@@ -291,3 +291,10 @@ obs() {
         *) _log "ERROR" "Unknown command"; obs_help ;;
     esac
 }
+
+# --- Execution Guard ---
+# Execute the main function if the script is run directly.
+# Check zsh_eval_context for Zsh and BASH_SOURCE for Bash.
+if [[ "${zsh_eval_context[-1]}" == "toplevel" || "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    obs "$@"
+fi
