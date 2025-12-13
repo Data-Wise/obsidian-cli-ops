@@ -11,6 +11,9 @@ from textual.widgets import Header, Footer, Static
 from textual.binding import Binding
 from textual.screen import Screen
 
+# Import custom screens
+from tui.screens.vaults import VaultBrowserScreen
+
 
 class HomeScreen(Screen):
     """Home screen with main menu."""
@@ -258,7 +261,7 @@ class ObsidianTUI(App):
 
     SCREENS = {
         "home": HomeScreen,
-        "vaults": lambda: PlaceholderScreen("Vault Browser", name="vaults"),
+        "vaults": VaultBrowserScreen,
         "notes": lambda: PlaceholderScreen("Note Explorer", name="notes"),
         "graph": lambda: PlaceholderScreen("Knowledge Graph", name="graph"),
         "stats": lambda: PlaceholderScreen("Statistics Dashboard", name="stats"),
