@@ -64,6 +64,7 @@ nav:
   - Configuration: configuration.md
   - Usage: usage.md
   - v2.0 Features: v2.0.md
+  - AI Setup Guide: ai-setup.md
   - R Integration: r-dev.md
 
 copyright: Copyright &copy; 2025 Data-Wise

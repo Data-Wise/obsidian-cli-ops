@@ -21,6 +21,7 @@
 *   **🏝️ Orphan Detection**: Find notes with no connections
 *   **🌟 Hub Detection**: Identify highly connected notes
 *   **📈 Analytics**: Comprehensive vault statistics and insights
+*   **🤖 AI-Powered Features**: Note similarity, duplicate detection, topic analysis (100% free, local, private)
 
 ## Quick Start
 
@@ -45,7 +46,17 @@ obs stats  # Auto-initializes on first run
 obs discover ~/Documents --scan -v
 ```
 
+### Setup AI Features (Optional)
+```bash
+# Quick setup - auto-detect and install (recommended)
+obs ai setup --quick
+
+# Interactive setup - choose your own provider
+obs ai setup
+```
+
 [Full Installation Guide](installation.md){ .md-button .md-button--primary }
+[AI Setup Guide](ai-setup.md){ .md-button }
 [v2.0 Features](v2.0.md){ .md-button }
 
 ## Use Cases
@@ -84,14 +95,15 @@ obs discover ~/Documents --scan -v
 - [Installation](installation.md) - Get obs installed and configured
 - [Usage](usage.md) - Core commands and workflows
 - [v2.0 Features](v2.0.md) - Knowledge graph analysis
+- [AI Setup Guide](ai-setup.md) - Set up free AI features (similarity, duplicates, topics)
 - [R-Dev Integration](r-dev.md) - R development workflow
 - [Configuration](configuration.md) - Advanced setup
 
 ## Project Status
 
 - ✅ **Phase 1 Complete**: Database, scanner, graph analysis
-- 🚧 **Phase 2 In Progress**: AI integration (Claude + Gemini)
-- 📋 **Phase 3 Planned**: Intelligent suggestions
+- ✅ **Phase 2 Complete**: AI integration (HuggingFace + Ollama - free, local, private)
+- 🚧 **Phase 3 In Progress**: AI-powered features (similarity, duplicates, topics)
 - 📋 **Phase 4 Planned**: TUI visualization
 - 📋 **Phase 5 Planned**: Learning system
 - 📋 **Phase 6 Planned**: Automation
