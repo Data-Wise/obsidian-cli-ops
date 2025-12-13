@@ -8,7 +8,7 @@
 
 ## 🎯 Current State
 
-**Active Development:** Phase 3 - AI-Powered Features
+**Active Development:** Phase 4 - TUI/Visualization (moved ahead of Phase 3)
 **Production Ready:** v1.x features + Phase 1-2 infrastructure
 **Test Coverage:** ~70% (162+ tests)
 
@@ -85,9 +85,51 @@
 
 ## 🚧 In Progress
 
-### Phase 3: AI-Powered Features (IN PROGRESS)
-**Status:** 🚧 Not Started
-**Target:** Next sprint
+### Phase 4: TUI/Visualization (IN PROGRESS)
+**Status:** 🚧 Active Development
+**Started:** 2025-12-13
+**Priority:** HIGH (moved ahead of Phase 3)
+**Target:** 2-week sprint
+
+**Rationale:**
+- Can visualize existing Phase 1 data immediately
+- Better UX for vault exploration
+- Foundation ready when Phase 3 features arrive
+- ADHD-friendly visual interface
+- Standalone utility value
+
+**Current Implementation:**
+- [x] Planning complete (PHASE_4_TUI_PLAN.md)
+- [x] Architecture designed (Textual framework)
+- [x] Dependencies already available (textual, rich in requirements.txt)
+- [ ] Phase 4.1: Foundation (app skeleton, navigation)
+- [ ] Phase 4.2: Vault browser
+- [ ] Phase 4.3: Note explorer with search/preview
+- [ ] Phase 4.4: Graph visualizer (ASCII art)
+- [ ] Phase 4.5: Statistics dashboard
+- [ ] Phase 4.6: Polish & CLI integration
+
+**Features to Implement:**
+- Interactive vault browser (list all vaults with stats)
+- Note explorer (searchable, filterable, preview pane)
+- Graph visualization (ASCII art, node highlighting)
+- Statistics dashboard (vault metrics, tag analytics)
+- Keyboard navigation (arrows, vim keys, mouse)
+- Help system and error handling
+
+**Documentation:**
+- See PHASE_4_TUI_PLAN.md for complete implementation plan
+
+**Estimated Effort:** 2 weeks
+
+---
+
+## 📋 Planned Phases
+
+### Phase 3: AI-Powered Features (PLANNED)
+**Status:** 📋 Deferred (Phase 4 prioritized)
+**Dependencies:** Phase 1-2 complete (ready to implement)
+**Will integrate with:** Phase 4 TUI when complete
 
 **Planned Implementation:**
 - [ ] Update similarity_analyzer.py (470 lines, exists but needs refactor)
@@ -99,29 +141,13 @@
 - [ ] Integration tests for AI features
 - [ ] Performance benchmarks
 - [ ] User documentation
+- [ ] TUI integration (review interface for suggestions)
 
 **Estimated Effort:** 2-3 days
 
----
-
-## 📋 Planned Phases
-
-### Phase 4: TUI/Visualization (PLANNED)
-**Status:** 📋 Not Started
-**Dependencies:** Phase 3 complete
-
-**Features:**
-- Interactive vault browser (using textual)
-- Graph visualization
-- Suggestion review interface
-- AI-powered recommendations display
-- Real-time analysis
-
-**Estimated Effort:** 1 week
-
 ### Phase 5: Learning System (PLANNED)
 **Status:** 📋 Not Started
-**Dependencies:** Phase 4 complete
+**Dependencies:** Phase 3 & 4 complete
 
 **Features:**
 - User feedback collection
@@ -133,7 +159,7 @@
 
 ### Phase 6: Automation (PLANNED)
 **Status:** 📋 Not Started
-**Dependencies:** Phase 5 complete
+**Dependencies:** Phase 3, 4, & 5 complete
 
 **Features:**
 - Automated vault watching (file system events)
@@ -219,19 +245,27 @@ System:
 
 ## 🎯 Immediate Next Steps
 
-1. **Phase 3 Implementation** (Priority 1)
-   - Start with `similarity_analyzer.py` refactor
-   - Implement `obs ai similar` command
-   - Add integration tests
-   - Document usage
+1. **Phase 4.1: TUI Foundation** (Priority 1)
+   - Create `src/python/tui/` directory structure
+   - Build main app skeleton (`app.py`)
+   - Implement home screen with menu
+   - Add keyboard navigation (arrows, vim keys)
+   - Add quit/help functionality
+   - Launch command: `obs tui`
 
-2. **Real-World Testing** (Priority 2)
+2. **Phase 4.2: Vault Browser** (Priority 2)
+   - Query vaults from database
+   - Display vault list with stats
+   - Implement selection and navigation
+   - Add vault details panel
+
+3. **Real-World Testing** (Priority 3)
    - Test AI setup wizard with both providers
    - Scan large vault (1000+ notes)
    - Verify performance benchmarks
    - Update documentation with findings
 
-3. **CI/CD Setup** (Priority 3)
+4. **CI/CD Setup** (Priority 4)
    - Create GitHub Actions workflow
    - Automate test runs on push
    - Add coverage reporting
@@ -268,6 +302,7 @@ System:
 - [x] PROJECT_PLAN_v2.0.md (roadmap)
 - [x] PHASE_1_COMPLETE.md (Phase 1 summary)
 - [x] PHASE_2_COMPLETE.md (Phase 2 summary)
+- [x] PHASE_4_TUI_PLAN.md (TUI implementation plan, 452 lines)
 - [x] AI_SETUP_QUICKSTART.md (quick start)
 - [x] docs_mkdocs/ai-setup.md (complete guide, 741 lines)
 - [x] TEST_SUITE_SUMMARY.md (test documentation)
@@ -293,12 +328,22 @@ System:
 - Complete documentation
 
 **Missing for v2.0.0 stable:**
-- Phase 3 AI features (in progress)
+- Phase 4 TUI (in progress)
 - CI/CD pipeline
 - Real-world validation
 - Performance optimization
 
 ### v2.1.0 (Next)
+**Target:** After Phase 4 complete
+
+**Will Include:**
+- TUI interface (vault browser, note explorer, graph visualizer)
+- Statistics dashboard
+- Interactive navigation
+- ADHD-friendly design
+- Performance improvements
+
+### v2.2.0 (Future)
 **Target:** After Phase 3 complete
 
 **Will Include:**
@@ -306,13 +351,13 @@ System:
 - Duplicate detection
 - Topic analysis
 - Merge suggestions
-- Performance improvements
+- TUI integration for AI features
 
 ### v3.0.0 (Future)
-**Target:** After Phase 4-6 complete
+**Target:** After Phase 3-6 complete
 
 **Will Include:**
-- TUI interface
+- Complete TUI with AI integration
 - Learning system
 - Automation features
 - Full production readiness
@@ -335,10 +380,12 @@ System:
 2025-12-12: Phase 1 complete - Foundation
 2025-12-13: Phase 2 complete - AI integration
 2025-12-13: Test suite implementation complete
+2025-12-13: Phase 4 start - TUI/Visualization (prioritized)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2025-12-XX: Phase 3 start - AI features
-2025-12-XX: v2.0.0 stable release
-2026-Q1:    Phase 4 - TUI
+2025-12-XX: Phase 4 complete - TUI
+2025-12-XX: v2.1.0 release (with TUI)
+2026-Q1:    Phase 3 - AI features
+2026-Q1:    v2.2.0 release (AI + TUI)
 2026-Q2:    Phase 5-6 - Learning & Automation
 2026-Q2:    v3.0.0 stable release
 ```
@@ -346,5 +393,5 @@ System:
 ---
 
 **Last Status Update:** 2025-12-13
-**Next Review:** After Phase 3 implementation
+**Next Review:** After Phase 4.1 implementation
 **Overall Project Health:** 🟢 Excellent

@@ -393,18 +393,41 @@ python3 src/python/setup_wizard.py --quick
 - Multi-provider architecture (easy to add more)
 - **Documentation**: Complete setup guide with troubleshooting
 
-### Phase 3: AI-Powered Features (In Progress)
+### Phase 3: TUI/Visualization 🚧 IN PROGRESS
+**Priority:** HIGH (moved ahead of Phase 4)
+**Started:** 2025-12-13
+**Plan:** See PHASE_4_TUI_PLAN.md
+
+**Features:**
+- Interactive vault browser (using Textual framework)
+- Note explorer with search/preview
+- Graph visualization (ASCII art)
+- Statistics dashboard
+- Keyboard navigation (arrows, vim keys, mouse)
+- ADHD-friendly design (colors, emojis, clear hierarchy)
+
+**Commands:**
+- `obs tui` - Launch TUI application
+- `obs tui --vault-id <id>` - Open specific vault
+- `obs tui --screen <name>` - Open specific screen
+
+**Rationale:**
+- Can visualize existing Phase 1 data immediately
+- Better UX for vault exploration
+- Foundation ready when Phase 4 features arrive
+- Standalone utility value
+
+### Phase 4: AI-Powered Features (Deferred)
+**Status:** Deferred (Phase 3 prioritized)
+**Will integrate with:** Phase 3 TUI when complete
+
+**Features:**
 - Find similar notes (`obs ai similar`)
 - Detect duplicates (`obs ai duplicates`)
 - Topic analysis and clustering (`obs ai topics`)
 - Merge suggestions with reasoning
 - Single note analysis
-
-### Phase 4: TUI/Visualization (Planned)
-- Interactive vault browser
-- Graph visualization
-- Suggestion review interface
-- AI-powered recommendations display
+- TUI review interface for suggestions
 
 ### Phase 5: Learning System (Planned)
 - User feedback collection
@@ -422,12 +445,15 @@ python3 src/python/setup_wizard.py --quick
 
 ### Documentation
 - `PROJECT_HUB.md`: ADHD-friendly control center
-- `PROJECT_PLAN_v2.0.md`: Complete 12-week roadmap
+- `PROJECT_PLAN_v2.0.md`: Complete 12-week roadmap (phase reordering: TUI before AI features)
+- `.STATUS`: Comprehensive project status and metrics
 - `V2_QUICKSTART.md`: Quick start guide for v2.0
 - `PHASE_1_COMPLETE.md`: Phase 1 summary and usage
 - `PHASE_2_COMPLETE.md`: Phase 2 AI integration summary
+- `PHASE_4_TUI_PLAN.md`: Phase 3 TUI implementation plan (452 lines)
 - `AI_SETUP_QUICKSTART.md`: One-page AI setup guide
 - `docs_mkdocs/ai-setup.md`: Complete AI setup documentation (741 lines)
+- `TEST_SUITE_SUMMARY.md`: Test suite documentation (162+ tests)
 - `src/python/README.md`: Python module documentation
 
 ### Examples

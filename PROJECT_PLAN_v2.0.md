@@ -313,8 +313,99 @@ obs understand <note>     # Explain note's role
 
 ---
 
-### Phase 3: Intelligent Suggestions (Weeks 5-6)
+### Phase 3: TUI/Visualization (Weeks 5-6) 🚧 IN PROGRESS
+**Goal:** Build interactive, ADHD-friendly visualization interface
+
+**Priority:** HIGH (moved ahead of AI Suggestions)
+**Status:** Active Development
+**Started:** 2025-12-13
+
+**Rationale for Priority Change:**
+- Can visualize existing Phase 1 data immediately (vaults, notes, graphs, metrics)
+- Better UX for vault exploration and analysis
+- Foundation ready when Phase 4 (AI Suggestions) features arrive
+- ADHD-friendly visual interface provides immediate value
+- Standalone utility that enhances Phase 1-2 work
+
+#### Deliverables
+- [x] TUI framework setup (Textual already in requirements.txt)
+- [x] Architecture design (PHASE_4_TUI_PLAN.md)
+- [ ] Vault browser
+- [ ] Note explorer with search/preview
+- [ ] Graph visualizer (ASCII art)
+- [ ] Statistics dashboard
+- [ ] Keyboard navigation (arrows, vim keys, mouse)
+
+#### New Commands
+```bash
+obs tui                   # Launch TUI application
+obs tui --vault-id 1      # Launch directly to vault view
+obs tui --screen vaults   # Open specific screen
+obs tui --screen notes    # Open notes explorer
+obs tui --screen graph    # Open graph visualizer
+obs tui --screen stats    # Open statistics dashboard
+```
+
+#### TUI Sub-Phases
+
+See [PHASE_4_TUI_PLAN.md](PHASE_4_TUI_PLAN.md) for complete implementation details.
+
+##### Phase 3.1: Foundation (Days 1-2)
+- Create `src/python/tui/` directory structure
+- Build main app skeleton with Textual
+- Implement home screen with menu
+- Add keyboard navigation
+- Help system
+
+##### Phase 3.2: Vault Browser (Days 3-4)
+- List all vaults from database
+- Show vault statistics
+- Navigate and select vaults
+- Vault details panel
+
+##### Phase 3.3: Note Explorer (Days 5-7)
+- Display notes in selected vault
+- Search/filter by title
+- Note preview pane
+- Sort by various criteria
+
+##### Phase 3.4: Graph Visualizer (Week 2, Days 1-3)
+- ASCII art graph visualization
+- Show note connections
+- Highlight orphans and hubs
+- Display graph metrics
+
+##### Phase 3.5: Statistics Dashboard (Week 2, Days 4-5)
+- Vault-level statistics
+- Tag analytics
+- Link distribution charts
+- Growth metrics
+
+##### Phase 3.6: Polish & Integration (Week 2, Days 6-7)
+- Error handling and loading states
+- Smooth transitions
+- CLI integration
+- Comprehensive testing
+
+#### Success Criteria
+- ✅ TUI launches without errors
+- ✅ Can browse all vaults
+- ✅ Can view and search notes
+- ✅ Graph visualization displays correctly
+- ✅ All keyboard navigation works
+- ✅ Help system is accessible
+- ✅ Intuitive navigation (< 5 key presses to any feature)
+- ✅ Clear visual hierarchy
+- ✅ Responsive (< 100ms interactions)
+
+---
+
+### Phase 4: Intelligent Suggestions (Weeks 7-8) 📋 DEFERRED
 **Goal:** Generate actionable reorganization suggestions
+
+**Status:** Deferred (Phase 3 prioritized)
+**Dependencies:** Phase 1-2 complete (ready to implement)
+**Will integrate with:** Phase 3 TUI when complete
 
 #### Deliverables
 - [ ] Suggestion engine
@@ -322,6 +413,7 @@ obs understand <note>     # Explain note's role
 - [ ] Duplicate finder
 - [ ] Move/merge/split recommendations
 - [ ] Confidence scoring
+- [ ] TUI integration (review interface for suggestions)
 
 #### New Commands
 ```bash
@@ -331,110 +423,15 @@ obs suggest merge         # Notes to merge
 obs suggest split         # Notes to split
 obs suggest archive       # Notes to archive
 obs suggest --execute     # Execute suggestions
+obs suggest --tui         # Review suggestions in TUI (after Phase 3)
 ```
 
 #### Suggestion Types
 
 ##### 1. Move Suggestions
-```python
-def suggest_moves(vault):
-    """Suggest notes that are in wrong folders"""
-    suggestions = []
+Suggest notes that should be relocated to different folders based on content analysis.
 
-    for note in vault.notes:
-        # Get AI analysis of note content
-        analysis = ai.analyze_content(note)
-
-        # Compare with current location
-        if analysis.suggested_folder != note.current_folder:
-            suggestions.append({
-                'note': note,
-                'current': note.folder,
-                'suggested': analysis.suggested_folder,
-                'confidence': analysis.confidence,
-                'reason': analysis.reason
-            })
-
-    return suggestions
-```
-
-##### 2. Merge Suggestions
-```python
-def suggest_merges(vault):
-    """Find duplicate or highly similar notes"""
-    suggestions = []
-
-    # Get embeddings for all notes
-    embeddings = ai.get_embeddings([n.content for n in vault.notes])
-
-    # Find similar pairs
-    for i, note_a in enumerate(vault.notes):
-        for j, note_b in enumerate(vault.notes[i+1:], i+1):
-            similarity = cosine_similarity(embeddings[i], embeddings[j])
-
-            if similarity > MERGE_THRESHOLD:
-                # Ask Claude for merge strategy
-                strategy = ai.plan_merge(note_a, note_b)
-
-                suggestions.append({
-                    'notes': [note_a, note_b],
-                    'similarity': similarity,
-                    'strategy': strategy,
-                    'confidence': strategy.confidence
-                })
-
-    return suggestions
-```
-
-#### Success Criteria
-- ✅ Generates 20+ useful suggestions per vault
-- ✅ 70%+ user acceptance rate
-- ✅ < 5% false positive rate
-- ✅ Clear, actionable recommendations
-
----
-
-### Phase 4: TUI Interface (Weeks 7-8)
-**Goal:** Build interactive, ADHD-friendly interfaces
-
-#### Deliverables
-- [ ] TUI framework setup
-- [ ] Vault browser
-- [ ] Suggestion reviewer
-- [ ] Confirmation dialogs
-- [ ] Knowledge graph visualizer
-
-#### New Commands
-```bash
-obs discover --tui        # Interactive vault browser
-obs analyze --tui         # Visual analysis dashboard
-obs suggest --tui         # Review suggestions interactively
-obs graph --tui           # Visual knowledge graph
-```
-
-#### TUI Components
-
-##### 1. Vault Browser
-```
-╭─ Vault Browser ──────────────────────────────────────╮
-│                                                      │
-│ Research_Lab/                                        │
-│ ├─ Methods/                         [347 notes]     │
-│ │  ├─ Theory/                       [89 notes]      │
-│ │  ├─ Applications/                 [156 notes]     │
-│ │  └─ Proofs/                       [102 notes]     │
-│ ├─ Papers/                          [892 notes]     │
-│ └─ Projects/                        [8 notes]       │
-│                                                      │
-│ Knowledge_Base/                                      │
-│ ├─ Statistics/                      [456 notes]     │
-│ └─ Mathematics/                     [234 notes]     │
-│                                                      │
-│ [▲▼] Navigate | [Enter] Open | [A] Analyze | [Q] Quit │
-╰──────────────────────────────────────────────────────╯
-```
-
-##### 2. Suggestion Reviewer
+##### 2. Merge Suggestions (TUI Example)
 ```
 ╭─ Suggestions (3 of 12) ──────────────────────────────╮
 │                                                      │
@@ -489,17 +486,16 @@ obs graph --tui           # Visual knowledge graph
 ```
 
 #### Technology Stack
-- **gum** - Simple prompts and confirmations
-- **rich** (Python) - Complex TUI layouts
-- **blessed** (Node.js) - Alternative TUI framework
-- **plotext** - Terminal graphs
-- **graphviz** - Knowledge graph rendering
+- **AI Providers:** HuggingFace (embeddings), Ollama (reasoning)
+- **Similarity:** Cosine similarity with sentence-transformers
+- **Clustering:** scikit-learn for topic analysis
+- **TUI Integration:** Textual (Phase 3) for suggestion review
 
 #### Success Criteria
-- ✅ Intuitive navigation (< 5 key presses to any feature)
-- ✅ Clear visual hierarchy
-- ✅ Responsive (< 100ms interactions)
-- ✅ Accessible (keyboard-only navigation)
+- ✅ Generates 20+ useful suggestions per vault
+- ✅ 70%+ user acceptance rate
+- ✅ < 5% false positive rate
+- ✅ Clear, actionable recommendations with reasoning
 
 ---
 
