@@ -165,6 +165,11 @@ obs_help() {
     echo "  vaults                    List all vaults in database"
     echo "  stats [vault_id]          Show database or vault statistics"
     echo ""
+    echo "AI Integration (v2.0):"
+    echo "  ai setup                  Interactive AI setup wizard"
+    echo "  ai setup --quick          Quick start (auto-detect and install)"
+    echo "  ai config                 Show current AI configuration"
+    echo ""
     echo "Config loaded from: $CONFIG_FILE"
 }
 
@@ -519,6 +524,44 @@ obs_stats() {
     fi
 }
 
+# --- AI Commands (v2.0) ---
+
+obs_ai() {
+    local python_cli=$(_get_python_cli) || return 1
+    local subcmd=$1
+    shift
+
+    case "$subcmd" in
+        setup)
+            _log_verbose "Running AI setup wizard"
+            local cmd=("$python_cli" "ai" "setup")
+
+            # Add --quick flag if requested
+            if [[ "$1" == "--quick" ]]; then
+                cmd+=(--quick)
+            fi
+
+            python3 "${cmd[@]}"
+            ;;
+
+        config)
+            _log_verbose "Showing AI configuration"
+            python3 "$python_cli" "ai" "config"
+            ;;
+
+        *)
+            _log "ERROR" "Unknown ai subcommand: $subcmd"
+            echo "Usage: obs ai <subcommand>"
+            echo ""
+            echo "Subcommands:"
+            echo "  setup        - Interactive AI setup wizard"
+            echo "  setup --quick - Quick start (auto-detect and install)"
+            echo "  config        - Show current AI configuration"
+            return 1
+            ;;
+    esac
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -568,6 +611,10 @@ obs() {
             ;;
         "stats")
             obs_stats "$@"
+            return $?
+            ;;
+        "ai")
+            obs_ai "$@"
             return $?
             ;;
     esac

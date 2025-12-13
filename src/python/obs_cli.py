@@ -248,6 +248,17 @@ def main():
     db_subparsers.add_parser('init', help='Initialize database')
     db_subparsers.add_parser('stats', help='Show database stats')
 
+    # ai command
+    ai_parser = subparsers.add_parser('ai',
+                                      help='AI setup and configuration')
+    ai_subparsers = ai_parser.add_subparsers(dest='ai_command')
+
+    setup_parser = ai_subparsers.add_parser('setup', help='Interactive AI setup wizard')
+    setup_parser.add_argument('--quick', action='store_true',
+                             help='Quick start mode (auto-detect and install)')
+
+    ai_subparsers.add_parser('config', help='Show current AI configuration')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -282,6 +293,21 @@ def main():
                 cli.stats()
             else:
                 db_parser.print_help()
+
+        elif args.command == 'ai':
+            # Import setup wizard only when needed
+            from setup_wizard import AISetupWizard
+
+            wizard = AISetupWizard()
+
+            if args.ai_command == 'setup':
+                mode = 'quick' if args.quick else 'interactive'
+                success = wizard.run(mode=mode)
+                sys.exit(0 if success else 1)
+            elif args.ai_command == 'config':
+                wizard.show_config()
+            else:
+                ai_parser.print_help()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")
