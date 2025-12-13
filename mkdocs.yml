@@ -1,5 +1,5 @@
 site_name: Obsidian CLI Ops
-site_description: A Federated Vault Manager for Obsidian
+site_description: An Intelligent Multi-Vault Knowledge Management Tool for Obsidian
 site_author: Data-Wise
 site_url: https://data-wise.github.io/obsidian-cli-ops/
 docs_dir: docs_mkdocs
@@ -63,6 +63,7 @@ nav:
   - Installation: installation.md
   - Configuration: configuration.md
   - Usage: usage.md
+  - v2.0 Features: v2.0.md
   - R Integration: r-dev.md
 
 copyright: Copyright &copy; 2025 Data-Wise
