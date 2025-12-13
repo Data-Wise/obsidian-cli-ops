@@ -14,18 +14,22 @@ mistune>=3.0.0
 # YAML parsing (for frontmatter)
 PyYAML>=6.0
 
-# Future AI integration
+# AI integration (Phase 2)
 anthropic>=0.40.0
-google-generativeai>=0.3.0
+google-generativeai>=0.8.0
 
-# TUI framework (optional, for --tui mode)
+# Machine learning (Phase 2)
+numpy>=1.24.0
+scikit-learn>=1.3.0
+
+# TUI framework (optional, for --tui mode in Phase 4)
 rich>=13.7.0
 textual>=0.47.0
 
 # Progress bars
 tqdm>=4.66.0
 
-# Graph analysis (future)
+# Graph analysis
 networkx>=3.2
 
 # CLI framework
