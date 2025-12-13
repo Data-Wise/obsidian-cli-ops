@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### What It Does
 
 - **v1.x Features**: Federated vault management, plugin installation, R-Dev integration
-- **v2.0 Features**: Knowledge graph analysis, vault scanning, link resolution, graph metrics
+- **v2.0 Features**: Knowledge graph analysis, vault scanning, link resolution, graph metrics, AI-powered similarity detection (100% free, local, private)
 
 ### Technology Stack
 
@@ -19,6 +19,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Python**: Backend for v2.0 features (`src/python/`)
 - **SQLite**: Knowledge graph database (`~/.config/obs/vault_db.sqlite`)
 - **NetworkX**: Graph analysis library
+- **HuggingFace/Ollama**: Free local AI (embeddings, similarity detection)
 - **Node.js**: Testing harness (Jest)
 - **MkDocs**: Documentation site
 
@@ -38,6 +39,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Vault scanning and parsing
 - Graph analysis and metrics
 - Knowledge extraction
+- AI integration (HuggingFace, Ollama)
+- Interactive setup wizard
 
 ### Main Script: `src/obs.zsh`
 
@@ -51,9 +54,10 @@ The script is designed as a ZSH function library that can be:
    - User config: `~/.config/obs/config` (defines `OBS_ROOT` and `VAULTS` array)
    - Project mapping: `~/.config/obs/project_map.json` (maps R project paths to Obsidian folders)
    - Database: `~/.config/obs/vault_db.sqlite` (knowledge graph storage)
+   - AI config: `~/.config/obs/ai_config.json` (AI provider and model settings)
 
 2. **Command Routing**:
-   - Commands that don't need config: `help`, `version`, `check`, `discover`, `analyze`, `vaults`, `stats`
+   - Commands that don't need config: `help`, `version`, `check`, `discover`, `analyze`, `vaults`, `stats`, `ai`
    - Commands that need config: `list`, `sync`, `install`, `search`, `audit`, `r-dev`
 
 3. **Helper Functions**:
@@ -72,7 +76,12 @@ src/python/
 ├── db_manager.py         # Database operations (469 lines)
 ├── vault_scanner.py      # Vault scanning & parsing (373 lines)
 ├── graph_builder.py      # Graph analysis (307 lines)
-├── obs_cli.py            # CLI entry point (281 lines)
+├── obs_cli.py            # CLI entry point (318 lines)
+├── ai_client.py          # AI client base & factory (440 lines)
+├── ai_client_ollama.py   # Ollama integration (450 lines)
+├── ai_client_hf.py       # HuggingFace integration (340 lines)
+├── setup_wizard.py       # Interactive AI setup (837 lines)
+├── similarity_analyzer.py # Note similarity analysis (470 lines)
 ├── requirements.txt      # Python dependencies
 └── README.md             # Python module documentation
 ```
@@ -101,8 +110,29 @@ src/python/
 
 4. **ObsCLI** (`obs_cli.py`):
    - Argparse-based CLI interface
-   - Commands: discover, scan, analyze, stats, vaults, db
+   - Commands: discover, scan, analyze, stats, vaults, db, ai
    - Verbose mode support
+
+5. **AI Clients** (`ai_client.py`, `ai_client_ollama.py`, `ai_client_hf.py`):
+   - **AIClient**: Abstract base class for AI providers
+   - **OllamaClient**: Local Ollama integration (embeddings + reasoning)
+   - **HuggingFaceClient**: sentence-transformers integration (embeddings)
+   - **get_ai_client()**: Factory function for provider selection
+   - Support for multiple models (qwen2.5:0.5b, llama3.1, all-mpnet-base-v2, etc.)
+
+6. **AISetupWizard** (`setup_wizard.py`):
+   - Interactive setup with two paths (Quick Start, Custom)
+   - System auto-detection (OS, Python, RAM, Ollama)
+   - Provider and model selection menus
+   - Automatic installation and testing
+   - Config persistence to `~/.config/obs/ai_config.json`
+   - Progress bars with `rich` library
+
+7. **SimilarityAnalyzer** (`similarity_analyzer.py`):
+   - Find similar notes using embeddings
+   - Duplicate detection with threshold
+   - Topic analysis and clustering
+   - Merge suggestions with reasoning
 
 ### Database Schema: `schema/vault_db.sql`
 
@@ -138,11 +168,22 @@ This design allows users to work within their R project directory without specif
 ### Python Dependencies
 
 ```bash
-# Install required packages
+# Install required packages (Phase 1)
 pip3 install python-frontmatter mistune PyYAML networkx
 
-# Optional AI packages (for Phase 2+)
-pip3 install anthropic google-generativeai rich textual
+# Install AI packages (Phase 2)
+# Option 1: HuggingFace (recommended, free forever)
+pip3 install sentence-transformers numpy scikit-learn rich
+
+# Option 2: Ollama (requires Ollama installed)
+brew install ollama
+pip3 install requests numpy rich
+
+# Optional: Run interactive setup wizard
+obs ai setup --quick
+
+# Optional paid APIs (commented out in requirements.txt)
+# pip3 install anthropic google-generativeai
 ```
 
 ### Testing
@@ -294,6 +335,26 @@ python3 src/python/obs_cli.py db init
 python3 src/python/obs_cli.py db stats
 ```
 
+### AI Setup and Configuration
+
+```bash
+# Interactive setup wizard (recommended)
+obs ai setup
+
+# Quick start (auto-detect and install)
+obs ai setup --quick
+
+# View current configuration
+obs ai config
+
+# Test AI clients directly (Python)
+python3 src/python/ai_client_ollama.py
+python3 src/python/ai_client_hf.py
+
+# Run setup wizard directly
+python3 src/python/setup_wizard.py --quick
+```
+
 ## Testing Strategy
 
 ### Node.js Tests (Jest)
@@ -323,32 +384,39 @@ python3 src/python/obs_cli.py db stats
 - Graph builder with NetworkX
 - CLI integration
 
-### Phase 2: AI Integration (In Progress)
-- Claude API for note similarity
-- Gemini API for embeddings
-- Semantic search
-- Topic modeling
+### Phase 2: AI Integration ✅ COMPLETE
+- **FREE local AI providers** (HuggingFace + Ollama)
+- Interactive setup wizard with auto-detection
+- Embedding generation (384-1024 dimensions)
+- Note comparison using cosine similarity
+- **Privacy-first**: 100% free, 100% local, 100% private
+- Multi-provider architecture (easy to add more)
+- **Documentation**: Complete setup guide with troubleshooting
 
-### Phase 3: Suggestions (Planned)
-- Merge duplicate notes
-- Move misplaced notes
-- Archive outdated content
-- Fix broken links
+### Phase 3: AI-Powered Features (In Progress)
+- Find similar notes (`obs ai similar`)
+- Detect duplicates (`obs ai duplicates`)
+- Topic analysis and clustering (`obs ai topics`)
+- Merge suggestions with reasoning
+- Single note analysis
 
 ### Phase 4: TUI/Visualization (Planned)
 - Interactive vault browser
 - Graph visualization
 - Suggestion review interface
+- AI-powered recommendations display
 
 ### Phase 5: Learning System (Planned)
 - User feedback collection
 - Rule generation
 - Accuracy improvement
+- Personalized suggestions
 
 ### Phase 6: Automation (Planned)
 - Automated vault watching
 - Scheduled scans
-- Automatic suggestions
+- Automatic AI-powered suggestions
+- Background processing
 
 ## Important Files
 
@@ -357,6 +425,9 @@ python3 src/python/obs_cli.py db stats
 - `PROJECT_PLAN_v2.0.md`: Complete 12-week roadmap
 - `V2_QUICKSTART.md`: Quick start guide for v2.0
 - `PHASE_1_COMPLETE.md`: Phase 1 summary and usage
+- `PHASE_2_COMPLETE.md`: Phase 2 AI integration summary
+- `AI_SETUP_QUICKSTART.md`: One-page AI setup guide
+- `docs_mkdocs/ai-setup.md`: Complete AI setup documentation (741 lines)
 - `src/python/README.md`: Python module documentation
 
 ### Examples
@@ -435,10 +506,16 @@ python3 src/python/obs_cli.py db stats
 - `PyYAML`: YAML parsing
 - `networkx`: Graph analysis
 
+### AI Packages (Phase 2)
+- `sentence-transformers`: HuggingFace embeddings (recommended, free)
+- `requests`: Ollama API client
+- `numpy`: Numerical operations
+- `scikit-learn`: Clustering and similarity
+- `rich`: Terminal UI for setup wizard
+
 ### Optional Python Packages
-- `anthropic`: Claude API (Phase 2)
-- `google-generativeai`: Gemini API (Phase 2)
-- `rich`: Terminal formatting (Phase 4)
+- `anthropic`: Claude API (paid, commented out)
+- `google-generativeai`: Gemini API (paid, commented out)
 - `textual`: TUI framework (Phase 4)
 
 ## Troubleshooting
@@ -484,15 +561,27 @@ python3 src/python/obs_cli.py db stats
 ### Local-First Design
 - All data stored locally in SQLite
 - No data sent to cloud by default
-- AI features (Phase 2+) are opt-in
+- AI features use local models (100% private)
 
-### API Key Management (Phase 2+)
-- Store keys in environment variables
+### AI Privacy (Phase 2)
+- **Default providers are 100% local** (HuggingFace, Ollama)
+- No API keys required for default setup
+- No data sent to external servers
+- Models run on your machine
+- Complete privacy and offline capability
+
+### API Key Management (Optional)
+- Paid APIs (Claude, Gemini) are **optional** and commented out
+- If using paid APIs, store keys in environment variables
 - Never commit API keys to git
 - Use `.env` file for local development
 
 ## Version History
 
-- **2.0.0-beta** (2025-12-12): Phase 1 complete - foundation, scanning, graph analysis
+- **2.0.0-beta** (2025-12-12):
+  - Phase 1: Foundation, scanning, graph analysis
+  - Phase 2: Free AI integration (HuggingFace + Ollama)
+  - Interactive setup wizard with auto-detection
+  - Complete AI documentation
 - **1.1.0** (2025-12-11): Quick wins - list, stats, unlink, completion
 - **1.0.0** (2025-12-10): Initial release - vault management, R-Dev integration
