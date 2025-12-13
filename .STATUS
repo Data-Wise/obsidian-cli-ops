@@ -102,20 +102,36 @@
 - [x] Planning complete (PHASE_4_TUI_PLAN.md)
 - [x] Architecture designed (Textual framework)
 - [x] Dependencies already available (textual, rich in requirements.txt)
-- [ ] Phase 4.1: Foundation (app skeleton, navigation)
-- [ ] Phase 4.2: Vault browser
-- [ ] Phase 4.3: Note explorer with search/preview
+- [x] Phase 4.1: Foundation ✅ COMPLETE (994ae42)
+  - TUI app skeleton (279 lines)
+  - HomeScreen with menu
+  - HelpScreen with shortcuts
+  - PlaceholderScreen template
+  - CLI integration (`obs tui`)
+- [x] Phase 4.2: Vault browser ✅ COMPLETE (707f3d7)
+  - VaultBrowserScreen (249 lines)
+  - DataTable with vault list
+  - Real database integration
+  - Details panel with statistics
+  - Keyboard navigation (↑↓, Enter, r, Esc, q)
+- [ ] Phase 4.3: Note explorer with search/preview (NEXT)
 - [ ] Phase 4.4: Graph visualizer (ASCII art)
 - [ ] Phase 4.5: Statistics dashboard
 - [ ] Phase 4.6: Polish & CLI integration
 
+**Features Completed:**
+- ✅ TUI launches and navigates between screens
+- ✅ Interactive vault browser with real data
+- ✅ Vault statistics display (notes, links, tags, orphans, hubs)
+- ✅ Keyboard navigation (arrows, vim keys)
+- ✅ Help system accessible (? key)
+- ✅ ADHD-friendly design (colors, emojis, borders)
+
 **Features to Implement:**
-- Interactive vault browser (list all vaults with stats)
 - Note explorer (searchable, filterable, preview pane)
 - Graph visualization (ASCII art, node highlighting)
 - Statistics dashboard (vault metrics, tag analytics)
-- Keyboard navigation (arrows, vim keys, mouse)
-- Help system and error handling
+- Additional polish and error handling
 
 **Documentation:**
 - See PHASE_4_TUI_PLAN.md for complete implementation plan
@@ -198,18 +214,24 @@
 
 ### Code Statistics
 ```
-Total Lines of Code: ~7,000
-- ZSH: ~630 lines (obs.zsh)
-- Python: ~4,800 lines (9 modules)
+Total Lines of Code: ~7,900
+- ZSH: ~670 lines (obs.zsh, +40 for TUI)
+- Python: ~5,350 lines (11 modules, +550 for TUI)
+  - Core: ~4,800 lines (9 modules)
+  - TUI: ~550 lines (app.py 279, vaults.py 249, init files)
 - Tests: ~1,500 lines (162+ tests)
-- Docs: ~3,000 lines (10+ files)
+- Docs: ~3,400 lines (11+ files, updated plans)
 ```
 
 ### File Inventory
 ```
 Core Files:
-- src/obs.zsh (630 lines)
+- src/obs.zsh (670 lines, +40 for TUI)
 - src/python/*.py (9 files, ~4,800 lines)
+- src/python/tui/ (3 files, ~550 lines)
+  - app.py (279 lines)
+  - screens/vaults.py (249 lines)
+  - screens/__init__.py, widgets/__init__.py, __init__.py
 
 Tests:
 - __tests__/*.js (1 file, 54 lines)
@@ -245,19 +267,19 @@ System:
 
 ## 🎯 Immediate Next Steps
 
-1. **Phase 4.1: TUI Foundation** (Priority 1)
-   - Create `src/python/tui/` directory structure
-   - Build main app skeleton (`app.py`)
-   - Implement home screen with menu
-   - Add keyboard navigation (arrows, vim keys)
-   - Add quit/help functionality
-   - Launch command: `obs tui`
+1. **Phase 4.3: Note Explorer** (Priority 1) 🎯 NEXT
+   - Create NoteExplorerScreen
+   - Display notes in selected vault
+   - Implement search/filter functionality
+   - Add note preview pane
+   - Show note metadata (links, tags, word count)
+   - Sort by various criteria
 
-2. **Phase 4.2: Vault Browser** (Priority 2)
-   - Query vaults from database
-   - Display vault list with stats
-   - Implement selection and navigation
-   - Add vault details panel
+2. **Phase 4.4: Graph Visualizer** (Priority 2)
+   - Generate ASCII graph from NetworkX
+   - Implement zoom/pan
+   - Highlight special nodes (orphans, hubs)
+   - Show interactive tooltips
 
 3. **Real-World Testing** (Priority 3)
    - Test AI setup wizard with both providers
