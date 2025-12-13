@@ -259,6 +259,13 @@ def main():
 
     ai_subparsers.add_parser('config', help='Show current AI configuration')
 
+    # tui command
+    tui_parser = subparsers.add_parser('tui',
+                                       help='Launch interactive TUI')
+    tui_parser.add_argument('--vault-id', type=int, help='Open specific vault')
+    tui_parser.add_argument('--screen', choices=['vaults', 'notes', 'graph', 'stats'],
+                           help='Open specific screen')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -308,6 +315,23 @@ def main():
                 wizard.show_config()
             else:
                 ai_parser.print_help()
+
+        elif args.command == 'tui':
+            # Import TUI app only when needed
+            try:
+                from tui.app import ObsidianTUI
+
+                app = ObsidianTUI()
+                app.run()
+
+            except ImportError as e:
+                print(f"❌ Error: TUI dependencies not available")
+                print(f"   Please ensure 'textual' is installed:")
+                print(f"   pip install textual")
+                sys.exit(1)
+            except Exception as e:
+                print(f"❌ Error launching TUI: {e}")
+                sys.exit(1)
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")

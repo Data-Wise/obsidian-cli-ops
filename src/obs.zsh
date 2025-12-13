@@ -170,6 +170,11 @@ obs_help() {
     echo "  ai setup --quick          Quick start (auto-detect and install)"
     echo "  ai config                 Show current AI configuration"
     echo ""
+    echo "TUI Interface (v2.0):"
+    echo "  tui                       Launch interactive TUI"
+    echo "  tui --vault-id <id>       Open specific vault"
+    echo "  tui --screen <name>       Open specific screen (vaults|notes|graph|stats)"
+    echo ""
     echo "Config loaded from: $CONFIG_FILE"
 }
 
@@ -562,6 +567,36 @@ obs_ai() {
     esac
 }
 
+# --- TUI Commands (v2.0) ---
+
+obs_tui() {
+    local python_cli=$(_get_python_cli) || return 1
+
+    _log_verbose "Launching TUI"
+
+    # Build command
+    local cmd=("$python_cli" "tui")
+
+    # Add flags
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --vault-id)
+                cmd+=(--vault-id "$2")
+                shift 2
+                ;;
+            --screen)
+                cmd+=(--screen "$2")
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    python3 "${cmd[@]}"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -615,6 +650,10 @@ obs() {
             ;;
         "ai")
             obs_ai "$@"
+            return $?
+            ;;
+        "tui")
+            obs_tui "$@"
             return $?
             ;;
     esac
