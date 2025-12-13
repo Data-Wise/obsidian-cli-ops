@@ -365,23 +365,75 @@ class GeminiClient(AIClient):
         return topics
 
 
-def get_ai_client(provider: str = "claude", **kwargs) -> AIClient:
+def get_ai_client(provider: str = "ollama", **kwargs) -> AIClient:
     """
     Factory function to get AI client.
 
     Args:
-        provider: 'claude' or 'gemini'
-        **kwargs: Additional arguments for client
+        provider: AI provider to use
+                 - 'ollama': Free, local (recommended, requires Ollama installed)
+                 - 'huggingface' or 'hf': Free, local Python (requires sentence-transformers)
+                 - 'claude': Paid API (requires ANTHROPIC_API_KEY)
+                 - 'gemini': Paid API with free tier (requires GOOGLE_API_KEY)
+        **kwargs: Additional arguments for specific client
 
     Returns:
         AI client instance
+
+    Examples:
+        # Free local options (recommended)
+        client = get_ai_client("ollama")
+        client = get_ai_client("huggingface", model_name="all-MiniLM-L6-v2")
+
+        # Paid API options
+        client = get_ai_client("claude", model="claude-3-5-sonnet-20241022")
+        client = get_ai_client("gemini", model="gemini-2.0-flash-exp")
     """
-    if provider.lower() == "claude":
+    provider = provider.lower()
+
+    # Free local options (recommended)
+    if provider == "ollama":
+        try:
+            from ai_client_ollama import OllamaClient
+            return OllamaClient(**kwargs)
+        except ImportError as e:
+            raise ImportError(
+                "Ollama client requires 'requests' package. "
+                "Install with: pip install requests\n"
+                f"Error: {e}"
+            )
+        except ConnectionError as e:
+            raise ConnectionError(
+                f"Cannot connect to Ollama. {e}\n"
+                "Setup instructions:\n"
+                "  1. Install: brew install ollama\n"
+                "  2. Start: ollama serve\n"
+                "  3. Pull models: ollama pull nomic-embed-text && ollama pull llama3.1"
+            )
+
+    elif provider in ("huggingface", "hf"):
+        try:
+            from ai_client_hf import HuggingFaceClient
+            return HuggingFaceClient(**kwargs)
+        except ImportError as e:
+            raise ImportError(
+                "HuggingFace client requires 'sentence-transformers' package. "
+                "Install with: pip install sentence-transformers\n"
+                f"Error: {e}"
+            )
+
+    # Paid API options
+    elif provider == "claude":
         return ClaudeClient(**kwargs)
-    elif provider.lower() == "gemini":
+
+    elif provider == "gemini":
         return GeminiClient(**kwargs)
+
     else:
-        raise ValueError(f"Unknown provider: {provider}. Use 'claude' or 'gemini'.")
+        raise ValueError(
+            f"Unknown provider: '{provider}'. "
+            f"Use: 'ollama' (recommended), 'huggingface', 'claude', or 'gemini'"
+        )
 
 
 def main():

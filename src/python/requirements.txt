@@ -14,9 +14,14 @@ mistune>=3.0.0
 # YAML parsing (for frontmatter)
 PyYAML>=6.0
 
-# AI integration (Phase 2)
-anthropic>=0.40.0
-google-generativeai>=0.8.0
+# AI integration (Phase 2) - FREE OPTIONS
+requests>=2.31.0  # For Ollama client
+sentence-transformers>=2.2.0  # For HuggingFace client (optional, ~2GB models)
+
+# AI integration (Phase 2) - PAID OPTIONS (Optional)
+# Uncomment if you want to use paid API providers:
+# anthropic>=0.40.0  # Claude API (paid)
+# google-generativeai>=0.8.0  # Gemini API (has free tier)
 
 # Machine learning (Phase 2)
 numpy>=1.24.0

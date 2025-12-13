@@ -10,7 +10,9 @@
       "Bash(chmod:*)",
       "Bash(zsh:*)",
       "Bash(python3:*)",
-      "Bash(pip3 install:*)"
+      "Bash(pip3 install:*)",
+      "WebSearch",
+      "Bash(grep:*)"
     ]
   }
 }
