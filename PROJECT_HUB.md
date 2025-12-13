@@ -1,8 +1,22 @@
 # 🎯 Project Control Hub: Obsidian CLI Ops
 
 > **Last Updated:** 2025-12-12
-> **Version:** 1.1.0
-> **Status:** ✅ Core Features Complete | 📚 Documentation Live | 🧪 26 Tests Passing | 🚀 10 Quick Wins Deployed
+> **Stable Version:** 1.1.0 ✅
+> **Next Version:** 2.0.0 (Planning) 📋
+> **Status:** ✅ v1.x Production Ready | 🚀 v2.0 Vision Defined
+
+---
+
+## 🔮 Vision: v2.0 - Intelligent Knowledge Companion
+
+**Transform obs from a vault manager into an AI-powered knowledge companion that:**
+- 🧠 **Learns** your vault structure and organizational preferences
+- 💡 **Suggests** intelligent reorganizations based on content analysis
+- 🎨 **Visualizes** your knowledge graph with beautiful TUI interfaces
+- 🔄 **Adapts** to your feedback and builds custom rules over time
+- 🛡️ **Protects** your data with ADHD-friendly confirmations and undo
+
+**[Full Plan: PROJECT_PLAN_v2.0.md](PROJECT_PLAN_v2.0.md)**
 
 ---
 
@@ -51,6 +65,72 @@
 ### 🔴 BLOCKED/WAITING
 
 *None currently*
+
+---
+
+## 🚀 v2.0 Roadmap - Intelligent Knowledge System
+
+### 🎯 Major Features (In Planning)
+
+#### Phase 1: Foundation (Weeks 1-2)
+- [ ] SQLite database for vaults, notes, links
+- [ ] Vault scanner with metadata extraction
+- [ ] Knowledge graph builder
+- [ ] `obs discover` - Scan all vaults
+- [ ] `obs analyze` - Deep vault analysis
+
+#### Phase 2: AI Integration (Weeks 3-4)
+- [ ] Claude API integration (analysis, reasoning)
+- [ ] Gemini API integration (embeddings, topics)
+- [ ] AI router with cost tracking
+- [ ] `obs analyze --ai` - AI-powered insights
+- [ ] `obs similarity` - Find similar notes
+
+#### Phase 3: Intelligent Suggestions (Weeks 5-6)
+- [ ] Suggestion engine
+- [ ] `obs suggest move` - Notes in wrong folders
+- [ ] `obs suggest merge` - Duplicate detection
+- [ ] `obs suggest split` - Oversized notes
+- [ ] Confidence scoring system
+
+#### Phase 4: TUI Interface (Weeks 7-8)
+- [ ] Interactive vault browser
+- [ ] Visual suggestion reviewer
+- [ ] ADHD-friendly confirmations
+- [ ] Knowledge graph visualizer
+- [ ] `obs discover --tui`, `obs suggest --tui`
+
+#### Phase 5: Learning System (Weeks 9-10)
+- [ ] User feedback collection
+- [ ] Rule generation from corrections
+- [ ] Confidence adaptation
+- [ ] `obs learn stats` - What system learned
+- [ ] `obs learn tune` - Interactive tuning
+
+#### Phase 6: Safety & Polish (Weeks 11-12)
+- [ ] Undo system for all operations
+- [ ] Trash management with restore
+- [ ] Backup creation and restore
+- [ ] Comprehensive testing suite
+- [ ] Production documentation
+
+### 🎨 Key Design Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| **Interface** | CLI + TUI | Visual clarity + automation |
+| **AI Providers** | Claude + Gemini | Best reasoning + fast embeddings |
+| **Privacy** | Local + Cloud | User choice, local fallback |
+| **Integration** | Standalone | Independent, flexible |
+| **Learning** | User feedback | Adapts to preferences |
+
+### 📊 Success Metrics for v2.0
+
+- **Suggestion Accuracy:** > 75% acceptance rate
+- **AI Response Time:** < 3 seconds
+- **Learning Improvement:** +15% accuracy after 100 interactions
+- **User Satisfaction:** > 80% positive feedback
+- **Cost Efficiency:** < $10/month AI costs per user
 
 ---
 
@@ -169,7 +249,10 @@ obsidian-cli-ops/
 
 ## 🎯 Next Steps & Future Ideas
 
-### 🟢 Ready to Start (High Impact, Low Effort)
+### 🎯 PRIORITY: v2.0 Development
+**See [v2.0 Roadmap](#-v20-roadmap---intelligent-knowledge-system) above and [PROJECT_PLAN_v2.0.md](PROJECT_PLAN_v2.0.md) for details**
+
+### 🟢 v1.x Maintenance (Quick Wins)
 - [ ] Add `obs config` command to manage configuration
 - [ ] Add `obs r-dev list` to show all R project mappings
 - [ ] Add plugin update checker (`obs install --update`)
@@ -260,4 +343,52 @@ Before releasing changes:
 
 ---
 
-**Pro Tip:** Bookmark this file! Keep it open in a tab for quick reference during development sessions.
+## 🎓 Getting Started with v2.0 Development
+
+Ready to build the future of obs? Here's how to begin:
+
+### Option 1: Start Phase 1 (Recommended)
+Begin building the foundation:
+```bash
+# Create database schema
+# Build vault scanner
+# Implement note parser
+# Test with real vaults
+```
+**Estimated Time:** 1-2 weeks
+**Key Skills:** Python/Node.js, SQLite, Markdown parsing
+
+### Option 2: Prototype TUI
+Visualize the future interface:
+```bash
+# Create TUI mockups
+# Build interactive vault browser
+# Design confirmation dialogs
+# User testing
+```
+**Estimated Time:** 1 week
+**Key Skills:** TUI frameworks (gum/rich/blessed)
+
+### Option 3: AI Integration Spike
+Validate AI approach:
+```bash
+# Test Claude API for analysis
+# Test Gemini for embeddings
+# Compare costs and performance
+# Prototype suggestion engine
+```
+**Estimated Time:** 1 week
+**Key Skills:** Claude/Gemini APIs, prompt engineering
+
+### 📚 Key Documents
+
+| Document | Purpose | Link |
+|----------|---------|------|
+| PROJECT_PLAN_v2.0.md | Complete technical plan | [View](PROJECT_PLAN_v2.0.md) |
+| PROJECT_HUB.md | This file - control center | You are here |
+| CLAUDE.md | AI assistant guidance | [View](CLAUDE.md) |
+| RELEASE_NOTES_v1.1.0.md | v1.x changelog | [View](RELEASE_NOTES_v1.1.0.md) |
+
+---
+
+**Pro Tip:** Keep this file open during development! It's your ADHD-friendly command center. 🧠✨

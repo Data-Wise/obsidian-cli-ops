@@ -33,7 +33,7 @@ _load_config() {
 # Defaults
 : ${PLUGIN_REGISTRY:="https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-plugins.json"}
 VERBOSE=false
-VERSION="1.1.0"
+VERSION="2.0.0-beta"
 
 # --- Helper Functions ---
 
@@ -158,6 +158,12 @@ obs_help() {
     echo "  r-dev log <file> [-m msg] Copy artifact to Obsidian 06_Analysis"
     echo "  r-dev context <term>      Fetch theory notes from Knowledge_Base"
     echo "  r-dev draft <file>        Copy vignette/Rmd to Obsidian 02_Drafts"
+    echo ""
+    echo "Knowledge Graph (v2.0):"
+    echo "  discover [path]           Discover and scan Obsidian vaults"
+    echo "  analyze <vault_id>        Analyze vault graph and calculate metrics"
+    echo "  vaults                    List all vaults in database"
+    echo "  stats [vault_id]          Show database or vault statistics"
     echo ""
     echo "Config loaded from: $CONFIG_FILE"
 }
@@ -427,6 +433,92 @@ obs_r_dev() {
     echo "Usage: obs r-dev {link|unlink|status|log|context|draft}"
 }
 
+# --- Knowledge Graph Commands (v2.0) ---
+
+_get_python_cli() {
+    # Get path to Python CLI
+    # When obs.zsh is in src/, Python CLI is in src/python/
+    local script_path="${(%):-%x}"  # Path to current script
+    local script_dir="$(cd "$(dirname "$script_path")" && pwd)"
+    local python_cli="$script_dir/python/obs_cli.py"
+
+    if [[ ! -f "$python_cli" ]]; then
+        _log "ERROR" "Python CLI not found at: $python_cli" >&2
+        _log "ERROR" "Script dir: $script_dir" >&2
+        return 1
+    fi
+
+    echo "$python_cli"
+}
+
+obs_discover() {
+    local python_cli=$(_get_python_cli) || return 1
+    local path=${1:-.}  # Default to current directory
+
+    _log_verbose "Running vault discovery in: $path"
+
+    # Build command
+    local cmd=("$python_cli" "discover" "$path")
+
+    # Add verbose flag if enabled
+    if [[ "$VERBOSE" == "true" ]]; then
+        cmd+=(--verbose)
+    fi
+
+    # Add --scan flag if requested
+    if [[ "$2" == "--scan" ]]; then
+        cmd+=(--scan)
+    fi
+
+    python3 "${cmd[@]}"
+}
+
+obs_analyze() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault_id=$1
+
+    if [[ -z "$vault_id" ]]; then
+        _log "ERROR" "Vault ID required"
+        echo "Usage: obs analyze <vault_id>"
+        echo ""
+        echo "Get vault IDs with: obs vaults"
+        return 1
+    fi
+
+    _log_verbose "Analyzing vault: $vault_id"
+
+    # Build command
+    local cmd=("$python_cli" "analyze" "$vault_id")
+
+    # Add verbose flag if enabled
+    if [[ "$VERBOSE" == "true" ]]; then
+        cmd+=(--verbose)
+    fi
+
+    python3 "${cmd[@]}"
+}
+
+obs_vaults() {
+    local python_cli=$(_get_python_cli) || return 1
+
+    _log_verbose "Listing vaults in database"
+
+    python3 "$python_cli" vaults
+}
+
+obs_stats() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault_id=$1
+
+    _log_verbose "Showing statistics"
+
+    if [[ -n "$vault_id" ]]; then
+        python3 "$python_cli" stats --vault "$vault_id"
+    else
+        python3 "$python_cli" stats
+    fi
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -460,6 +552,22 @@ obs() {
             ;;
         "check")
             obs_check "$@"
+            return $?
+            ;;
+        "discover")
+            obs_discover "$@"
+            return $?
+            ;;
+        "analyze")
+            obs_analyze "$@"
+            return $?
+            ;;
+        "vaults")
+            obs_vaults "$@"
+            return $?
+            ;;
+        "stats")
+            obs_stats "$@"
             return $?
             ;;
     esac
