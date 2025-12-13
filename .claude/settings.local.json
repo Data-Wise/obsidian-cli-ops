@@ -12,7 +12,15 @@
       "Bash(python3:*)",
       "Bash(pip3 install:*)",
       "WebSearch",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(source:*)",
+      "Bash(obs help:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm run test:js:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(updating docs, knowledge and wrapping up\"\nEOF\n)\")",
+      "Bash(find:*)"
     ]
   }
 }
