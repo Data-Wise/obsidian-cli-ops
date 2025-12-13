@@ -20,28 +20,55 @@
 CONFIG_FILE="$HOME/.config/obs/config"
 MAP_FILE="$HOME/.config/obs/project_map.json"
 
-if [[ -f "$CONFIG_FILE" ]]; then
-    source "$CONFIG_FILE"
-else
-    echo "\033[0;31m[ERROR]\033[0m Config file not found at $CONFIG_FILE"
-    echo "Please create it with OBS_ROOT and VAULTS variables."
-    return 1
-fi
+_load_config() {
+    if [[ -f "$CONFIG_FILE" ]]; then
+        source "$CONFIG_FILE"
+    else
+        echo "\033[0;31m[ERROR]\033[0m Config file not found at $CONFIG_FILE"
+        echo "Please create it with OBS_ROOT and VAULTS variables."
+        return 1
+    fi
+}
 
 # Defaults
 : ${PLUGIN_REGISTRY:="https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-plugins.json"}
+VERBOSE=false
+VERSION="1.1.0"
 
 # --- Helper Functions ---
 
 _log() {
     local type=$1
     local msg=$2
-    case $type in
-        "INFO") echo "\033[0;34m[INFO]\033[0m $msg" ;;
-        "SUCCESS") echo "\033[0;32m[OK]\033[0m $msg" ;;
-        "WARN") echo "\033[0;33m[WARN]\033[0m $msg" ;;
-        "ERROR") echo "\033[0;31m[ERROR]\033[0m $msg" ;;
-    esac
+
+    # Check if colors should be disabled
+    if [[ -n "$NO_COLOR" ]] || [[ ! -t 1 ]]; then
+        # No color output
+        case $type in
+            "INFO") echo "[INFO] $msg" ;;
+            "SUCCESS") echo "[OK] $msg" ;;
+            "WARN") echo "[WARN] $msg" ;;
+            "ERROR") echo "[ERROR] $msg" ;;
+        esac
+    else
+        # Colored output
+        case $type in
+            "INFO") echo "\033[0;34m[INFO]\033[0m $msg" ;;
+            "SUCCESS") echo "\033[0;32m[OK]\033[0m $msg" ;;
+            "WARN") echo "\033[0;33m[WARN]\033[0m $msg" ;;
+            "ERROR") echo "\033[0;31m[ERROR]\033[0m $msg" ;;
+        esac
+    fi
+}
+
+_log_verbose() {
+    if [[ "$VERBOSE" == "true" ]]; then
+        if [[ -n "$NO_COLOR" ]] || [[ ! -t 1 ]]; then
+            echo "[VERBOSE] $1"
+        else
+            echo "\033[0;90m[VERBOSE]\033[0m $1"
+        fi
+    fi
 }
 
 _check_root() {
@@ -72,23 +99,37 @@ _get_plugin_url() {
 _get_r_root() {
     # Climb up directories to find DESCRIPTION or .Rproj
     local d="$PWD"
+    _log_verbose "Searching for R project root starting from: $PWD"
     while [[ "$d" != "/" ]]; do
+        _log_verbose "Checking directory: $d"
         if [[ -f "$d/DESCRIPTION" ]] || compgen -G "$d/*.Rproj" > /dev/null; then
+            _log_verbose "Found R project root: $d"
             echo "$d"
             return 0
         fi
         d=$(dirname "$d")
     done
+    _log_verbose "No R project root found"
     return 1
 }
 
 _get_mapped_path() {
     # Returns the Obsidian path relative to OBS_ROOT for the current R project
     local r_root=$1
-    if [[ ! -f "$MAP_FILE" ]]; then echo ""; return 1; fi
-    
+    _log_verbose "Looking up mapping for: $r_root"
+    if [[ ! -f "$MAP_FILE" ]]; then
+        _log_verbose "Mapping file not found: $MAP_FILE"
+        echo ""
+        return 1
+    fi
+
     # Use jq to lookup the path. We assume the map keys are absolute paths to R projects
     local obs_path=$(jq -r --arg p "$r_root" '.[$p] // empty' "$MAP_FILE")
+    if [[ -n "$obs_path" ]]; then
+        _log_verbose "Found mapping: $r_root -> $obs_path"
+    else
+        _log_verbose "No mapping found for: $r_root"
+    fi
     echo "$obs_path"
 }
 
@@ -97,10 +138,14 @@ _get_mapped_path() {
 obs_help() {
     echo "Obsidian CLI Ops (obs)"
     echo "----------------------"
-    echo "Usage: obs <command> [options]"
+    echo "Usage: obs [--verbose|-v] <command> [options]"
+    echo ""
+    echo "Global Flags:"
+    echo "  --verbose, -v    Enable verbose logging"
     echo ""
     echo "Core Commands:"
     echo "  check     Check dependencies"
+    echo "  list      Show configured vaults and R project mappings"
     echo "  sync      Sync Core Config (Theme, Hotkeys) from Root to Sub-vaults"
     echo "  install   Install a Community Plugin"
     echo "  search    Search for a plugin ID"
@@ -108,11 +153,23 @@ obs_help() {
     echo ""
     echo "R-Dev Integration (obs r-dev):"
     echo "  r-dev link <obs_folder>   Link current R project to an Obsidian folder"
+    echo "  r-dev unlink              Remove current R project mapping"
+    echo "  r-dev status              Show current R project link status"
     echo "  r-dev log <file> [-m msg] Copy artifact to Obsidian 06_Analysis"
     echo "  r-dev context <term>      Fetch theory notes from Knowledge_Base"
     echo "  r-dev draft <file>        Copy vignette/Rmd to Obsidian 02_Drafts"
     echo ""
     echo "Config loaded from: $CONFIG_FILE"
+}
+
+obs_version() {
+    echo "obs (Obsidian CLI Ops) version $VERSION"
+    echo ""
+    echo "A command-line tool for managing federated Obsidian vaults"
+    echo "with R development integration."
+    echo ""
+    echo "Repository: https://github.com/Data-Wise/obsidian-cli-ops"
+    echo "Documentation: https://data-wise.github.io/obsidian-cli-ops/"
 }
 
 # ... [Previous commands: check, audit, sync, install, search remain unchanged] ...
@@ -197,26 +254,120 @@ obs_search() {
     jq -r --arg q "$query" '.[] | select(.name | ascii_downcase | contains($q | ascii_downcase)) | "\(.name) (ID: \(.id))"' "$cache_file" | head -n 10
 }
 
+obs_list() {
+    _check_root || return 1
+    _log "INFO" "Configured Vaults"
+    echo ""
+    echo "Root: $OBS_ROOT"
+    echo ""
+    echo "Sub-vaults:"
+    for vault in "${VAULTS[@]}"; do
+        local vault_path="$OBS_ROOT/$vault"
+        if [[ -d "$vault_path" ]]; then
+            echo "  ✓ $vault"
+        else
+            echo "  ✗ $vault (missing)"
+        fi
+    done
+    echo ""
+    if [[ -f "$MAP_FILE" ]]; then
+        local count=$(jq 'length' "$MAP_FILE")
+        _log "INFO" "R Project Mappings: $count"
+        if [[ $count -gt 0 ]]; then
+            echo ""
+            jq -r 'to_entries[] | "  \(.key | split("/") | .[-1]) → \(.value)"' "$MAP_FILE"
+        fi
+    else
+        _log "INFO" "R Project Mappings: 0 (no mapping file)"
+    fi
+}
+
 # --- R-Dev Subcommands ---
 
 obs_r_dev() {
     local subcmd=$1
     shift
-    
+
     # 1. LINK
     if [[ "$subcmd" == "link" ]]; then
         local obs_folder=$1
         local r_root=$(_get_r_root)
         if [[ -z "$r_root" ]]; then _log "ERROR" "Not inside an R Project (no DESCRIPTION/.Rproj)."; return 1; fi
         if [[ ! -d "$OBS_ROOT/$obs_folder" ]]; then _log "ERROR" "Obsidian folder not found: $OBS_ROOT/$obs_folder"; return 1; fi
-        
+
         # Init map file if needed
         if [[ ! -f "$MAP_FILE" ]]; then echo "{}" > "$MAP_FILE"; fi
-        
+
         # Update JSON
         local temp=$(mktemp)
         jq --arg k "$r_root" --arg v "$obs_folder" '.[$k] = $v' "$MAP_FILE" > "$temp" && mv "$temp" "$MAP_FILE"
         _log "SUCCESS" "Linked '$r_root' -> '$obs_folder'"
+        return 0
+    fi
+
+    # 1b. UNLINK
+    if [[ "$subcmd" == "unlink" ]]; then
+        local r_root=$(_get_r_root)
+        if [[ -z "$r_root" ]]; then _log "ERROR" "Not inside an R Project (no DESCRIPTION/.Rproj)."; return 1; fi
+
+        if [[ ! -f "$MAP_FILE" ]]; then
+            _log "WARN" "No mapping file exists."
+            return 0
+        fi
+
+        # Check if mapping exists
+        local current_mapping=$(_get_mapped_path "$r_root")
+        if [[ -z "$current_mapping" ]]; then
+            _log "WARN" "Project is not linked."
+            return 0
+        fi
+
+        # Remove from JSON
+        local temp=$(mktemp)
+        jq --arg k "$r_root" 'del(.[$k])' "$MAP_FILE" > "$temp" && mv "$temp" "$MAP_FILE"
+        _log "SUCCESS" "Unlinked '$r_root' from '$current_mapping'"
+        return 0
+    fi
+
+    # 1c. STATUS
+    if [[ "$subcmd" == "status" ]]; then
+        local r_root=$(_get_r_root)
+        if [[ -z "$r_root" ]]; then
+            _log "ERROR" "Not inside an R Project (no DESCRIPTION/.Rproj)."
+            return 1
+        fi
+
+        _log "INFO" "R Project Status"
+        echo ""
+        echo "R Project Root: $r_root"
+
+        if [[ ! -f "$MAP_FILE" ]]; then
+            echo "Mapping Status: ✗ Not linked (no mapping file)"
+            echo ""
+            echo "To link this project, run:"
+            echo "  obs r-dev link <obsidian_folder>"
+            return 1
+        fi
+
+        local current_mapping=$(_get_mapped_path "$r_root")
+        if [[ -z "$current_mapping" ]]; then
+            echo "Mapping Status: ✗ Not linked"
+            echo ""
+            echo "To link this project, run:"
+            echo "  obs r-dev link <obsidian_folder>"
+            return 1
+        else
+            echo "Mapping Status: ✓ Linked"
+            echo "Obsidian Folder: $current_mapping"
+            echo "Full Path: $OBS_ROOT/$current_mapping"
+
+            if [[ -d "$OBS_ROOT/$current_mapping" ]]; then
+                echo "Folder Exists: ✓ Yes"
+            else
+                echo "Folder Exists: ✗ No (will be created on first use)"
+            fi
+        fi
+        echo ""
         return 0
     fi
 
@@ -273,22 +424,57 @@ obs_r_dev() {
     fi
     
     _log "ERROR" "Unknown r-dev command: $subcmd"
-    echo "Usage: obs r-dev {link|log|context|draft}"
+    echo "Usage: obs r-dev {link|unlink|status|log|context|draft}"
 }
 
 # --- Dispatch ---
 obs() {
+    # Parse global flags first
+    while [[ "$1" == --* ]]; do
+        case "$1" in
+            --verbose|-v)
+                VERBOSE=true
+                _log_verbose "Verbose mode enabled"
+                shift
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
     local cmd=$1
-    shift
+    if [[ -n "$cmd" ]]; then
+        shift
+    fi
+
+    # Commands that don't need config
     case "$cmd" in
-        "check") obs_check "$@" ;;
+        "help"|"")
+            obs_help
+            return 0
+            ;;
+        "version")
+            obs_version
+            return 0
+            ;;
+        "check")
+            obs_check "$@"
+            return $?
+            ;;
+    esac
+
+    # Load config for all other commands
+    _load_config || return 1
+
+    case "$cmd" in
+        "list") obs_list "$@" ;;
         "sync") obs_sync "$@" ;;
         "install") obs_install "$@" ;;
         "search") obs_search "$@" ;;
         "audit") obs_audit "$@" ;;
         "r-dev") obs_r_dev "$@" ;;
-        "help"|"") obs_help ;;
-        *) _log "ERROR" "Unknown command"; obs_help ;;
+        *) _log "ERROR" "Unknown command: $cmd"; obs_help ;;
     esac
 }
 

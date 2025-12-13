@@ -37,7 +37,8 @@ describe('Obsidian CLI Ops', () => {
   test('should display help', () => {
     const result = runCli(['help']);
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain('Usage: obs <command>');
+    expect(result.stdout).toContain('Usage: obs');
+    expect(result.stdout).toContain('Obsidian CLI Ops');
   });
 
   test('should fail on unknown command', () => {
