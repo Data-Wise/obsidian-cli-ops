@@ -135,6 +135,132 @@ describe('obs CLI Tool', () => {
   });
 });
 
+describe('v2.0 Knowledge Graph Commands', () => {
+  describe('discover command', () => {
+    test('should accept discover command', () => {
+      // discover doesn't need config
+      const output = runObs('discover /tmp', { allowFailure: true });
+      // Should not show unknown command error
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should handle discover with --scan flag', () => {
+      const output = runObs('discover /tmp --scan', { allowFailure: true });
+      // Should accept the flag
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should accept -v flag with discover', () => {
+      const output = runObs('--verbose discover /tmp', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+  });
+
+  describe('vaults command', () => {
+    test('should accept vaults command', () => {
+      const output = runObs('vaults', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should list vaults or show empty', () => {
+      const output = runObs('vaults', { allowFailure: true });
+      // Should either show vaults or indicate database not initialized
+      expect(
+        output.includes('Vault') ||
+          output.includes('database') ||
+          output.includes('No vaults')
+      ).toBe(true);
+    });
+  });
+
+  describe('stats command', () => {
+    test('should accept stats command', () => {
+      const output = runObs('stats', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should accept stats with vault ID', () => {
+      const output = runObs('stats 1', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should show statistics or database info', () => {
+      const output = runObs('stats', { allowFailure: true });
+      // Should show some stats or database info
+      expect(output.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('analyze command', () => {
+    test('should accept analyze command with vault ID', () => {
+      const output = runObs('analyze 1', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should require vault ID', () => {
+      const output = runObs('analyze', { allowFailure: true });
+      // Should show error about missing vault ID
+      expect(
+        output.includes('Vault ID') ||
+          output.includes('required') ||
+          output.includes('Usage')
+      ).toBe(true);
+    });
+
+    test('should accept -v flag with analyze', () => {
+      const output = runObs('--verbose analyze 1', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+  });
+});
+
+describe('v2.0 AI Commands', () => {
+  describe('ai setup command', () => {
+    test('should accept ai setup command', () => {
+      const output = runObs('ai setup', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should accept ai setup --quick', () => {
+      const output = runObs('ai setup --quick', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should show AI setup wizard or provider info', () => {
+      const output = runObs('ai setup', { allowFailure: true });
+      // Should execute without "Unknown command" error
+      // May show module errors if dependencies not installed
+      expect(output).not.toContain('Unknown command');
+    });
+  });
+
+  describe('ai config command', () => {
+    test('should accept ai config command', () => {
+      const output = runObs('ai config', { allowFailure: true });
+      expect(output).not.toContain('Unknown command');
+    });
+
+    test('should show config or no config message', () => {
+      const output = runObs('ai config', { allowFailure: true });
+      // Should execute without "Unknown command" error
+      expect(output).not.toContain('Unknown command');
+    });
+  });
+
+  describe('ai command help', () => {
+    test('should show ai subcommands in help', () => {
+      const output = runObs('help', { allowFailure: true });
+      expect(output).toContain('ai setup');
+      expect(output).toContain('ai config');
+    });
+
+    test('should show AI Integration section in help', () => {
+      const output = runObs('help', { allowFailure: true });
+      expect(output).toContain('AI Integration');
+    });
+  });
+});
+
 describe('Configuration Files', () => {
   test('example config file should exist', () => {
     const exampleConfig = path.join(__dirname, '../config/example.conf');

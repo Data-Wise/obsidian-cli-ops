@@ -7,7 +7,17 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest", "lint": "eslint .", "format": "prettier --write ."
+    "test": "npm run test:js && npm run test:py",
+    "test:js": "jest",
+    "test:py": "pytest src/python/tests -v",
+    "test:py:unit": "pytest src/python/tests -v -m unit",
+    "test:py:integration": "pytest src/python/tests -v -m integration",
+    "test:py:ai": "pytest src/python/tests -v -m ai",
+    "test:shell": "bash tests/test_r_dev.sh",
+    "test:all": "npm run test:js && npm run test:py && npm run test:shell",
+    "test:coverage": "jest --coverage && pytest src/python/tests --cov=src/python --cov-report=term-missing",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
