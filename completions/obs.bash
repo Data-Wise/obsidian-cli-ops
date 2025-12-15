@@ -5,7 +5,7 @@ _obs_completion() {
     local cur prev words cword
     _init_completion || return
 
-    local commands="check list sync install search audit r-dev help version"
+    local commands="check list sync install search audit r-dev tui help version"
     local r_dev_commands="link unlink status log context draft"
     local global_flags="-v --verbose"
 

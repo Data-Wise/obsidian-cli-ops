@@ -99,6 +99,50 @@ class VaultBrowserScreen(Screen):
         )
         yield Footer()
 
+    def _format_last_scan(self, last_scanned: str) -> str:
+        """Format last scan timestamp as relative time.
+
+        Args:
+            last_scanned: ISO timestamp string
+
+        Returns:
+            Human-readable relative time (e.g., "5 minutes ago")
+        """
+        if not last_scanned:
+            return "Never scanned"
+
+        try:
+            dt = datetime.fromisoformat(last_scanned.replace('Z', '+00:00'))
+            now = datetime.now(dt.tzinfo)
+            delta = now - dt
+
+            seconds = delta.total_seconds()
+            if seconds < 60:
+                return "Just now"
+            elif seconds < 3600:
+                minutes = int(seconds / 60)
+                return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+            elif seconds < 86400:
+                hours = int(seconds / 3600)
+                return f"{hours} hour{'s' if hours > 1 else ''} ago"
+            else:
+                days = int(seconds / 86400)
+                return f"{days} day{'s' if days > 1 else ''} ago"
+        except:
+            return last_scanned
+
+    def update_header_timestamp(self):
+        """Update header with latest scan timestamp."""
+        if self.selected_vault:
+            last_scan = self.selected_vault.get('last_scanned', '')
+            scan_text = self._format_last_scan(last_scan)
+            title = f"[bold cyan]📁 Vault Browser[/]  [dim]Last scan: {scan_text}[/]"
+        else:
+            title = "[bold cyan]📁 Vault Browser[/]"
+
+        title_widget = self.query_one("#title", Static)
+        title_widget.update(title)
+
     def on_mount(self) -> None:
         """Set up the vault table when screen is mounted."""
         table = self.query_one("#vault-table", DataTable)
@@ -183,6 +227,7 @@ class VaultBrowserScreen(Screen):
                 break
 
         if self.selected_vault:
+            self.update_header_timestamp()
             self.show_vault_details()
 
     def show_vault_details(self) -> None:

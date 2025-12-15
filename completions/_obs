@@ -13,6 +13,7 @@ _obs() {
         'search:Search for a plugin ID'
         'audit:Check for misplaced files in Root'
         'r-dev:R development integration commands'
+        'tui:Launch interactive TUI'
         'help:Show help message'
         'version:Show version information'
     )

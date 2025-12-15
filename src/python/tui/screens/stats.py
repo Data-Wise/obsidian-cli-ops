@@ -1,5 +1,9 @@
 """Statistics Dashboard Screen for TUI."""
 
+import json
+from datetime import datetime
+from pathlib import Path
+
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Header, Footer, Static
@@ -16,7 +20,7 @@ class StatisticsDashboardScreen(Screen):
         Binding("escape", "back", "Back", show=True),
         Binding("tab", "cycle_view", "Next View", show=True),
         Binding("r", "refresh", "Refresh", show=True),
-        Binding("e", "export", "Export", show=False),
+        Binding("e", "export", "Export", show=True),
         Binding("q", "quit", "Quit", show=True),
     ]
 
@@ -143,8 +147,68 @@ class StatisticsDashboardScreen(Screen):
         self.notify(f"View: {view_names[self.current_view]}", severity="information")
 
     def action_export(self) -> None:
-        """Export statistics to CSV (future)."""
-        self.notify("Export feature coming soon", severity="warning")
+        """Export statistics to JSON file."""
+        try:
+            # Collect all data
+            vault = self.db.get_vault(self.vault_id)
+            tags = self.db.get_vault_tag_stats(self.vault_id, limit=100)  # More than display
+            distribution = self.db.get_link_distribution(self.vault_id)
+            history = self.db.get_scan_history(self.vault_id, limit=50)  # More history
+            orphans = self.db.get_orphaned_notes(self.vault_id)
+            hubs = self.db.get_hub_notes(self.vault_id, limit=100)
+            broken = self.db.get_broken_links(self.vault_id)
+
+            note_count = vault.get('note_count', 0)
+
+            # Build export data structure
+            export_data = {
+                "exported_at": datetime.now().isoformat(),
+                "vault": {
+                    "id": self.vault_id,
+                    "name": self.vault_name,
+                    "path": vault.get('path', ''),
+                    "note_count": note_count,
+                    "link_count": vault.get('link_count', 0),
+                    "last_scanned": vault.get('last_scanned', ''),
+                },
+                "statistics": {
+                    "orphans": {
+                        "count": len(orphans),
+                        "percentage": len(orphans) / note_count * 100 if note_count > 0 else 0
+                    },
+                    "hubs": {
+                        "count": len(hubs),
+                        "percentage": len(hubs) / note_count * 100 if note_count > 0 else 0
+                    },
+                    "broken_links": {
+                        "count": len(broken)
+                    },
+                },
+                "tags": tags,
+                "link_distribution": distribution,
+                "scan_history": history,
+            }
+
+            # Generate filename
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            vault_slug = self.vault_name.lower().replace(' ', '_')
+            filename = f"stats_{vault_slug}_{timestamp}.json"
+
+            # Default export location (user's Downloads or current directory)
+            export_dir = Path.home() / "Downloads"
+            if not export_dir.exists():
+                export_dir = Path.cwd()
+
+            export_path = export_dir / filename
+
+            # Write JSON file
+            with open(export_path, 'w', encoding='utf-8') as f:
+                json.dump(export_data, f, indent=2, ensure_ascii=False)
+
+            self.notify(f"Exported to: {export_path}", severity="information", timeout=5)
+
+        except Exception as e:
+            self.notify(f"Export failed: {str(e)}", severity="error")
 
     def update_overview(self) -> None:
         """Update left panel with vault overview."""

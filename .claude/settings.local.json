@@ -26,7 +26,10 @@
       "WebFetch(domain:textual.textualize.io)",
       "Bash(sqlite3:*)",
       "Bash(command -v:*)",
-      "Bash(obs tui --help:*)"
+      "Bash(obs tui --help:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Complete Phase 4.5 - Statistics Dashboard + Comprehensive Test Suite\n\nPhase 4.5: Statistics Dashboard (✅ COMPLETE)\n- Created StatisticsDashboardScreen with 4 views (tags, distribution, history, overview)\n- Added 3 database methods for vault-specific analytics\n- Implemented tab-switching navigation between views\n- ADHD-friendly design with progress bars, color coding, emojis\n- Two-panel layout (35/65 split) with persistent overview\n- Integration with vault browser (''s'' key binding)\n\nTest Suite Expansion:\n- Added comprehensive tests for all TUI phases (4.1-4.4)\n- Total: 298 tests (136 TUI-specific)\n- All tests passing ✅\n\nFiles Created (7):\n- src/python/tui/screens/stats.py (420 lines)\n- src/python/tui/tests/test_*.py (4 test files, 136 tests)\n- PHASE_4.5_COMPLETE.md (302 lines)\n- PHASE_4.5_OPTIONS.md (294 lines)\n- project-status.json\n\nFiles Modified (11):\n- src/python/db_manager.py (+60 lines, 3 new methods)\n- src/python/tui/screens/vaults.py (+18 lines)\n- src/python/tui/app.py, __init__.py (integration)\n- PHASE_4_TUI_PLAN.md, README.md, .STATUS, TEST_SUITE_SUMMARY.md\n\nPhase 4 TUI Status: 100% Complete (Phases 4.1-4.5 ✅)\n- 4.1: Foundation (279 lines, 30 tests)\n- 4.2: Vault Browser (249 lines, 26 tests)\n- 4.3: Note Explorer (378 lines, 42 tests)\n- 4.4: Graph Visualizer (375 lines, 38 tests)\n- 4.5: Statistics Dashboard (420 lines)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "SlashCommand(/workflow:brainstorm \"What should we work on next after Phase 4 TUI completion? Consider Phase 3 (AI features), Phase 5 (learning system), polish/improvements, or new ideas.\")",
+      "Bash(bash -c:*)"
     ]
   }
 }
