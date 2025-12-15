@@ -4,7 +4,7 @@
 
 `obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis. It bridges your Knowledge Base (Obsidian), your Computational Environment (R/Python), and your System Shell (ZSH).
 
-**Current Version**: 2.0.0-beta
+**Current Version**: 2.1.0
 
 ## Key Features
 
@@ -23,13 +23,15 @@
 *   **📈 Analytics**: Comprehensive vault statistics and insights
 *   **🤖 AI-Powered Features**: Note similarity, duplicate detection, topic analysis (100% free, local, private)
 
-### v2.1: Interactive TUI (NEW!)
-*   **🖥️ Full-Screen Interface**: Beautiful terminal user interface with Textual framework
-*   **📁 Vault Browser**: Interactive vault selection with real-time statistics
-*   **📝 Note Explorer**: Search, filter, and preview notes with metadata
-*   **🕸️ Graph Visualizer**: ASCII art graph with hub/orphan detection
-*   **⌨️ Keyboard Navigation**: Vim-style keys, arrow keys, and shortcuts
-*   **🎨 ADHD-Friendly Design**: Clear hierarchy, colors, emojis, and borders
+### v2.1: Obsidian App Clone (NEW!)
+*   **🎯 Zero-Friction Start**: Just type `obs` - opens last vault automatically (like Obsidian app)
+*   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
+*   **🔄 Last-Vault Tracking**: Remembers where you were (like Obsidian app)
+*   **🖥️ Full-Screen TUI**: Beautiful terminal UI with vault browser, note explorer, graph visualizer
+*   **⌨️ Obsidian-Style Commands**: `obs switch`, `obs manage`, `obs open` - works like the official app
+*   **🎨 ADHD-Friendly**: One command, smart defaults, progressive disclosure
+*   **📦 Shortened R Integration**: `obs r` (from `obs r-dev`) for less typing
+*   **✅ Backward Compatible**: All legacy commands still work
 
 ## Quick Start
 
@@ -38,32 +40,38 @@
 # Required CLI tools
 brew install jq curl
 
-# Python dependencies (for v2.0)
-pip3 install python-frontmatter mistune PyYAML networkx
+# Python dependencies
+pip3 install -r src/python/requirements.txt
 ```
 
 ### Initialize Database
 ```bash
 # Create knowledge graph database
-obs stats  # Auto-initializes on first run
+python3 src/python/obs_cli.py db init
 ```
 
-### Discover Vaults
+### Start Using (Zero Configuration!)
 ```bash
-# Find and scan Obsidian vaults
-obs discover ~/Documents --scan -v
+# Just type obs - it auto-detects iCloud vaults!
+obs
+
+# If no vaults found, discover in specific directory
+obs manage open ~/Documents
+
+# Or use vault picker (press 'd' to discover iCloud vaults)
+obs switch
 ```
 
-### Launch TUI Interface
-```bash
-# Open interactive TUI
-obs tui
+**That's it!** Works exactly like launching the Obsidian app.
 
-# Or use keyboard shortcuts in TUI:
-# v - Browse vaults
-# n - Explore notes
-# g - Visualize graph
-# ? - Show help
+### Option D Commands (Obsidian-Style)
+```bash
+obs                     # Open last vault (or show picker)
+obs switch              # Vault switcher (like "Open another vault")
+obs manage              # Manage vaults (like "Manage Vaults" menu)
+obs open <name>         # Open specific vault
+obs graph               # Show graph visualization
+obs stats               # View statistics
 ```
 
 ### Setup AI Features (Optional)
@@ -71,8 +79,8 @@ obs tui
 # Quick setup - auto-detect and install (recommended)
 obs ai setup --quick
 
-# Interactive setup - choose your own provider
-obs ai setup
+# Find similar notes
+obs ai similar <note_id>
 ```
 
 [Full Installation Guide](installation.md){ .md-button .md-button--primary }
@@ -123,12 +131,13 @@ obs ai setup
 
 - ✅ **Phase 1 Complete**: Database, scanner, graph analysis
 - ✅ **Phase 2 Complete**: AI integration (HuggingFace + Ollama - free, local, private)
-- 🚧 **Phase 3 In Progress**: AI-powered features (similarity, duplicates, topics)
-- 📋 **Phase 4 Planned**: TUI visualization
-- 📋 **Phase 5 Planned**: Learning system
-- 📋 **Phase 6 Planned**: Automation
+- ✅ **Phase 4 Complete**: TUI visualization, Option D (Obsidian App Clone)
+- 📋 **Phase 5 Deferred**: AI-powered features (infrastructure ready)
+- 📋 **Phase 6 Planned**: Learning system
 
-See the [complete roadmap](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/PROJECT_PLAN_v2.0.md).
+**Current Status:** v2.1.0 (95% complete) - Production Ready
+
+See [TODOS.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md) for current work items.
 
 ## Community
 
