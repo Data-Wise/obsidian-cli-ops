@@ -20,7 +20,13 @@
       "Bash(tree:*)",
       "Bash(wc:*)",
       "Bash(updating docs, knowledge and wrapping up\"\nEOF\n)\")",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh issue list:*)",
+      "WebFetch(domain:textual.textualize.io)",
+      "Bash(sqlite3:*)",
+      "Bash(command -v:*)",
+      "Bash(obs tui --help:*)"
     ]
   }
 }

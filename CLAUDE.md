@@ -714,16 +714,18 @@ See `.claude/skills/README.md` for complete usage guide and examples.
 
 ## Version History
 
-- **2.0.0-beta** (2025-12-13):
+- **2.0.0-beta** (2025-12-15):
   - Phase 1: Foundation, scanning, graph analysis (COMPLETE)
   - Phase 2: Free AI integration (HuggingFace + Ollama) (COMPLETE)
   - Phase 4: TUI/Visualization (IN PROGRESS)
     - Phase 4.1: TUI Foundation with Textual framework (COMPLETE)
     - Phase 4.2: Vault Browser with real database integration (COMPLETE)
-    - Phase 4.3: Note Explorer (NEXT)
+    - Phase 4.3: Note Explorer with search and preview (COMPLETE)
+    - Phase 4.4: Graph Visualizer (NEXT)
   - Claude Code Skills for docs/knowledge/wrap-up workflow
   - Interactive setup wizard with auto-detection
   - Complete test suite (122 tests, 70% coverage)
   - Comprehensive documentation
+  - Note explorer: 378 lines, two-panel layout, real-time search, content preview
 - **1.1.0** (2025-12-11): Quick wins - list, stats, unlink, completion
 - **1.0.0** (2025-12-10): Initial release - vault management, R-Dev integration

@@ -317,6 +317,67 @@ class DatabaseManager:
             """)
             return [dict(row) for row in cursor.fetchall()]
 
+    def get_vault_tag_stats(self, vault_id: str, limit: int = 20) -> List[Dict]:
+        """Get top tags for specific vault with note counts.
+
+        Args:
+            vault_id: Vault ID
+            limit: Max tags to return (default: 20)
+
+        Returns:
+            List of {tag, note_count} dicts sorted by count desc
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT t.tag, COUNT(DISTINCT nt.note_id) as note_count
+                FROM tags t
+                JOIN note_tags nt ON t.id = nt.tag_id
+                JOIN notes n ON nt.note_id = n.id
+                WHERE n.vault_id = ?
+                GROUP BY t.tag
+                ORDER BY note_count DESC, t.tag ASC
+                LIMIT ?
+            """, (vault_id, limit))
+
+            columns = [col[0] for col in cursor.description]
+            return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    def get_link_distribution(self, vault_id: str) -> Dict[str, int]:
+        """Get distribution of link degrees in buckets.
+
+        Args:
+            vault_id: Vault ID
+
+        Returns:
+            Dict with buckets: {"0-2": count, "3-5": count, "6-10": count, "11+": count}
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT
+                    n.id,
+                    COALESCE(gm.in_degree, 0) + COALESCE(gm.out_degree, 0) as total_degree
+                FROM notes n
+                LEFT JOIN graph_metrics gm ON n.id = gm.note_id
+                WHERE n.vault_id = ?
+            """, (vault_id,))
+
+            degrees = [row[1] for row in cursor.fetchall()]
+
+            distribution = {"0-2": 0, "3-5": 0, "6-10": 0, "11+": 0}
+            for deg in degrees:
+                if deg <= 2:
+                    distribution["0-2"] += 1
+                elif deg <= 5:
+                    distribution["3-5"] += 1
+                elif deg <= 10:
+                    distribution["6-10"] += 1
+                else:
+                    distribution["11+"] += 1
+
+            return distribution
+
     # ========================================================================
     # GRAPH METRICS
     # ========================================================================
@@ -412,6 +473,29 @@ class DatabaseManager:
                     error_message = ?
                 WHERE id = ?
             """, (error_message, scan_id))
+
+    def get_scan_history(self, vault_id: str, limit: int = 10) -> List[Dict]:
+        """Get recent scan history for vault.
+
+        Args:
+            vault_id: Vault ID
+            limit: Max records to return (default: 10)
+
+        Returns:
+            List of scan record dicts sorted by started_at desc
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT *
+                FROM scan_history
+                WHERE vault_id = ?
+                ORDER BY started_at DESC
+                LIMIT ?
+            """, (vault_id, limit))
+
+            columns = [col[0] for col in cursor.description]
+            return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
     # ========================================================================
     # UTILITY FUNCTIONS

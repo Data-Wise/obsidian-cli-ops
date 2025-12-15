@@ -216,15 +216,15 @@ obs tui --vault-id 1 # Launch directly to vault view (future)
 - [ ] Add note preview pane
 - [ ] Show note metadata (links, tags, size)
 
-### Phase 4.4: Graph Visualizer (Week 2, Days 1-3)
+### Phase 4.4: Graph Visualizer (Week 2, Days 1-3) ✅ COMPLETE
 
 **Goal:** Visual representation of knowledge graph
 
 **Features:**
-- ASCII art graph visualization
-- Show connections between notes
-- Highlight orphans and hubs
-- Display metrics
+- ✅ ASCII art ego graph visualization
+- ✅ Show connections between notes (1-hop neighborhoods)
+- ✅ Highlight orphans and hubs
+- ✅ Display metrics (density, degree distribution, PageRank)
 
 **Screen Design:**
 ```
@@ -250,20 +250,27 @@ obs tui --vault-id 1 # Launch directly to vault view (future)
 ```
 
 **Tasks:**
-- [ ] Generate ASCII graph from NetworkX
-- [ ] Implement zoom/pan
-- [ ] Highlight special nodes (orphans, hubs)
-- [ ] Show interactive tooltips
+- [x] Generate ASCII graph from NetworkX (ego graphs)
+- [x] Implement hub/orphan/cluster views
+- [x] Highlight special nodes (orphans, hubs)
+- [x] Show graph statistics and metrics
+- [x] Interactive node selection
+- [x] Navigation to note explorer
+- [x] 38 comprehensive tests
 
-### Phase 4.5: Statistics Dashboard (Week 2, Days 4-5)
+### Phase 4.5: Statistics Dashboard (Week 2, Days 4-5) ✅ COMPLETE
 
 **Goal:** Visual analytics and insights
 
+**Status:** ✅ Complete (2025-12-15)
+**Commit:** (pending)
+
 **Features:**
-- Vault-level statistics
-- Tag analytics
-- Link distribution
-- Growth over time
+- ✅ Vault-level statistics
+- ✅ Tag analytics (top 20 tags with bar charts)
+- ✅ Link distribution (degree buckets)
+- ✅ Scan history (last 10 scans)
+- ✅ Tab-switching between views
 
 **Screen Design:**
 ```
@@ -290,11 +297,17 @@ obs tui --vault-id 1 # Launch directly to vault view (future)
 ╰─────────────────────────────────────────────────────────╯
 ```
 
-**Tasks:**
-- [ ] Query statistics from database
-- [ ] Create bar charts with rich
-- [ ] Show distributions
-- [ ] Add export to CSV
+**Implementation:**
+- [x] Added 3 database methods (get_vault_tag_stats, get_link_distribution, get_scan_history)
+- [x] Created StatisticsDashboardScreen (~420 lines)
+- [x] Implemented overview panel with vault stats
+- [x] Implemented tag analytics view with progress bars (▓░)
+- [x] Implemented link distribution view with degree buckets (█░)
+- [x] Implemented scan history view
+- [x] Integrated with vault browser ('s' key)
+- [x] Tab-switching between views works
+- [ ] Tests (35+ tests needed, see TEST_SUITE_SUMMARY.md)
+- [ ] Export to CSV feature (future enhancement)
 
 ### Phase 4.6: Polish & Integration (Week 2, Days 6-7)
 

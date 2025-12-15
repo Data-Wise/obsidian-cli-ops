@@ -25,6 +25,8 @@ class VaultBrowserScreen(Screen):
     BINDINGS = [
         Binding("escape", "back", "Back", show=True),
         Binding("enter", "select_vault", "Open", show=True),
+        Binding("g", "view_graph", "Graph", show=True),
+        Binding("s", "view_stats", "Stats", show=True),
         Binding("r", "refresh", "Refresh", show=True),
         Binding("q", "quit", "Quit", show=True),
     ]
@@ -233,11 +235,51 @@ class VaultBrowserScreen(Screen):
     def action_select_vault(self) -> None:
         """Open selected vault in note explorer."""
         if self.selected_vault:
-            # TODO: Navigate to notes screen with selected vault
-            self.app.push_screen("notes", callback=lambda: None)
+            # Import at call site to avoid circular imports
+            from tui.screens.notes import NoteExplorerScreen
+
+            # Push screen instance directly with parameters
+            self.app.push_screen(
+                NoteExplorerScreen(
+                    vault_id=self.selected_vault['id'],
+                    vault_name=self.selected_vault['name']
+                )
+            )
         else:
-            # If no vault selected, just show message
-            pass
+            # If no vault selected, show message
+            self.notify("Please select a vault first", severity="warning")
+
+    def action_view_graph(self) -> None:
+        """Open graph visualizer for selected vault."""
+        if self.selected_vault:
+            # Import at call site to avoid circular imports
+            from tui.screens.graph import GraphVisualizerScreen
+
+            # Push screen instance directly with parameters
+            self.app.push_screen(
+                GraphVisualizerScreen(
+                    vault_id=self.selected_vault['id'],
+                    vault_name=self.selected_vault['name']
+                )
+            )
+        else:
+            self.notify("Please select a vault first", severity="warning")
+
+    def action_view_stats(self) -> None:
+        """Open statistics dashboard for selected vault."""
+        if self.selected_vault:
+            # Import at call site to avoid circular imports
+            from tui.screens.stats import StatisticsDashboardScreen
+
+            # Push screen instance directly with parameters
+            self.app.push_screen(
+                StatisticsDashboardScreen(
+                    vault_id=self.selected_vault['id'],
+                    vault_name=self.selected_vault['name']
+                )
+            )
+        else:
+            self.notify("Please select a vault first", severity="warning")
 
     def action_refresh(self) -> None:
         """Refresh vault list."""

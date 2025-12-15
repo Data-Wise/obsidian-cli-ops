@@ -262,9 +262,7 @@ class ObsidianTUI(App):
     SCREENS = {
         "home": HomeScreen,
         "vaults": VaultBrowserScreen,
-        "notes": lambda: PlaceholderScreen("Note Explorer", name="notes"),
-        "graph": lambda: PlaceholderScreen("Knowledge Graph", name="graph"),
-        "stats": lambda: PlaceholderScreen("Statistics Dashboard", name="stats"),
+        # Note: "notes", "graph", and "stats" screens use direct instantiation (see vaults.py)
     }
 
     def on_mount(self) -> None:

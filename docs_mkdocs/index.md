@@ -14,7 +14,7 @@
 *   **🔬 R-Dev Integration**: Seamlessly log plots, fetch theory, and sync drafts between R Projects and Obsidian
 *   **🛡️ Audit**: Ensure your file structure stays organized
 
-### v2.0: Knowledge Graph Analysis (NEW!)
+### v2.0: Knowledge Graph Analysis
 *   **🔍 Vault Discovery**: Automatically find and scan all Obsidian vaults
 *   **📊 Graph Metrics**: PageRank, centrality, clustering coefficients
 *   **🔗 Link Resolution**: Resolve wikilinks and detect broken links
@@ -22,6 +22,14 @@
 *   **🌟 Hub Detection**: Identify highly connected notes
 *   **📈 Analytics**: Comprehensive vault statistics and insights
 *   **🤖 AI-Powered Features**: Note similarity, duplicate detection, topic analysis (100% free, local, private)
+
+### v2.1: Interactive TUI (NEW!)
+*   **🖥️ Full-Screen Interface**: Beautiful terminal user interface with Textual framework
+*   **📁 Vault Browser**: Interactive vault selection with real-time statistics
+*   **📝 Note Explorer**: Search, filter, and preview notes with metadata
+*   **🕸️ Graph Visualizer**: ASCII art graph with hub/orphan detection
+*   **⌨️ Keyboard Navigation**: Vim-style keys, arrow keys, and shortcuts
+*   **🎨 ADHD-Friendly Design**: Clear hierarchy, colors, emojis, and borders
 
 ## Quick Start
 
@@ -44,6 +52,18 @@ obs stats  # Auto-initializes on first run
 ```bash
 # Find and scan Obsidian vaults
 obs discover ~/Documents --scan -v
+```
+
+### Launch TUI Interface
+```bash
+# Open interactive TUI
+obs tui
+
+# Or use keyboard shortcuts in TUI:
+# v - Browse vaults
+# n - Explore notes
+# g - Visualize graph
+# ? - Show help
 ```
 
 ### Setup AI Features (Optional)

@@ -1,8 +1,8 @@
 priority: P2
 status: active
-progress: 70
-updated: 2025-12-14
-Next: Complete Phase 4.3 Note Explorer
+progress: 85
+updated: 2025-12-15
+Next: Complete Phase 4.5 Statistics Dashboard
 
 # Project Status
 
@@ -150,23 +150,46 @@ Next: Complete Phase 4.3 Note Explorer
   - Real database integration
   - Details panel with statistics
   - Keyboard navigation (↑↓, Enter, r, Esc, q)
-- [ ] Phase 4.3: Note explorer with search/preview (NEXT)
-- [ ] Phase 4.4: Graph visualizer (ASCII art)
-- [ ] Phase 4.5: Statistics dashboard
+- [x] Phase 4.3: Note explorer ✅ COMPLETE (2025-12-15)
+  - NoteExplorerScreen (378 lines)
+  - Two-panel layout (list + preview)
+  - Real-time search filtering
+  - Note content preview (first 20 lines)
+  - Metadata display (links, tags, graph metrics)
+  - Sort cycling (title, word count, date)
+  - Direct screen instantiation pattern
+  - Keyboard navigation (/, r, s, Enter, Esc, q)
+  - 42 comprehensive unit tests (all passing)
+- [x] Phase 4.4: Graph visualizer ✅ COMPLETE (2025-12-15)
+  - GraphVisualizerScreen (378 lines)
+  - Three-panel layout (stats + node list + visualization)
+  - Statistics panel with graph metrics (density, degree distribution)
+  - Hub/orphan node lists (interactive DataTables)
+  - ASCII ego graph renderer (1-hop neighborhoods)
+  - Keyboard navigation (h, o, c, n, r, g, Enter, Esc, q)
+  - Direct screen instantiation pattern
+- [ ] Phase 4.5: Statistics dashboard (NEXT)
 - [ ] Phase 4.6: Polish & CLI integration
 
 **Features Completed:**
 - ✅ TUI launches and navigates between screens
 - ✅ Interactive vault browser with real data
 - ✅ Vault statistics display (notes, links, tags, orphans, hubs)
+- ✅ Note explorer with search and preview
+- ✅ Real-time search filtering (in-memory)
+- ✅ Note content preview (reads markdown from disk)
+- ✅ Metadata display (links, tags, graph metrics)
+- ✅ Sort cycling (title, word count, modified date)
+- ✅ Graph visualizer with statistics and ego graphs
+- ✅ Hub/orphan node lists (interactive switching)
+- ✅ ASCII art rendering for local neighborhoods
+- ✅ Graph metrics (density, degree distribution, PageRank)
 - ✅ Keyboard navigation (arrows, vim keys)
 - ✅ Help system accessible (? key)
 - ✅ ADHD-friendly design (colors, emojis, borders)
 
 **Features to Implement:**
-- Note explorer (searchable, filterable, preview pane)
-- Graph visualization (ASCII art, node highlighting)
-- Statistics dashboard (vault metrics, tag analytics)
+- Statistics dashboard (vault metrics, tag analytics, temporal analysis)
 - Additional polish and error handling
 
 **Documentation:**
@@ -250,15 +273,15 @@ Next: Complete Phase 4.3 Note Explorer
 
 ### Code Statistics
 ```
-Total Lines of Code: ~9,800
+Total Lines of Code: ~10,600
 - ZSH: ~680 lines (obs.zsh, +40 for TUI)
-- Python: ~5,850 lines (11 modules, +1,050 for TUI/skills)
+- Python: ~6,630 lines (12 modules, +1,830 for TUI/skills)
   - Core: ~4,500 lines (9 modules)
-  - TUI: ~550 lines (app.py 282, vaults.py 249, init files)
-  - Tests: ~1,340 lines (82 Python tests)
+  - TUI: ~1,330 lines (app.py 282, vaults.py 267, notes.py 378, graph.py 378, init files)
+  - Tests: ~2,120 lines (124 Python tests)
 - Skills: ~960 lines (4 markdown files in .claude/skills/)
 - Docs: ~4,400 lines (15+ files, including skills README)
-- Tests: 122 total (82 Python + 40 Jest)
+- Tests: 164 total (124 Python + 40 Jest)
 ```
 
 ### File Inventory
@@ -266,9 +289,11 @@ Total Lines of Code: ~9,800
 Core Files:
 - src/obs.zsh (680 lines, +40 for TUI)
 - src/python/*.py (9 files, ~4,500 lines)
-- src/python/tui/ (4 files, ~550 lines)
+- src/python/tui/ (6 files, ~1,330 lines)
   - app.py (282 lines)
-  - screens/vaults.py (249 lines)
+  - screens/vaults.py (267 lines)
+  - screens/notes.py (378 lines)
+  - screens/graph.py (378 lines)
   - screens/__init__.py, widgets/__init__.py, __init__.py
 
 Skills:
@@ -281,7 +306,7 @@ Tests:
 - __tests__/*.js (1 file, 54 lines)
 - tests/*.js (2 files, 273 lines)
 - tests/*.sh (1 file, 120 lines)
-- src/python/tests/*.py (4 files, ~1,340 lines, 82 tests)
+- src/python/tests/*.py (5 files, ~2,120 lines, 124 tests)
 
 Documentation:
 - CLAUDE.md (630 lines, updated)
@@ -311,15 +336,7 @@ System:
 
 ## 🎯 Immediate Next Steps
 
-1. **Phase 4.3: Note Explorer** (Priority 1) 🎯 NEXT
-   - Create NoteExplorerScreen
-   - Display notes in selected vault
-   - Implement search/filter functionality
-   - Add note preview pane
-   - Show note metadata (links, tags, word count)
-   - Sort by various criteria
-
-2. **Phase 4.4: Graph Visualizer** (Priority 2)
+1. **Phase 4.4: Graph Visualizer** (Priority 1) 🎯 NEXT
    - Generate ASCII graph from NetworkX
    - Implement zoom/pan
    - Highlight special nodes (orphans, hubs)
@@ -450,8 +467,10 @@ System:
 2025-12-13: Phase 4.1 complete - TUI Foundation (commit 994ae42)
 2025-12-13: Phase 4.2 complete - Vault Browser (commit 707f3d7)
 2025-12-13: Claude Code Skills system implemented (commit c4302ce)
+2025-12-15: Phase 4.3 complete - Note Explorer (42 tests)
+2025-12-15: Phase 4.4 complete - Graph Visualizer
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2025-12-XX: Phase 4.3 complete - Note Explorer
+2025-12-XX: Phase 4.5 complete - Statistics Dashboard
 2025-12-XX: Phase 4 complete - TUI
 2025-12-XX: v2.1.0 release (with TUI)
 2026-Q1:    Phase 3 - AI features
@@ -462,6 +481,6 @@ System:
 
 ---
 
-**Last Status Update:** 2025-12-13 (after docs-update skill)
-**Next Review:** After Phase 4.3 implementation
+**Last Status Update:** 2025-12-15 (after Phase 4.4 implementation)
+**Next Review:** After Phase 4.5 implementation
 **Overall Project Health:** 🟢 Excellent
