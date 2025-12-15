@@ -1,0 +1,171 @@
+# Current TODOs
+
+> **Active work items and immediate next steps**
+>
+> **Last Updated:** 2025-12-15
+> **Status:** 92% Complete | v2.1.0-beta
+
+---
+
+## 🎯 High Priority (Do Next)
+
+### v2.1.0 Release Prep
+- [ ] **Test iCloud vault discovery** - User hasn't tested the new `d` key feature yet
+- [ ] **Complete Quick Wins** - 2 remaining items
+  - [ ] JSON export in statistics dashboard
+  - [ ] Timestamp formatting improvements
+- [ ] **Final testing pass** - Run full test suite, manual TUI testing
+- [ ] **Create v2.1.0 release notes**
+- [ ] **Tag release** - `git tag v2.1.0`
+- [ ] **Publish to GitHub Pages**
+
+### Documentation
+- [x] Organize docs/ structure (user/developer/planning/releases)
+- [x] Update all documentation to v2.1-beta
+- [x] Create TUI navigation guides (tutorial, reference, cheat sheet)
+- [x] Optimize CLAUDE.md for developers
+- [x] Consolidate planning docs into IDEAS.md and TODOS.md
+
+---
+
+## 🟡 Medium Priority (Soon)
+
+### Testing & Quality
+- [ ] **Increase test coverage** to 80%
+  - Current: 70% overall
+  - Core layer: 85% (good)
+  - Database layer: 75% (needs work)
+  - TUI layer: Need more tests
+- [ ] **Performance testing**
+  - Test with large vaults (10k+ notes)
+  - Memory profiling
+  - Query optimization
+- [ ] **Error handling improvements**
+  - Better error messages
+  - Graceful degradation
+  - Recovery suggestions
+
+### Features
+- [ ] **Keyboard shortcut generator** - Auto-generate from BINDINGS
+- [ ] **TUI help screen improvements** - Context-sensitive help
+- [ ] **Search improvements** - Fuzzy search, regex support
+- [ ] **Export functionality** - Export stats to JSON/CSV
+
+---
+
+## 🟢 Low Priority (Future)
+
+### v1.x Maintenance
+- [ ] `obs config` command - Manage configuration interactively
+- [ ] `obs r-dev list` - Show all R project mappings in table
+- [ ] Plugin update checker - `obs install --update`
+- [ ] `obs init` - Interactive setup wizard
+
+### AI Features (Phase 5 - Deferred)
+- [ ] Find similar notes - `obs ai similar <note_id>`
+- [ ] Detect duplicates - `obs ai duplicates <vault_id>`
+- [ ] Topic analysis - `obs ai topics <vault_id>`
+- [ ] Merge suggestions - `obs ai suggest <vault_id>`
+
+### Learning System (Phase 6 - Deferred)
+- [ ] User feedback collection
+- [ ] Rule generation from corrections
+- [ ] Confidence adaptation
+- [ ] Interactive tuning interface
+
+---
+
+## ✅ Recently Completed
+
+### 2025-12-15
+- [x] Unified `obs` command with three domains (graph/open/sync)
+- [x] TUI vault discovery with `d` key (iCloud default)
+- [x] Fixed Python path issues in obs.zsh
+- [x] Fixed TUI TypeErrors (limit parameters)
+- [x] Created comprehensive TUI documentation
+  - Vim tutorial for beginners
+  - Quick reference guide
+  - Printable cheat sheet
+- [x] Organized documentation structure
+- [x] Updated all docs to v2.1-beta
+
+### Earlier December 2025
+- [x] Phase 4: TUI/Visualization (100%)
+  - Interactive vault browser
+  - Note explorer with search
+  - ASCII graph visualization
+  - Statistics dashboard
+  - Vim-style navigation
+- [x] Phase 2: AI Integration (100%)
+  - FREE local AI (HuggingFace + Ollama)
+  - Interactive setup wizard
+  - Embedding generation
+  - Note similarity analysis
+- [x] Phase 1: Foundation (100%)
+  - SQLite database
+  - Vault scanner
+  - Graph builder
+  - Link resolution
+
+---
+
+## 📋 Not Started (Backlog)
+
+### Nice to Have
+- [ ] Multi-vault operations - Work across all vaults simultaneously
+- [ ] Watch mode - Auto-scan on file changes
+- [ ] Integration with Zotero - Citation management
+- [ ] Graph export - Export graph to formats (GraphML, DOT, etc.)
+- [ ] Plugin ecosystem - Allow custom extensions
+
+### Research Needed
+- [ ] Performance at scale - Test with 50k+ notes
+- [ ] Graph algorithms - Better clustering, community detection
+- [ ] AI optimization - Faster embeddings, better prompts
+- [ ] Cross-platform support - Windows, Linux testing
+
+---
+
+## 🗑️ Removed/Cancelled
+
+- ~~Phase 3 in original plan~~ - Merged into Phase 4 (TUI)
+- ~~Paid AI APIs by default~~ - Switched to 100% free local AI
+- ~~Complex plugin system~~ - Keep it simple for now
+- ~~Multi-language support~~ - English only for v2.x
+
+---
+
+## 💡 How to Use This File
+
+**Adding TODOs:**
+```bash
+# Add to appropriate priority section
+# Use [ ] for pending items
+# Use [x] for completed items
+# Move completed items to "Recently Completed"
+```
+
+**Prioritization:**
+- 🎯 **High** - Do now (this week)
+- 🟡 **Medium** - Do soon (this month)
+- 🟢 **Low** - Do eventually (this quarter)
+- 📋 **Backlog** - Nice to have (someday)
+
+**Review Frequency:**
+- High priority: Daily
+- Medium priority: Weekly
+- Low priority: Monthly
+- Backlog: Quarterly
+
+---
+
+## 🔗 Related Files
+
+- **[IDEAS.md](IDEAS.md)** - Future features and brainstorming
+- **[.STATUS](.STATUS)** - Project metrics and status
+- **[CLAUDE.md](CLAUDE.md)** - Developer guide
+- **[docs/planning/project-hub.md](docs/planning/project-hub.md)** - ADHD-friendly control center
+
+---
+
+**Remember:** Focus on HIGH priority first. Don't get distracted by shiny LOW priority items! 🧠✨

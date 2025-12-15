@@ -1,54 +1,526 @@
-# Ideas for obsidian-cli-ops
+# Ideas & Future Features
 
-## 🧪 Testing & Quality Assurance
+> **Brainstorming space for enhancements, improvements, and new features**
+>
+> **Last Updated:** 2025-12-15
 
-### Sandbox Testing Strategy (2025-12-15)
+---
 
-**Quick Wins (< 30 min):**
-- [2025-12-15] Create minimal test vault - Single folder with 10-20 markdown files, basic wikilinks, no complexity
-- [2025-12-15] Use existing vault as read-only - Point `obs` at your real vault, test without modifying
-- [2025-12-15] ✅ **IMPLEMENTED** Generate synthetic vault with script - Python script creates notes/links/tags on demand
+## 🚀 Phase 5: AI-Powered Features (Future)
 
-**Medium Effort (1-2 hrs):**
-- [2025-12-15] Structured test vault with scenarios - Organized folders testing: orphans, hubs, broken links, tags, clusters
-- [2025-12-15] Multi-vault test environment - 3 vaults (small/medium/large) for different test cases
-- [2025-12-15] Docker-based sandbox - Containerized Obsidian vault + database for isolated testing
-- [2025-12-15] Copy-on-write vault snapshots - rsync or git-based snapshots for quick reset between tests
+### Note Similarity & Duplicates
+**Status:** Deferred (AI integration complete, features pending)
 
-**Big Ideas (3+ hrs):**
-- [2025-12-15] Automated test data generator - CLI tool that creates realistic knowledge graphs with configurable parameters
-- [2025-12-15] Test vault fixtures library - Reusable vault templates (empty, minimal, realistic, stress-test, edge-cases)
-- [2025-12-15] CI/CD integration - Automated tests run against fixture vaults on every commit
+- **Find Similar Notes**
+  ```bash
+  obs ai similar <note_id>
+  # Shows notes with similar content using embeddings
+  # Useful for: Finding related research, consolidating knowledge
+  ```
 
-**Tutorials Created:**
-- Step-by-step guide for Option #1: Minimal Test Vault (manual creation)
-- Step-by-step guide for Option #3: Synthetic Vault Generator (Python script)
+- **Duplicate Detection**
+  ```bash
+  obs ai duplicates <vault_id>
+  # Identifies potential duplicate notes
+  # Shows: Similarity score, content overlap, merge suggestions
+  ```
 
-**Recommended Path:**
-1. Start with minimal vault (5 min setup) for immediate TUI testing
-2. ✅ Add synthetic generator (15 min setup) for repeatable tests **[IMPLEMENTED 2025-12-15]**
-3. Expand to structured scenarios as needed
+- **Topic Analysis**
+  ```bash
+  obs ai topics <vault_id>
+  # Extracts main topics from vault using AI
+  # Groups notes by theme/topic
+  # Suggests folder reorganization
+  ```
 
-**Implementation Details (Option #3 - Synthetic Generator):**
-- **Script:** `src/python/generate_test_vault.py` (369 lines)
-- **Features:** Configurable notes, links, tags, frontmatter, special test notes (orphan, hub, broken links)
-- **Documentation:** `SANDBOX_TESTING_GUIDE.md` (complete guide), `SANDBOX_QUICK_REF.md` (quick reference)
-- **Test Vaults Created:** TestVault-Small (10 notes), TestVault-Medium (50 notes), TestVault-Large (200 notes)
-- **Time to Implement:** ~15 minutes (as estimated)
-- **Status:** ✅ Fully functional and tested
+- **Smart Merge Suggestions**
+  ```bash
+  obs ai suggest <vault_id>
+  # AI-powered merge recommendations
+  # Shows: Reason, confidence, preview of merged result
+  # User accepts/rejects with feedback loop
+  ```
 
-## 🆕 New Features
+**Implementation Notes:**
+- AI backend complete (HuggingFace + Ollama)
+- Need to build suggestion engine
+- Requires user feedback system
 
-*No items yet*
+---
+
+## 🧠 Phase 6: Learning System (Future)
+
+### Adaptive Intelligence
+**Status:** Planned (requires Phase 5 first)
+
+- **User Feedback Collection**
+  - Accept/reject suggestions
+  - Provide reasoning for corrections
+  - Build preference database
+
+- **Rule Generation**
+  - Learn from user corrections
+  - Generate custom rules automatically
+  - Export/import preference files
+
+- **Confidence Adaptation**
+  - Increase confidence for accepted patterns
+  - Decrease for rejected suggestions
+  - Tune thresholds per user
+
+- **Interactive Tuning**
+  ```bash
+  obs learn stats     # What system has learned
+  obs learn tune      # Interactive tuning interface
+  obs learn export    # Export rules for backup/sharing
+  obs learn import    # Import rules from file
+  ```
+
+**Success Criteria:**
+- +15% accuracy improvement after 100 interactions
+- User-specific rules that work consistently
+- Explainable suggestions (show reasoning)
+
+---
+
+## 🎨 TUI Enhancements
+
+### Current State
+- ✅ Interactive vault browser
+- ✅ Note explorer with search
+- ✅ ASCII graph visualization
+- ✅ Statistics dashboard
+- ✅ Vim-style navigation
+
+### Future Ideas
+
+**Visual Improvements:**
+- [ ] Color themes (dark/light/custom)
+- [ ] Graph layout options (force-directed, hierarchical, radial)
+- [ ] Minimap for large graphs
+- [ ] Split-pane view (graph + notes)
+- [ ] Preview pane for note content
+
+**Interaction Improvements:**
+- [ ] Mouse support (click nodes, drag to pan)
+- [ ] Zoom in/out on graphs
+- [ ] Filter by tag/folder
+- [ ] Multi-select for batch operations
+- [ ] Command palette (Ctrl+P)
+
+**New Screens:**
+- [ ] Tag explorer (browse by tags)
+- [ ] Timeline view (notes by date)
+- [ ] Cluster navigator (explore communities)
+- [ ] Link browser (see all connections)
+- [ ] Search results view
+
+---
+
+## 📊 Analytics & Insights
+
+### Knowledge Graph Metrics
+
+**Currently Implemented:**
+- ✅ PageRank
+- ✅ Centrality measures
+- ✅ Clustering coefficient
+- ✅ Hub/orphan detection
+
+**Future Metrics:**
+- [ ] **Temporal Analysis**
+  - Note creation patterns over time
+  - Link formation velocity
+  - Knowledge growth rate
+  - Activity heatmaps
+
+- [ ] **Structural Analysis**
+  - Community detection (Louvain, Leiden)
+  - Betweenness centrality
+  - Eigenvector centrality
+  - Bridge nodes detection
+
+- [ ] **Content Analysis**
+  - Word count distribution
+  - Tag co-occurrence patterns
+  - Folder usage statistics
+  - Backlink analysis
+
+- [ ] **Health Metrics**
+  - Broken link ratio
+  - Orphan percentage
+  - Average note connections
+  - Graph density trends
+
+---
+
+## 🔄 Automation & Workflows
+
+### Auto-Categorization
+- Watch mode for new notes
+- Auto-suggest folder based on content
+- Auto-tag based on similarity
+- Auto-link to related notes
+
+### Batch Operations
+- Bulk rename notes
+- Batch tag updates
+- Mass link creation
+- Folder reorganization
+
+### Integration Ideas
+- **Zotero** - Sync citations and references
+- **Emacs** - Org-mode integration
+- **R Studio** - Enhanced R-Dev features
+- **VS Code** - Extension for quick access
+- **Alfred/Raycast** - Quick vault switching
+
+---
+
+## 🧪 Testing & Quality
+
+### Sandbox Testing (Partially Implemented)
+
+**✅ Completed (2025-12-15):**
+- Synthetic vault generator (`generate_test_vault.py`)
+- Quick reference guide
+- Test vault templates (small/medium/large)
+
+**Future Improvements:**
+- [ ] Automated test suite using fixtures
+- [ ] CI/CD integration with test vaults
+- [ ] Performance benchmarking suite
+- [ ] Stress testing (50k+ notes)
+- [ ] Edge case test scenarios
+
+### Test Vault Library
+- [ ] Empty vault (new user scenario)
+- [ ] Minimal vault (10 notes, basic links)
+- [ ] Realistic vault (1k notes, real structure)
+- [ ] Stress vault (10k+ notes, complex graph)
+- [ ] Edge case vault (broken links, orphans, weird characters)
+
+---
+
+## 🆕 New Features (Brainstorming)
+
+### Export & Sharing
+- [ ] Export vault graph to GraphML/DOT
+- [ ] Generate static HTML vault visualization
+- [ ] Share statistics as infographics
+- [ ] Export note clusters as separate vaults
+
+### Search & Discovery
+- [ ] Full-text search across all vaults
+- [ ] Fuzzy search (typo-tolerant)
+- [ ] Regex search support
+- [ ] Saved search queries
+- [ ] Search within graph (find paths between notes)
+
+### Collaboration Features
+- [ ] Compare vaults (diff tool)
+- [ ] Merge vaults intelligently
+- [ ] Sync specific folders between vaults
+- [ ] Shared knowledge base tracking
+
+### Plugin Ecosystem
+- [ ] Plugin API for extensions
+- [ ] Custom analyzers
+- [ ] Custom visualizations
+- [ ] Third-party integrations
+
+---
 
 ## 🔧 Improvements
 
-*No items yet*
+### Performance Optimizations
+- [ ] Incremental scanning (only changed files)
+- [ ] Caching layer for graph queries
+- [ ] Parallel processing for large vaults
+- [ ] Database query optimization
+- [ ] Lazy loading in TUI
 
-## 🐛 Bugs to Fix
+### Error Handling
+- [ ] Better error messages with recovery suggestions
+- [ ] Graceful degradation when features unavailable
+- [ ] Detailed logging with levels
+- [ ] Error reporting with diagnostics
 
-*No items yet*
+### Configuration
+- [ ] Per-vault settings
+- [ ] Global configuration file
+- [ ] Environment variable support
+- [ ] Configuration validation
+- [ ] Interactive config wizard
+
+---
+
+## 🐛 Known Issues & Wishlist
+
+### Edge Cases to Handle
+- [ ] Very long note titles (>255 chars)
+- [ ] Special characters in filenames
+- [ ] Circular links (A → B → C → A)
+- [ ] Case-sensitive vs case-insensitive filesystems
+- [ ] Unicode in wikilinks
+
+### Platform Support
+- [ ] Windows compatibility testing
+- [ ] Linux compatibility testing
+- [ ] WSL (Windows Subsystem for Linux) support
+- [ ] Docker container version
+
+---
 
 ## 🤔 To Explore
 
-*No items yet*
+### Research Topics
+- [ ] **Graph Neural Networks** - Could GNNs improve link prediction?
+- [ ] **Knowledge Graph Embedding** - Better note similarity via embeddings
+- [ ] **Community Detection** - Advanced clustering algorithms
+- [ ] **Temporal Graph Analysis** - How knowledge evolves over time
+- [ ] **Natural Language Processing** - Extract entities, relationships
+
+### Tools & Libraries
+- [ ] **Neo4j** - Graph database for complex queries?
+- [ ] **Cytoscape** - Better graph visualization?
+- [ ] **D3.js** - Interactive web visualizations?
+- [ ] **NetworkX** - More graph algorithms (currently using)
+- [ ] **spaCy** - NLP for content analysis?
+
+### Design Patterns
+- [ ] Event-driven architecture for watch mode
+- [ ] Plugin system design
+- [ ] Caching strategies
+- [ ] Multi-threading for scanning
+
+---
+
+## 💡 Community Ideas
+
+> **Got an idea?** Add it here or create an issue on GitHub!
+
+**How to contribute ideas:**
+1. Add to appropriate section above
+2. Describe the problem it solves
+3. Sketch out how it might work
+4. Tag with priority (nice-to-have, must-have, game-changer)
+
+**Discussion:**
+- GitHub Discussions: https://github.com/Data-Wise/obsidian-cli-ops/discussions
+- GitHub Issues: https://github.com/Data-Wise/obsidian-cli-ops/issues
+
+---
+
+## 🎯 Prioritization Framework
+
+**When evaluating new ideas:**
+
+1. **Impact** - How many users benefit?
+2. **Effort** - How long to implement?
+3. **Alignment** - Fits project vision?
+4. **Dependencies** - Requires other features?
+5. **Maintenance** - Ongoing cost?
+
+**Priority Levels:**
+- 🔴 **Game Changer** - Core to vision, high impact
+- 🟡 **High Value** - Significant improvement, reasonable effort
+- 🟢 **Nice to Have** - Useful but not critical
+- ⚪ **Low Priority** - Cool idea but low impact or high effort
+
+---
+
+## 📚 Appendix: Research & Architecture
+
+### CLI/GUI Application Best Practices
+
+**Date:** 2025-12-15
+**Status:** ✅ Research completed and implemented
+**Implementation:** Three-layer architecture is production ready
+
+This research informed our three-layer architecture design. Key findings:
+
+#### Architecture Pattern: Three-Layer Design ✅ IMPLEMENTED
+
+```
+Presentation Layer (CLI/TUI/GUI)
+        ↓
+Application Layer (Core Logic)
+        ↓
+Data Layer (Database/Files)
+```
+
+**What We Built:**
+- **Presentation**: `obs.zsh` (CLI), `tui/` (TUI) - 2,019 lines
+- **Application**: `core/` (VaultManager, GraphAnalyzer, Models) - 859 lines
+- **Data**: `db_manager.py`, `vault_scanner.py`, `graph_builder.py` - 1,149 lines
+
+**Key Achievement:** CLI and TUI share 100% of business logic with zero duplication.
+
+#### Why This Matters
+
+**Before (2025-12-10):**
+```
+ZSH CLI → Python CLI → Database
+```
+- Business logic mixed with presentation
+- Hard to add TUI
+- Would require duplicating code
+
+**After (2025-12-14):**
+```
+ZSH CLI ──┐
+Python CLI├──> Core Layer → Data Layer
+TUI ──────┘
+```
+- Business logic in Core only
+- CLI and TUI both use same VaultManager
+- Adding GUI just means new presentation layer
+
+**Future Ready:**
+```
+ZSH CLI ──┐
+Python CLI│
+TUI ──────├──> Core Layer → Data Layer
+GUI ──────┘  (Just add new presentation layer)
+Web API ───┘
+```
+
+#### Technology Choices Evaluated
+
+**For GUI (If Needed in Future):**
+- **Winner:** PySide6 (Qt for Python)
+- **Reason:** Professional look, graph visualization support, LGPL license
+- **Status:** Not needed yet (TUI is sufficient)
+
+**For TUI (Current):**
+- **Winner:** Textual ✅ IMPLEMENTED
+- **Reason:** Python-native, rich widgets, vim-friendly
+- **Status:** Production ready
+
+#### Patterns Used
+
+**✅ Repository Pattern** - Data layer abstracts database
+**✅ Domain Models** - Vault, Note, ScanResult, GraphMetrics
+**✅ Command Pattern** - VaultManager methods are commands
+**✅ Master-Detail UI** - TUI vault browser uses this
+**✅ Three-Panel Layout** - Graph visualizer uses this
+
+#### Real-World Examples Studied
+
+1. **Git Ecosystem**
+   - Core: libgit2 (library)
+   - CLI: git command
+   - GUIs: GitKraken, GitHub Desktop
+   - **Lesson:** Core library enables multiple frontends
+
+2. **Docker Ecosystem**
+   - Backend: Docker daemon (REST API)
+   - CLI: docker command
+   - GUI: Docker Desktop
+   - **Lesson:** API-first design
+
+3. **Jupyter**
+   - Backend: Jupyter server
+   - Frontends: JupyterLab, notebooks, VS Code
+   - **Lesson:** Protocol-based communication
+
+#### Best Practices Applied
+
+**CLI Design:**
+- ✅ Composable with Unix tools (`obs list --json | jq`)
+- ✅ Machine-readable output (JSON)
+- ✅ Progressive disclosure (simple → complex)
+- ✅ Standard conventions (verb-noun structure)
+
+**Architecture:**
+- ✅ Business logic is interface-agnostic
+- ✅ Domain models for data transfer
+- ✅ Clear layer separation
+- ✅ Unit tests for core layer (70% coverage)
+
+**Graph Visualization:**
+- ✅ Force-directed layout (NetworkX + ASCII)
+- ✅ Node sizing by PageRank
+- ✅ Hub/orphan highlighting
+- 📋 Future: Interactive Qt-based visualization
+
+#### Metrics
+
+**Code Distribution:**
+- Presentation: 2,019 lines (CLI 318 + TUI 1,701)
+- Application: 859 lines (Core business logic)
+- Data: 1,149 lines (Database, scanning, parsing)
+
+**Achievement:**
+- Completed Phase 1 & 2 in 4 days (estimated 2-3 weeks)
+- Zero code duplication between CLI and TUI
+- Ready for GUI without core changes
+
+#### Future GUI Considerations
+
+**When to build:**
+- User demand (survey needed)
+- GUI-specific features identified
+- TUI limitations reached
+
+**What to build:**
+- Master-detail vault browser
+- Interactive graph with zoom/pan
+- Visual diff and merge tools
+- Settings configuration UI
+
+**How to build:**
+1. Install PySide6
+2. Create `gui/` directory
+3. Import VaultManager from core
+4. Build Qt widgets
+5. No changes to core layer needed!
+
+#### Quick Reference
+
+**Architecture Checklist:**
+- ✅ Separate presentation, application, data
+- ✅ Business logic is interface-agnostic
+- ✅ Use domain models
+- ✅ Repository pattern for data
+- ✅ Command pattern for operations
+- ✅ Unit test core layer
+
+**CLI Checklist:**
+- ✅ Use argparse
+- ✅ Support --json
+- ✅ Use rich for output
+- ✅ Follow verb-noun structure
+- ✅ Add --verbose flag
+- ✅ Clear error messages
+- ✅ Correct exit codes
+
+**GUI Checklist (Future):**
+- [ ] Use layouts, not fixed positions
+- [ ] Support window resizing
+- [ ] Save/restore window state
+- [ ] Master-detail pattern
+- [ ] Debounce search input
+- [ ] Loading indicators
+- [ ] Error dialogs
+- [ ] Keyboard shortcuts
+
+#### Documentation
+
+**Full Research:** See `docs/developer/research/cli-gui-practices.md` (comprehensive guide)
+**Architecture:** See `docs/developer/architecture.md` (890 lines)
+**CLAUDE.md:** Quick developer reference with three-layer design
+
+---
+
+## 🔗 Related Files
+
+- **[TODOS.md](TODOS.md)** - Current active work items
+- **[.STATUS](.STATUS)** - Project status and metrics
+- **[CLAUDE.md](CLAUDE.md)** - Developer guide
+- **[docs/planning/project-hub.md](docs/planning/project-hub.md)** - Control center
+
+---
+
+**Remember:** Ideas are cheap, execution is everything. Focus on completing current work (see TODOS.md) before starting new features! 🚀

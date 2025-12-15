@@ -26,6 +26,7 @@ class VaultBrowserScreen(Screen):
     BINDINGS = [
         Binding("escape", "back", "Back", show=True),
         Binding("enter", "select_vault", "Open", show=True),
+        Binding("d", "discover_vaults", "Discover", show=True),
         Binding("g", "view_graph", "Graph", show=True),
         Binding("s", "view_stats", "Stats", show=True),
         Binding("r", "refresh", "Refresh", show=True),
@@ -338,6 +339,35 @@ class VaultBrowserScreen(Screen):
         """Refresh vault list."""
         self.refresh_vaults()
         self.notify("Vault list refreshed", severity="information")
+
+    def action_discover_vaults(self) -> None:
+        """Discover vaults in default iCloud location."""
+        # Default to iCloud Obsidian location
+        default_path = Path.home() / "Library" / "Mobile Documents" / "iCloud~md~obsidian" / "Documents"
+
+        # Fallback to Documents if iCloud path doesn't exist
+        if not default_path.exists():
+            default_path = Path.home() / "Documents"
+
+        try:
+            self.notify(f"Discovering vaults in {default_path}...", severity="information")
+            discovered = self.vault_manager.discover_vaults(str(default_path))
+
+            if discovered:
+                # Scan discovered vaults
+                for vault_path in discovered:
+                    try:
+                        self.vault_manager.scan_vault(vault_path, force=False)
+                    except Exception as e:
+                        self.notify(f"Error scanning {vault_path}: {str(e)}", severity="warning")
+
+                # Refresh the list
+                self.refresh_vaults()
+                self.notify(f"Discovered and scanned {len(discovered)} vault(s)", severity="information")
+            else:
+                self.notify(f"No vaults found in {default_path}", severity="warning")
+        except Exception as e:
+            self.notify(f"Error discovering vaults: {str(e)}", severity="error")
 
     def action_quit(self) -> None:
         """Quit the application."""

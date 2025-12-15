@@ -391,17 +391,27 @@ class DatabaseManager:
             row = cursor.fetchone()
             return dict(row) if row else None
 
-    def get_orphaned_notes(self, vault_id: Optional[str] = None) -> List[Dict]:
+    def get_orphaned_notes(self, vault_id: Optional[str] = None, limit: Optional[int] = None) -> List[Dict]:
         """Get notes with no links."""
         with self.get_connection() as conn:
             if vault_id:
-                cursor = conn.execute("""
-                    SELECT * FROM orphaned_notes WHERE vault_id = ?
-                """, (vault_id,))
+                if limit:
+                    cursor = conn.execute("""
+                        SELECT * FROM orphaned_notes WHERE vault_id = ? LIMIT ?
+                    """, (vault_id, limit))
+                else:
+                    cursor = conn.execute("""
+                        SELECT * FROM orphaned_notes WHERE vault_id = ?
+                    """, (vault_id,))
             else:
-                cursor = conn.execute("""
-                    SELECT * FROM orphaned_notes
-                """)
+                if limit:
+                    cursor = conn.execute("""
+                        SELECT * FROM orphaned_notes LIMIT ?
+                    """, (limit,))
+                else:
+                    cursor = conn.execute("""
+                        SELECT * FROM orphaned_notes
+                    """)
             return [dict(row) for row in cursor.fetchall()]
 
     def get_hub_notes(self, vault_id: Optional[str] = None, limit: int = 20) -> List[Dict]:
@@ -417,20 +427,34 @@ class DatabaseManager:
                 """, (limit,))
             return [dict(row) for row in cursor.fetchall()]
 
-    def get_broken_links(self, vault_id: Optional[str] = None) -> List[Dict]:
+    def get_broken_links(self, vault_id: Optional[str] = None, limit: Optional[int] = None) -> List[Dict]:
         """Get all broken links."""
         with self.get_connection() as conn:
             if vault_id:
-                cursor = conn.execute("""
-                    SELECT bl.*
-                    FROM broken_links bl
-                    JOIN notes n ON bl.source_path = n.path
-                    WHERE n.vault_id = ?
-                """, (vault_id,))
+                if limit:
+                    cursor = conn.execute("""
+                        SELECT bl.*
+                        FROM broken_links bl
+                        JOIN notes n ON bl.source_path = n.path
+                        WHERE n.vault_id = ?
+                        LIMIT ?
+                    """, (vault_id, limit))
+                else:
+                    cursor = conn.execute("""
+                        SELECT bl.*
+                        FROM broken_links bl
+                        JOIN notes n ON bl.source_path = n.path
+                        WHERE n.vault_id = ?
+                    """, (vault_id,))
             else:
-                cursor = conn.execute("""
-                    SELECT * FROM broken_links
-                """)
+                if limit:
+                    cursor = conn.execute("""
+                        SELECT * FROM broken_links LIMIT ?
+                    """, (limit,))
+                else:
+                    cursor = conn.execute("""
+                        SELECT * FROM broken_links
+                    """)
             return [dict(row) for row in cursor.fetchall()]
 
     # ========================================================================

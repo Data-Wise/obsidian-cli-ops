@@ -27,7 +27,21 @@
       "Bash(command -v:*)",
       "Bash(obs tui --help:*)",
       "Bash(bash -c:*)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(echo:*)",
+      "Bash(obs graph help:*)",
+      "Bash(obs open:*)",
+      "Bash(obs sync:*)",
+      "Bash(obs graph:*)",
+      "Bash(git mv:*)",
+      "Bash(ls:*)",
+      "Bash([ -f UNIFIED_OBS_COMMAND.md ])",
+      "Bash([ -f KEYBOARD_SHORTCUTS.md ])",
+      "Bash([ -f V2_QUICKSTART.md ])",
+      "Bash(cat:*)",
+      "Bash(test:*)",
+      "Bash(curl:*)",
+      "Bash(mkdocs serve:*)"
     ]
   }
 }
