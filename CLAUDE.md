@@ -1,208 +1,240 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with code in this repository.
+Developer guide for Claude Code when working with this repository.
 
 ## Project Overview
 
-**Obsidian CLI Ops (obs)** is an intelligent command-line tool for managing multi-vault Obsidian systems with knowledge graph analysis and R development integration.
+**Obsidian CLI Ops (obs)** - Intelligent CLI tool for multi-vault Obsidian knowledge management with graph analysis and interactive TUI.
 
-**Current Version**: 2.0.0-beta
-**Status**: Phase 4 TUI Complete (100%)
+**Current Version**: 2.1.0 (Option D Complete)
+**Status**: Production ready (95% complete)
+**Priority**: P2
 
-### What It Does
+### Core Features
 
-- **v1.x Features**: Federated vault management, plugin installation, R-Dev integration
-- **v2.0 Features**: Knowledge graph analysis, vault scanning, link resolution, graph metrics, AI-powered similarity detection (100% free, local, private)
+- **Vault Management**: Discovery, scanning, synchronization across multiple vaults
+- **Graph Analysis**: PageRank, centrality, clustering, orphan/hub detection
+- **Interactive TUI**: Full-screen terminal UI with vim-style navigation
+- **AI Features**: Note similarity, duplicate detection (100% local, free, private)
+- **R-Dev Integration**: Seamless R Project ↔ Obsidian workflow
 
 ### Technology Stack
 
-- **ZSH**: Main CLI interface (`src/obs.zsh`)
-- **Python 3.9+**: Backend for v2.0 features (`src/python/`)
-- **SQLite**: Knowledge graph database (`~/.config/obs/vault_db.sqlite`)
-- **NetworkX**: Graph analysis library
-- **Textual**: TUI framework for interactive interface
-- **HuggingFace/Ollama**: Free local AI (embeddings, similarity detection)
-- **Node.js**: Testing harness (Jest)
-- **MkDocs**: Documentation site
+- **ZSH**: CLI interface (`src/obs.zsh`)
+- **Python 3.9+**: Core logic (`src/python/`)
+- **SQLite**: Knowledge graph database
+- **NetworkX**: Graph analysis
+- **Textual**: TUI framework
+- **HuggingFace/Ollama**: Local AI (optional)
+- **Jest**: Testing harness
 
-## Quick Command Reference
+## Architecture
 
-### Vault Discovery and Scanning
+**Three-Layer Design** (zero duplication principle):
 
-```bash
-# Discover vaults in directory
-obs discover ~/Documents -v
-
-# Discover and scan automatically
-obs discover ~/Documents --scan -v
-
-# Scan specific vault
-python3 src/python/obs_cli.py scan /path/to/vault --analyze -v
+```
+Presentation → Application → Data
+   (CLI/TUI)     (Core Logic)   (DB/Files)
 ```
 
-### Graph Analysis
+- **Presentation**: `obs.zsh` (CLI), `tui/` (TUI)
+- **Application**: `core/vault_manager.py`, `core/graph_analyzer.py`
+- **Data**: `db_manager.py`, `vault_scanner.py`, `graph_builder.py`
+
+**Key Principle**: Business logic lives in Core layer only. CLI and TUI are thin presentation layers that share 100% of business logic.
+
+**See `.claude/rules/architecture.md` for detailed documentation.**
+
+## Quick Development Reference
+
+### Installation & Setup
 
 ```bash
-# List all vaults (get vault IDs)
-obs vaults
+# Install dependencies
+pip3 install -r src/python/requirements.txt
 
-# Analyze vault graph
-obs analyze <vault_id> -v
-
-# View statistics
-obs stats                    # Global stats
-obs stats <vault_id>         # Vault-specific stats
-```
-
-### TUI Interface
-
-```bash
-# Launch interactive TUI
-obs tui
-
-# Open specific vault
-obs tui --vault-id <id>
-
-# Open specific screen
-obs tui --screen vaults|notes|graph|stats
-```
-
-### Database Management
-
-```bash
-# Initialize/rebuild database
+# Initialize database
 python3 src/python/obs_cli.py db init
 
-# View database stats
-python3 src/python/obs_cli.py db stats
+# Symlink for CLI usage
+ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 ```
 
-## Development Commands
+### Essential Commands
 
-### Python Dependencies
+**Option D: Obsidian App Clone** - Just type `obs`!
 
 ```bash
-# Install required packages (Phase 1)
-pip3 install python-frontmatter mistune PyYAML networkx
+# Primary commands (90% of usage)
+obs                             # Open last vault (or show picker)
+obs switch                      # Vault switcher
+obs manage                      # Manage vaults
 
-# Install TUI packages
-pip3 install textual rich
+# Quick actions
+obs open <name>                 # Open specific vault
+obs graph [vault]               # Show graph visualization
+obs stats [vault]               # View statistics
 
-# Install AI packages (Phase 2)
-pip3 install sentence-transformers numpy scikit-learn
+# R integration (shortened)
+obs r link                      # Link R project (was: obs r-dev link)
+obs r log <file>                # Copy artifact (was: obs r-dev log)
+
+# Development
+npm test                        # Run test suite (298 tests)
+python3 src/python/obs_cli.py --help  # Python CLI help
+mkdocs serve                    # Serve docs locally
 ```
 
 ### Testing
 
 ```bash
-# Run Node.js test harness (Jest)
-npm test
-
-# Run shell integration tests for R-Dev module
-bash tests/test_r_dev.sh
-
-# Test Python CLI directly
-python3 src/python/obs_cli.py --help
+npm test                          # Full test suite (298 tests)
+pytest src/python/tests/          # Python tests only
+bash tests/test_r_dev.sh          # R-Dev integration tests
 ```
+
+### Python Path Note
+
+⚠️ **Important**: Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. Update all Python calls to use full path.
+
+## Key Locations
+
+### Root Files
+- `.STATUS` - Project status and metrics
+- `README.md` - User-facing documentation
+- `IDEAS.md` - Feature ideas and enhancements
+- `CLAUDE.md` - This file
+
+### Code Structure
+- `src/obs.zsh` - ZSH CLI interface (917 lines, Option D)
+- `src/python/` - Python backend (~11,500 lines)
+  - `core/` - Business logic (859 lines)
+  - `tui/` - TUI screens (1,701 lines)
+  - `obs_cli.py` - CLI interface (318 lines)
+- `schema/vault_db.sql` - Database schema
+- `tests/` - Test suite (298 tests)
 
 ### Documentation
-
-```bash
-# Serve docs locally
-mkdocs serve
-
-# Build docs
-mkdocs build
-
-# Deploy to GitHub Pages (automatic on push to main)
-mkdocs gh-deploy --force
-```
+- `docs/` - All documentation (organized by user/developer/planning)
+- `docs/developer/architecture.md` - Detailed architecture
+- `docs/developer/testing/` - Testing guides
+- `.claude/rules/` - Auto-loaded rules (architecture, workflows, troubleshooting)
+- `.claude/skills/` - Custom Claude Code skills
 
 ## Database Schema
 
-**Location:** `schema/vault_db.sql`
+**Location**: `schema/vault_db.sql`
 
-**Tables:**
-- `vaults`: Vault metadata
-- `notes`: Note content, metadata, hashes
-- `links`: Wikilink relationships (source → target)
-- `tags`: Tag definitions
-- `note_tags`: Many-to-many tag-note relationships
-- `graph_metrics`: PageRank, centrality, clustering
-- `scan_history`: Scan tracking and analytics
+**Core Tables**: vaults, notes, links, tags, graph_metrics, scan_history
+**Views**: orphaned_notes, hub_notes, broken_links
 
-**Views:**
-- `orphaned_notes`: Notes with no incoming/outgoing links
-- `hub_notes`: Highly connected notes (>10 links)
-- `broken_links`: Unresolved wikilinks
+Details in schema file and `docs/developer/architecture.md`.
 
-## Important Files
+## Common Workflows
 
-- `PROJECT_HUB.md`: ADHD-friendly control center
-- `PROJECT_PLAN_v2.0.md`: Complete 12-week roadmap
-- `.STATUS`: Comprehensive project status and metrics
-- `V2_QUICKSTART.md`: Quick start guide for v2.0
-- `PHASE_1_COMPLETE.md`: Phase 1 summary and usage
-- `PHASE_2_COMPLETE.md`: Phase 2 AI integration summary
-- `PHASE_4_TUI_PLAN.md`: Phase 3 TUI implementation plan (452 lines)
-- `TEST_SUITE_SUMMARY.md`: Test suite documentation (162+ tests)
-- `src/python/README.md`: Python module documentation
+### Adding a New Command (Three-Layer Approach)
 
-## Project Roadmap
+1. **Core Layer** (`src/python/core/vault_manager.py`):
+   - Add business logic method (interface-agnostic)
+   - Return domain model objects
 
-### Phase 1: Foundation ✅ COMPLETE
-- Database schema and manager
-- Vault scanner with markdown parsing
-- Graph builder with NetworkX
-- CLI integration
+2. **CLI Interface** (`src/python/obs_cli.py`):
+   - Add argparse subcommand
+   - Call core method
+   - Format output for terminal
 
-### Phase 2: AI Integration ✅ COMPLETE
-- FREE local AI providers (HuggingFace + Ollama)
-- Interactive setup wizard with auto-detection
-- Embedding generation (384-1024 dimensions)
-- Note comparison using cosine similarity
+3. **TUI Interface** (`src/python/tui/screens/`):
+   - Add key binding or button
+   - Call same core method
+   - Update widgets with results
 
-### Phase 3: TUI/Visualization ✅ COMPLETE
-- Interactive vault browser (Textual framework)
-- Note explorer with search/preview
-- Graph visualization (ASCII art)
-- Statistics dashboard
-- Keyboard navigation (arrows, vim keys, mouse)
+4. **ZSH Wrapper** (`src/obs.zsh`):
+   - Add wrapper function (optional)
+   - Use full Python path: `/opt/homebrew/bin/python3`
 
-### Phase 4: AI-Powered Features (Next)
-- Find similar notes
-- Detect duplicates
-- Topic analysis and clustering
-- Merge suggestions with reasoning
+**See `.claude/rules/workflows.md` for detailed examples.**
 
-## Architecture
+## Development Guidelines
 
-**Three-Layer Design:**
-- **Presentation Layer**: CLI (`obs_cli.py`), TUI (`tui/`), ZSH wrapper (`obs.zsh`)
-- **Application Layer**: Core business logic (`core/vault_manager.py`, `core/graph_analyzer.py`)
-- **Data Layer**: Database, file scanning, graph building
+### Code Quality
+- Follow three-layer architecture strictly
+- No business logic in presentation layers
+- Use domain models for data transfer
+- All Python calls use full path `/opt/homebrew/bin/python3`
+- Keep test coverage above 70%
 
-**See `.claude/rules/architecture.md` for detailed architecture documentation.**
+### Testing Requirements
+- Unit tests for all core logic
+- Integration tests for CLI commands
+- TUI screen tests for major workflows
+- Update test count in documentation
 
-## Additional Documentation
+### Documentation
+- Update `.STATUS` for progress tracking
+- Add entries to `IDEAS.md` for future features
+- Document new commands in appropriate docs
+- Update version history for releases
 
-Detailed documentation has been split into focused rule files in `.claude/rules/`:
+### Git Workflow
+- Work on feature branches
+- Keep commits focused and atomic
+- Update relevant docs before committing
+- Run tests before pushing
 
-- **architecture.md** - Three-layer design, module structure, implementation details
-- **workflows.md** - Common workflows, adding new commands
-- **skills.md** - Claude Code skills documentation
-- **troubleshooting.md** - Troubleshooting guide and performance tips
+## Option D: Obsidian App Clone
 
-These files are automatically loaded by Claude Code when working in relevant paths.
+**Version 2.1.0** implements Option D - a complete redesign that mimics the official Obsidian app.
 
-## Version History
+### Key Features
 
-- **2.0.0-beta** (2025-12-15):
-  - Phase 1: Foundation, scanning, graph analysis (COMPLETE)
-  - Phase 2: Free AI integration (HuggingFace + Ollama) (COMPLETE)
-  - Phase 3: TUI/Visualization (COMPLETE)
-  - Claude Code Skills for docs/knowledge/wrap-up workflow
-  - Interactive setup wizard with auto-detection
-  - Complete test suite (122 tests, 70% coverage)
-- **1.1.0** (2025-12-11): Quick wins - list, stats, unlink, completion
-- **1.0.0** (2025-12-10): Initial release - vault management, R-Dev integration
+1. **Zero-Friction Start**: `obs` opens last vault automatically
+2. **iCloud-First**: Auto-detects `~/Library/Mobile Documents/iCloud~md~obsidian/Documents`
+3. **Last-Vault Tracking**: Saved to `~/.config/obs/last_vault`
+4. **Obsidian-Style Commands**:
+   - `obs` - Open last vault (like launching Obsidian)
+   - `obs switch` - Vault switcher (like "Open another vault")
+   - `obs manage` - Vault management (like "Manage Vaults" menu)
+5. **Shortened Namespaces**: `obs r` (was `obs r-dev`)
+6. **Progressive Help**: `obs help` (simple) vs `obs help --all` (detailed)
+
+### Command Structure
+
+```
+Primary: obs, obs switch, obs manage
+Actions: obs open, obs graph, obs stats
+AI: obs ai setup, obs ai similar
+R: obs r link, obs r log, obs r context
+Legacy: obs discover, obs tui, obs vaults (still work)
+```
+
+### ADHD-Friendly Design
+
+- **One command**: Just type `obs`
+- **Smart defaults**: iCloud auto-detect, last-vault memory
+- **Progressive disclosure**: Simple help by default
+- **Visual hierarchy**: Emojis, clear categories
+- **Reduced cognitive load**: 15 → 12 commands (-20%)
+
+**See `OPTION_D_IMPLEMENTATION.md` for complete details.**
+
+## Additional Resources
+
+### Detailed Documentation
+- **Architecture**: `.claude/rules/architecture.md` (890 lines)
+- **Workflows**: `.claude/rules/workflows.md`
+- **Troubleshooting**: `.claude/rules/troubleshooting.md`
+- **Skills**: `.claude/rules/skills.md`
+
+### Planning & Status
+- **Project Hub**: `docs/planning/project-hub.md` (ADHD-friendly)
+- **Project Plan**: `docs/planning/project-plan.md` (complete roadmap)
+- **Phase Summaries**: `docs/planning/phases/`
+- **Test Overview**: `docs/developer/testing/overview.md`
+
+### External Links
+- **Published Docs**: https://data-wise.github.io/obsidian-cli-ops/
+- **Repository**: https://github.com/Data-Wise/obsidian-cli-ops
+
+---
+
+**Note**: This file focuses on quick developer reference. For comprehensive documentation, see `docs/` directory and `.claude/rules/`.

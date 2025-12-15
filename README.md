@@ -4,7 +4,7 @@
 
 `obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis and an interactive TUI interface.
 
-**Current Version**: 2.1.0-beta
+**Current Version**: 2.1.0
 
 ## ✨ Features
 
@@ -23,14 +23,18 @@
 - **Analytics**: Comprehensive vault statistics and insights
 - **AI Features**: Note similarity, duplicate detection (100% free, local, private)
 
-### 🖥️ v2.1: Interactive TUI (NEW!)
-- **Full-Screen Interface**: Beautiful terminal UI with Textual framework
+### 🖥️ v2.1: Obsidian App Clone (NEW!)
+- **Zero-Friction Start**: Just type `obs` - opens last vault automatically
+- **Obsidian-Style Commands**: Works exactly like the official Obsidian app
+- **iCloud-First**: Auto-detects standard Obsidian iCloud location
+- **Last-Vault Tracking**: Remembers where you were (like Obsidian app)
+- **Full-Screen TUI**: Beautiful terminal UI with Textual framework
 - **Vault Browser**: Interactive vault selection with real-time statistics
 - **Note Explorer**: Search, filter, and preview notes with metadata
 - **Graph Visualizer**: ASCII art graph with hub/orphan detection
 - **Statistics Dashboard**: Tag analytics, link distribution, scan history
 - **Keyboard Navigation**: Vim-style keys, arrow keys, and shortcuts
-- **ADHD-Friendly Design**: Clear hierarchy, colors, emojis, and borders
+- **ADHD-Friendly**: One command, smart defaults, progressive disclosure
 
 ## 🚀 Quick Start
 
@@ -47,27 +51,80 @@ pip3 install -r src/python/requirements.txt
 ```
 
 ### Basic Usage
-```bash
-# Discover and scan vaults
-obs discover ~/Documents --scan
 
-# Launch interactive TUI
-obs tui
+**Option D: Obsidian App Clone** - Just type `obs`!
+
+```bash
+# The one command you need (opens last vault or shows picker)
+obs
+
+# Switch vaults (like "Open another vault" in Obsidian)
+obs switch
+
+# Manage vaults (like "Manage Vaults" menu in Obsidian)
+obs manage
+
+# Open specific vault
+obs open <vault_name>
+
+# Show graph visualization
+obs graph
 
 # View statistics
 obs stats
 
 # Setup AI features (optional, 100% local)
 obs ai setup --quick
+
+# R integration (shortened from obs r-dev)
+obs r link
+obs r log result.png
 ```
+
+**Pro Tip:** The CLI works exactly like the Obsidian app - just type `obs` and it does the right thing!
+
+## 📋 Planning & Development
+
+**Current Status:** v2.1.0 - Option D Complete (95% complete)
+
+### Active Planning Files
+- **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
+- **[IDEAS.md](IDEAS.md)** - Future features and brainstorming 💡 What could be built
+
+### For Contributors
+- **[CLAUDE.md](CLAUDE.md)** - Developer guide and architecture quick reference
+- **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center with current status
+- **[.STATUS](.STATUS)** - Project metrics and progress tracking
+
+**Want to contribute?** Start with [TODOS.md](TODOS.md) to see what needs doing!
 
 ## 📖 Documentation
 
-- **[Full Documentation](https://data-wise.github.io/obsidian-cli-ops/)** - Complete guides and API reference
-- **[Installation Guide](docs_mkdocs/installation.md)** - Detailed setup instructions
-- **[v2.0 Features](docs_mkdocs/v2.0.md)** - Knowledge graph and AI features
-- **[AI Setup Guide](docs_mkdocs/ai-setup.md)** - Complete AI configuration guide
+### Getting Started
+- **[Documentation Index](docs/README.md)** - Complete documentation structure
+- **[Quickstart Guide](docs/user/getting-started/quickstart.md)** - Get up and running with v2.0
+- **[Full Documentation](https://data-wise.github.io/obsidian-cli-ops/)** - Published guides and API reference
 - **[CLAUDE.md](CLAUDE.md)** - Developer guide for contributing
+
+### TUI Navigation (New to Vim?)
+- **[Vim Tutorial](docs/user/guides/tui/vim-tutorial.md)** - Complete beginner's guide to vim navigation
+- **[Quick Reference](docs/user/guides/tui/quick-reference.md)** - Detailed keyboard shortcuts reference
+- **[Cheat Sheet](docs/user/guides/tui/cheat-sheet.txt)** - Printable one-page cheat sheet
+
+### User Guides
+- **[Unified Command Guide](docs/user/guides/unified-command.md)** - Using the unified `obs` command
+- **[AI Setup Guide](docs/user/guides/ai-setup.md)** - Setting up AI features (100% local)
+- **[Keyboard Shortcuts](docs/user/guides/keyboard-shortcuts.md)** - All TUI shortcuts
+
+### Developer Docs
+- **[Architecture](docs/developer/architecture.md)** - Three-layer system design
+- **[Testing Guide](docs/developer/testing/overview.md)** - Test suite overview
+- **[Sandbox Testing](docs/developer/testing/sandbox.md)** - Comprehensive testing guide
+
+### Planning & Releases
+- **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
+- **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
+- **[Latest Release](docs/releases/v1.1.0.md)** - v1.1.0 release notes
 
 ## 🧪 Test Coverage
 
@@ -94,7 +151,11 @@ MIT License - See LICENSE file for details.
 
 - ✅ v1.x: Production Ready
 - ✅ v2.0: Knowledge Graph - Complete
-- ✅ v2.1: Interactive TUI - Complete (Phases 4.1-4.5)
+- ✅ v2.1: Option D (Obsidian App Clone) - Complete
+  - Interactive TUI (Phases 4.1-4.5)
+  - ADHD-friendly command structure
+  - iCloud-first defaults
+  - Last-vault tracking
 - 🚧 Future: AI Features, Learning System, Automation
 
 ---
