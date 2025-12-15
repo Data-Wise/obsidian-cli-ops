@@ -1,42 +1,59 @@
 #compdef obs
 
 # Zsh completion for obs (Obsidian CLI Ops)
-# Install: Copy to a directory in $fpath (e.g., /usr/local/share/zsh/site-functions/)
+# Option D: Obsidian App Clone
+# Install: Copy to ~/.zsh/completions/ and add to fpath
 
 _obs() {
     local -a commands
     commands=(
-        'check:Check dependencies (curl, jq, unzip)'
-        'list:Show configured vaults and R project mappings'
-        'sync:Sync Core Config from Root to Sub-vaults'
-        'install:Install a Community Plugin'
-        'search:Search for a plugin ID'
-        'audit:Check for misplaced files in Root'
-        'r-dev:R development integration commands'
-        'tui:Launch interactive TUI'
+        'switch:Switch vaults (Obsidian-style vault picker)'
+        'manage:Manage vaults (create/open/remove/rename)'
+        'open:Open specific vault'
+        'graph:Show graph visualization'
+        'stats:Show vault statistics'
+        'search:Search across all vaults'
+        'ai:AI features (setup/similar/duplicates)'
+        'r:R integration (link/log/context/draft)'
+        'discover:Discover vaults (legacy)'
+        'tui:Launch TUI (legacy)'
+        'vaults:List vaults (legacy)'
+        'analyze:Analyze graph (legacy)'
+        'sync:Sync vault settings'
+        'install:Install community plugin'
         'help:Show help message'
-        'version:Show version information'
+        'version:Show version'
+        'check:Check dependencies'
     )
 
-    local -a r_dev_commands
-    r_dev_commands=(
-        'link:Link current R project to an Obsidian folder'
-        'unlink:Remove current R project mapping'
-        'status:Show current R project link status'
-        'log:Copy artifact to Obsidian 06_Analysis'
-        'context:Fetch theory notes from Knowledge_Base'
-        'draft:Copy vignette/Rmd to Obsidian 02_Drafts'
+    local -a manage_commands
+    manage_commands=(
+        'create:Create new vault'
+        'open:Open folder as vault'
+        'remove:Remove vault from database'
+        'rename:Rename vault'
+        'info:Show vault details'
     )
 
-    local -a global_flags
-    global_flags=(
-        '--verbose:Enable verbose debug logging'
-        '-v:Enable verbose debug logging (short form)'
+    local -a ai_commands
+    ai_commands=(
+        'setup:Interactive AI setup wizard'
+        'config:Show AI configuration'
+        'similar:Find similar notes'
+        'duplicates:Find duplicate notes'
+    )
+
+    local -a r_commands
+    r_commands=(
+        'link:Link R project to vault folder'
+        'unlink:Remove R project mapping'
+        'status:Show R project link status'
+        'log:Copy artifact to vault'
+        'context:Search theory notes'
+        'draft:Copy draft to vault'
     )
 
     _arguments -C \
-        '(- :)'{-h,--help}'[Show help message]' \
-        '(- :)'{-V,--version}'[Show version information]' \
         '(-v --verbose)'{-v,--verbose}'[Enable verbose logging]' \
         '1: :->command' \
         '*:: :->args'
@@ -47,47 +64,121 @@ _obs() {
             ;;
         args)
             case "${words[1]}" in
-                r-dev)
+                switch)
+                    _message 'vault name (optional)'
+                    ;;
+
+                manage)
                     _arguments \
-                        '1: :->r_dev_command' \
-                        '*:: :->r_dev_args'
+                        '1: :->manage_command' \
+                        '*:: :->manage_args'
 
                     case "$state" in
-                        r_dev_command)
-                            _describe -t r_dev_commands 'obs r-dev commands' r_dev_commands
+                        manage_command)
+                            _describe -t manage_commands 'obs manage commands' manage_commands
                             ;;
-                        r_dev_args)
-                            case "${words[1]}" in
-                                link)
-                                    _message 'obsidian_folder path (e.g., Research_Lab/MyProject)'
+                        manage_args)
+                            case "${words[2]}" in
+                                open)
+                                    _arguments '1:path:_directories'
                                     ;;
-                                log)
-                                    _arguments \
-                                        '1:file:_files' \
-                                        '-m[Message]:message:'
-                                    ;;
-                                context)
-                                    _message 'search term'
-                                    ;;
-                                draft)
-                                    _files
+                                remove|info)
+                                    _message 'vault ID'
                                     ;;
                             esac
                             ;;
                     esac
                     ;;
+
+                open)
+                    _message 'vault name'
+                    ;;
+
+                graph|stats)
+                    _message 'vault ID (optional)'
+                    ;;
+
+                search)
+                    _message 'search query'
+                    ;;
+
+                ai)
+                    _arguments \
+                        '1: :->ai_command' \
+                        '*:: :->ai_args'
+
+                    case "$state" in
+                        ai_command)
+                            _describe -t ai_commands 'obs ai commands' ai_commands
+                            ;;
+                        ai_args)
+                            case "${words[2]}" in
+                                setup)
+                                    _arguments '--quick[Quick start (auto-detect)]'
+                                    ;;
+                                similar)
+                                    _message 'note ID'
+                                    ;;
+                            esac
+                            ;;
+                    esac
+                    ;;
+
+                r|r-dev)
+                    _arguments \
+                        '1: :->r_command' \
+                        '*:: :->r_args'
+
+                    case "$state" in
+                        r_command)
+                            _describe -t r_commands 'obs r commands' r_commands
+                            ;;
+                        r_args)
+                            case "${words[2]}" in
+                                link)
+                                    _message 'obsidian folder'
+                                    ;;
+                                log|draft)
+                                    _arguments '1:file:_files'
+                                    ;;
+                                context)
+                                    _message 'search term'
+                                    ;;
+                            esac
+                            ;;
+                    esac
+                    ;;
+
+                discover)
+                    _arguments \
+                        '1:path:_directories' \
+                        '--scan[Scan after discovery]' \
+                        '(-v --verbose)'{-v,--verbose}'[Verbose output]'
+                    ;;
+
+                tui)
+                    _arguments \
+                        '--vault-id[Open specific vault]:vault_id:' \
+                        '--screen[Open specific screen]:screen:(vaults notes graph stats)'
+                    ;;
+
+                analyze)
+                    _message 'vault ID'
+                    ;;
+
+                sync)
+                    _message 'vault ID (optional)'
+                    ;;
+
                 install)
                     _arguments \
                         '1:plugin name:' \
-                        '2:flag:(--all --vault)' \
-                        '3:vault name:'
+                        '--all[Install to all vaults]' \
+                        '--vault[Install to specific vault]:vault_name:'
                     ;;
-                search)
-                    _message 'plugin search query'
-                    ;;
-                sync)
-                    _arguments \
-                        '1:flag:(--force)'
+
+                help)
+                    _arguments '--all[Show all commands]'
                     ;;
             esac
             ;;

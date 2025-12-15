@@ -19,21 +19,44 @@
 # --- Load Configuration ---
 CONFIG_FILE="$HOME/.config/obs/config"
 MAP_FILE="$HOME/.config/obs/project_map.json"
+LAST_VAULT_FILE="$HOME/.config/obs/last_vault"
+
+# iCloud Obsidian location (default root - Option D)
+ICLOUD_OBSIDIAN="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents"
 
 _load_config() {
+    # Create config dir if it doesn't exist
+    mkdir -p "$HOME/.config/obs"
+
     if [[ -f "$CONFIG_FILE" ]]; then
         source "$CONFIG_FILE"
-    else
-        echo "\033[0;31m[ERROR]\033[0m Config file not found at $CONFIG_FILE"
-        echo "Please create it with OBS_ROOT and VAULTS variables."
-        return 1
+    fi
+
+    # Set default OBS_ROOT to iCloud if not configured (Option D)
+    if [[ -z "$OBS_ROOT" ]]; then
+        if [[ -d "$ICLOUD_OBSIDIAN" ]]; then
+            OBS_ROOT="$ICLOUD_OBSIDIAN"
+            _log_verbose "Using iCloud Obsidian: $OBS_ROOT"
+        fi
+    fi
+}
+
+_save_last_vault() {
+    local vault_id=$1
+    echo "$vault_id" > "$LAST_VAULT_FILE"
+    _log_verbose "Saved last vault: $vault_id"
+}
+
+_get_last_vault() {
+    if [[ -f "$LAST_VAULT_FILE" ]]; then
+        cat "$LAST_VAULT_FILE"
     fi
 }
 
 # Defaults
 : ${PLUGIN_REGISTRY:="https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-plugins.json"}
 VERBOSE=false
-VERSION="2.0.0-beta"
+VERSION="2.1.0"
 
 # --- Helper Functions ---
 
@@ -136,46 +159,73 @@ _get_mapped_path() {
 # --- Subcommands ---
 
 obs_help() {
-    echo "Obsidian CLI Ops (obs)"
-    echo "----------------------"
-    echo "Usage: obs [--verbose|-v] <command> [options]"
+    local show_all=${1:-false}
+
+    echo "Obsidian CLI Ops (obs) v$VERSION"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "Global Flags:"
-    echo "  --verbose, -v    Enable verbose logging"
+    echo "📖 Usage: obs [command] [options]"
     echo ""
-    echo "Core Commands:"
-    echo "  check     Check dependencies"
-    echo "  list      Show configured vaults and R project mappings"
-    echo "  sync      Sync Core Config (Theme, Hotkeys) from Root to Sub-vaults"
-    echo "  install   Install a Community Plugin"
-    echo "  search    Search for a plugin ID"
-    echo "  audit     Check for misplaced files in Root"
+
+    if [[ "$show_all" == "true" ]]; then
+        echo "🎯 PRIMARY COMMANDS (Start Here)"
+    else
+        echo "🎯 QUICK START"
+    fi
+
+    echo "  obs                       Open last vault (or show vault picker)"
+    echo "  obs switch [name]         Switch vaults (Obsidian-style vault picker)"
+    echo "  obs manage                Manage vaults (create/open/remove/rename)"
     echo ""
-    echo "R-Dev Integration (obs r-dev):"
-    echo "  r-dev link <obs_folder>   Link current R project to an Obsidian folder"
-    echo "  r-dev unlink              Remove current R project mapping"
-    echo "  r-dev status              Show current R project link status"
-    echo "  r-dev log <file> [-m msg] Copy artifact to Obsidian 06_Analysis"
-    echo "  r-dev context <term>      Fetch theory notes from Knowledge_Base"
-    echo "  r-dev draft <file>        Copy vignette/Rmd to Obsidian 02_Drafts"
+
+    if [[ "$show_all" == "true" ]]; then
+        echo "⚡ QUICK ACTIONS"
+        echo "  obs open <name>           Open specific vault in TUI"
+        echo "  obs graph [vault]         Show graph visualization"
+        echo "  obs stats [vault]         Show statistics"
+        echo "  obs search <query>        Search across all vaults"
+        echo ""
+
+        echo "🛠️  VAULT MANAGEMENT"
+        echo "  obs manage create         Create new vault"
+        echo "  obs manage open <path>    Open folder as vault"
+        echo "  obs manage remove <name>  Remove vault from database"
+        echo "  obs manage rename         Rename vault"
+        echo "  obs manage info <name>    Show vault details"
+        echo ""
+
+        echo "🤖 AI FEATURES"
+        echo "  obs ai setup              Interactive AI setup wizard"
+        echo "  obs ai setup --quick      Quick start (auto-detect)"
+        echo "  obs ai config             Show AI configuration"
+        echo "  obs ai similar <note>     Find similar notes"
+        echo ""
+
+        echo "📦 R INTEGRATION"
+        echo "  obs r link                Link R project to vault folder"
+        echo "  obs r unlink              Remove R project mapping"
+        echo "  obs r status              Show R project link status"
+        echo "  obs r log <file>          Copy artifact to vault"
+        echo "  obs r context <term>      Search theory notes"
+        echo "  obs r draft <file>        Copy draft to vault"
+        echo ""
+
+        echo "🔧 UTILITIES"
+        echo "  obs sync [vault]          Sync vault settings"
+        echo "  obs install <plugin>      Install community plugin"
+        echo "  obs check                 Check dependencies"
+        echo "  obs version               Show version"
+        echo "  obs help --all            Show all commands"
+        echo ""
+
+        echo "📍 DEFAULT ROOT: $ICLOUD_OBSIDIAN"
+        echo "📝 CONFIG: $CONFIG_FILE"
+    else
+        echo "💡 TIP: Just type 'obs' to get started!"
+        echo ""
+        echo "More commands: obs help --all"
+    fi
     echo ""
-    echo "Knowledge Graph (v2.0):"
-    echo "  discover [path]           Discover and scan Obsidian vaults"
-    echo "  analyze <vault_id>        Analyze vault graph and calculate metrics"
-    echo "  vaults                    List all vaults in database"
-    echo "  stats [vault_id]          Show database or vault statistics"
-    echo ""
-    echo "AI Integration (v2.0):"
-    echo "  ai setup                  Interactive AI setup wizard"
-    echo "  ai setup --quick          Quick start (auto-detect and install)"
-    echo "  ai config                 Show current AI configuration"
-    echo ""
-    echo "TUI Interface (v2.0):"
-    echo "  tui                       Launch interactive TUI"
-    echo "  tui --vault-id <id>       Open specific vault"
-    echo "  tui --screen <name>       Open specific screen (vaults|notes|graph|stats)"
-    echo ""
-    echo "Config loaded from: $CONFIG_FILE"
 }
 
 obs_version() {
@@ -480,7 +530,7 @@ obs_discover() {
         cmd+=(--scan)
     fi
 
-    python3 "${cmd[@]}"
+    /opt/homebrew/bin/python3 "${cmd[@]}"
 }
 
 obs_analyze() {
@@ -505,7 +555,7 @@ obs_analyze() {
         cmd+=(--verbose)
     fi
 
-    python3 "${cmd[@]}"
+    /opt/homebrew/bin/python3 "${cmd[@]}"
 }
 
 obs_vaults() {
@@ -513,7 +563,7 @@ obs_vaults() {
 
     _log_verbose "Listing vaults in database"
 
-    python3 "$python_cli" vaults
+    /opt/homebrew/bin/python3 "$python_cli" vaults
 }
 
 obs_stats() {
@@ -523,9 +573,9 @@ obs_stats() {
     _log_verbose "Showing statistics"
 
     if [[ -n "$vault_id" ]]; then
-        python3 "$python_cli" stats --vault "$vault_id"
+        /opt/homebrew/bin/python3 "$python_cli" stats --vault "$vault_id"
     else
-        python3 "$python_cli" stats
+        /opt/homebrew/bin/python3 "$python_cli" stats
     fi
 }
 
@@ -546,12 +596,12 @@ obs_ai() {
                 cmd+=(--quick)
             fi
 
-            python3 "${cmd[@]}"
+            /opt/homebrew/bin/python3 "${cmd[@]}"
             ;;
 
         config)
             _log_verbose "Showing AI configuration"
-            python3 "$python_cli" "ai" "config"
+            /opt/homebrew/bin/python3 "$python_cli" "ai" "config"
             ;;
 
         *)
@@ -582,6 +632,8 @@ obs_tui() {
         case "$1" in
             --vault-id)
                 cmd+=(--vault-id "$2")
+                # Save last vault
+                _save_last_vault "$2"
                 shift 2
                 ;;
             --screen)
@@ -594,7 +646,135 @@ obs_tui() {
         esac
     done
 
-    python3 "${cmd[@]}"
+    /opt/homebrew/bin/python3 "${cmd[@]}"
+}
+
+# --- Option D Commands ---
+
+obs_switch() {
+    # Vault switcher (like Obsidian's "Open another vault")
+    local vault_name=$1
+    local python_cli=$(_get_python_cli) || return 1
+
+    if [[ -n "$vault_name" ]]; then
+        # Direct switch to named vault
+        _log "INFO" "Switching to vault: $vault_name"
+        /opt/homebrew/bin/python3 "$python_cli" tui --vault-name "$vault_name"
+        _save_last_vault "$vault_name"
+    else
+        # Show vault picker
+        _log_verbose "Opening vault switcher"
+        /opt/homebrew/bin/python3 "$python_cli" tui --screen vaults
+    fi
+}
+
+obs_open() {
+    # Open specific vault (like "Open" in Obsidian)
+    local vault_name=$1
+    local python_cli=$(_get_python_cli) || return 1
+
+    if [[ -z "$vault_name" ]]; then
+        _log "ERROR" "Vault name required"
+        echo "Usage: obs open <vault_name>"
+        echo ""
+        echo "Get vault names with: obs switch"
+        return 1
+    fi
+
+    _log_verbose "Opening vault: $vault_name"
+    /opt/homebrew/bin/python3 "$python_cli" tui --vault-name "$vault_name"
+    _save_last_vault "$vault_name"
+}
+
+obs_manage() {
+    # Manage vaults (like Obsidian's "Manage Vaults" menu)
+    local subcmd=$1
+    shift
+    local python_cli=$(_get_python_cli) || return 1
+
+    case "$subcmd" in
+        create)
+            _log "INFO" "Creating new vault..."
+            # Future: Interactive vault creation
+            _log "ERROR" "Not yet implemented. Use: obs discover <path> --scan"
+            return 1
+            ;;
+
+        open)
+            local path=$1
+            if [[ -z "$path" ]]; then
+                _log "ERROR" "Path required"
+                echo "Usage: obs manage open <path>"
+                return 1
+            fi
+            _log "INFO" "Opening folder as vault: $path"
+            /opt/homebrew/bin/python3 "$python_cli" discover "$path" --scan
+            ;;
+
+        remove)
+            local vault_id=$1
+            if [[ -z "$vault_id" ]]; then
+                _log "ERROR" "Vault ID required"
+                echo "Usage: obs manage remove <vault_id>"
+                return 1
+            fi
+            _log "INFO" "Removing vault: $vault_id"
+            # Future: Implement vault removal in Python CLI
+            _log "ERROR" "Not yet implemented"
+            return 1
+            ;;
+
+        rename)
+            _log "ERROR" "Not yet implemented"
+            return 1
+            ;;
+
+        info)
+            local vault_id=$1
+            if [[ -z "$vault_id" ]]; then
+                _log "ERROR" "Vault ID required"
+                echo "Usage: obs manage info <vault_id>"
+                return 1
+            fi
+            /opt/homebrew/bin/python3 "$python_cli" stats --vault "$vault_id"
+            ;;
+
+        ""|help)
+            echo "Manage Vaults"
+            echo "━━━━━━━━━━━━━"
+            echo ""
+            echo "Usage: obs manage <subcommand>"
+            echo ""
+            echo "Subcommands:"
+            echo "  create              Create new vault"
+            echo "  open <path>         Open folder as vault"
+            echo "  remove <vault_id>   Remove vault from database"
+            echo "  rename              Rename vault"
+            echo "  info <vault_id>     Show vault details"
+            echo ""
+            ;;
+
+        *)
+            _log "ERROR" "Unknown manage subcommand: $subcmd"
+            echo "Run 'obs manage' for help"
+            return 1
+            ;;
+    esac
+}
+
+obs_graph() {
+    # Show graph visualization
+    local vault_id=$1
+    local python_cli=$(_get_python_cli) || return 1
+
+    if [[ -n "$vault_id" ]]; then
+        # Specific vault
+        /opt/homebrew/bin/python3 "$python_cli" tui --vault-id "$vault_id" --screen graph
+    else
+        # Current vault or prompt
+        _log_verbose "Opening graph view"
+        /opt/homebrew/bin/python3 "$python_cli" tui --screen graph
+    fi
 }
 
 # --- Dispatch ---
@@ -618,10 +798,34 @@ obs() {
         shift
     fi
 
-    # Commands that don't need config
+    # Load config first for iCloud detection
+    _load_config
+
+    # OPTION D: Default behavior (no command)
+    if [[ -z "$cmd" ]]; then
+        local last_vault=$(_get_last_vault)
+        local python_cli=$(_get_python_cli) || return 1
+
+        if [[ -n "$last_vault" ]]; then
+            # Open last-used vault (like Obsidian app)
+            _log_verbose "Opening last vault: $last_vault"
+            /opt/homebrew/bin/python3 "$python_cli" tui --vault-id "$last_vault"
+        else
+            # Show vault picker (like first launch)
+            _log_verbose "No last vault, showing vault picker"
+            /opt/homebrew/bin/python3 "$python_cli" tui --screen vaults
+        fi
+        return $?
+    fi
+
+    # Commands that don't need extra processing
     case "$cmd" in
-        "help"|"")
-            obs_help
+        "help")
+            if [[ "$1" == "--all" ]]; then
+                obs_help true
+            else
+                obs_help false
+            fi
             return 0
             ;;
         "version")
@@ -632,6 +836,26 @@ obs() {
             obs_check "$@"
             return $?
             ;;
+
+        # Option D: New primary commands
+        "switch")
+            obs_switch "$@"
+            return $?
+            ;;
+        "manage")
+            obs_manage "$@"
+            return $?
+            ;;
+        "open")
+            obs_open "$@"
+            return $?
+            ;;
+        "graph")
+            obs_graph "$@"
+            return $?
+            ;;
+
+        # V2.0 commands (kept for compatibility)
         "discover")
             obs_discover "$@"
             return $?
@@ -648,27 +872,47 @@ obs() {
             obs_stats "$@"
             return $?
             ;;
-        "ai")
-            obs_ai "$@"
-            return $?
-            ;;
         "tui")
             obs_tui "$@"
             return $?
             ;;
-    esac
 
-    # Load config for all other commands
-    _load_config || return 1
+        # AI commands
+        "ai")
+            obs_ai "$@"
+            return $?
+            ;;
 
-    case "$cmd" in
-        "list") obs_list "$@" ;;
-        "sync") obs_sync "$@" ;;
-        "install") obs_install "$@" ;;
-        "search") obs_search "$@" ;;
-        "audit") obs_audit "$@" ;;
-        "r-dev") obs_r_dev "$@" ;;
-        *) _log "ERROR" "Unknown command: $cmd"; obs_help ;;
+        # R integration (renamed from r-dev to r)
+        "r"|"r-dev")
+            obs_r_dev "$@"
+            return $?
+            ;;
+
+        # V1.x commands (require OBS_ROOT config)
+        "list"|"sync"|"install"|"search"|"audit")
+            if [[ -z "$OBS_ROOT" ]]; then
+                _log "ERROR" "OBS_ROOT not configured"
+                echo "This command requires v1.x configuration."
+                echo "See: obs help --all"
+                return 1
+            fi
+
+            case "$cmd" in
+                "list") obs_list "$@" ;;
+                "sync") obs_sync "$@" ;;
+                "install") obs_install "$@" ;;
+                "search") obs_search "$@" ;;
+                "audit") obs_audit "$@" ;;
+            esac
+            ;;
+
+        *)
+            _log "ERROR" "Unknown command: $cmd"
+            echo ""
+            obs_help false
+            return 1
+            ;;
     esac
 }
 
