@@ -2,13 +2,41 @@ priority: P2
 status: active
 progress: 92
 updated: 2025-12-15
-Next: Test quick wins manually → Update docs → Commit/push → Plan next phase
+Next: Resume aiterm development (iterm2-context-switcher MVP Day 1)
 
-## ✅ Just Completed (2025-12-15)
-- Implemented 4 quick wins (TUI alias, JSON export, scan timestamp, keyboard shortcuts)
-- Created comprehensive unit tests (28 tests, all passing)
-- Files: test_quick_wins.py (481 lines), generate_bindings_docs.py (169 lines)
-- Total: ~860 lines (implementation + tests), 100% passing
+## ✅ Just Completed (2025-12-15 - Context Overflow Fix)
+
+### CLAUDE.md Refactoring (Major)
+- ✅ Fixed SessionStart hook error (removed unused quota program)
+- ✅ Refactored CLAUDE.md from 1068 lines → 208 lines (80% reduction!)
+- ✅ Created `.claude/rules/` structure with 4 focused files:
+  - architecture.md (370 lines) - Three-layer design, module structure
+  - workflows.md (89 lines) - Common workflows, adding commands
+  - skills.md (101 lines) - Claude Code skills documentation
+  - troubleshooting.md (84 lines) - Troubleshooting guide
+- ✅ Cleaned up `.claude/settings.local.json` (removed malformed entries)
+- ✅ Created backup: CLAUDE.md.backup-20251215
+- ✅ **Result:** Context overflow issue fixed! Sessions should start normally now
+
+## ✅ Previously Completed (2025-12-15)
+
+### Architecture Refactoring (Major)
+- ✅ Refactored to three-layer architecture (Presentation → Application → Data)
+- ✅ Created core layer (`src/python/core/`) with 860 lines
+  - VaultManager (311 lines): Vault business logic
+  - GraphAnalyzer (311 lines): Graph business logic
+  - Domain models (237 lines): Vault, Note, ScanResult, GraphMetrics, VaultStats
+  - Custom exceptions: VaultNotFoundError, ScanError, AnalysisError
+- ✅ Updated CLI and TUI to use core layer (zero duplication)
+- ✅ Created ARCHITECTURE.md (890 lines, comprehensive guide)
+- ✅ Updated CLAUDE.md with three-layer architecture section
+- ✅ Updated RESEARCH_CLI_GUI_BEST_PRACTICES.md with implementation status
+
+### Quick Wins Implementation
+- ✅ Implemented 4 quick wins (TUI alias, JSON export, scan timestamp, keyboard shortcuts)
+- ✅ Created comprehensive unit tests (28 tests, all passing)
+- ✅ Files: test_quick_wins.py (481 lines), generate_bindings_docs.py (169 lines)
+- ✅ Total: ~860 lines (implementation + tests), 100% passing
 
 ## 🎯 Next Action
 **Choose one:**
@@ -326,14 +354,17 @@ Next: Test quick wins manually → Update docs → Commit/push → Plan next pha
 
 ### Code Statistics
 ```
-Total Lines of Code: ~10,600
+Total Lines of Code: ~11,500
 - ZSH: ~680 lines (obs.zsh, +40 for TUI)
-- Python: ~6,630 lines (12 modules, +1,830 for TUI/skills)
-  - Core: ~4,500 lines (9 modules)
-  - TUI: ~1,330 lines (app.py 282, vaults.py 267, notes.py 378, graph.py 378, init files)
+- Python: ~7,500 lines (15 modules, +2,700 for TUI/skills/core)
+  - Core Layer: ~860 lines (vault_manager.py 311, graph_analyzer.py 311, models.py 237, exceptions.py)
+  - Data Layer: ~4,500 lines (9 modules: db_manager, vault_scanner, graph_builder, etc.)
+  - Presentation Layer: ~2,020 lines
+    - CLI: 318 lines (obs_cli.py)
+    - TUI: ~1,700 lines (app.py 282, vaults.py 267, notes.py 378, graph.py 378, stats.py 420)
   - Tests: ~2,120 lines (124 Python tests)
 - Skills: ~960 lines (4 markdown files in .claude/skills/)
-- Docs: ~4,400 lines (15+ files, including skills README)
+- Docs: ~5,500 lines (17+ files, including ARCHITECTURE.md)
 - Tests: 164 total (124 Python + 40 Jest)
 ```
 
@@ -341,12 +372,19 @@ Total Lines of Code: ~10,600
 ```
 Core Files:
 - src/obs.zsh (680 lines, +40 for TUI)
-- src/python/*.py (9 files, ~4,500 lines)
-- src/python/tui/ (6 files, ~1,330 lines)
+- src/python/core/ (4 files, ~860 lines) ← NEW: APPLICATION LAYER
+  - vault_manager.py (311 lines)
+  - graph_analyzer.py (311 lines)
+  - models.py (237 lines)
+  - exceptions.py (~10 lines)
+- src/python/*.py (9 files, ~4,500 lines) ← DATA LAYER
+- src/python/obs_cli.py (318 lines) ← PRESENTATION LAYER
+- src/python/tui/ (8 files, ~1,700 lines) ← PRESENTATION LAYER
   - app.py (282 lines)
   - screens/vaults.py (267 lines)
   - screens/notes.py (378 lines)
   - screens/graph.py (378 lines)
+  - screens/stats.py (420 lines)
   - screens/__init__.py, widgets/__init__.py, __init__.py
 
 Skills:
@@ -362,9 +400,11 @@ Tests:
 - src/python/tests/*.py (5 files, ~2,120 lines, 124 tests)
 
 Documentation:
-- CLAUDE.md (630 lines, updated)
+- CLAUDE.md (850 lines, updated with 3-layer architecture) ← UPDATED
+- ARCHITECTURE.md (890 lines, comprehensive guide) ← NEW
+- RESEARCH_CLI_GUI_BEST_PRACTICES.md (780 lines, updated with status) ← UPDATED
 - docs_mkdocs/*.md (10+ files, ~2,500 lines)
-- *.md (15+ files, ~2,400 lines, including PHASE_4_TUI_PLAN.md)
+- *.md (17+ files, ~3,200 lines total)
 ```
 
 ### Dependencies

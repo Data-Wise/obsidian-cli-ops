@@ -14,18 +14,19 @@ from pathlib import Path
 from typing import Optional
 
 from db_manager import DatabaseManager
-from vault_scanner import VaultScanner
-from graph_builder import GraphBuilder
+from core.vault_manager import VaultManager
+from core.graph_analyzer import GraphAnalyzer
+from core.exceptions import VaultNotFoundError, ScanError, AnalysisError
 
 
 class ObsCLI:
-    """Main CLI handler for obs Python commands."""
+    """Main CLI handler for obs Python commands (presentation layer only)."""
 
     def __init__(self):
         """Initialize CLI."""
         self.db = DatabaseManager()
-        self.scanner = VaultScanner(self.db)
-        self.graph = GraphBuilder(self.db)
+        self.vault_manager = VaultManager(self.db)
+        self.graph_analyzer = GraphAnalyzer(self.db)
 
     def discover(self, root_path: str, scan: bool = False, verbose: bool = False):
         """
@@ -36,20 +37,30 @@ class ObsCLI:
             scan: Whether to scan discovered vaults
             verbose: Print detailed output
         """
-        vaults = self.scanner.discover_vaults(root_path, verbose=verbose)
+        try:
+            vaults = self.vault_manager.discover_vaults(root_path)
+        except VaultNotFoundError as e:
+            print(f"❌ {e}")
+            sys.exit(1)
 
         if not vaults:
             print("No vaults found.")
             return
+
+        if verbose:
+            print(f"\n✓ Found {len(vaults)} vault(s):")
+            for vault_path in vaults:
+                print(f"  • {vault_path}")
 
         if scan:
             print(f"\n📂 Scanning {len(vaults)} vault(s)...\n")
             for vault_path in vaults:
                 vault_name = Path(vault_path).name
                 try:
-                    stats = self.scanner.scan_vault(vault_path, vault_name, verbose=verbose)
+                    result = self.vault_manager.scan_vault(vault_path, vault_name)
+                    self._print_scan_result(result, verbose)
                     print("")
-                except Exception as e:
+                except (VaultNotFoundError, ScanError) as e:
                     print(f"❌ Error scanning {vault_name}: {e}\n")
 
     def scan(self, vault_path: str, vault_name: Optional[str] = None,
@@ -64,17 +75,18 @@ class ObsCLI:
             verbose: Print detailed output
         """
         try:
-            # Scan vault
-            stats = self.scanner.scan_vault(vault_path, vault_name, verbose=verbose)
+            # Scan vault using core layer
+            result = self.vault_manager.scan_vault(vault_path, vault_name)
+
+            # Print scan result
+            self._print_scan_result(result, verbose)
 
             # Analyze graph if requested
             if analyze:
-                vault = self.db.get_vault_by_path(vault_path)
-                if vault:
-                    print("")
-                    self.analyze(vault['id'], verbose=verbose)
+                print("")
+                self.analyze(result.vault_id, verbose=verbose)
 
-        except Exception as e:
+        except (VaultNotFoundError, ScanError) as e:
             print(f"❌ Error: {e}")
             sys.exit(1)
 
@@ -87,21 +99,30 @@ class ObsCLI:
             verbose: Print detailed output
         """
         try:
-            stats = self.graph.analyze_vault(vault_id, verbose=verbose)
+            # Run analysis using core layer
+            result = self.graph_analyzer.analyze_vault(vault_id)
+
+            # Print results
+            print(f"📊 Graph Analysis: {result['vault_name']}")
+            print(f"   Notes: {result['total_notes']}")
+            print(f"   Links: {result['total_edges']}")
+            print(f"   Density: {result['graph_density']:.4f}")
+            print(f"   Clusters: {result['clusters_found']}")
 
             if verbose:
                 # Show additional insights
                 print("\n📈 Insights:")
 
                 # Top hubs
-                hubs = self.db.get_hub_notes(vault_id, limit=5)
+                hubs = self.graph_analyzer.get_hub_notes(vault_id, limit=5)
                 if hubs:
                     print("\n  🌟 Top Hub Notes:")
                     for hub in hubs:
-                        print(f"    • {hub['title']} ({hub['total_degree']} connections)")
+                        total_degree = hub.get('in_degree', 0) + hub.get('out_degree', 0)
+                        print(f"    • {hub['title']} ({total_degree} connections)")
 
                 # Orphans
-                orphans = self.db.get_orphaned_notes(vault_id)
+                orphans = self.graph_analyzer.get_orphan_notes(vault_id)
                 if orphans:
                     print(f"\n  🏝️  Orphaned Notes: {len(orphans)}")
                     if len(orphans) <= 10:
@@ -109,15 +130,14 @@ class ObsCLI:
                             print(f"    • {orphan['title']}")
 
                 # Broken links
-                broken = self.db.get_broken_links(vault_id)
+                broken = self.graph_analyzer.get_broken_links(vault_id)
                 if broken:
-                    total_broken = sum(b['broken_count'] for b in broken)
-                    print(f"\n  🔗 Broken Links: {total_broken}")
+                    print(f"\n  🔗 Broken Links: {len(broken)}")
                     if len(broken) <= 5:
                         for link in broken[:5]:
-                            print(f"    • {link['source_title']} → {link['target_path']}")
+                            print(f"    • {link.get('source_title', 'Unknown')} → {link.get('target_path', 'Unknown')}")
 
-        except Exception as e:
+        except (VaultNotFoundError, AnalysisError) as e:
             print(f"❌ Error: {e}")
             sys.exit(1)
 
@@ -174,7 +194,7 @@ class ObsCLI:
 
     def list_vaults(self):
         """List all vaults in database."""
-        vaults = self.db.list_vaults()
+        vaults = self.vault_manager.list_vaults()
 
         if not vaults:
             print("No vaults in database.")
@@ -183,12 +203,43 @@ class ObsCLI:
 
         print("\n📚 Vaults:\n")
         for vault in vaults:
-            print(f"  {vault['name']}")
-            print(f"    Path: {vault['path']}")
-            print(f"    Notes: {vault.get('note_count', 0)}")
-            print(f"    Last scanned: {vault.get('last_scanned', 'Never')}")
-            print(f"    ID: {vault['id']}")
+            print(f"  {vault.name}")
+            print(f"    Path: {vault.path}")
+            print(f"    Notes: {vault.note_count}")
+            print(f"    Last scanned: {vault.last_scanned or 'Never'}")
+            print(f"    ID: {vault.id}")
             print("")
+
+    def _print_scan_result(self, result, verbose: bool = False):
+        """
+        Print scan result (presentation layer helper).
+
+        Args:
+            result: ScanResult object from core layer
+            verbose: Print detailed output
+        """
+        print(f"✓ Scanned: {result.vault_name}")
+        print(f"  Notes: {result.notes_scanned}")
+        print(f"  Links: {result.links_found}")
+        print(f"  Tags: {result.tags_found}")
+        print(f"  Duration: {result.duration_seconds:.2f}s")
+
+        if verbose:
+            if result.orphans_detected > 0:
+                print(f"  Orphans: {result.orphans_detected}")
+            if result.hubs_detected > 0:
+                print(f"  Hubs: {result.hubs_detected}")
+
+        if result.errors:
+            print(f"  ⚠️  Errors: {len(result.errors)}")
+            if verbose:
+                for error in result.errors[:5]:
+                    print(f"    • {error}")
+
+        if result.warnings and verbose:
+            print(f"  ⚠️  Warnings: {len(result.warnings)}")
+            for warning in result.warnings[:5]:
+                print(f"    • {warning}")
 
     def db_init(self):
         """Initialize or rebuild database."""

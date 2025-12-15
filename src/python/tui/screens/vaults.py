@@ -16,7 +16,8 @@ import os
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-from db_manager import DatabaseManager
+from core.vault_manager import VaultManager
+from core.graph_analyzer import GraphAnalyzer
 
 
 class VaultBrowserScreen(Screen):
@@ -81,7 +82,8 @@ class VaultBrowserScreen(Screen):
     def __init__(self):
         """Initialize vault browser screen."""
         super().__init__()
-        self.db = DatabaseManager()
+        self.vault_manager = VaultManager()
+        self.graph_analyzer = GraphAnalyzer()
         self.vaults = []
         self.selected_vault = None
 
@@ -99,11 +101,11 @@ class VaultBrowserScreen(Screen):
         )
         yield Footer()
 
-    def _format_last_scan(self, last_scanned: str) -> str:
+    def _format_last_scan(self, last_scanned) -> str:
         """Format last scan timestamp as relative time.
 
         Args:
-            last_scanned: ISO timestamp string
+            last_scanned: datetime object or ISO timestamp string
 
         Returns:
             Human-readable relative time (e.g., "5 minutes ago")
@@ -112,8 +114,12 @@ class VaultBrowserScreen(Screen):
             return "Never scanned"
 
         try:
-            dt = datetime.fromisoformat(last_scanned.replace('Z', '+00:00'))
-            now = datetime.now(dt.tzinfo)
+            if isinstance(last_scanned, str):
+                dt = datetime.fromisoformat(last_scanned.replace('Z', '+00:00'))
+            else:
+                dt = last_scanned
+
+            now = datetime.now(dt.tzinfo) if dt.tzinfo else datetime.now()
             delta = now - dt
 
             seconds = delta.total_seconds()
@@ -129,12 +135,12 @@ class VaultBrowserScreen(Screen):
                 days = int(seconds / 86400)
                 return f"{days} day{'s' if days > 1 else ''} ago"
         except:
-            return last_scanned
+            return str(last_scanned)
 
     def update_header_timestamp(self):
         """Update header with latest scan timestamp."""
         if self.selected_vault:
-            last_scan = self.selected_vault.get('last_scanned', '')
+            last_scan = self.selected_vault.last_scanned
             scan_text = self._format_last_scan(last_scan)
             title = f"[bold cyan]📁 Vault Browser[/]  [dim]Last scan: {scan_text}[/]"
         else:
@@ -169,8 +175,8 @@ class VaultBrowserScreen(Screen):
         # Clear existing rows
         table.clear()
 
-        # Query vaults
-        self.vaults = self.db.list_vaults()
+        # Query vaults using VaultManager
+        self.vaults = self.vault_manager.list_vaults()
 
         if not self.vaults:
             # Show empty message
@@ -179,22 +185,25 @@ class VaultBrowserScreen(Screen):
 
         # Add vault rows
         for vault in self.vaults:
-            vault_id = str(vault['id'])
-            name = vault['name'] or '[dim]Unnamed[/]'
-            path = vault['path']
+            vault_id = str(vault.id)
+            name = vault.name or '[dim]Unnamed[/]'
+            path = vault.path
 
             # Shorten path if too long
             if len(path) > 45:
                 path = "..." + path[-42:]
 
-            note_count = str(vault.get('note_count', 0))
-            link_count = str(vault.get('link_count', 0))
+            note_count = str(vault.note_count)
+            link_count = str(vault.link_count)
 
             # Format last scanned time
-            last_scanned = vault.get('last_scanned')
+            last_scanned = vault.last_scanned
             if last_scanned:
                 try:
-                    dt = datetime.fromisoformat(last_scanned)
+                    if isinstance(last_scanned, str):
+                        dt = datetime.fromisoformat(last_scanned)
+                    else:
+                        dt = last_scanned
                     scanned_str = dt.strftime("%Y-%m-%d %H:%M")
                 except:
                     scanned_str = "[dim]Unknown[/]"
@@ -222,7 +231,7 @@ class VaultBrowserScreen(Screen):
         # Find vault by ID
         self.selected_vault = None
         for vault in self.vaults:
-            if str(vault['id']) == vault_id:
+            if str(vault.id) == vault_id:
                 self.selected_vault = vault
                 break
 
@@ -238,35 +247,34 @@ class VaultBrowserScreen(Screen):
         details_panel = self.query_one("#details-panel", Static)
 
         vault = self.selected_vault
-        vault_id = vault['id']
+        vault_id = str(vault.id)
 
-        # Get additional statistics
-        orphans = self.db.get_orphaned_notes(vault_id)
-        hubs = self.db.get_hub_notes(vault_id, limit=3)
-        broken = self.db.get_broken_links(vault_id)
-        tags = self.db.get_tag_stats(vault_id)
+        # Get additional statistics using GraphAnalyzer
+        orphans = self.graph_analyzer.get_orphan_notes(vault_id)
+        hubs = self.graph_analyzer.get_hub_notes(vault_id, limit=3)
+        broken = self.graph_analyzer.get_broken_links(vault_id)
 
         orphan_count = len(orphans)
         hub_count = len(hubs)
         broken_count = len(broken)
-        tag_count = len(tags)
+        tag_count = vault.tag_count
 
         # Build details text
         details = f"""[bold]Vault Details:[/]
 
-[cyan]Name:[/] {vault['name']}
-[cyan]Path:[/] {vault['path']}
-[cyan]ID:[/] {vault['id']}
+[cyan]Name:[/] {vault.name}
+[cyan]Path:[/] {vault.path}
+[cyan]ID:[/] {vault.id}
 
 [bold]Statistics:[/]
-  📝 Notes: {vault.get('note_count', 0)}
-  🔗 Links: {vault.get('link_count', 0)}
+  📝 Notes: {vault.note_count}
+  🔗 Links: {vault.link_count}
   🏷️  Tags: {tag_count}
   🔴 Orphans: {orphan_count}
   🌟 Hubs: {hub_count}
   ❌ Broken Links: {broken_count}
 
-[dim]Last Scanned: {vault.get('last_scanned', 'Never')}[/]
+[dim]Last Scanned: {vault.last_scanned or 'Never'}[/]
 
 [dim italic]Press Enter to explore this vault's notes[/]
 """
@@ -286,8 +294,8 @@ class VaultBrowserScreen(Screen):
             # Push screen instance directly with parameters
             self.app.push_screen(
                 NoteExplorerScreen(
-                    vault_id=self.selected_vault['id'],
-                    vault_name=self.selected_vault['name']
+                    vault_id=str(self.selected_vault.id),
+                    vault_name=self.selected_vault.name
                 )
             )
         else:
@@ -303,8 +311,8 @@ class VaultBrowserScreen(Screen):
             # Push screen instance directly with parameters
             self.app.push_screen(
                 GraphVisualizerScreen(
-                    vault_id=self.selected_vault['id'],
-                    vault_name=self.selected_vault['name']
+                    vault_id=str(self.selected_vault.id),
+                    vault_name=self.selected_vault.name
                 )
             )
         else:
@@ -319,8 +327,8 @@ class VaultBrowserScreen(Screen):
             # Push screen instance directly with parameters
             self.app.push_screen(
                 StatisticsDashboardScreen(
-                    vault_id=self.selected_vault['id'],
-                    vault_name=self.selected_vault['name']
+                    vault_id=str(self.selected_vault.id),
+                    vault_name=self.selected_vault.name
                 )
             )
         else:

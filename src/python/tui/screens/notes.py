@@ -17,7 +17,8 @@ import os
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-from db_manager import DatabaseManager
+from core.vault_manager import VaultManager
+from core.graph_analyzer import GraphAnalyzer
 
 
 class NoteExplorerScreen(Screen):
@@ -115,7 +116,8 @@ class NoteExplorerScreen(Screen):
         super().__init__()
         self.vault_id = vault_id
         self.vault_name = vault_name
-        self.db = DatabaseManager()
+        self.vault_manager = VaultManager()
+        self.graph_analyzer = GraphAnalyzer()
         self.all_notes = []          # Full dataset
         self.filtered_notes = []     # Search results
         self.selected_note = None
@@ -149,7 +151,7 @@ class NoteExplorerScreen(Screen):
     def on_mount(self) -> None:
         """Called when screen is mounted to the app."""
         # Verify vault exists
-        vault = self.db.get_vault(self.vault_id)
+        vault = self.vault_manager.get_vault(self.vault_id)
         if not vault:
             self.notify(
                 "Vault not found in database",
@@ -175,8 +177,8 @@ class NoteExplorerScreen(Screen):
     def refresh_data(self) -> None:
         """Load notes from database and populate table."""
         try:
-            # Load all notes from database
-            self.all_notes = self.db.list_notes(vault_id=self.vault_id)
+            # Load all notes using VaultManager
+            self.all_notes = self.vault_manager.get_notes(vault_id=self.vault_id)
 
             # Apply current sort (in-memory)
             self.all_notes = self._sort_notes(self.all_notes, self.current_sort)
@@ -203,11 +205,11 @@ class NoteExplorerScreen(Screen):
     def _sort_notes(self, notes: list, sort_by: str) -> list:
         """Sort notes in-memory by specified field."""
         if sort_by == "title":
-            return sorted(notes, key=lambda n: n.get('title', '').lower())
+            return sorted(notes, key=lambda n: n.title.lower())
         elif sort_by == "word_count":
-            return sorted(notes, key=lambda n: n.get('word_count', 0), reverse=True)
+            return sorted(notes, key=lambda n: n.word_count, reverse=True)
         elif sort_by == "modified_at":
-            return sorted(notes, key=lambda n: n.get('modified_at', ''), reverse=True)
+            return sorted(notes, key=lambda n: n.modified_at or '', reverse=True)
         else:
             return notes
 
@@ -229,32 +231,36 @@ class NoteExplorerScreen(Screen):
             return
 
         for note in self.filtered_notes:
-            # PERFORMANCE: Use graph_metrics table instead of querying links!
-            metrics = self.db.get_graph_metrics(note['id'])
+            # Get graph metrics using GraphAnalyzer
+            metrics = self.graph_analyzer.get_note_metrics(note.id)
             if metrics:
-                out_links = metrics.get('out_degree', 0)
-                in_links = metrics.get('in_degree', 0)
+                out_links = metrics.out_degree
+                in_links = metrics.in_degree
             else:
                 out_links = in_links = 0
 
-            # Get tags (limited to first 2 for display)
-            tags = self.db.get_note_tags(note['id'])
+            # Get tags from note object (note: tags may not be populated from DB)
+            # For now, we'll use the database directly for tags
+            # TODO: Add tags to VaultManager.get_notes()
+            from db_manager import DatabaseManager
+            db = DatabaseManager()
+            tags = db.get_note_tags(note.id)
 
             # Truncate long titles
-            title = note['title']
+            title = note.title
             if len(title) > 40:
                 title = title[:37] + "..."
 
             # Format timestamp
-            modified = self._format_datetime(note.get('modified_at', ''))
+            modified = self._format_datetime(note.modified_at)
 
             table.add_row(
                 title,
-                str(note.get('word_count', 0)),
+                str(note.word_count),
                 f"{out_links}→ {in_links}←",
                 ", ".join(tags[:2]) + ("..." if len(tags) > 2 else "") if tags else "-",
                 modified,
-                key=str(note['id'])
+                key=str(note.id)
             )
 
     def update_result_count(self) -> None:
@@ -276,7 +282,7 @@ class NoteExplorerScreen(Screen):
                 # Filter by title (case-insensitive)
                 self.filtered_notes = [
                     note for note in self.all_notes
-                    if query in note['title'].lower()
+                    if query in note.title.lower()
                 ]
 
             self.update_table()
@@ -294,7 +300,7 @@ class NoteExplorerScreen(Screen):
         # Find corresponding note
         self.selected_note = None
         for note in self.filtered_notes:
-            if str(note['id']) == note_id:
+            if str(note.id) == note_id:
                 self.selected_note = note
                 break
 
@@ -311,14 +317,14 @@ class NoteExplorerScreen(Screen):
             preview_pane.update("[dim]No note selected[/]")
             return
 
-        # Get vault path
-        vault = self.db.get_vault(self.vault_id)
+        # Get vault using VaultManager
+        vault = self.vault_manager.get_vault(self.vault_id)
         if not vault:
             preview_pane.update("[red]Error: Vault not found[/]")
             return
 
         # Construct full path to note
-        note_path = Path(vault['path']) / self.selected_note['path']
+        note_path = Path(vault.path) / self.selected_note.path
 
         try:
             # Read markdown file from disk
@@ -365,18 +371,22 @@ class NoteExplorerScreen(Screen):
             metadata_pane.update("")
             return
 
-        # Get detailed info
+        # Get detailed info using database (for links and tags not in core layer yet)
         note = self.selected_note
-        out_links = self.db.get_outgoing_links(note['id'])
-        in_links = self.db.get_incoming_links(note['id'])
-        tags = self.db.get_note_tags(note['id'])
-        metrics = self.db.get_graph_metrics(note['id'])
+        from db_manager import DatabaseManager
+        db = DatabaseManager()
+        out_links = db.get_outgoing_links(note.id)
+        in_links = db.get_incoming_links(note.id)
+        tags = db.get_note_tags(note.id)
+
+        # Get metrics using GraphAnalyzer
+        metrics = self.graph_analyzer.get_note_metrics(note.id)
 
         # Build metadata display
         metadata_text = f"""[bold cyan]╭─ Metadata ─────────────────────────────╮[/]
-[cyan]Path:[/] {note['path']}
-[cyan]Words:[/] {note.get('word_count', 0)} | [cyan]Chars:[/] {note.get('char_count', 0)}
-[cyan]Modified:[/] {self._format_datetime(note.get('modified_at', ''))}
+[cyan]Path:[/] {note.path}
+[cyan]Words:[/] {note.word_count} | [cyan]Chars:[/] {len(note.content) if note.content else 0}
+[cyan]Modified:[/] {self._format_datetime(note.modified_at)}
 
 [bold]🔗 Links:[/]
   → Outgoing: {len(out_links)}
@@ -390,8 +400,8 @@ class NoteExplorerScreen(Screen):
         if metrics:
             metadata_text += f"""
 [bold]📊 Graph Metrics:[/]
-  PageRank: {metrics.get('pagerank', 0):.4f}
-  Centrality: {metrics.get('betweenness', 0):.4f}
+  PageRank: {metrics.pagerank:.4f}
+  Centrality: {metrics.betweenness_centrality:.4f}
 """
 
         metadata_text += "[bold cyan]╰────────────────────────────────────────╯[/]"
@@ -432,13 +442,14 @@ class NoteExplorerScreen(Screen):
 
     # Helper methods
 
-    def _format_datetime(self, dt_str: str) -> str:
-        """Format ISO datetime string for display."""
-        if not dt_str:
+    def _format_datetime(self, dt) -> str:
+        """Format datetime for display."""
+        if not dt:
             return "[dim]Unknown[/]"
         try:
-            # Handle both ISO formats (with and without timezone)
-            dt = datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+            # Handle both datetime objects and ISO format strings
+            if isinstance(dt, str):
+                dt = datetime.fromisoformat(dt.replace('Z', '+00:00'))
             return dt.strftime("%Y-%m-%d %H:%M")
         except:
             return "[dim]Invalid[/]"

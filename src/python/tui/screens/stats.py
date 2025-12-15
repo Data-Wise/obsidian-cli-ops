@@ -10,7 +10,9 @@ from textual.widgets import Header, Footer, Static
 from textual.containers import Container, Horizontal, Vertical
 from textual.binding import Binding
 
-from db_manager import DatabaseManager
+from core.vault_manager import VaultManager
+from core.graph_analyzer import GraphAnalyzer
+from db_manager import DatabaseManager  # Still needed for some specific queries
 
 
 class StatisticsDashboardScreen(Screen):
@@ -90,7 +92,9 @@ class StatisticsDashboardScreen(Screen):
         super().__init__()
         self.vault_id = vault_id
         self.vault_name = vault_name
-        self.db = DatabaseManager()
+        self.vault_manager = VaultManager()
+        self.graph_analyzer = GraphAnalyzer()
+        self.db = DatabaseManager()  # Still needed for some specific queries
         self.current_view = "tags"  # tags, distribution, history
 
     def compose(self) -> ComposeResult:
@@ -113,7 +117,7 @@ class StatisticsDashboardScreen(Screen):
 
     def on_mount(self) -> None:
         """Load data when screen mounts."""
-        vault = self.db.get_vault(self.vault_id)
+        vault = self.vault_manager.get_vault(self.vault_id)
         if not vault:
             self.notify("Vault not found", severity="error")
             self.app.pop_screen()
@@ -150,15 +154,15 @@ class StatisticsDashboardScreen(Screen):
         """Export statistics to JSON file."""
         try:
             # Collect all data
-            vault = self.db.get_vault(self.vault_id)
+            vault = self.vault_manager.get_vault(self.vault_id)
             tags = self.db.get_vault_tag_stats(self.vault_id, limit=100)  # More than display
             distribution = self.db.get_link_distribution(self.vault_id)
             history = self.db.get_scan_history(self.vault_id, limit=50)  # More history
-            orphans = self.db.get_orphaned_notes(self.vault_id)
-            hubs = self.db.get_hub_notes(self.vault_id, limit=100)
-            broken = self.db.get_broken_links(self.vault_id)
+            orphans = self.graph_analyzer.get_orphan_notes(self.vault_id)
+            hubs = self.graph_analyzer.get_hub_notes(self.vault_id, limit=100)
+            broken = self.graph_analyzer.get_broken_links(self.vault_id)
 
-            note_count = vault.get('note_count', 0)
+            note_count = vault.note_count
 
             # Build export data structure
             export_data = {
@@ -166,10 +170,10 @@ class StatisticsDashboardScreen(Screen):
                 "vault": {
                     "id": self.vault_id,
                     "name": self.vault_name,
-                    "path": vault.get('path', ''),
+                    "path": vault.path,
                     "note_count": note_count,
-                    "link_count": vault.get('link_count', 0),
-                    "last_scanned": vault.get('last_scanned', ''),
+                    "link_count": vault.link_count,
+                    "last_scanned": vault.last_scanned.isoformat() if vault.last_scanned else '',
                 },
                 "statistics": {
                     "orphans": {
@@ -215,19 +219,19 @@ class StatisticsDashboardScreen(Screen):
         panel = self.query_one("#left-panel", Static)
 
         # Get vault data
-        vault = self.db.get_vault(self.vault_id)
+        vault = self.vault_manager.get_vault(self.vault_id)
         if not vault:
             panel.update("[red]Vault not found[/]")
             return
 
-        # Get statistics
-        orphans = self.db.get_orphaned_notes(self.vault_id)
-        hubs = self.db.get_hub_notes(self.vault_id, limit=100)
-        broken = self.db.get_broken_links(self.vault_id)
+        # Get statistics using GraphAnalyzer
+        orphans = self.graph_analyzer.get_orphan_notes(self.vault_id)
+        hubs = self.graph_analyzer.get_hub_notes(self.vault_id, limit=100)
+        broken = self.graph_analyzer.get_broken_links(self.vault_id)
         tags = self.db.get_vault_tag_stats(self.vault_id, limit=1)
 
-        note_count = vault.get('note_count', 0)
-        link_count = vault.get('link_count', 0)
+        note_count = vault.note_count
+        link_count = vault.link_count
         tag_count = len(tags) if tags else 0
         orphan_count = len(orphans)
         hub_count = len(hubs)
@@ -238,14 +242,18 @@ class StatisticsDashboardScreen(Screen):
         hub_pct = (hub_count / note_count * 100) if note_count > 0 else 0
 
         # Last scanned
-        last_scan = vault.get('last_scanned', 'Never')
-        if last_scan and last_scan != 'Never':
+        last_scan = vault.last_scanned
+        if last_scan:
             try:
-                from datetime import datetime
-                dt = datetime.fromisoformat(last_scan.replace('Z', '+00:00'))
+                if isinstance(last_scan, str):
+                    dt = datetime.fromisoformat(last_scan.replace('Z', '+00:00'))
+                else:
+                    dt = last_scan
                 last_scan = dt.strftime('%Y-%m-%d %H:%M')
             except:
-                pass
+                last_scan = str(last_scan)
+        else:
+            last_scan = 'Never'
 
         # Build overview
         content = f"""[bold cyan]╭─ Vault Overview ─────────────────╮[/]
@@ -290,8 +298,8 @@ class StatisticsDashboardScreen(Screen):
 
         # Get tag data
         tags = self.db.get_vault_tag_stats(self.vault_id, limit=20)
-        vault = self.db.get_vault(self.vault_id)
-        total_notes = vault.get('note_count', 0)
+        vault = self.vault_manager.get_vault(self.vault_id)
+        total_notes = vault.note_count
 
         if not tags or total_notes == 0:
             content_panel.update("[dim]No tags found in this vault[/]")
@@ -350,8 +358,8 @@ class StatisticsDashboardScreen(Screen):
             return
 
         # Calculate stats
-        vault = self.db.get_vault(self.vault_id)
-        link_count = vault.get('link_count', 0)
+        vault = self.vault_manager.get_vault(self.vault_id)
+        link_count = vault.link_count
         avg_links = link_count / total if total > 0 else 0
 
         # Build content

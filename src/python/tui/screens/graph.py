@@ -14,8 +14,8 @@ import os
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-from db_manager import DatabaseManager
-from graph_builder import GraphBuilder
+from core.vault_manager import VaultManager
+from core.graph_analyzer import GraphAnalyzer
 
 
 class GraphVisualizerScreen(Screen):
@@ -95,8 +95,8 @@ class GraphVisualizerScreen(Screen):
         super().__init__()
         self.vault_id = vault_id
         self.vault_name = vault_name
-        self.db = DatabaseManager()
-        self.builder = GraphBuilder(self.db)
+        self.vault_manager = VaultManager()
+        self.graph_analyzer = GraphAnalyzer()
         self.graph = None
         self.current_view = "hubs"
         self.selected_note = None
@@ -121,7 +121,7 @@ class GraphVisualizerScreen(Screen):
 
     def on_mount(self) -> None:
         """Set up the graph visualizer when screen is mounted."""
-        vault = self.db.get_vault(self.vault_id)
+        vault = self.vault_manager.get_vault(self.vault_id)
         if not vault:
             self.notify("Vault not found", severity="error")
             self.app.pop_screen()
@@ -143,7 +143,7 @@ class GraphVisualizerScreen(Screen):
     def load_graph(self) -> None:
         """Load graph from database."""
         try:
-            self.graph = self.builder.build_graph(self.vault_id)
+            self.graph = self.graph_analyzer.get_graph(self.vault_id)
             if not self.graph or len(self.graph) == 0:
                 self.notify("No graph data available", severity="warning")
         except Exception as e:
@@ -178,9 +178,9 @@ class GraphVisualizerScreen(Screen):
             else:
                 dist["11+"] += 1
 
-        # Get top hub and orphan count
-        hubs = self.db.get_hub_notes(self.vault_id, limit=1)
-        orphans = self.db.get_orphaned_notes(self.vault_id)
+        # Get top hub and orphan count using GraphAnalyzer
+        hubs = self.graph_analyzer.get_hub_notes(self.vault_id, limit=1)
+        orphans = self.graph_analyzer.get_orphan_notes(self.vault_id)
 
         # ASCII bar chart function
         def bar(count, total, width=10):
@@ -211,7 +211,7 @@ class GraphVisualizerScreen(Screen):
         table.clear()
 
         if self.current_view == "hubs":
-            nodes = self.db.get_hub_notes(self.vault_id, limit=20)
+            nodes = self.graph_analyzer.get_hub_notes(self.vault_id, limit=20)
             for node in nodes:
                 table.add_row(
                     node['title'][:30],
@@ -221,13 +221,13 @@ class GraphVisualizerScreen(Screen):
                 )
 
         elif self.current_view == "orphans":
-            nodes = self.db.get_orphaned_notes(self.vault_id)
+            nodes = self.graph_analyzer.get_orphan_notes(self.vault_id)
             for node in nodes:
-                metrics = self.db.get_graph_metrics(node['id'])
+                metrics = self.graph_analyzer.get_note_metrics(node['id'])
                 table.add_row(
                     node['title'][:30],
                     "0",
-                    f"{metrics.get('pagerank', 0):.4f}" if metrics else "0.0000",
+                    f"{metrics.pagerank:.4f}" if metrics else "0.0000",
                     key=str(node['id'])
                 )
 
@@ -280,18 +280,18 @@ class GraphVisualizerScreen(Screen):
             return
 
         viz_panel = self.query_one("#viz-panel", Static)
-        note = self.db.get_note(self.selected_note)
+        note = self.vault_manager.get_note(self.selected_note)
 
         if not note:
             viz_panel.update("[red]Note not found[/]")
             return
 
-        # Get 1-hop neighborhood
-        ego_graph = self.builder.get_note_neighborhood(self.selected_note, depth=1)
+        # Get 1-hop neighborhood using GraphAnalyzer
+        ego_graph = self.graph_analyzer.get_ego_graph(self.selected_note, radius=1)
 
         if not ego_graph or len(ego_graph) == 0:
             viz_panel.update(
-                f"[bold cyan]╭─ {note['title'][:30]} ──────────────╮[/]\n"
+                f"[bold cyan]╭─ {note.title[:30]} ──────────────╮[/]\n"
                 f"[dim]No connected notes (orphan)[/]\n"
                 f"[bold cyan]╰────────────────────────────────╯[/]"
             )
@@ -300,14 +300,14 @@ class GraphVisualizerScreen(Screen):
         # Render ASCII graph
         ascii_graph = self.render_ascii_graph_simple(ego_graph)
 
-        # Get metrics
-        metrics = self.db.get_graph_metrics(self.selected_note)
+        # Get metrics using GraphAnalyzer
+        metrics = self.graph_analyzer.get_note_metrics(self.selected_note)
 
-        in_degree = metrics.get('in_degree', 0) if metrics else 0
-        out_degree = metrics.get('out_degree', 0) if metrics else 0
-        pagerank = metrics.get('pagerank', 0) if metrics else 0
+        in_degree = metrics.in_degree if metrics else 0
+        out_degree = metrics.out_degree if metrics else 0
+        pagerank = metrics.pagerank if metrics else 0
 
-        viz_text = f"""[bold cyan]╭─ Neighborhood: {note['title'][:30]} ──╮[/]
+        viz_text = f"""[bold cyan]╭─ Neighborhood: {note.title[:30]} ──╮[/]
 
 {ascii_graph}
 
@@ -368,7 +368,7 @@ class GraphVisualizerScreen(Screen):
             return
 
         from tui.screens.notes import NoteExplorerScreen
-        vault = self.db.get_vault(self.vault_id)
+        vault = self.vault_manager.get_vault(self.vault_id)
         self.app.push_screen(
-            NoteExplorerScreen(vault_id=self.vault_id, vault_name=vault['name'])
+            NoteExplorerScreen(vault_id=self.vault_id, vault_name=vault.name)
         )
