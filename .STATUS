@@ -3,9 +3,45 @@ status: active
 progress: 95
 updated: 2025-12-15
 version: 2.1.0
-next: Test Option D features, complete remaining quick wins, prepare v2.1.0 release
+next: Deploy MkDocs site, test Option D features, complete remaining quick wins
 
-## ✅ Just Completed (2025-12-15 - Option D: Obsidian App Clone)
+## ✅ Just Completed (2025-12-15 - MkDocs Documentation Sync)
+
+### MkDocs Site Updates (Major - v2.1.0)
+- ✅ Fixed documentation-code mismatch (docs_mkdocs/ had v2.0.0-beta content)
+- ✅ Updated index.md with v2.1.0 and Option D features
+- ✅ Completely rewrote usage.md (328 lines) with Obsidian-style commands
+- ✅ Enhanced installation.md with zero-configuration iCloud setup
+- ✅ Started MkDocs server and verified preview shows correct content
+- ✅ **Result:** Published site ready for deployment with accurate Option D docs
+
+### Documentation Organization (Major - v2.1.0)
+- ✅ Organized docs into professional structure (user/developer/planning/releases)
+- ✅ Created 5 README.md index files for navigation
+- ✅ Created comprehensive TUI guides (tutorial, reference, cheat sheet)
+- ✅ Expanded IDEAS.md with future features and brainstorming
+- ✅ Created TODOS.md for current work items
+- ✅ **Result:** Industry-standard documentation structure
+
+### Bug Fixes (Minor - v2.1.0)
+- ✅ Added limit parameters to get_orphaned_notes() and get_broken_links()
+- ✅ Fixed TUI TypeErrors when loading large result sets
+- ✅ Added 'd' key binding for vault discovery in TUI
+- ✅ **Result:** TUI now handles large vaults without errors
+
+### Git Management
+- ✅ 2 commits created and pushed to GitHub (35 files, +3029/-941 lines)
+- ✅ Working tree clean, all changes committed and synced
+- ✅ **Result:** All documentation updates safely pushed to remote
+
+## 🎯 Next Actions
+
+**Choose one (or do in order):**
+- **A)** Deploy MkDocs site to GitHub Pages (`mkdocs gh-deploy --force`) [5 min] 🟢
+- **B)** Test Option D features (verify `obs`, `obs switch`, `obs manage` work) [15 min] 🟢
+- **C)** Complete remaining quick wins (JSON export, timestamp formatting) [30 min] 🟡
+
+## ✅ Previously Completed (2025-12-15 - Option D: Obsidian App Clone)
 
 ### Option D Implementation (Major - v2.1.0)
 - ✅ Implemented zero-friction start (`obs` opens last vault)
