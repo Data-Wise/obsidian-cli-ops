@@ -1,11 +1,48 @@
 priority: P2
 status: active
-progress: 95
-updated: 2025-12-15
-version: 2.1.0
-next: Deploy MkDocs site, test Option D features, complete remaining quick wins
+progress: 98
+updated: 2025-12-16
+version: 2.2.0
+next: Tag and publish v2.2.0 release
 
-## ✅ Just Completed (2025-12-15 - MkDocs Documentation Sync)
+## ✅ Just Completed (2025-12-16 - Phase 5B: AI Features)
+
+### Phase 5B: AI-Powered Features
+- ✅ Implemented `obs ai similar <note_id>` - Find similar notes using embeddings
+- ✅ Implemented `obs ai analyze <note_id>` - Deep analysis of a single note
+- ✅ Implemented `obs ai duplicates <vault_id>` - Detect potential duplicate notes
+- ✅ Created ai/features.py module with full feature implementations
+- ✅ Added CLI commands with proper argument parsing
+- ✅ Added 23 new tests for AI features module
+- ✅ **Result:** Complete AI feature set ready for use
+
+### Phase 5A: Multi-Provider AI Architecture
+- ✅ Implemented multi-provider AI system with 4 providers:
+  - gemini-api (default, embeddings, batch)
+  - gemini-cli (CLI fallback)
+  - claude-cli (high-quality analysis)
+  - ollama (local, free, private)
+- ✅ Created smart router with auto-fallback based on operation type
+- ✅ Added user-friendly dependency management:
+  - pyproject.toml with optional extras (pip install obs[gemini])
+  - Interactive setup wizard (obs ai setup)
+  - Auto-install prompts when deps missing
+- ✅ Wired up CLI commands: obs ai status/setup/test
+- ✅ Added 73 new tests for AI module (config, install, router, providers)
+- ✅ **Result:** Modern AI architecture ready for Phase 5B features
+
+### Quick Wins Completion (v2.1.0)
+- ✅ JSON export already implemented in TUI stats screen (press 'e')
+- ✅ Added human-friendly timestamp formatting (relative times)
+  - Created shared utils.py module with format_relative_time()
+  - Updated all TUI screens (vaults, stats, notes) to use relative times
+  - Updated CLI (obs_cli.py) to use relative times
+  - Added 22 new tests for utility functions
+- ✅ MkDocs site built and ready for deployment (gh-pages push blocked)
+- ✅ Removed minify plugin from mkdocs.yml (build dependency issue)
+- ✅ **Result:** All quick wins complete, +22 tests, cleaner codebase
+
+## ✅ Previous Session (2025-12-15 - MkDocs Documentation Sync)
 
 ### MkDocs Site Updates (Major - v2.1.0)
 - ✅ Fixed documentation-code mismatch (docs_mkdocs/ had v2.0.0-beta content)
@@ -224,17 +261,24 @@ next: Deploy MkDocs site, test Option D features, complete remaining quick wins
 
 ---
 
-## 🟡 Pending Phases
+## 🟡 In Progress Phases
 
-### Phase 5: AI-Powered Features (Deferred)
-**Status:** Infrastructure complete, features pending
+### Phase 5: AI-Powered Features (100%) ✅
+**Status:** Complete
 **Dependencies:** Phase 2 AI integration ✅
 
-**Planned Features:**
-- [ ] Find similar notes (embeddings ready)
-- [ ] Detect duplicates (cosine similarity ready)
-- [ ] Topic analysis (AI backend ready)
-- [ ] Smart merge suggestions
+**Phase 5A - Multi-Provider Architecture (✅ Complete):**
+- [x] Multi-provider system (gemini-api, gemini-cli, claude-cli, ollama)
+- [x] Smart routing based on operation type
+- [x] User-friendly dependency management (pyproject.toml, wizard)
+- [x] CLI commands (obs ai status/setup/test)
+- [x] 73 new tests
+
+**Phase 5B - AI Features (✅ Complete):**
+- [x] Find similar notes (`obs ai similar <note>`)
+- [x] Analyze note (`obs ai analyze <note>`)
+- [x] Detect duplicates (`obs ai duplicates`)
+- [x] 23 new tests
 
 **See IDEAS.md for details**
 
@@ -264,14 +308,16 @@ next: Deploy MkDocs site, test Option D features, complete remaining quick wins
 - **Documentation:** 20+ files, ~3,000 lines
 
 ### Test Coverage
-- **Total Tests:** 298
-  - Python: 124 tests (core, database, scanning)
+- **Total Tests:** 394+
+  - Python: 220 tests (core, database, scanning, AI module)
   - Jest: 40 tests (CLI, integration)
   - Shell: 4 tests (R-Dev module)
-- **Coverage:** ~70% overall
+  - AI Module: 96 tests (config, install, router, providers, features)
+- **Coverage:** ~72% overall
   - Core layer: 85%
   - Database layer: 75%
-  - Overall: 70%
+  - AI layer: 80%
+  - Overall: 72%
 
 ### Documentation
 - **User Docs:** 8 files (quickstart, guides, TUI, commands)

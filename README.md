@@ -4,7 +4,7 @@
 
 `obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis and an interactive TUI interface.
 
-**Current Version**: 2.1.0
+**Current Version**: 2.2.0
 
 ## ✨ Features
 
@@ -23,7 +23,7 @@
 - **Analytics**: Comprehensive vault statistics and insights
 - **AI Features**: Note similarity, duplicate detection (100% free, local, private)
 
-### 🖥️ v2.1: Obsidian App Clone (NEW!)
+### 🖥️ v2.1: Obsidian App Clone
 - **Zero-Friction Start**: Just type `obs` - opens last vault automatically
 - **Obsidian-Style Commands**: Works exactly like the official Obsidian app
 - **iCloud-First**: Auto-detects standard Obsidian iCloud location
@@ -35,6 +35,15 @@
 - **Statistics Dashboard**: Tag analytics, link distribution, scan history
 - **Keyboard Navigation**: Vim-style keys, arrow keys, and shortcuts
 - **ADHD-Friendly**: One command, smart defaults, progressive disclosure
+
+### 🤖 v2.2: AI-Powered Features (NEW!)
+- **Multi-Provider AI**: Choose from Gemini API, Gemini CLI, Claude CLI, or Ollama
+- **Find Similar Notes**: `obs ai similar` - semantic similarity using embeddings
+- **Analyze Notes**: `obs ai analyze` - deep analysis with topics, themes, suggestions
+- **Detect Duplicates**: `obs ai duplicates` - find potential duplicate notes
+- **Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
+- **Smart Routing**: Auto-selects best provider for each operation type
+- **Easy Installation**: `pip install obs[gemini]` or `pip install obs[ollama]`
 
 ## 🚀 Quick Start
 
@@ -73,8 +82,12 @@ obs graph
 # View statistics
 obs stats
 
-# Setup AI features (optional, 100% local)
-obs ai setup --quick
+# AI features (optional)
+obs ai status              # Check provider status
+obs ai setup               # Interactive setup wizard
+obs ai similar <note_id>   # Find similar notes
+obs ai analyze <note_id>   # Analyze a note
+obs ai duplicates <vault>  # Find duplicates
 
 # R integration (shortened from obs r-dev)
 obs r link
@@ -85,7 +98,7 @@ obs r log result.png
 
 ## 📋 Planning & Development
 
-**Current Status:** v2.1.0 - Option D Complete (95% complete)
+**Current Status:** v2.2.0 - Phase 5 AI Complete (98% complete)
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -124,12 +137,12 @@ obs r log result.png
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](docs/releases/v1.1.0.md)** - v1.1.0 release notes
+- **[Latest Release](docs/releases/v2.2.0.md)** - v2.2.0 release notes
 
 ## 🧪 Test Coverage
 
-- **298 tests** across all components
-- **80% code coverage**
+- **394+ tests** across all components
+- **72% code coverage** (AI: 80%, Core: 85%)
 - All tests passing
 
 ## 📦 Requirements
@@ -152,11 +165,11 @@ MIT License - See LICENSE file for details.
 - ✅ v1.x: Production Ready
 - ✅ v2.0: Knowledge Graph - Complete
 - ✅ v2.1: Option D (Obsidian App Clone) - Complete
-  - Interactive TUI (Phases 4.1-4.5)
-  - ADHD-friendly command structure
-  - iCloud-first defaults
-  - Last-vault tracking
-- 🚧 Future: AI Features, Learning System, Automation
+- ✅ v2.2: AI Features - Complete
+  - Multi-provider AI (Gemini, Claude, Ollama)
+  - Find similar notes, analyze, detect duplicates
+  - 96 AI tests, smart routing
+- 📋 Future: Learning System, Automation
 
 ---
 

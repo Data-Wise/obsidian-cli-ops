@@ -4,7 +4,7 @@
 
 ## Philosophy
 
-**Version 2.1.0** implements **Option D** - a complete redesign that mimics the official Obsidian app's behavior.
+**Version 2.2.0** implements **Option D** - a complete redesign that mimics the official Obsidian app's behavior, plus AI-powered features.
 
 - **Zero-Friction Start**: Just type `obs` (like clicking the Obsidian icon)
 - **iCloud-First**: Auto-detects `~/Library/Mobile Documents/iCloud~md~obsidian/Documents`
@@ -103,24 +103,59 @@ obs manage info vault_123
 
 ## AI Features
 
-### Setup AI (100% Local)
+**Version 2.2.0** adds powerful AI-powered note analysis with multi-provider support.
+
+### AI Provider Management
 
 ```bash
+obs ai status           # Check provider availability
 obs ai setup            # Interactive setup wizard
-obs ai setup --quick    # Quick start (auto-detect)
-obs ai config           # Show configuration
+obs ai test             # Test provider functionality
 ```
+
+**Supported Providers:**
+- `gemini-api` - Fast batch operations (default)
+- `gemini-cli` - CLI fallback
+- `claude-cli` - High-quality analysis
+- `ollama` - Local, free, private
 
 ### Find Similar Notes
 
 ```bash
-obs ai similar <note_id>    # Find notes similar to this one
+obs ai similar <note_id>              # Find similar notes
+obs ai similar <note_id> --limit 20   # Limit results
+obs ai similar <note_id> --threshold 0.5  # Min similarity
 ```
+
+**Example:**
+```bash
+obs ai similar abc123 --limit 10
+```
+
+### Analyze Note
+
+```bash
+obs ai analyze <note_id>              # Deep note analysis
+obs ai analyze <note_id> --provider gemini-api
+```
+
+**Returns:**
+- Topics and themes
+- Suggested tags
+- Quality scores
+- Improvement suggestions
 
 ### Find Duplicates
 
 ```bash
-obs ai duplicates           # Find potential duplicate notes
+obs ai duplicates <vault_id>          # Scan vault for duplicates
+obs ai duplicates <vault_id> --threshold 0.85
+obs ai duplicates <vault_id> --limit 50
+```
+
+**Example:**
+```bash
+obs ai duplicates my-vault --threshold 0.9
 ```
 
 ## R Integration

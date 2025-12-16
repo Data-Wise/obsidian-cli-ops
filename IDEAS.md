@@ -2,49 +2,138 @@
 
 > **Brainstorming space for enhancements, improvements, and new features**
 >
-> **Last Updated:** 2025-12-15
+> **Last Updated:** 2025-12-16
 
 ---
 
-## 🚀 Phase 5: AI-Powered Features (Future)
+## 🚀 Phase 5: AI-Powered Features (In Progress)
 
-### Note Similarity & Duplicates
-**Status:** Deferred (AI integration complete, features pending)
+### Multi-Provider AI Architecture
+**Status:** ✅ Phase 5A Complete (2025-12-16) | Phase 5B Pending
+
+#### Provider Stack (6 providers)
+
+```
+TIER 1: Cloud APIs (Fast, Batch, Embeddings)
+└── Gemini API ← Default (free tier: 1000 RPD)
+
+TIER 2: CLI Tools (Simple, Use Existing Subscriptions)
+├── Gemini CLI (npm: @google/gemini-cli)
+├── Claude CLI (Claude Code)
+└── Qwen CLI (optional)
+
+TIER 3: Local (Free, Private, Offline)
+├── Ollama (easy setup)
+└── llama.cpp (lightweight, 90MB)
+```
+
+#### Provider Capabilities
+
+| Provider | Embeddings | Analysis | Batch | Cost |
+|----------|------------|----------|-------|------|
+| gemini-api | ✅ | ✅ | ✅ | Free tier |
+| gemini-cli | ❌ | ✅ | ❌ | Free |
+| claude-cli | ❌ | ✅ | ❌ | Subscription |
+| qwen-cli | ❌ | ✅ | ❌ | Free |
+| ollama | ✅ | ✅ | ⚠️ | Free (local) |
+| llama-cpp | ✅ | ✅ | ⚠️ | Free (local) |
+
+#### Smart Routing
+
+```python
+# Embeddings → API or Local (CLIs don't support)
+# Batch ops → API (parallel processing)
+# Single analysis → CLI (saves API quota)
+# Complex reasoning → Claude CLI or Gemini API
+```
+
+#### Config Structure
+
+```json
+{
+  "default_provider": "gemini-api",
+  "fallback_chain": ["gemini-cli", "ollama"],
+  "providers": {
+    "gemini-api": { "model": "gemini-2.5-flash" },
+    "gemini-cli": { "enabled": true },
+    "claude-cli": { "enabled": true },
+    "ollama": { "url": "http://localhost:11434" }
+  }
+}
+```
+
+---
+
+### AI Features (Using Multi-Provider)
 
 - **Find Similar Notes**
   ```bash
   obs ai similar <note_id>
-  # Shows notes with similar content using embeddings
-  # Useful for: Finding related research, consolidating knowledge
+  obs ai similar <note_id> --provider claude-cli
   ```
 
 - **Duplicate Detection**
   ```bash
   obs ai duplicates <vault_id>
-  # Identifies potential duplicate notes
-  # Shows: Similarity score, content overlap, merge suggestions
   ```
 
 - **Topic Analysis**
   ```bash
   obs ai topics <vault_id>
-  # Extracts main topics from vault using AI
-  # Groups notes by theme/topic
-  # Suggests folder reorganization
   ```
 
 - **Smart Merge Suggestions**
   ```bash
   obs ai suggest <vault_id>
-  # AI-powered merge recommendations
-  # Shows: Reason, confidence, preview of merged result
-  # User accepts/rejects with feedback loop
   ```
 
-**Implementation Notes:**
-- AI backend complete (HuggingFace + Ollama)
-- Need to build suggestion engine
-- Requires user feedback system
+- **Provider Management**
+  ```bash
+  obs ai setup              # Interactive setup
+  obs ai status             # Show provider status
+  obs ai test               # Test all providers
+  ```
+
+---
+
+### Implementation Plan
+
+**Phase 5A: Multi-Provider Foundation ✅ COMPLETE**
+1. ✅ Create `src/python/ai/` module structure
+2. ✅ Implement `router.py` (smart provider selection)
+3. ✅ Add `gemini_api.py` provider (default)
+4. ✅ Add `gemini_cli.py` provider
+5. ✅ Add `claude_cli.py` provider
+6. ✅ Add `ollama.py` provider (refactored)
+7. ✅ Add `config.py` with auto_install settings
+8. ✅ Add `install.py` for dependency management
+9. ✅ Add pyproject.toml with optional extras
+10. ✅ Wire up CLI commands (obs ai status/setup/test)
+11. ✅ Add 73 tests
+
+**Phase 5B: AI Features (✅ Complete - 2025-12-16)**
+1. [x] `obs ai similar` - Find similar notes
+2. [x] `obs ai analyze` - Analyze single note
+3. [x] `obs ai duplicates` - Detect duplicates
+4. [ ] `obs ai topics` - Topic clustering (future)
+5. [ ] `obs ai suggest` - Merge suggestions (future)
+6. [ ] TUI integration (AI insights panel) (future)
+
+**Current File Structure:**
+```
+src/python/ai/
+├── __init__.py          # Module exports
+├── router.py            # Smart provider selection
+├── config.py            # Configuration + setup wizard
+├── install.py           # Dependency management
+└── providers/
+    ├── __init__.py
+    ├── base.py          # Abstract base class
+    ├── gemini_api.py    # Default (embeddings, batch)
+    ├── gemini_cli.py    # CLI fallback
+    ├── claude_cli.py    # High-quality analysis
+    └── ollama.py        # Local, free, private
+```
 
 ---
 
