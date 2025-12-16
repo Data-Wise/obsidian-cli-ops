@@ -195,10 +195,9 @@ obs_help() {
         echo ""
 
         echo "🤖 AI FEATURES"
+        echo "  obs ai status             Show AI provider status"
         echo "  obs ai setup              Interactive AI setup wizard"
-        echo "  obs ai setup --quick      Quick start (auto-detect)"
-        echo "  obs ai config             Show AI configuration"
-        echo "  obs ai similar <note>     Find similar notes"
+        echo "  obs ai test               Test all AI providers"
         echo ""
 
         echo "📦 R INTEGRATION"
@@ -587,21 +586,26 @@ obs_ai() {
     shift
 
     case "$subcmd" in
+        status)
+            _log_verbose "Showing AI provider status"
+            /opt/homebrew/bin/python3 "$python_cli" "ai" "status"
+            ;;
+
         setup)
             _log_verbose "Running AI setup wizard"
-            local cmd=("$python_cli" "ai" "setup")
+            /opt/homebrew/bin/python3 "$python_cli" "ai" "setup"
+            ;;
 
-            # Add --quick flag if requested
-            if [[ "$1" == "--quick" ]]; then
-                cmd+=(--quick)
+        test)
+            _log_verbose "Testing AI providers"
+            local cmd=("$python_cli" "ai" "test")
+
+            # Add --provider flag if specified
+            if [[ "$1" == "--provider" ]]; then
+                cmd+=(--provider "$2")
             fi
 
             /opt/homebrew/bin/python3 "${cmd[@]}"
-            ;;
-
-        config)
-            _log_verbose "Showing AI configuration"
-            /opt/homebrew/bin/python3 "$python_cli" "ai" "config"
             ;;
 
         *)
@@ -609,9 +613,10 @@ obs_ai() {
             echo "Usage: obs ai <subcommand>"
             echo ""
             echo "Subcommands:"
-            echo "  setup        - Interactive AI setup wizard"
-            echo "  setup --quick - Quick start (auto-detect and install)"
-            echo "  config        - Show current AI configuration"
+            echo "  status              - Show AI provider status"
+            echo "  setup               - Interactive AI setup wizard"
+            echo "  test                - Test all AI providers"
+            echo "  test --provider X   - Test specific provider"
             return 1
             ;;
     esac

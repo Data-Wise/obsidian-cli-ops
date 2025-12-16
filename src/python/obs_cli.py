@@ -302,14 +302,13 @@ def main():
 
     # ai command
     ai_parser = subparsers.add_parser('ai',
-                                      help='AI setup and configuration')
+                                      help='AI provider management')
     ai_subparsers = ai_parser.add_subparsers(dest='ai_command')
 
-    setup_parser = ai_subparsers.add_parser('setup', help='Interactive AI setup wizard')
-    setup_parser.add_argument('--quick', action='store_true',
-                             help='Quick start mode (auto-detect and install)')
-
-    ai_subparsers.add_parser('config', help='Show current AI configuration')
+    ai_subparsers.add_parser('status', help='Show AI provider status')
+    ai_subparsers.add_parser('setup', help='Interactive AI setup wizard')
+    test_parser = ai_subparsers.add_parser('test', help='Test AI providers')
+    test_parser.add_argument('--provider', help='Test specific provider')
 
     # tui command
     tui_parser = subparsers.add_parser('tui',
@@ -354,17 +353,47 @@ def main():
                 db_parser.print_help()
 
         elif args.command == 'ai':
-            # Import setup wizard only when needed
-            from setup_wizard import AISetupWizard
+            # Import AI module only when needed
+            from ai import print_status, setup_wizard
+            from ai.router import AIRouter, PROVIDER_CLASSES
 
-            wizard = AISetupWizard()
+            if args.ai_command == 'status':
+                print_status()
 
-            if args.ai_command == 'setup':
-                mode = 'quick' if args.quick else 'interactive'
-                success = wizard.run(mode=mode)
-                sys.exit(0 if success else 1)
-            elif args.ai_command == 'config':
-                wizard.show_config()
+            elif args.ai_command == 'setup':
+                setup_wizard()
+
+            elif args.ai_command == 'test':
+                # Test providers
+                print("🧪 Testing AI Providers\n")
+                router = AIRouter()
+
+                providers_to_test = [args.provider] if args.provider else list(PROVIDER_CLASSES.keys())
+
+                for name in providers_to_test:
+                    if name not in PROVIDER_CLASSES:
+                        print(f"  ✗ Unknown provider: {name}")
+                        continue
+
+                    try:
+                        provider = PROVIDER_CLASSES[name]()
+                        available = provider.is_available()
+                        if available:
+                            print(f"  ✓ {name}: available")
+                            # Quick test if analysis is supported
+                            if provider.capabilities.analysis:
+                                try:
+                                    result = provider.analyze_note("Test note content", "Test")
+                                    print(f"    └─ Analysis: working")
+                                except Exception as e:
+                                    print(f"    └─ Analysis: {e}")
+                        else:
+                            print(f"  ✗ {name}: not available")
+                    except Exception as e:
+                        print(f"  ✗ {name}: {e}")
+
+                print()
+
             else:
                 ai_parser.print_help()
 
