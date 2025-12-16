@@ -41,7 +41,11 @@
       "Bash(cat:*)",
       "Bash(test:*)",
       "Bash(curl:*)",
-      "Bash(mkdocs serve:*)"
+      "Bash(mkdocs serve:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(git pull:*)",
+      "Bash(git merge:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
