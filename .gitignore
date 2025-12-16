@@ -2,3 +2,4 @@
 *.swp
 .obsidian/
 __pycache__/
+site/
