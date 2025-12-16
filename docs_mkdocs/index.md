@@ -4,7 +4,7 @@
 
 `obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis. It bridges your Knowledge Base (Obsidian), your Computational Environment (R/Python), and your System Shell (ZSH).
 
-**Current Version**: 2.1.0
+**Current Version**: 2.2.0
 
 ## Key Features
 
@@ -23,7 +23,7 @@
 *   **📈 Analytics**: Comprehensive vault statistics and insights
 *   **🤖 AI-Powered Features**: Note similarity, duplicate detection, topic analysis (100% free, local, private)
 
-### v2.1: Obsidian App Clone (NEW!)
+### v2.1: Obsidian App Clone
 *   **🎯 Zero-Friction Start**: Just type `obs` - opens last vault automatically (like Obsidian app)
 *   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
 *   **🔄 Last-Vault Tracking**: Remembers where you were (like Obsidian app)
@@ -32,6 +32,15 @@
 *   **🎨 ADHD-Friendly**: One command, smart defaults, progressive disclosure
 *   **📦 Shortened R Integration**: `obs r` (from `obs r-dev`) for less typing
 *   **✅ Backward Compatible**: All legacy commands still work
+
+### v2.2: AI-Powered Features (NEW!)
+*   **🤖 Multi-Provider AI**: Gemini API, Gemini CLI, Claude CLI, Ollama
+*   **🔍 Find Similar Notes**: `obs ai similar` - semantic similarity using embeddings
+*   **🔬 Analyze Notes**: `obs ai analyze` - deep analysis with topics, themes, suggestions
+*   **📋 Detect Duplicates**: `obs ai duplicates` - find potential duplicate notes
+*   **🔧 Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
+*   **⚡ Smart Routing**: Auto-selects best provider for each operation
+*   **📦 Easy Setup**: `pip install obs[gemini]` or `pip install obs[ollama]`
 
 ## Quick Start
 
@@ -76,11 +85,20 @@ obs stats               # View statistics
 
 ### Setup AI Features (Optional)
 ```bash
-# Quick setup - auto-detect and install (recommended)
-obs ai setup --quick
+# Check available providers
+obs ai status
+
+# Interactive setup wizard
+obs ai setup
 
 # Find similar notes
 obs ai similar <note_id>
+
+# Analyze a note
+obs ai analyze <note_id>
+
+# Find duplicates in vault
+obs ai duplicates <vault_id>
 ```
 
 [Full Installation Guide](installation.md){ .md-button .md-button--primary }
@@ -132,10 +150,10 @@ obs ai similar <note_id>
 - ✅ **Phase 1 Complete**: Database, scanner, graph analysis
 - ✅ **Phase 2 Complete**: AI integration (HuggingFace + Ollama - free, local, private)
 - ✅ **Phase 4 Complete**: TUI visualization, Option D (Obsidian App Clone)
-- 📋 **Phase 5 Deferred**: AI-powered features (infrastructure ready)
+- ✅ **Phase 5 Complete**: Multi-provider AI (Gemini, Claude, Ollama) + AI features
 - 📋 **Phase 6 Planned**: Learning system
 
-**Current Status:** v2.1.0 (95% complete) - Production Ready
+**Current Status:** v2.2.0 (98% complete) - Production Ready
 
 See [TODOS.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md) for current work items.
 
