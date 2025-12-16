@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Intelligent CLI tool for multi-vault Obsidian knowledge management with graph analysis and interactive TUI.
 
-**Current Version**: 2.2.0-dev (Phase 5A Complete)
+**Current Version**: 2.2.0-dev (Phase 5 Complete)
 **Status**: Production ready (97% complete)
 **Priority**: P2
 

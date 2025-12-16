@@ -1,9 +1,9 @@
 priority: P2
 status: active
-progress: 97
+progress: 98
 updated: 2025-12-16
-version: 2.2.0-dev
-next: Phase 5B testing and polish, then release
+version: 2.2.0
+next: Tag and publish v2.2.0 release
 
 ## ✅ Just Completed (2025-12-16 - Phase 5B: AI Features)
 
