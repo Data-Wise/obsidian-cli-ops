@@ -6,8 +6,8 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Intelligent CLI tool for multi-vault Obsidian knowledge management with graph analysis and interactive TUI.
 
-**Current Version**: 2.1.0 (Option D Complete)
-**Status**: Production ready (95% complete)
+**Current Version**: 2.2.0-dev (Phase 5A Complete)
+**Status**: Production ready (97% complete)
 **Priority**: P2
 
 ### Core Features
@@ -15,7 +15,7 @@ Developer guide for Claude Code when working with this repository.
 - **Vault Management**: Discovery, scanning, synchronization across multiple vaults
 - **Graph Analysis**: PageRank, centrality, clustering, orphan/hub detection
 - **Interactive TUI**: Full-screen terminal UI with vim-style navigation
-- **AI Features**: Note similarity, duplicate detection (100% local, free, private)
+- **AI Features**: Multi-provider AI (Gemini API, Gemini CLI, Claude CLI, Ollama)
 - **R-Dev Integration**: Seamless R Project ↔ Obsidian workflow
 
 ### Technology Stack
@@ -25,7 +25,7 @@ Developer guide for Claude Code when working with this repository.
 - **SQLite**: Knowledge graph database
 - **NetworkX**: Graph analysis
 - **Textual**: TUI framework
-- **HuggingFace/Ollama**: Local AI (optional)
+- **Gemini/Claude/Ollama**: Multi-provider AI (optional)
 - **Jest**: Testing harness
 
 ## Architecture
@@ -80,7 +80,7 @@ obs r link                      # Link R project (was: obs r-dev link)
 obs r log <file>                # Copy artifact (was: obs r-dev log)
 
 # Development
-npm test                        # Run test suite (298 tests)
+npm test                        # Run test suite (371+ tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -88,8 +88,8 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-npm test                          # Full test suite (298 tests)
-pytest src/python/tests/          # Python tests only
+npm test                          # Full test suite (371+ tests)
+pytest src/python/tests/          # Python tests only (197 tests)
 bash tests/test_r_dev.sh          # R-Dev integration tests
 ```
 
@@ -112,7 +112,7 @@ bash tests/test_r_dev.sh          # R-Dev integration tests
   - `tui/` - TUI screens (1,701 lines)
   - `obs_cli.py` - CLI interface (318 lines)
 - `schema/vault_db.sql` - Database schema
-- `tests/` - Test suite (298 tests)
+- `tests/` - Test suite (371+ tests)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -202,7 +202,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ```
 Primary: obs, obs switch, obs manage
 Actions: obs open, obs graph, obs stats
-AI: obs ai setup, obs ai similar
+AI: obs ai status, obs ai setup, obs ai test
 R: obs r link, obs r log, obs r context
 Legacy: obs discover, obs tui, obs vaults (still work)
 ```

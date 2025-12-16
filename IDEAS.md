@@ -2,14 +2,14 @@
 
 > **Brainstorming space for enhancements, improvements, and new features**
 >
-> **Last Updated:** 2025-12-15
+> **Last Updated:** 2025-12-16
 
 ---
 
-## 🚀 Phase 5: AI-Powered Features (Future)
+## 🚀 Phase 5: AI-Powered Features (In Progress)
 
 ### Multi-Provider AI Architecture
-**Status:** Planned (brainstorm complete 2025-12-16)
+**Status:** ✅ Phase 5A Complete (2025-12-16) | Phase 5B Pending
 
 #### Provider Stack (6 providers)
 
@@ -98,38 +98,41 @@ TIER 3: Local (Free, Private, Offline)
 
 ### Implementation Plan
 
-**Phase 5A: Multi-Provider Foundation**
-1. Create `src/python/ai/` module structure
-2. Implement `router.py` (smart provider selection)
-3. Add `gemini_cli.py` provider
-4. Add `claude_cli.py` provider
-5. Add `qwen_cli.py` provider (optional)
-6. Add `llama_cpp.py` provider
-7. Update setup wizard
-8. Add `obs ai status` command
+**Phase 5A: Multi-Provider Foundation ✅ COMPLETE**
+1. ✅ Create `src/python/ai/` module structure
+2. ✅ Implement `router.py` (smart provider selection)
+3. ✅ Add `gemini_api.py` provider (default)
+4. ✅ Add `gemini_cli.py` provider
+5. ✅ Add `claude_cli.py` provider
+6. ✅ Add `ollama.py` provider (refactored)
+7. ✅ Add `config.py` with auto_install settings
+8. ✅ Add `install.py` for dependency management
+9. ✅ Add pyproject.toml with optional extras
+10. ✅ Wire up CLI commands (obs ai status/setup/test)
+11. ✅ Add 73 tests
 
-**Phase 5B: AI Features**
-1. `obs ai similar` - Find similar notes
-2. `obs ai duplicates` - Detect duplicates
-3. `obs ai topics` - Topic clustering
-4. `obs ai suggest` - Merge suggestions
-5. TUI integration (AI insights panel)
+**Phase 5B: AI Features (Next)**
+1. [ ] `obs ai similar` - Find similar notes
+2. [ ] `obs ai analyze` - Analyze single note
+3. [ ] `obs ai duplicates` - Detect duplicates
+4. [ ] `obs ai topics` - Topic clustering
+5. [ ] `obs ai suggest` - Merge suggestions
+6. [ ] TUI integration (AI insights panel)
 
-**File Structure:**
+**Current File Structure:**
 ```
 src/python/ai/
-├── __init__.py
-├── router.py
-├── config.py
-├── providers/
-│   ├── base.py
-│   ├── gemini_api.py
-│   ├── gemini_cli.py
-│   ├── claude_cli.py
-│   ├── qwen_cli.py
-│   ├── ollama.py
-│   └── llama_cpp.py
-└── embeddings.py
+├── __init__.py          # Module exports
+├── router.py            # Smart provider selection
+├── config.py            # Configuration + setup wizard
+├── install.py           # Dependency management
+└── providers/
+    ├── __init__.py
+    ├── base.py          # Abstract base class
+    ├── gemini_api.py    # Default (embeddings, batch)
+    ├── gemini_cli.py    # CLI fallback
+    ├── claude_cli.py    # High-quality analysis
+    └── ollama.py        # Local, free, private
 ```
 
 ---
