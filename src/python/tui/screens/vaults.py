@@ -111,32 +111,9 @@ class VaultBrowserScreen(Screen):
         Returns:
             Human-readable relative time (e.g., "5 minutes ago")
         """
-        if not last_scanned:
-            return "Never scanned"
-
-        try:
-            if isinstance(last_scanned, str):
-                dt = datetime.fromisoformat(last_scanned.replace('Z', '+00:00'))
-            else:
-                dt = last_scanned
-
-            now = datetime.now(dt.tzinfo) if dt.tzinfo else datetime.now()
-            delta = now - dt
-
-            seconds = delta.total_seconds()
-            if seconds < 60:
-                return "Just now"
-            elif seconds < 3600:
-                minutes = int(seconds / 60)
-                return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
-            elif seconds < 86400:
-                hours = int(seconds / 3600)
-                return f"{hours} hour{'s' if hours > 1 else ''} ago"
-            else:
-                days = int(seconds / 86400)
-                return f"{days} day{'s' if days > 1 else ''} ago"
-        except:
-            return str(last_scanned)
+        from utils import format_relative_time
+        result = format_relative_time(last_scanned)
+        return "Never scanned" if result == "Never" else result
 
     def update_header_timestamp(self):
         """Update header with latest scan timestamp."""

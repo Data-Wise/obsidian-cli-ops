@@ -17,6 +17,7 @@ from db_manager import DatabaseManager
 from core.vault_manager import VaultManager
 from core.graph_analyzer import GraphAnalyzer
 from core.exceptions import VaultNotFoundError, ScanError, AnalysisError
+from utils import format_relative_time
 
 
 class ObsCLI:
@@ -156,7 +157,7 @@ class ObsCLI:
 
             print(f"\n📊 Vault Statistics: {vault['name']}")
             print(f"   Path: {vault['path']}")
-            print(f"   Last scanned: {vault.get('last_scanned', 'Never')}")
+            print(f"   Last scanned: {format_relative_time(vault.get('last_scanned'))}")
 
             notes = self.db.list_notes(vault_id)
             print(f"\n   Notes: {len(notes)}")
@@ -206,7 +207,7 @@ class ObsCLI:
             print(f"  {vault.name}")
             print(f"    Path: {vault.path}")
             print(f"    Notes: {vault.note_count}")
-            print(f"    Last scanned: {vault.last_scanned or 'Never'}")
+            print(f"    Last scanned: {format_relative_time(vault.last_scanned)}")
             print(f"    ID: {vault.id}")
             print("")
 

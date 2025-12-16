@@ -11,9 +11,9 @@
 
 ### v2.1.0 Release Prep
 - [ ] **Test iCloud vault discovery** - User hasn't tested the new `d` key feature yet
-- [ ] **Complete Quick Wins** - 2 remaining items
-  - [ ] JSON export in statistics dashboard
-  - [ ] Timestamp formatting improvements
+- [x] **Complete Quick Wins** - 2 remaining items
+  - [x] JSON export in statistics dashboard (press 'e' in stats TUI)
+  - [x] Timestamp formatting improvements (human-readable relative times)
 - [ ] **Final testing pass** - Run full test suite, manual TUI testing
 - [ ] **Create v2.1.0 release notes**
 - [ ] **Tag release** - `git tag v2.1.0`

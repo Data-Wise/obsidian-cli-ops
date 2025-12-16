@@ -241,19 +241,9 @@ class StatisticsDashboardScreen(Screen):
         orphan_pct = (orphan_count / note_count * 100) if note_count > 0 else 0
         hub_pct = (hub_count / note_count * 100) if note_count > 0 else 0
 
-        # Last scanned
-        last_scan = vault.last_scanned
-        if last_scan:
-            try:
-                if isinstance(last_scan, str):
-                    dt = datetime.fromisoformat(last_scan.replace('Z', '+00:00'))
-                else:
-                    dt = last_scan
-                last_scan = dt.strftime('%Y-%m-%d %H:%M')
-            except:
-                last_scan = str(last_scan)
-        else:
-            last_scan = 'Never'
+        # Last scanned (human-readable relative time)
+        from utils import format_relative_time
+        last_scan = format_relative_time(vault.last_scanned)
 
         # Build overview
         content = f"""[bold cyan]╭─ Vault Overview ─────────────────╮[/]
@@ -424,13 +414,9 @@ class StatisticsDashboardScreen(Screen):
             notes_deleted = scan.get('notes_deleted', 0)
             duration = scan.get('duration_seconds', 0)
 
-            # Format timestamp
-            try:
-                from datetime import datetime
-                dt = datetime.fromisoformat(started.replace('Z', '+00:00'))
-                timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
-            except:
-                timestamp = started
+            # Format timestamp (human-readable relative time)
+            from utils import format_relative_time
+            timestamp = format_relative_time(started)
 
             # Status icon
             status_icon = "✅" if status == "completed" else "❌"

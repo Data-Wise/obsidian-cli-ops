@@ -1,11 +1,24 @@
 priority: P2
 status: active
 progress: 95
-updated: 2025-12-15
+updated: 2025-12-16
 version: 2.1.0
-next: Deploy MkDocs site, test Option D features, complete remaining quick wins
+next: Test Option D features, final testing pass, create release notes
 
-## ✅ Just Completed (2025-12-15 - MkDocs Documentation Sync)
+## ✅ Just Completed (2025-12-16 - Quick Wins & Deployment Prep)
+
+### Quick Wins Completion (v2.1.0)
+- ✅ JSON export already implemented in TUI stats screen (press 'e')
+- ✅ Added human-friendly timestamp formatting (relative times)
+  - Created shared utils.py module with format_relative_time()
+  - Updated all TUI screens (vaults, stats, notes) to use relative times
+  - Updated CLI (obs_cli.py) to use relative times
+  - Added 22 new tests for utility functions
+- ✅ MkDocs site built and ready for deployment (gh-pages push blocked)
+- ✅ Removed minify plugin from mkdocs.yml (build dependency issue)
+- ✅ **Result:** All quick wins complete, +22 tests, cleaner codebase
+
+## ✅ Previous Session (2025-12-15 - MkDocs Documentation Sync)
 
 ### MkDocs Site Updates (Major - v2.1.0)
 - ✅ Fixed documentation-code mismatch (docs_mkdocs/ had v2.0.0-beta content)

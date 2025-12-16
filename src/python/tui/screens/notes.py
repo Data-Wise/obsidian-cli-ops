@@ -443,13 +443,9 @@ class NoteExplorerScreen(Screen):
     # Helper methods
 
     def _format_datetime(self, dt) -> str:
-        """Format datetime for display."""
-        if not dt:
+        """Format datetime for display as relative time."""
+        from utils import format_relative_time
+        result = format_relative_time(dt)
+        if result == "Never":
             return "[dim]Unknown[/]"
-        try:
-            # Handle both datetime objects and ISO format strings
-            if isinstance(dt, str):
-                dt = datetime.fromisoformat(dt.replace('Z', '+00:00'))
-            return dt.strftime("%Y-%m-%d %H:%M")
-        except:
-            return "[dim]Invalid[/]"
+        return result
