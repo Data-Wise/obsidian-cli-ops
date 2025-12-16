@@ -3,9 +3,32 @@ status: active
 progress: 98
 updated: 2025-12-16
 version: 2.2.0
-next: Tag and publish v2.2.0 release
+next: Fix remaining test failures (53 left)
 
-## ✅ Just Completed (2025-12-16 - Phase 5B: AI Features)
+## ✅ Just Completed (2025-12-16 - Test Suite Fixes)
+
+### Major Test Infrastructure Improvements
+- ✅ Fixed 109 tests! (289 → 398 passing, 67% failure reduction)
+- ✅ **test_db_manager.py**: 25/25 passing (fixed all 15 failures)
+- ✅ **test_vault_browser.py**: All TUI tests passing
+- ✅ **test_graph_builder.py**: All tests passing
+- ✅ Created shared test fixtures in conftest.py
+- ✅ Fixed database schema initialization across all test files
+- ✅ Corrected API mismatches (add_vault, add_note, add_link signatures)
+- ✅ Updated TUI mocks to use VaultManager/GraphAnalyzer (not DatabaseManager)
+- ✅ Converted mock data from dicts to proper Vault domain objects
+- ✅ Documentation: TUI_TEST_FIXES_SUMMARY.md, GRAPH_BUILDER_TEST_FIXES.md
+- ✅ **Result:** 398/461 tests passing (86% pass rate), 53 failures remaining
+
+## 🎯 Next Action
+
+**Choose one (or both in order):**
+- **A)** Fix test_note_explorer.py - convert mock data to Note domain objects (27 failures) [est. 30-45min] 🟢
+- **B)** Fix test_graph_visualizer.py - update mock method calls (14 failures) [est. 20-30min] 🟢
+
+**Remaining after A+B:** 12 failures (vault_scanner: 6, quick_wins: 5, ai_client: 1)
+
+## ✅ Previous Session (2025-12-16 - Phase 5B: AI Features)
 
 ### Phase 5B: AI-Powered Features
 - ✅ Implemented `obs ai similar <note_id>` - Find similar notes using embeddings

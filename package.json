@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npm run test:js && npm run test:py",
     "test:js": "jest",
-    "test:py": "pytest src/python/tests -v",
+    "test:py": "PYTHONPATH=src/python pytest src/python/tests -v",
     "test:py:unit": "pytest src/python/tests -v -m unit",
     "test:py:integration": "pytest src/python/tests -v -m integration",
     "test:py:ai": "pytest src/python/tests -v -m ai",

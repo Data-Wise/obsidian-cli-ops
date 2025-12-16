@@ -33,6 +33,18 @@ def temp_db():
 @pytest.fixture
 def db_manager(temp_db):
     """Create a DatabaseManager instance with temporary database."""
+    # Initialize schema from schema file
+    schema_path = Path(__file__).parent.parent.parent.parent / "schema" / "vault_db.sql"
+
+    if schema_path.exists():
+        with open(schema_path, 'r') as f:
+            schema_sql = f.read()
+
+        conn = sqlite3.connect(temp_db)
+        conn.executescript(schema_sql)
+        conn.commit()
+        conn.close()
+
     manager = DatabaseManager(temp_db)
     return manager
 
@@ -84,27 +96,27 @@ class TestVaultOperations:
     def test_add_vault(self, db_manager):
         """Test adding a vault."""
         vault_id = db_manager.add_vault(
-            '/path/to/vault',
-            'Test Vault'
+            'Test Vault',
+            '/path/to/vault'
         )
 
         assert vault_id is not None
-        assert isinstance(vault_id, int)
+        assert isinstance(vault_id, str)
 
     def test_get_vault(self, db_manager):
         """Test retrieving a vault."""
-        vault_id = db_manager.add_vault('/path/to/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/to/vault')
 
         vault = db_manager.get_vault(vault_id)
 
         assert vault is not None
-        assert vault['path'] == '/path/to/vault'
         assert vault['name'] == 'Test Vault'
+        assert vault['path'] == '/path/to/vault'
 
     def test_list_vaults(self, db_manager):
         """Test listing all vaults."""
-        db_manager.add_vault('/path/vault1', 'Vault 1')
-        db_manager.add_vault('/path/vault2', 'Vault 2')
+        db_manager.add_vault('Vault 1', '/path/vault1')
+        db_manager.add_vault('Vault 2', '/path/vault2')
 
         vaults = db_manager.list_vaults()
 
@@ -113,10 +125,11 @@ class TestVaultOperations:
 
     def test_add_duplicate_vault(self, db_manager):
         """Test that adding duplicate vault path updates existing."""
-        vault_id1 = db_manager.add_vault('/path/vault', 'Vault 1')
-        vault_id2 = db_manager.add_vault('/path/vault', 'Vault 2')
+        vault_id1 = db_manager.add_vault('Vault 1', '/path/vault')
+        vault_id2 = db_manager.add_vault('Vault 2', '/path/vault')
 
-        # Should return same ID or handle gracefully
+        # Should return same ID since path is same (vault_id is hash of path)
+        assert vault_id1 == vault_id2
         vaults = db_manager.list_vaults()
         assert len(vaults) == 1  # Only one vault with this path
 
@@ -126,25 +139,24 @@ class TestNoteOperations:
 
     def test_add_note(self, db_manager):
         """Test adding a note."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
 
         note_id = db_manager.add_note(
             vault_id=vault_id,
             path='notes/test.md',
             title='Test Note',
-            content='# Test\n\nContent here',
-            content_hash='abc123'
+            content='# Test\n\nContent here'
         )
 
         assert note_id is not None
-        assert isinstance(note_id, int)
+        assert isinstance(note_id, str)
 
     def test_get_note(self, db_manager):
         """Test retrieving a note."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
         note_id = db_manager.add_note(
             vault_id, 'notes/test.md', 'Test Note',
-            '# Test', 'abc123'
+            '# Test'
         )
 
         note = db_manager.get_note(note_id)
@@ -155,9 +167,9 @@ class TestNoteOperations:
 
     def test_list_notes(self, db_manager):
         """Test listing notes in a vault."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
-        db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'hash1')
-        db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2', 'hash2')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
+        db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
+        db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2')
 
         notes = db_manager.list_notes(vault_id)
 
@@ -167,20 +179,24 @@ class TestNoteOperations:
 
     def test_update_note_content_hash(self, db_manager):
         """Test updating note when content changes."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
         note_id = db_manager.add_note(
-            vault_id, 'test.md', 'Test', '# Original', 'hash1'
+            vault_id, 'test.md', 'Test', '# Original'
         )
 
-        # Update with new hash
+        # Get original hash
+        note = db_manager.get_note(note_id)
+        original_hash = note['content_hash']
+
+        # Update with new content
         note_id2 = db_manager.add_note(
-            vault_id, 'test.md', 'Test', '# Updated', 'hash2'
+            vault_id, 'test.md', 'Test', '# Updated'
         )
 
-        # Should update existing note
+        # Should update existing note with new hash
         notes = db_manager.list_notes(vault_id)
         assert len(notes) == 1
-        assert notes[0]['content_hash'] == 'hash2'
+        assert notes[0]['content_hash'] != original_hash  # Hash should change
 
 
 class TestLinkOperations:
@@ -188,39 +204,45 @@ class TestLinkOperations:
 
     def test_add_link(self, db_manager):
         """Test adding a link between notes."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
-        note1_id = db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'h1')
-        note2_id = db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2', 'h2')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
+        note1_id = db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
+        note2_id = db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2')
 
-        link_id = db_manager.add_link(note1_id, note2_id, 'Note 2')
+        link_id = db_manager.add_link(note1_id, 'note2.md', 'Note 2')
 
         assert link_id is not None
 
     def test_get_outgoing_links(self, db_manager):
         """Test retrieving outgoing links from a note."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
-        note1 = db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'h1')
-        note2 = db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2', 'h2')
-        note3 = db_manager.add_note(vault_id, 'note3.md', 'Note 3', '# 3', 'h3')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
+        note1 = db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
+        note2 = db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2')
+        note3 = db_manager.add_note(vault_id, 'note3.md', 'Note 3', '# 3')
 
-        db_manager.add_link(note1, note2, 'Note 2')
-        db_manager.add_link(note1, note3, 'Note 3')
+        db_manager.add_link(note1, 'note2.md', 'Note 2')
+        db_manager.add_link(note1, 'note3.md', 'Note 3')
 
         links = db_manager.get_outgoing_links(note1)
 
         assert len(links) == 2
-        target_ids = {link['target_note_id'] for link in links}
-        assert target_ids == {note2, note3}
+        target_paths = {link['target_path'] for link in links}
+        assert target_paths == {'note2.md', 'note3.md'}
 
     def test_get_incoming_links(self, db_manager):
         """Test retrieving incoming links to a note."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
-        note1 = db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'h1')
-        note2 = db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2', 'h2')
-        note3 = db_manager.add_note(vault_id, 'note3.md', 'Note 3', '# 3', 'h3')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
+        note1 = db_manager.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
+        note2 = db_manager.add_note(vault_id, 'note2.md', 'Note 2', '# 2')
+        note3 = db_manager.add_note(vault_id, 'note3.md', 'Note 3', '# 3')
 
-        db_manager.add_link(note1, note3, 'Note 3')
-        db_manager.add_link(note2, note3, 'Note 3')
+        db_manager.add_link(note1, 'note3.md', 'Note 3')
+        db_manager.add_link(note2, 'note3.md', 'Note 3')
+
+        # Manually resolve links for testing
+        with db_manager.get_connection() as conn:
+            conn.execute("""
+                UPDATE links SET target_note_id = ? WHERE target_path = 'note3.md'
+            """, (note3,))
 
         links = db_manager.get_incoming_links(note3)
 
@@ -240,8 +262,8 @@ class TestTagOperations:
 
     def test_add_note_tag(self, db_manager):
         """Test associating a tag with a note."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
-        note_id = db_manager.add_note(vault_id, 'test.md', 'Test', '# Test', 'h1')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
+        note_id = db_manager.add_note(vault_id, 'test.md', 'Test', '# Test')
         tag_id = db_manager.add_tag('research')
 
         # This would use a method like add_note_tag if it exists
@@ -261,12 +283,12 @@ class TestGraphQueries:
 
     def test_get_orphaned_notes(self, db_manager):
         """Test finding orphaned notes (no links)."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
-        orphan = db_manager.add_note(vault_id, 'orphan.md', 'Orphan', '# O', 'h1')
-        connected1 = db_manager.add_note(vault_id, 'c1.md', 'C1', '# C1', 'h2')
-        connected2 = db_manager.add_note(vault_id, 'c2.md', 'C2', '# C2', 'h3')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
+        orphan = db_manager.add_note(vault_id, 'orphan.md', 'Orphan', '# O')
+        connected1 = db_manager.add_note(vault_id, 'c1.md', 'C1', '# C1')
+        connected2 = db_manager.add_note(vault_id, 'c2.md', 'C2', '# C2')
 
-        db_manager.add_link(connected1, connected2, 'C2')
+        db_manager.add_link(connected1, 'c2.md', 'C2')
 
         orphans = db_manager.get_orphaned_notes(vault_id)
 
@@ -276,7 +298,7 @@ class TestGraphQueries:
 
     def test_get_hub_notes(self, db_manager):
         """Test finding hub notes (highly connected)."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
 
         # This will depend on the threshold in the view (>10 links)
         # For now, just test that the query works
@@ -296,7 +318,7 @@ class TestScanHistory:
 
     def test_start_scan(self, db_manager):
         """Test starting a scan."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
 
         scan_id = db_manager.start_scan(vault_id)
 
@@ -304,10 +326,10 @@ class TestScanHistory:
 
     def test_complete_scan(self, db_manager):
         """Test completing a scan."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
         scan_id = db_manager.start_scan(vault_id)
 
-        db_manager.complete_scan(scan_id, notes_scanned=10, links_found=15)
+        db_manager.complete_scan(scan_id, notes_scanned=10, notes_added=8, notes_updated=2)
 
         # Verify scan was completed
         with db_manager.get_connection() as conn:
@@ -324,7 +346,7 @@ class TestScanHistory:
 
     def test_fail_scan(self, db_manager):
         """Test failing a scan with error message."""
-        vault_id = db_manager.add_vault('/path/vault', 'Test Vault')
+        vault_id = db_manager.add_vault('Test Vault', '/path/vault')
         scan_id = db_manager.start_scan(vault_id)
 
         db_manager.fail_scan(scan_id, "Test error message")

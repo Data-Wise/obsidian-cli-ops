@@ -18,8 +18,10 @@ from graph_builder import GraphBuilder, LinkResolver
 
 @pytest.fixture
 def temp_db():
-    """Create temporary database."""
-    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.db') as f:
+    """Create temporary database path (database will be auto-initialized)."""
+    # Create temp file to get a unique path, then delete it
+    # DatabaseManager will initialize the schema when it doesn't exist
+    with tempfile.NamedTemporaryFile(mode='w', delete=True, suffix='.db') as f:
         db_path = f.name
     yield db_path
     if os.path.exists(db_path):
@@ -29,21 +31,26 @@ def temp_db():
 @pytest.fixture
 def populated_db(temp_db):
     """Create database with sample notes and links."""
+    # DatabaseManager will auto-initialize schema
     db = DatabaseManager(temp_db)
 
     # Add vault
     vault_id = db.add_vault('/path/vault', 'Test Vault')
 
     # Add notes
-    note1 = db.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'h1')
-    note2 = db.add_note(vault_id, 'note2.md', 'Note 2', '# 2', 'h2')
-    note3 = db.add_note(vault_id, 'note3.md', 'Note 3', '# 3', 'h3')
-    note4 = db.add_note(vault_id, 'note4.md', 'Note 4', '# 4', 'h4')
+    note1 = db.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
+    note2 = db.add_note(vault_id, 'note2.md', 'Note 2', '# 2')
+    note3 = db.add_note(vault_id, 'note3.md', 'Note 3', '# 3')
+    note4 = db.add_note(vault_id, 'note4.md', 'Note 4', '# 4')
 
     # Add links: 1->2, 1->3, 2->3
-    db.add_link(note1, note2, 'Note 2')
-    db.add_link(note1, note3, 'Note 3')
-    db.add_link(note2, note3, 'Note 3')
+    db.add_link(note1, 'note2.md', 'Note 2')
+    db.add_link(note1, 'note3.md', 'Note 3')
+    db.add_link(note2, 'note3.md', 'Note 3')
+
+    # Resolve links so graph can be built
+    resolver = LinkResolver(db)
+    resolver.resolve_all_links(vault_id)
 
     return db, vault_id, [note1, note2, note3, note4]
 
@@ -84,31 +91,35 @@ class TestGraphBuilder:
         db, vault_id, notes = populated_db
         builder = GraphBuilder(db)
 
-        graph = builder.build_graph(vault_id)
-        metrics = builder.calculate_metrics(graph)
+        stats = builder.calculate_metrics(vault_id)
 
-        assert metrics is not None
-        assert len(metrics) == 4  # One per note
+        assert stats is not None
+        assert stats['notes'] == 4
+        assert stats['edges'] == 3
 
-        # Each metric should have node_id and values
-        for metric in metrics.values():
-            assert 'pagerank' in metric
-            assert 'in_degree' in metric
-            assert 'out_degree' in metric
+        # Check that metrics were stored in database
+        for note_id in notes:
+            metrics = db.get_graph_metrics(note_id)
+            assert metrics is not None
+            assert 'pagerank' in metrics
+            assert 'in_degree' in metrics
+            assert 'out_degree' in metrics
 
     def test_pagerank_calculation(self, populated_db):
         """Test PageRank calculation."""
         db, vault_id, notes = populated_db
         builder = GraphBuilder(db)
 
-        graph = builder.build_graph(vault_id)
-        metrics = builder.calculate_metrics(graph)
+        builder.calculate_metrics(vault_id)
 
         note1, note2, note3, note4 = notes
 
         # Note3 has most incoming links, should have high PageRank
-        note3_pagerank = metrics[note3]['pagerank']
-        note4_pagerank = metrics[note4]['pagerank']  # Orphan
+        note3_metrics = db.get_graph_metrics(note3)
+        note4_metrics = db.get_graph_metrics(note4)
+
+        note3_pagerank = note3_metrics['pagerank']
+        note4_pagerank = note4_metrics['pagerank']  # Orphan
 
         assert note3_pagerank > note4_pagerank
 
@@ -117,18 +128,21 @@ class TestGraphBuilder:
         db, vault_id, notes = populated_db
         builder = GraphBuilder(db)
 
-        graph = builder.build_graph(vault_id)
-        metrics = builder.calculate_metrics(graph)
+        builder.calculate_metrics(vault_id)
 
         note1, note2, note3, note4 = notes
 
+        note1_metrics = db.get_graph_metrics(note1)
+        note3_metrics = db.get_graph_metrics(note3)
+        note4_metrics = db.get_graph_metrics(note4)
+
         # Note1 has 2 outgoing links
-        assert metrics[note1]['out_degree'] == 2
+        assert note1_metrics['out_degree'] == 2
         # Note3 has 2 incoming links
-        assert metrics[note3]['in_degree'] == 2
+        assert note3_metrics['in_degree'] == 2
         # Note4 has no links
-        assert metrics[note4]['in_degree'] == 0
-        assert metrics[note4]['out_degree'] == 0
+        assert note4_metrics['in_degree'] == 0
+        assert note4_metrics['out_degree'] == 0
 
     def test_analyze_vault(self, populated_db):
         """Test full vault analysis."""
@@ -138,10 +152,14 @@ class TestGraphBuilder:
         result = builder.analyze_vault(vault_id)
 
         assert result is not None
-        assert 'total_nodes' in result
-        assert 'total_edges' in result
-        assert result['total_nodes'] == 4
-        assert result['total_edges'] == 3
+        # Should have link resolution stats
+        assert 'total_links' in result
+        assert 'resolved' in result
+        # Should have graph stats
+        assert 'notes' in result
+        assert 'edges' in result
+        assert result['notes'] == 4
+        assert result['edges'] == 3
 
 
 class TestLinkResolver:
@@ -150,13 +168,14 @@ class TestLinkResolver:
     def test_resolve_exact_path(self, populated_db):
         """Test resolving link by exact path."""
         db, vault_id, notes = populated_db
-        resolver = LinkResolver(db, vault_id)
+        resolver = LinkResolver(db)
 
         # Build cache
-        resolver.build_cache()
+        resolver.build_note_cache(vault_id)
 
         # Try to resolve
-        target_id = resolver.resolve('note2.md', notes[0])
+        note_dict = db.get_note(notes[0])
+        target_id = resolver.resolve_link('note2.md', note_dict)
 
         assert target_id is not None
         assert target_id == notes[1]
@@ -164,11 +183,12 @@ class TestLinkResolver:
     def test_resolve_by_title(self, populated_db):
         """Test resolving link by title."""
         db, vault_id, notes = populated_db
-        resolver = LinkResolver(db, vault_id)
+        resolver = LinkResolver(db)
 
-        resolver.build_cache()
+        resolver.build_note_cache(vault_id)
 
-        target_id = resolver.resolve('Note 2', notes[0])
+        note_dict = db.get_note(notes[0])
+        target_id = resolver.resolve_link('Note 2', note_dict)
 
         # Should resolve to note2
         assert target_id is not None
@@ -176,11 +196,12 @@ class TestLinkResolver:
     def test_resolve_nonexistent(self, populated_db):
         """Test resolving non-existent link."""
         db, vault_id, notes = populated_db
-        resolver = LinkResolver(db, vault_id)
+        resolver = LinkResolver(db)
 
-        resolver.build_cache()
+        resolver.build_note_cache(vault_id)
 
-        target_id = resolver.resolve('NonExistent', notes[0])
+        note_dict = db.get_note(notes[0])
+        target_id = resolver.resolve_link('NonExistent', note_dict)
 
         # Should return None for unresolved
         assert target_id is None
@@ -188,12 +209,12 @@ class TestLinkResolver:
     def test_cache_building(self, populated_db):
         """Test that cache is built properly."""
         db, vault_id, notes = populated_db
-        resolver = LinkResolver(db, vault_id)
+        resolver = LinkResolver(db)
 
-        resolver.build_cache()
+        resolver.build_note_cache(vault_id)
 
         # Cache should have entries
-        assert len(resolver.cache) > 0
+        assert len(resolver._note_cache) > 0
 
 
 @pytest.mark.unit
@@ -205,26 +226,26 @@ class TestGraphMetrics:
         db, vault_id, notes = populated_db
         builder = GraphBuilder(db)
 
-        graph = builder.build_graph(vault_id)
-        metrics = builder.calculate_metrics(graph)
+        builder.calculate_metrics(vault_id)
 
         note3 = notes[2]  # Most connected
+        metrics = db.get_graph_metrics(note3)
 
         # Should have non-zero centrality
-        assert metrics[note3]['betweenness'] >= 0
-        assert metrics[note3]['closeness'] >= 0
+        assert metrics['betweenness'] >= 0
+        assert metrics['closeness'] >= 0
 
     def test_clustering_coefficient(self, populated_db):
         """Test clustering coefficient calculation."""
         db, vault_id, notes = populated_db
         builder = GraphBuilder(db)
 
-        graph = builder.build_graph(vault_id)
-        metrics = builder.calculate_metrics(graph)
+        builder.calculate_metrics(vault_id)
 
         # Clustering coefficients should be between 0 and 1
-        for metric in metrics.values():
-            assert 0 <= metric['clustering'] <= 1
+        for note_id in notes:
+            metrics = db.get_graph_metrics(note_id)
+            assert 0 <= metrics['clustering_coefficient'] <= 1
 
 
 @pytest.mark.unit
@@ -248,8 +269,8 @@ class TestEdgeCases:
         vault_id = db.add_vault('/path/vault', 'Test Vault')
 
         # Add notes without links
-        db.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'h1')
-        db.add_note(vault_id, 'note2.md', 'Note 2', '# 2', 'h2')
+        db.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
+        db.add_note(vault_id, 'note2.md', 'Note 2', '# 2')
 
         builder = GraphBuilder(db)
         graph = builder.build_graph(vault_id)
@@ -262,10 +283,10 @@ class TestEdgeCases:
         db = DatabaseManager(temp_db)
         vault_id = db.add_vault('/path/vault', 'Test Vault')
 
-        note1 = db.add_note(vault_id, 'note1.md', 'Note 1', '# 1', 'h1')
+        note1 = db.add_note(vault_id, 'note1.md', 'Note 1', '# 1')
 
         # Add self-referencing link
-        db.add_link(note1, note1, 'Note 1')
+        db.add_link(note1, 'note1.md', 'Note 1')
 
         builder = GraphBuilder(db)
         graph = builder.build_graph(vault_id)

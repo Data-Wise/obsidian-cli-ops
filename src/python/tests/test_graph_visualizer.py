@@ -110,8 +110,7 @@ def mock_app():
 @pytest.fixture
 def graph_visualizer(mock_db, mock_builder, mock_app):
     """Create a GraphVisualizerScreen instance with mocks."""
-    with patch('tui.screens.graph.DatabaseManager', return_value=mock_db):
-        with patch('tui.screens.graph.GraphBuilder', return_value=mock_builder):
+    with patch('tui.screens.graph.VaultManager'), patch('tui.screens.graph.GraphAnalyzer'):
             screen = GraphVisualizerScreen(vault_id='vault1', vault_name='Test Vault')
             type(screen).app = PropertyMock(return_value=mock_app)
             screen.query_one = Mock(side_effect=lambda selector, widget_type=None: Mock())
@@ -128,15 +127,14 @@ class TestGraphVisualizerScreen:
 
     def test_graph_visualizer_initialization(self, mock_db, mock_builder):
         """Test that GraphVisualizerScreen can be initialized."""
-        with patch('tui.screens.graph.DatabaseManager', return_value=mock_db):
-            with patch('tui.screens.graph.GraphBuilder', return_value=mock_builder):
-                screen = GraphVisualizerScreen(vault_id='vault1', vault_name='Test Vault')
-                assert screen is not None
-                assert screen.vault_id == 'vault1'
-                assert screen.vault_name == 'Test Vault'
-                assert screen.graph is None
-                assert screen.current_view == "hubs"
-                assert screen.selected_note is None
+        with patch('tui.screens.graph.VaultManager'), patch('tui.screens.graph.GraphAnalyzer'):
+            screen = GraphVisualizerScreen(vault_id='vault1', vault_name='Test Vault')
+            assert screen is not None
+            assert screen.vault_id == 'vault1'
+            assert screen.vault_name == 'Test Vault'
+            assert screen.graph is None
+            assert screen.current_view == "hubs"
+            assert screen.selected_note is None
 
     def test_graph_visualizer_bindings(self):
         """Test that GraphVisualizerScreen has correct key bindings."""

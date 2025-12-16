@@ -97,7 +97,7 @@ def mock_app():
 @pytest.fixture
 def note_explorer(mock_db, mock_app):
     """Create a NoteExplorerScreen instance with mocks."""
-    with patch('tui.screens.notes.DatabaseManager', return_value=mock_db):
+    with patch('tui.screens.notes.VaultManager'), patch('tui.screens.notes.GraphAnalyzer'):
         screen = NoteExplorerScreen(vault_id='vault1', vault_name='Test Vault')
 
         # Mock the app property using PropertyMock
@@ -117,7 +117,7 @@ class TestNoteExplorerInitialization:
 
     def test_initialization_with_vault_id(self, mock_db):
         """Test that screen initializes with vault ID and name."""
-        with patch('tui.screens.notes.DatabaseManager', return_value=mock_db):
+        with patch('tui.screens.notes.VaultManager'), patch('tui.screens.notes.GraphAnalyzer'):
             screen = NoteExplorerScreen(vault_id='vault1', vault_name='Test Vault')
 
             assert screen.vault_id == 'vault1'
@@ -127,12 +127,12 @@ class TestNoteExplorerInitialization:
             assert screen.filtered_notes == []
             assert screen.selected_note is None
 
-    def test_database_manager_created(self, mock_db):
-        """Test that DatabaseManager is instantiated."""
-        with patch('tui.screens.notes.DatabaseManager', return_value=mock_db) as mock_dm:
+    def test_vault_manager_created(self):
+        """Test that VaultManager is instantiated."""
+        with patch('tui.screens.notes.VaultManager') as MockVM, patch('tui.screens.notes.GraphAnalyzer'):
             screen = NoteExplorerScreen(vault_id='vault1', vault_name='Test Vault')
-            mock_dm.assert_called_once()
-            assert screen.db is not None
+            MockVM.assert_called_once()
+            assert screen.vault_manager is not None
 
 
 class TestDataLoading:

@@ -45,7 +45,10 @@
       "Bash(gh pr merge:*)",
       "Bash(git pull:*)",
       "Bash(git merge:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(PYTHONPATH=/Users/dt/projects/dev-tools/obsidian-cli-ops/src/python:$PYTHONPATH python3 -m pytest:*)",
+      "Bash(npm run test:py:*)",
+      "Bash(PYTHONPATH=src/python pytest:*)"
     ]
   }
 }

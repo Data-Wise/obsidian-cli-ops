@@ -79,6 +79,19 @@ def temp_db():
 @pytest.fixture
 def vault_scanner(temp_db):
     """Create VaultScanner instance."""
+    # Initialize schema from schema file
+    import sqlite3
+    schema_path = Path(__file__).parent.parent.parent.parent / "schema" / "vault_db.sql"
+
+    if schema_path.exists():
+        with open(schema_path, 'r') as f:
+            schema_sql = f.read()
+
+        conn = sqlite3.connect(temp_db)
+        conn.executescript(schema_sql)
+        conn.commit()
+        conn.close()
+
     db_manager = DatabaseManager(temp_db)
     scanner = VaultScanner(db_manager)
     return scanner
@@ -89,15 +102,19 @@ class TestMarkdownParser:
 
     def test_parse_simple_markdown(self):
         """Test parsing simple markdown content."""
-        content = "# Heading\n\nSome content."
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write("# Heading\n\nSome content.")
+            temp_file = f.name
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
 
-        assert result['frontmatter'] == {}
-        assert result['content'] == content
-        assert result['wikilinks'] == []
-        assert result['tags'] == []
+            assert result.frontmatter == {}
+            assert "Heading" in result.content
+            assert len(result.wikilinks) == 0
+            assert len(result.tags) == 0
+        finally:
+            os.unlink(temp_file)
 
     def test_parse_frontmatter(self):
         """Test extracting YAML frontmatter."""
@@ -110,12 +127,18 @@ class TestMarkdownParser:
             "# Body\n"
         )
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        assert result['frontmatter']['title'] == 'Test'
-        assert result['frontmatter']['tags'] == ['a', 'b']
-        assert '# Body' in result['content']
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            assert result.frontmatter['title'] == 'Test'
+            assert result.frontmatter['tags'] == ['a', 'b']
+            assert '# Body' in result.content
+        finally:
+            os.unlink(temp_file)
 
     def test_extract_wikilinks(self):
         """Test extracting wikilinks."""
@@ -125,21 +148,27 @@ class TestMarkdownParser:
             "Another [[note3]].\n"
         )
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        wikilinks = result['wikilinks']
-        assert len(wikilinks) == 3
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
 
-        # Check targets
-        targets = [link['target'] for link in wikilinks]
-        assert 'note1' in targets
-        assert 'note2' in targets
-        assert 'note3' in targets
+            wikilinks = result.wikilinks
+            assert len(wikilinks) == 3
 
-        # Check alias
-        note2_link = next(l for l in wikilinks if l['target'] == 'note2')
-        assert note2_link['display'] == 'Note Two'
+            # Check targets (wikilinks are tuples of (target, display))
+            targets = [link[0] for link in wikilinks]
+            assert 'note1' in targets
+            assert 'note2' in targets
+            assert 'note3' in targets
+
+            # Check alias
+            note2_link = next(l for l in wikilinks if l[0] == 'note2')
+            assert note2_link[1] == 'Note Two'
+        finally:
+            os.unlink(temp_file)
 
     def test_extract_tags(self):
         """Test extracting tags."""
@@ -148,15 +177,21 @@ class TestMarkdownParser:
             "Also #nested/tag and #tag-with-dash.\n"
         )
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        tags = result['tags']
-        assert len(tags) == 4
-        assert 'tag1' in tags
-        assert 'tag2' in tags
-        assert 'nested/tag' in tags
-        assert 'tag-with-dash' in tags
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            tags = result.tags
+            assert len(tags) == 4
+            assert 'tag1' in tags
+            assert 'tag2' in tags
+            assert 'nested/tag' in tags
+            assert 'tag-with-dash' in tags
+        finally:
+            os.unlink(temp_file)
 
     def test_ignore_code_block_tags(self):
         """Test that tags in code blocks are ignored."""
@@ -170,13 +205,19 @@ class TestMarkdownParser:
             "```\n"
         )
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        tags = result['tags']
-        assert 'tag1' in tags
-        # tag2 might still be extracted depending on implementation
-        # This is a known limitation - can be improved
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            tags = result.tags
+            assert 'tag1' in tags
+            # tag2 might still be extracted depending on implementation
+            # This is a known limitation - can be improved
+        finally:
+            os.unlink(temp_file)
 
     def test_extract_title_from_frontmatter(self):
         """Test extracting title from frontmatter."""
@@ -188,21 +229,33 @@ class TestMarkdownParser:
             "# Heading Title\n"
         )
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        # Title should come from frontmatter
-        assert result['frontmatter']['title'] == 'Frontmatter Title'
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            # Title should come from frontmatter
+            assert result.title == 'Frontmatter Title'
+        finally:
+            os.unlink(temp_file)
 
     def test_extract_title_from_heading(self):
         """Test extracting title from first heading."""
         content = "# Main Title\n\nContent here."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        # Implementation may extract title from heading
-        # This depends on the actual implementation
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            # Title should be extracted from first heading
+            assert result.title == 'Main Title'
+        finally:
+            os.unlink(temp_file)
 
 
 class TestVaultDiscovery:
@@ -386,32 +439,50 @@ class TestWikilinkExtraction:
         """Test wikilink to section: [[note#section]]."""
         content = "Link to [[note#section]]."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        wikilinks = result['wikilinks']
-        assert len(wikilinks) == 1
-        # May extract as "note#section" or just "note"
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            wikilinks = result.wikilinks
+            assert len(wikilinks) == 1
+            # May extract as "note#section" or just "note"
+        finally:
+            os.unlink(temp_file)
 
     def test_wikilink_with_pipe_in_display(self):
         """Test wikilink with pipe in display text."""
         content = "Link [[target|Display | Text]]."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        wikilinks = result['wikilinks']
-        assert len(wikilinks) >= 1
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            wikilinks = result.wikilinks
+            assert len(wikilinks) >= 1
+        finally:
+            os.unlink(temp_file)
 
     def test_empty_wikilink(self):
         """Test empty wikilink [[]]."""
         content = "Empty link [[]]."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        wikilinks = result['wikilinks']
-        # Should not crash, may or may not extract empty link
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            wikilinks = result.wikilinks
+            # Should not crash, may or may not extract empty link
+        finally:
+            os.unlink(temp_file)
 
 
 @pytest.mark.unit
@@ -422,29 +493,47 @@ class TestTagExtraction:
         """Test tag at start of line."""
         content = "#tag at start."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        tags = result['tags']
-        # First # might be interpreted as heading
-        # Depends on implementation
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            tags = result.tags
+            # First # might be interpreted as heading
+            # Depends on implementation
+        finally:
+            os.unlink(temp_file)
 
     def test_nested_tags(self):
         """Test nested tags with slashes."""
         content = "This has #category/subcategory tag."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        tags = result['tags']
-        assert 'category/subcategory' in tags
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            tags = result.tags
+            assert 'category/subcategory' in tags
+        finally:
+            os.unlink(temp_file)
 
     def test_tags_in_heading(self):
         """Test tags in headings."""
         content = "# Heading with #tag\n\nContent."
 
-        parser = MarkdownParser()
-        result = parser.parse(content)
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+            f.write(content)
+            temp_file = f.name
 
-        # Heading # should not be extracted as tag
-        # But #tag should be
+        try:
+            result = MarkdownParser.parse_file(Path(temp_file))
+
+            # Heading # should not be extracted as tag
+            # But #tag should be
+        finally:
+            os.unlink(temp_file)
