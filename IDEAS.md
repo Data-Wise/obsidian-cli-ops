@@ -8,43 +8,129 @@
 
 ## 🚀 Phase 5: AI-Powered Features (Future)
 
-### Note Similarity & Duplicates
-**Status:** Deferred (AI integration complete, features pending)
+### Multi-Provider AI Architecture
+**Status:** Planned (brainstorm complete 2025-12-16)
+
+#### Provider Stack (6 providers)
+
+```
+TIER 1: Cloud APIs (Fast, Batch, Embeddings)
+└── Gemini API ← Default (free tier: 1000 RPD)
+
+TIER 2: CLI Tools (Simple, Use Existing Subscriptions)
+├── Gemini CLI (npm: @google/gemini-cli)
+├── Claude CLI (Claude Code)
+└── Qwen CLI (optional)
+
+TIER 3: Local (Free, Private, Offline)
+├── Ollama (easy setup)
+└── llama.cpp (lightweight, 90MB)
+```
+
+#### Provider Capabilities
+
+| Provider | Embeddings | Analysis | Batch | Cost |
+|----------|------------|----------|-------|------|
+| gemini-api | ✅ | ✅ | ✅ | Free tier |
+| gemini-cli | ❌ | ✅ | ❌ | Free |
+| claude-cli | ❌ | ✅ | ❌ | Subscription |
+| qwen-cli | ❌ | ✅ | ❌ | Free |
+| ollama | ✅ | ✅ | ⚠️ | Free (local) |
+| llama-cpp | ✅ | ✅ | ⚠️ | Free (local) |
+
+#### Smart Routing
+
+```python
+# Embeddings → API or Local (CLIs don't support)
+# Batch ops → API (parallel processing)
+# Single analysis → CLI (saves API quota)
+# Complex reasoning → Claude CLI or Gemini API
+```
+
+#### Config Structure
+
+```json
+{
+  "default_provider": "gemini-api",
+  "fallback_chain": ["gemini-cli", "ollama"],
+  "providers": {
+    "gemini-api": { "model": "gemini-2.5-flash" },
+    "gemini-cli": { "enabled": true },
+    "claude-cli": { "enabled": true },
+    "ollama": { "url": "http://localhost:11434" }
+  }
+}
+```
+
+---
+
+### AI Features (Using Multi-Provider)
 
 - **Find Similar Notes**
   ```bash
   obs ai similar <note_id>
-  # Shows notes with similar content using embeddings
-  # Useful for: Finding related research, consolidating knowledge
+  obs ai similar <note_id> --provider claude-cli
   ```
 
 - **Duplicate Detection**
   ```bash
   obs ai duplicates <vault_id>
-  # Identifies potential duplicate notes
-  # Shows: Similarity score, content overlap, merge suggestions
   ```
 
 - **Topic Analysis**
   ```bash
   obs ai topics <vault_id>
-  # Extracts main topics from vault using AI
-  # Groups notes by theme/topic
-  # Suggests folder reorganization
   ```
 
 - **Smart Merge Suggestions**
   ```bash
   obs ai suggest <vault_id>
-  # AI-powered merge recommendations
-  # Shows: Reason, confidence, preview of merged result
-  # User accepts/rejects with feedback loop
   ```
 
-**Implementation Notes:**
-- AI backend complete (HuggingFace + Ollama)
-- Need to build suggestion engine
-- Requires user feedback system
+- **Provider Management**
+  ```bash
+  obs ai setup              # Interactive setup
+  obs ai status             # Show provider status
+  obs ai test               # Test all providers
+  ```
+
+---
+
+### Implementation Plan
+
+**Phase 5A: Multi-Provider Foundation**
+1. Create `src/python/ai/` module structure
+2. Implement `router.py` (smart provider selection)
+3. Add `gemini_cli.py` provider
+4. Add `claude_cli.py` provider
+5. Add `qwen_cli.py` provider (optional)
+6. Add `llama_cpp.py` provider
+7. Update setup wizard
+8. Add `obs ai status` command
+
+**Phase 5B: AI Features**
+1. `obs ai similar` - Find similar notes
+2. `obs ai duplicates` - Detect duplicates
+3. `obs ai topics` - Topic clustering
+4. `obs ai suggest` - Merge suggestions
+5. TUI integration (AI insights panel)
+
+**File Structure:**
+```
+src/python/ai/
+├── __init__.py
+├── router.py
+├── config.py
+├── providers/
+│   ├── base.py
+│   ├── gemini_api.py
+│   ├── gemini_cli.py
+│   ├── claude_cli.py
+│   ├── qwen_cli.py
+│   ├── ollama.py
+│   └── llama_cpp.py
+└── embeddings.py
+```
 
 ---
 
