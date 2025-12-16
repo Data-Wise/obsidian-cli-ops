@@ -164,14 +164,69 @@ class AIRouter:
 
     # Convenience methods that route automatically
 
+    def _ensure_provider_or_install(
+        self,
+        operation: OperationType,
+        required_cap: str
+    ) -> AIProvider:
+        """Get provider for operation, offering to install if needed."""
+        provider = self.get_provider_for_operation(operation)
+        if provider:
+            return provider
+
+        # No provider available - try auto-install
+        from .config import get_config
+        from .install import (
+            ensure_provider_available, get_missing_deps,
+            InstallMode, print_install_help
+        )
+
+        config = get_config()
+        mode = InstallMode(config.auto_install)
+
+        # Find first provider with missing deps that supports this operation
+        for name in self.priority:
+            prov_class = PROVIDER_CLASSES.get(name)
+            if not prov_class:
+                continue
+
+            # Check if this provider supports the operation
+            caps = prov_class.capabilities
+            supports = False
+            if required_cap == "embeddings":
+                supports = caps.embeddings
+            elif required_cap == "analysis":
+                supports = caps.analysis
+            elif required_cap == "comparison":
+                supports = caps.comparison
+
+            if not supports:
+                continue
+
+            # Check if deps are missing
+            missing = get_missing_deps(name)
+            if missing:
+                # Offer to install
+                success, msg = ensure_provider_available(name, mode)
+                if success:
+                    # Refresh and retry
+                    self.refresh_availability()
+                    self._providers.pop(name, None)  # Clear cached instance
+                    provider = self.get_provider_for_operation(operation)
+                    if provider:
+                        return provider
+
+        # Still no provider - show help
+        raise RuntimeError(
+            f"No provider available for {required_cap}.\n"
+            f"Run 'obs ai setup' to configure providers."
+        )
+
     def get_embedding(self, text: str) -> List[float]:
         """Get embedding using best available provider."""
-        provider = self.get_provider_for_operation(OperationType.EMBEDDING)
-        if not provider:
-            raise RuntimeError(
-                "No provider available for embeddings. "
-                "Configure gemini-api or ollama."
-            )
+        provider = self._ensure_provider_or_install(
+            OperationType.EMBEDDING, "embeddings"
+        )
         return provider.get_embedding(text)
 
     def get_embeddings_batch(self, texts: List[str]) -> List[List[float]]:
@@ -181,19 +236,16 @@ class AIRouter:
             return provider.get_embeddings_batch(texts)
 
         # Fallback to sequential if no batch provider
-        provider = self.get_provider_for_operation(OperationType.EMBEDDING)
-        if not provider:
-            raise RuntimeError("No provider available for embeddings.")
+        provider = self._ensure_provider_or_install(
+            OperationType.EMBEDDING, "embeddings"
+        )
         return [provider.get_embedding(text) for text in texts]
 
     def analyze_note(self, content: str, title: str = "") -> AnalysisResult:
         """Analyze note using best available provider."""
-        provider = self.get_provider_for_operation(OperationType.ANALYSIS)
-        if not provider:
-            raise RuntimeError(
-                "No provider available for analysis. "
-                "Configure gemini-api, gemini-cli, claude-cli, or ollama."
-            )
+        provider = self._ensure_provider_or_install(
+            OperationType.ANALYSIS, "analysis"
+        )
         return provider.analyze_note(content, title)
 
     def compare_notes(
@@ -204,12 +256,9 @@ class AIRouter:
         note2_title: str = ""
     ) -> ComparisonResult:
         """Compare notes using best available provider."""
-        provider = self.get_provider_for_operation(OperationType.COMPARISON)
-        if not provider:
-            raise RuntimeError(
-                "No provider available for comparison. "
-                "Configure gemini-api, gemini-cli, claude-cli, or ollama."
-            )
+        provider = self._ensure_provider_or_install(
+            OperationType.COMPARISON, "comparison"
+        )
         return provider.compare_notes(
             note1_content, note2_content,
             note1_title, note2_title

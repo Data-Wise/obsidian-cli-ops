@@ -46,6 +46,10 @@ class AIConfig:
     auto_detect_providers: bool = True
     use_embeddings_for_similarity: bool = True
 
+    # Installation behavior: "always" | "prompt" | "never"
+    auto_install: str = "prompt"
+    show_install_hints: bool = True
+
     @classmethod
     def load(cls) -> "AIConfig":
         """Load config from file or create default."""
@@ -94,6 +98,7 @@ def save_config(config: AIConfig):
 def print_status():
     """Print AI provider status to console."""
     from .router import AIRouter, PROVIDER_CLASSES
+    from .install import get_missing_deps, PROVIDER_URLS
 
     config = get_config()
     router = AIRouter(
@@ -101,45 +106,53 @@ def print_status():
         preferred_provider=config.preferred_provider,
     )
 
-    print("🤖 AI Provider Status\n")
-    print(f"Config file: {CONFIG_FILE}")
-    print(f"Preferred: {config.preferred_provider or '(auto)'}")
-    print(f"Priority: {' → '.join(config.provider_priority)}\n")
+    print("🤖 AI Provider Status")
+    print("━" * 40)
+    print()
 
     status = router.get_status()
+
+    # Table header
+    print(f"{'Provider':<14} {'Status':<12} {'Capabilities':<20}")
+    print("─" * 46)
+
+    quick_fixes = []
 
     # Print each provider
     for name in config.provider_priority:
         prov = status["providers"].get(name, {})
         available = prov.get("available", False)
         icon = "✓" if available else "✗"
-        color_start = "\033[32m" if available else "\033[31m"
-        color_end = "\033[0m"
+        color = "\033[32m" if available else "\033[31m"
+        reset = "\033[0m"
 
-        print(f"{color_start}{icon}{color_end} {name}")
-
+        # Capabilities
+        caps_list = []
         if available:
             caps = prov.get("capabilities", {})
-            features = []
             if caps.get("embeddings"):
-                features.append("embeddings")
+                caps_list.append("embeddings")
             if caps.get("batch"):
-                features.append("batch")
-            if features:
-                print(f"    Features: {', '.join(features)}")
-
-            # Provider-specific info
-            if "model" in prov:
-                print(f"    Model: {prov['model']}")
-            if "embedding_model" in prov:
-                print(f"    Embedding: {prov['embedding_model']}")
-            if "models_available" in prov and prov["models_available"]:
-                print(f"    Ollama models: {len(prov['models_available'])}")
+                caps_list.append("batch")
+            caps_str = ", ".join(caps_list) if caps_list else "analysis"
         else:
-            error = prov.get("error", "Not configured")
-            print(f"    Status: {error}")
+            # Show why not available
+            missing = get_missing_deps(name)
+            if missing:
+                caps_str = f"needs: {', '.join(missing)}"
+                quick_fixes.append((name, f"pip install {' '.join(missing)}"))
+            elif name == "ollama":
+                caps_str = "(not running)"
+                quick_fixes.append((name, "ollama serve"))
+            elif name == "gemini-api":
+                caps_str = "(no API key)"
+                quick_fixes.append((name, f"export GOOGLE_API_KEY=..."))
+            else:
+                caps_str = "(not installed)"
 
-        print()
+        print(f"{color}{icon}{reset} {name:<12} {caps_str:<20}")
+
+    print()
 
     # API key status
     print("🔑 API Keys")
@@ -150,63 +163,188 @@ def print_status():
         found = any(os.getenv(v) for v in env_vars)
         icon = "✓" if found else "✗"
         color = "\033[32m" if found else "\033[33m"
-        print(f"  {color}{icon}\033[0m {key_name}: {'set' if found else 'not set'}")
+        reset = "\033[0m"
+        print(f"   {color}{icon}{reset} {key_name}: {'set' if found else 'not set'}")
+
+    print()
+
+    # Config info
+    print(f"📁 Config: {CONFIG_FILE}")
+    print(f"   preferred: {config.preferred_provider or '(auto)'}")
+    print(f"   auto_install: {config.auto_install}")
+
+    # Quick fixes
+    if quick_fixes and config.show_install_hints:
+        print()
+        print("💡 Quick fixes:")
+        for name, fix in quick_fixes[:3]:  # Show top 3
+            print(f"   • {name}: {fix}")
 
     print()
 
 
 def setup_wizard():
     """Interactive setup wizard for AI providers."""
-    print("🧙 AI Provider Setup Wizard\n")
+    from .router import AIRouter, PROVIDER_CLASSES
+    from .install import (
+        get_missing_deps, install_packages,
+        PROVIDER_DEPS, PROVIDER_URLS
+    )
+
+    print("🧙 AI Provider Setup")
+    print("━" * 40)
+    print()
 
     config = get_config()
 
-    # Check what's available
-    from .router import AIRouter, PROVIDER_CLASSES
+    print("Scanning system...\n")
 
-    print("Checking available providers...\n")
+    # Check each provider
+    provider_status = {}
+    installable = []
 
-    available = []
-    for name in PROVIDER_CLASSES:
+    for idx, name in enumerate(config.provider_priority, 1):
+        try:
+            router = AIRouter(preferred_provider=name)
+            router.refresh_availability()
+            available = router._is_available(name)
+        except Exception:
+            available = False
+
+        missing = get_missing_deps(name)
+        provider_status[name] = {
+            "available": available,
+            "missing": missing,
+            "idx": idx
+        }
+
+        status = "✓ available" if available else "✗ not available"
+        color = "\033[32m" if available else "\033[31m"
+        reset = "\033[0m"
+
+        action = ""
+        if not available and missing:
+            action = f"[{idx}] Install"
+            installable.append(name)
+        elif not available and name == "ollama":
+            action = f"[{idx}] Setup guide"
+            installable.append(name)
+        elif not available and name == "gemini-api":
+            action = f"[{idx}] Configure"
+            installable.append(name)
+
+        print(f"  {color}{'✓' if available else '✗'}{reset} {name:<14} {action}")
+
+    print()
+
+    # Count available
+    available_providers = [n for n, s in provider_status.items() if s["available"]]
+
+    if available_providers:
+        print(f"✓ {len(available_providers)} provider(s) ready: {', '.join(available_providers)}")
+    else:
+        print("⚠️  No providers available yet")
+
+    if not installable:
+        print("\nAll providers configured!")
+        config.preferred_provider = available_providers[0] if available_providers else None
+        config.save()
+        print(f"\n✓ Using '{config.preferred_provider}' as default")
+        return
+
+    # Offer installation
+    print()
+    print("  [A]ll  [1-4] Select  [S]kip")
+    print()
+
+    try:
+        choice = input("> ").strip().lower()
+    except (KeyboardInterrupt, EOFError):
+        print("\nSetup cancelled")
+        return
+
+    if choice == "s" or choice == "skip":
+        print("\nSkipped installation")
+    elif choice == "a" or choice == "all":
+        # Install all missing deps
+        all_missing = []
+        for name in installable:
+            all_missing.extend(get_missing_deps(name))
+        if all_missing:
+            print(f"\nInstalling: {', '.join(set(all_missing))}...")
+            success, msg = install_packages(list(set(all_missing)))
+            print(f"{'✓' if success else '✗'} {msg}")
+        _prompt_api_keys()
+    elif choice.isdigit():
+        idx = int(choice)
+        for name, status in provider_status.items():
+            if status["idx"] == idx:
+                missing = status["missing"]
+                if missing:
+                    print(f"\nInstalling: {', '.join(missing)}...")
+                    success, msg = install_packages(missing)
+                    print(f"{'✓' if success else '✗'} {msg}")
+                if name == "gemini-api":
+                    _prompt_api_keys()
+                elif name == "ollama":
+                    _print_ollama_setup()
+                break
+
+    # Re-check and save
+    print()
+    for name in config.provider_priority:
         try:
             router = AIRouter(preferred_provider=name)
             router.refresh_availability()
             if router._is_available(name):
-                available.append(name)
-                print(f"  ✓ {name} is available")
-            else:
-                print(f"  ✗ {name} not available")
-        except Exception as e:
-            print(f"  ✗ {name} error: {e}")
+                config.preferred_provider = name
+                break
+        except Exception:
+            pass
 
-    if not available:
-        print("\n⚠️  No providers available!")
-        print("\nSetup options:")
-        print("  1. Set GOOGLE_API_KEY for Gemini API (recommended)")
-        print("  2. Install Ollama for local AI:")
-        print("     brew install ollama && ollama serve")
-        print("     ollama pull nomic-embed-text llama3.1")
-        print("  3. Install Gemini CLI:")
-        print("     npm install -g @google/gemini-cli")
-        return
-
-    print(f"\n✓ {len(available)} provider(s) available: {', '.join(available)}")
-
-    # Set preferred provider
-    if len(available) == 1:
-        config.preferred_provider = available[0]
-    else:
-        # Default to gemini-api if available, otherwise first available
-        if "gemini-api" in available:
-            config.preferred_provider = "gemini-api"
-        else:
-            config.preferred_provider = available[0]
-
-    print(f"\nUsing '{config.preferred_provider}' as default provider")
-
-    # Save config
     config.save()
-    print(f"\n✓ Configuration saved to {CONFIG_FILE}")
+    print(f"✓ Configuration saved to {CONFIG_FILE}")
+    if config.preferred_provider:
+        print(f"✓ Default provider: {config.preferred_provider}")
+    print("\nRun 'obs ai status' to check anytime")
+
+
+def _prompt_api_keys():
+    """Prompt for API key setup."""
+    import os
+
+    if not os.getenv("GOOGLE_API_KEY") and not os.getenv("GEMINI_API_KEY"):
+        print()
+        print("🔑 Gemini API Key")
+        print("   Get one free at: https://aistudio.google.com/apikey")
+        print()
+        try:
+            key = input("   Paste key (or Enter to skip): ").strip()
+            if key:
+                os.environ["GOOGLE_API_KEY"] = key
+                print()
+                print("   💡 Add to your shell profile for persistence:")
+                print(f'      export GOOGLE_API_KEY="{key}"')
+        except (KeyboardInterrupt, EOFError):
+            pass
+
+
+def _print_ollama_setup():
+    """Print Ollama setup instructions."""
+    print()
+    print("📦 Ollama Setup")
+    print()
+    print("   1. Install Ollama:")
+    print("      brew install ollama  # macOS")
+    print("      # or visit: https://ollama.com/download")
+    print()
+    print("   2. Start the server:")
+    print("      ollama serve")
+    print()
+    print("   3. Pull required models:")
+    print("      ollama pull nomic-embed-text  # embeddings")
+    print("      ollama pull llama3.1          # analysis")
+    print()
 
 
 if __name__ == "__main__":
