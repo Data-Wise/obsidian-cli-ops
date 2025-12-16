@@ -3,9 +3,18 @@ status: active
 progress: 97
 updated: 2025-12-16
 version: 2.2.0-dev
-next: Phase 5B AI features (obs ai similar/analyze/duplicates), then release
+next: Phase 5B testing and polish, then release
 
-## ✅ Just Completed (2025-12-16 - Phase 5A: Multi-Provider AI)
+## ✅ Just Completed (2025-12-16 - Phase 5B: AI Features)
+
+### Phase 5B: AI-Powered Features
+- ✅ Implemented `obs ai similar <note_id>` - Find similar notes using embeddings
+- ✅ Implemented `obs ai analyze <note_id>` - Deep analysis of a single note
+- ✅ Implemented `obs ai duplicates <vault_id>` - Detect potential duplicate notes
+- ✅ Created ai/features.py module with full feature implementations
+- ✅ Added CLI commands with proper argument parsing
+- ✅ Added 23 new tests for AI features module
+- ✅ **Result:** Complete AI feature set ready for use
 
 ### Phase 5A: Multi-Provider AI Architecture
 - ✅ Implemented multi-provider AI system with 4 providers:
@@ -254,8 +263,8 @@ next: Phase 5B AI features (obs ai similar/analyze/duplicates), then release
 
 ## 🟡 In Progress Phases
 
-### Phase 5: AI-Powered Features (In Progress)
-**Status:** Phase 5A complete, Phase 5B pending
+### Phase 5: AI-Powered Features (100%) ✅
+**Status:** Complete
 **Dependencies:** Phase 2 AI integration ✅
 
 **Phase 5A - Multi-Provider Architecture (✅ Complete):**
@@ -265,11 +274,11 @@ next: Phase 5B AI features (obs ai similar/analyze/duplicates), then release
 - [x] CLI commands (obs ai status/setup/test)
 - [x] 73 new tests
 
-**Phase 5B - AI Features (Pending):**
-- [ ] Find similar notes (`obs ai similar <note>`)
-- [ ] Analyze note (`obs ai analyze <note>`)
-- [ ] Detect duplicates (`obs ai duplicates`)
-- [ ] Smart merge suggestions
+**Phase 5B - AI Features (✅ Complete):**
+- [x] Find similar notes (`obs ai similar <note>`)
+- [x] Analyze note (`obs ai analyze <note>`)
+- [x] Detect duplicates (`obs ai duplicates`)
+- [x] 23 new tests
 
 **See IDEAS.md for details**
 
@@ -299,11 +308,11 @@ next: Phase 5B AI features (obs ai similar/analyze/duplicates), then release
 - **Documentation:** 20+ files, ~3,000 lines
 
 ### Test Coverage
-- **Total Tests:** 371+
-  - Python: 197 tests (core, database, scanning, AI module)
+- **Total Tests:** 394+
+  - Python: 220 tests (core, database, scanning, AI module)
   - Jest: 40 tests (CLI, integration)
   - Shell: 4 tests (R-Dev module)
-  - AI Module: 73 tests (config, install, router, providers)
+  - AI Module: 96 tests (config, install, router, providers, features)
 - **Coverage:** ~72% overall
   - Core layer: 85%
   - Database layer: 75%

@@ -111,13 +111,13 @@ TIER 3: Local (Free, Private, Offline)
 10. ✅ Wire up CLI commands (obs ai status/setup/test)
 11. ✅ Add 73 tests
 
-**Phase 5B: AI Features (Next)**
-1. [ ] `obs ai similar` - Find similar notes
-2. [ ] `obs ai analyze` - Analyze single note
-3. [ ] `obs ai duplicates` - Detect duplicates
-4. [ ] `obs ai topics` - Topic clustering
-5. [ ] `obs ai suggest` - Merge suggestions
-6. [ ] TUI integration (AI insights panel)
+**Phase 5B: AI Features (✅ Complete - 2025-12-16)**
+1. [x] `obs ai similar` - Find similar notes
+2. [x] `obs ai analyze` - Analyze single note
+3. [x] `obs ai duplicates` - Detect duplicates
+4. [ ] `obs ai topics` - Topic clustering (future)
+5. [ ] `obs ai suggest` - Merge suggestions (future)
+6. [ ] TUI integration (AI insights panel) (future)
 
 **Current File Structure:**
 ```

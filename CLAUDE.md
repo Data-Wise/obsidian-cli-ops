@@ -80,7 +80,7 @@ obs r link                      # Link R project (was: obs r-dev link)
 obs r log <file>                # Copy artifact (was: obs r-dev log)
 
 # Development
-npm test                        # Run test suite (371+ tests)
+npm test                        # Run test suite (394+ tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -88,7 +88,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-npm test                          # Full test suite (371+ tests)
+npm test                          # Full test suite (394+ tests)
 pytest src/python/tests/          # Python tests only (197 tests)
 bash tests/test_r_dev.sh          # R-Dev integration tests
 ```
@@ -112,7 +112,7 @@ bash tests/test_r_dev.sh          # R-Dev integration tests
   - `tui/` - TUI screens (1,701 lines)
   - `obs_cli.py` - CLI interface (318 lines)
 - `schema/vault_db.sql` - Database schema
-- `tests/` - Test suite (371+ tests)
+- `tests/` - Test suite (394+ tests)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -202,7 +202,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ```
 Primary: obs, obs switch, obs manage
 Actions: obs open, obs graph, obs stats
-AI: obs ai status, obs ai setup, obs ai test
+AI: obs ai similar, obs ai analyze, obs ai duplicates, obs ai status
 R: obs r link, obs r log, obs r context
 Legacy: obs discover, obs tui, obs vaults (still work)
 ```

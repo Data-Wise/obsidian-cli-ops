@@ -310,6 +310,23 @@ def main():
     test_parser = ai_subparsers.add_parser('test', help='Test AI providers')
     test_parser.add_argument('--provider', help='Test specific provider')
 
+    # AI feature commands
+    similar_parser = ai_subparsers.add_parser('similar', help='Find similar notes')
+    similar_parser.add_argument('note_id', help='Note ID to find similar notes for')
+    similar_parser.add_argument('--limit', type=int, default=10, help='Max results')
+    similar_parser.add_argument('--threshold', type=float, default=0.3, help='Min similarity (0-1)')
+    similar_parser.add_argument('--provider', help='Use specific AI provider')
+
+    analyze_parser = ai_subparsers.add_parser('analyze', help='Analyze a note')
+    analyze_parser.add_argument('note_id', help='Note ID to analyze')
+    analyze_parser.add_argument('--provider', help='Use specific AI provider')
+
+    duplicates_parser = ai_subparsers.add_parser('duplicates', help='Find duplicate notes')
+    duplicates_parser.add_argument('vault_id', help='Vault ID to scan')
+    duplicates_parser.add_argument('--threshold', type=float, default=0.85, help='Similarity threshold')
+    duplicates_parser.add_argument('--limit', type=int, default=50, help='Max duplicate groups')
+    duplicates_parser.add_argument('--provider', help='Use specific AI provider')
+
     # tui command
     tui_parser = subparsers.add_parser('tui',
                                        help='Launch interactive TUI')
@@ -393,6 +410,108 @@ def main():
                         print(f"  ✗ {name}: {e}")
 
                 print()
+
+            elif args.ai_command == 'similar':
+                # Find similar notes
+                from ai.features import find_similar_notes
+
+                print(f"🔍 Finding similar notes to: {args.note_id}\n")
+                try:
+                    matches = find_similar_notes(
+                        args.note_id,
+                        cli.db,
+                        limit=args.limit,
+                        min_similarity=args.threshold,
+                        provider=args.provider
+                    )
+
+                    if matches:
+                        print(f"Found {len(matches)} similar notes:\n")
+                        for i, match in enumerate(matches, 1):
+                            print(f"  {i}. {match.title}")
+                            print(f"     Similarity: {match.similarity:.1%}")
+                            print(f"     Path: {match.path}")
+                            print(f"     ID: {match.note_id}")
+                            print()
+                    else:
+                        print("No similar notes found.")
+                except ValueError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+                except RuntimeError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'analyze':
+                # Analyze a note
+                from ai.features import analyze_note as ai_analyze_note
+
+                print(f"🔬 Analyzing note: {args.note_id}\n")
+                try:
+                    result = ai_analyze_note(
+                        args.note_id,
+                        cli.db,
+                        provider=args.provider
+                    )
+
+                    # Print analysis results
+                    print("📊 Analysis Results:\n")
+
+                    if result.topics:
+                        print(f"  Topics: {', '.join(result.topics)}")
+                    if result.themes:
+                        print(f"  Themes: {', '.join(result.themes)}")
+                    if result.suggested_tags:
+                        print(f"  Suggested Tags: {', '.join(result.suggested_tags)}")
+
+                    print()
+                    print("  Quality Scores:")
+                    for key, value in result.quality.items():
+                        print(f"    • {key}: {value}/10")
+
+                    if result.suggestions:
+                        print()
+                        print("  💡 Suggestions:")
+                        for suggestion in result.suggestions:
+                            print(f"    • {suggestion}")
+
+                except ValueError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+                except RuntimeError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'duplicates':
+                # Find duplicate notes
+                from ai.features import find_duplicates
+
+                print(f"🔍 Scanning vault for duplicates: {args.vault_id}\n")
+                try:
+                    groups = find_duplicates(
+                        args.vault_id,
+                        cli.db,
+                        threshold=args.threshold,
+                        limit=args.limit,
+                        provider=args.provider
+                    )
+
+                    if groups:
+                        print(f"Found {len(groups)} potential duplicate groups:\n")
+                        for i, group in enumerate(groups, 1):
+                            print(f"  Group {i} ({group.similarity:.1%} similarity):")
+                            for note in group.notes:
+                                print(f"    • {note['title']}")
+                                print(f"      {note['path']}")
+                            print()
+                    else:
+                        print("No duplicate notes found.")
+                except ValueError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+                except RuntimeError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
 
             else:
                 ai_parser.print_help()
