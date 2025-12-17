@@ -58,11 +58,28 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Configuration: configuration.md
-  - Usage: usage.md
-  - v2.0 Features: v2.0.md
-  - AI Setup Guide: ai-setup.md
-  - R Integration: r-dev.md
+  - Getting Started:
+      - Installation: installation.md
+      - Configuration: configuration.md
+      - Usage: usage.md
+  - Features:
+      - v2.0 Features: v2.0.md
+      - AI Setup Guide: ai-setup.md
+      - R Integration: r-dev.md
+  - Developer:
+      - Testing:
+          - Overview: developer/testing/overview.md
+          - Core Tests: developer/testing/core-tests.md
+          - Sandbox: developer/testing/sandbox.md
+  - Planning:
+      - Phases:
+          - Phase 1 Complete: planning/phases/phase1-complete.md
+          - Phase 2 Complete: planning/phases/phase2-complete.md
+          - Phase 4 Plan: planning/phases/phase4-plan.md
+          - Phase 4.5 Options: planning/phases/phase4.5-options.md
+          - Phase 4.5 Complete: planning/phases/phase4.5-complete.md
+  - Releases:
+      - v2.2.0: releases/v2.2.0.md
+      - v1.1.0: releases/v1.1.0.md
 
 copyright: Copyright &copy; 2025 Data-Wise

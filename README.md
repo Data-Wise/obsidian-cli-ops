@@ -1,5 +1,11 @@
 # Obsidian CLI Ops
 
+[![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
+[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/tests-394%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+
 **An Intelligent Command-Line Tool for Multi-Vault Obsidian Knowledge Management.**
 
 `obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis and an interactive TUI interface.

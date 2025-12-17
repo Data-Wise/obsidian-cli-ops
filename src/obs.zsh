@@ -56,7 +56,7 @@ _get_last_vault() {
 # Defaults
 : ${PLUGIN_REGISTRY:="https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-plugins.json"}
 VERBOSE=false
-VERSION="2.1.0"
+VERSION="2.2.0"
 
 # --- Helper Functions ---
 
