@@ -7,6 +7,9 @@ Tests for the main TUI app, HomeScreen, HelpScreen, and PlaceholderScreen.
 import pytest
 from unittest.mock import Mock, patch, PropertyMock
 from tui.app import ObsidianTUI, HomeScreen, HelpScreen, PlaceholderScreen
+from tui.screens.notes import NoteExplorerScreen
+from tui.screens.graph import GraphVisualizerScreen
+from tui.screens.stats import StatisticsDashboardScreen
 
 
 # ==============================================================================
@@ -20,6 +23,9 @@ def mock_app():
     app.push_screen = Mock()
     app.pop_screen = Mock()
     app.exit = Mock()
+    app.notify = Mock()
+    app.last_vault_id = None
+    app.last_vault_name = None
     return app
 
 
@@ -63,7 +69,7 @@ class TestHomeScreen:
         text = screen._get_welcome_text()
 
         assert "Obsidian CLI Ops" in text
-        assert "2.0.0-beta" in text
+        assert "2.1.0" in text
         assert "Interactive Vault Explorer" in text
 
     def test_action_vaults(self, mock_app):
@@ -75,32 +81,77 @@ class TestHomeScreen:
 
         mock_app.push_screen.assert_called_once_with("vaults")
 
-    def test_action_notes(self, mock_app):
-        """Test action_notes pushes notes screen."""
+    def test_action_notes_no_vault(self, mock_app):
+        """Test action_notes when no vault is selected."""
         screen = HomeScreen()
         type(screen).app = PropertyMock(return_value=mock_app)
+        mock_app.last_vault_id = None
 
         screen.action_notes()
 
-        mock_app.push_screen.assert_called_once_with("notes")
+        mock_app.notify.assert_called_once()
+        mock_app.push_screen.assert_called_once_with("vaults")
 
-    def test_action_graph(self, mock_app):
-        """Test action_graph pushes graph screen."""
+    def test_action_notes_with_vault(self, mock_app):
+        """Test action_notes when a vault is selected."""
         screen = HomeScreen()
         type(screen).app = PropertyMock(return_value=mock_app)
+        mock_app.last_vault_id = "v1"
+        mock_app.last_vault_name = "V1"
+
+        screen.action_notes()
+
+        assert mock_app.push_screen.called
+        args = mock_app.push_screen.call_args[0]
+        assert isinstance(args[0], NoteExplorerScreen)
+
+    def test_action_graph_no_vault(self, mock_app):
+        """Test action_graph when no vault is selected."""
+        screen = HomeScreen()
+        type(screen).app = PropertyMock(return_value=mock_app)
+        mock_app.last_vault_id = None
 
         screen.action_graph()
 
-        mock_app.push_screen.assert_called_once_with("graph")
+        mock_app.notify.assert_called_once()
+        mock_app.push_screen.assert_called_once_with("vaults")
 
-    def test_action_stats(self, mock_app):
-        """Test action_stats pushes stats screen."""
+    def test_action_graph_with_vault(self, mock_app):
+        """Test action_graph when a vault is selected."""
         screen = HomeScreen()
         type(screen).app = PropertyMock(return_value=mock_app)
+        mock_app.last_vault_id = "v1"
+        mock_app.last_vault_name = "V1"
+
+        screen.action_graph()
+
+        assert mock_app.push_screen.called
+        args = mock_app.push_screen.call_args[0]
+        assert isinstance(args[0], GraphVisualizerScreen)
+
+    def test_action_stats_no_vault(self, mock_app):
+        """Test action_stats when no vault is selected."""
+        screen = HomeScreen()
+        type(screen).app = PropertyMock(return_value=mock_app)
+        mock_app.last_vault_id = None
 
         screen.action_stats()
 
-        mock_app.push_screen.assert_called_once_with("stats")
+        mock_app.notify.assert_called_once()
+        mock_app.push_screen.assert_called_once_with("vaults")
+
+    def test_action_stats_with_vault(self, mock_app):
+        """Test action_stats when a vault is selected."""
+        screen = HomeScreen()
+        type(screen).app = PropertyMock(return_value=mock_app)
+        mock_app.last_vault_id = "v1"
+        mock_app.last_vault_name = "V1"
+
+        screen.action_stats()
+
+        assert mock_app.push_screen.called
+        args = mock_app.push_screen.call_args[0]
+        assert isinstance(args[0], StatisticsDashboardScreen)
 
     def test_action_help(self, mock_app):
         """Test action_help pushes help screen."""
@@ -306,7 +357,9 @@ class TestIntegration:
     def test_all_screens_are_importable(self):
         """Test that all screen classes can be imported."""
         from tui.app import HomeScreen, HelpScreen, PlaceholderScreen
-        from tui.screens import VaultBrowserScreen, NoteExplorerScreen, GraphVisualizerScreen
+        from tui.screens.vaults import VaultBrowserScreen
+        from tui.screens.notes import NoteExplorerScreen
+        from tui.screens.graph import GraphVisualizerScreen
 
         assert HomeScreen is not None
         assert HelpScreen is not None

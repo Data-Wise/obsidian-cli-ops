@@ -214,6 +214,10 @@ class VaultBrowserScreen(Screen):
                 break
 
         if self.selected_vault:
+            # Update app state for last used vault
+            self.app.last_vault_id = str(self.selected_vault.id)
+            self.app.last_vault_name = self.selected_vault.name
+
             self.update_header_timestamp()
             self.show_vault_details()
 

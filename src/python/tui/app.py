@@ -13,6 +13,9 @@ from textual.screen import Screen
 
 # Import custom screens
 from tui.screens.vaults import VaultBrowserScreen
+from tui.screens.notes import NoteExplorerScreen
+from tui.screens.graph import GraphVisualizerScreen
+from tui.screens.stats import StatisticsDashboardScreen
 
 
 class HomeScreen(Screen):
@@ -49,7 +52,7 @@ class HomeScreen(Screen):
         """Get welcome message."""
         return """[bold cyan]╭─ Obsidian CLI Ops ─────────────────────────────╮[/]
 [bold cyan]│[/]  [bold]Interactive Vault Explorer & Analyzer[/]        [bold cyan]│[/]
-[bold cyan]│[/]  Version 2.0.0-beta                          [bold cyan]│[/]
+[bold cyan]│[/]  Version 2.1.0                                 [bold cyan]│[/]
 [bold cyan]╰─────────────────────────────────────────────────╯[/]
 
 [dim]Select an option below to get started:[/]
@@ -60,16 +63,43 @@ class HomeScreen(Screen):
         self.app.push_screen("vaults")
 
     def action_notes(self) -> None:
-        """Navigate to notes screen."""
-        self.app.push_screen("notes")
+        """Navigate to notes screen for last used vault."""
+        if self.app.last_vault_id:
+            self.app.push_screen(
+                NoteExplorerScreen(
+                    vault_id=self.app.last_vault_id,
+                    vault_name=self.app.last_vault_name
+                )
+            )
+        else:
+            self.app.notify("Please select a vault first", severity="warning")
+            self.app.push_screen("vaults")
 
     def action_graph(self) -> None:
-        """Navigate to graph screen."""
-        self.app.push_screen("graph")
+        """Navigate to graph screen for last used vault."""
+        if self.app.last_vault_id:
+            self.app.push_screen(
+                GraphVisualizerScreen(
+                    vault_id=self.app.last_vault_id,
+                    vault_name=self.app.last_vault_name
+                )
+            )
+        else:
+            self.app.notify("Please select a vault first", severity="warning")
+            self.app.push_screen("vaults")
 
     def action_stats(self) -> None:
-        """Navigate to stats screen."""
-        self.app.push_screen("stats")
+        """Navigate to stats screen for last used vault."""
+        if self.app.last_vault_id:
+            self.app.push_screen(
+                StatisticsDashboardScreen(
+                    vault_id=self.app.last_vault_id,
+                    vault_name=self.app.last_vault_name
+                )
+            )
+        else:
+            self.app.notify("Please select a vault first", severity="warning")
+            self.app.push_screen("vaults")
 
     def action_help(self) -> None:
         """Show help modal."""
@@ -262,8 +292,12 @@ class ObsidianTUI(App):
     SCREENS = {
         "home": HomeScreen,
         "vaults": VaultBrowserScreen,
-        # Note: "notes", "graph", and "stats" screens use direct instantiation (see vaults.py)
     }
+
+    def __init__(self):
+        super().__init__()
+        self.last_vault_id = None
+        self.last_vault_name = None
 
     def on_mount(self) -> None:
         """Mount the home screen on startup."""
