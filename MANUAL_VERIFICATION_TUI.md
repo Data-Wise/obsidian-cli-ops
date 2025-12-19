@@ -1,39 +1,36 @@
-# Manual Verification: Note Explorer & Last Vault Logic
+# Manual Verification: TUI Performance & Navigation
 
-Follow these steps to verify the implementation of Phase 1:
+Follow these steps to verify the optimized, responsive TUI architecture:
 
 1. **Start the TUI application:**
    ```bash
-   python src/python/tui/app.py
+   ./run_tui.sh
    ```
 
-2. **Navigate to Vaults:**
-   - Press `v` on the Home screen.
-   - You should see the Vault Browser.
+2. **Verify Instant Startup:**
+   - The application should launch immediately to the Home Screen.
+   - No scanning should block the startup.
 
-3. **Select a Vault:**
-   - Use arrow keys to highlight a vault.
-   - Press `Enter`.
-   - **Verification:** You should be taken to the **Note Explorer** screen for that vault.
+3. **Verify Vault Discovery:**
+   - Press `v` to open the Vault Browser.
+   - If you have iCloud vaults, they should appear in the list.
+   - If not, press `d` to trigger discovery. This should be fast and non-blocking.
+   - New vaults will show as `[ unscanned ]`.
 
-4. **Test Search:**
-   - Type in the search box at the top.
-   - **Verification:** The note list should filter in real-time as you type.
+4. **Verify On-Demand Scanning:**
+   - Select an `[ unscanned ]` vault and press `Enter`.
+   - **Check:** The UI **must not freeze**. You should see a progress bar appear at the bottom of the screen.
+   - **Check:** While scanning, try moving the selection up and down. The UI should remain responsive.
 
-5. **Test Preview & Metadata:**
-   - Select a note in the table using arrow keys.
-   - **Verification:** The preview pane (right-top) and metadata pane (right-bottom) should update with the note's content and details.
-
-6. **Test Navigation Back:**
+5. **Verify Navigation:**
+   - Once the scan finishes, press `Enter` again on the vault.
+   - **Check:** You should instantly navigate to the Note Explorer.
    - Press `Esc` to go back to the Vault Browser.
-   - Press `Esc` again to go back to the Home screen.
+   - Press `Esc` again to go back to the Home Screen.
 
-7. **Test "Last Vault" Shortcuts:**
-   - On the Home screen, press `n` (Notes).
-   - **Verification:** You should be taken **directly** to the Note Explorer for the vault you previously selected, without having to pick it again.
-   - Go back to Home (`Esc` twice).
-   - Press `g` (Graph).
-   - **Verification:** You should be taken to the Graph Visualizer for that same vault.
+6. **Verify "Last Vault" Shortcut:**
+   - On the Home Screen, press `n`.
+   - **Check:** You should jump directly to the Note Explorer for the vault you just used.
 
 ---
-**Status:** Phase 1 implementation complete and unit-tested.
+**Status:** Architecture updated for performance and reliability.

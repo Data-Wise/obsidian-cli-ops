@@ -22,14 +22,15 @@ class GraphVisualizerScreen(Screen):
     """Graph visualizer screen with statistics and interactive exploration."""
 
     BINDINGS = [
-        Binding("escape", "back", "Back", show=True),
-        Binding("enter", "view_neighborhood", "Neighborhood", show=True),
-        Binding("h", "toggle_hubs", "Hubs", show=True),
-        Binding("o", "toggle_orphans", "Orphans", show=True),
-        Binding("c", "toggle_clusters", "Clusters", show=True),
-        Binding("n", "view_note", "View Note", show=True),
-        Binding("r", "refresh", "Refresh", show=True),
-        Binding("q", "quit", "Quit", show=True),
+        Binding("escape", "back", "Back"),
+        Binding("enter", "view_neighborhood", "Neighborhood"),
+        Binding("h", "toggle_hubs", "Hubs"),
+        Binding("o", "toggle_orphans", "Orphans"),
+        Binding("c", "toggle_clusters", "Clusters"),
+        Binding("n", "view_note", "View Note"),
+        Binding("r", "refresh", "Refresh"),
+        Binding("q", "quit", "Quit"),
+        Binding("ctrl+q", "quit", "Quit", show=False),
     ]
 
     CSS = """
@@ -214,8 +215,8 @@ class GraphVisualizerScreen(Screen):
             nodes = self.graph_analyzer.get_hub_notes(self.vault_id, limit=20)
             for node in nodes:
                 table.add_row(
-                    node['title'][:30],
-                    str(node.get('total_degree', 0)),
+                    f"[bold yellow]🌟 {node['title'][:28]}[/]",
+                    f"[bold]{node.get('total_degree', 0)}[/]",
                     f"{node.get('pagerank', 0):.4f}",
                     key=str(node['id'])
                 )
@@ -225,7 +226,7 @@ class GraphVisualizerScreen(Screen):
             for node in nodes:
                 metrics = self.graph_analyzer.get_note_metrics(node['id'])
                 table.add_row(
-                    node['title'][:30],
+                    f"[bold red]🔴 {node['title'][:28]}[/]",
                     "0",
                     f"{metrics.pagerank:.4f}" if metrics else "0.0000",
                     key=str(node['id'])
@@ -233,7 +234,7 @@ class GraphVisualizerScreen(Screen):
 
         elif self.current_view == "clusters":
             # Future: implement cluster view
-            table.add_row("Coming soon", "", "", key="empty")
+            table.add_row("[dim]Coming soon[/]", "", "", key="empty")
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         """Handle node selection from table."""
@@ -242,35 +243,47 @@ class GraphVisualizerScreen(Screen):
             self.selected_note = node_id
             self.show_ego_graph()
 
-    def render_ascii_graph_simple(self, graph) -> str:
-        """Simple indented list representation of graph.
+    def render_ego_graph(self, graph, center_node_id: str) -> str:
+        """Render a specialized ASCII view for an ego graph.
 
         Args:
-            graph: NetworkX graph to render
+            graph: NetworkX graph (ego graph)
+            center_node_id: The central node of the ego graph
 
         Returns:
-            ASCII art string representation
+            ASCII string representation
         """
-        if not graph or len(graph) == 0:
-            return "[dim]No nodes to display[/]"
+        if not graph or len(graph) <= 1:
+            return "[dim]No connected notes (orphan)[/]"
 
-        if len(graph) > 30:
-            return "[yellow]Graph too large (>30 nodes).\nSelect a node to view neighborhood.[/]"
+        predecessors = list(graph.predecessors(center_node_id))
+        successors = list(graph.successors(center_node_id))
 
         lines = []
-        for node in list(graph.nodes())[:20]:  # Limit display
-            title = graph.nodes[node].get('title', str(node))[:30]
-            successors = list(graph.successors(node))
 
-            if successors:
-                lines.append(f"[bold]● {title}[/]")
-                for succ in successors[:5]:
-                    succ_title = graph.nodes[succ].get('title', str(succ))[:25]
-                    lines.append(f"  └─→ {succ_title}")
-                if len(successors) > 5:
-                    lines.append(f"  [dim]... +{len(successors) - 5} more[/]")
-            else:
-                lines.append(f"● {title}")
+        # Incoming section
+        if predecessors:
+            lines.append("[bold yellow]Incoming Links:[/]")
+            for pred in predecessors[:10]:
+                title = graph.nodes[pred].get('title', str(pred))[:35]
+                lines.append(f"  [yellow]←[/] {title}")
+            if len(predecessors) > 10:
+                lines.append(f"    [dim]... and {len(predecessors) - 10} more[/]")
+            lines.append("")
+
+        # Center node
+        center_title = graph.nodes[center_node_id].get('title', str(center_node_id))
+        lines.append(f"[bold cyan]● {center_title}[/] [dim](Selected)[/]")
+        lines.append("")
+
+        # Outgoing section
+        if successors:
+            lines.append("[bold green]Outgoing Links:[/]")
+            for succ in successors[:10]:
+                title = graph.nodes[succ].get('title', str(succ))[:35]
+                lines.append(f"  [green]→[/] {title}")
+            if len(successors) > 10:
+                lines.append(f"    [dim]... and {len(successors) - 10} more[/]")
 
         return "\n".join(lines)
 
@@ -289,16 +302,8 @@ class GraphVisualizerScreen(Screen):
         # Get 1-hop neighborhood using GraphAnalyzer
         ego_graph = self.graph_analyzer.get_ego_graph(self.selected_note, radius=1)
 
-        if not ego_graph or len(ego_graph) == 0:
-            viz_panel.update(
-                f"[bold cyan]╭─ {note.title[:30]} ──────────────╮[/]\n"
-                f"[dim]No connected notes (orphan)[/]\n"
-                f"[bold cyan]╰────────────────────────────────╯[/]"
-            )
-            return
-
-        # Render ASCII graph
-        ascii_graph = self.render_ascii_graph_simple(ego_graph)
+        # Render specialized ego graph ASCII
+        ascii_graph = self.render_ego_graph(ego_graph, self.selected_note)
 
         # Get metrics using GraphAnalyzer
         metrics = self.graph_analyzer.get_note_metrics(self.selected_note)
@@ -307,17 +312,17 @@ class GraphVisualizerScreen(Screen):
         out_degree = metrics.out_degree if metrics else 0
         pagerank = metrics.pagerank if metrics else 0
 
-        viz_text = f"""[bold cyan]╭─ Neighborhood: {note.title[:30]} ──╮[/]
+        viz_text = f"""[bold cyan]╭─ Neighborhood Explorer ──────────────────╮[/]
 
 {ascii_graph}
 
 [bold]Metrics:[/]
-• In-degree: {in_degree}
+• In-degree:  {in_degree}
 • Out-degree: {out_degree}
-• PageRank: {pagerank:.4f}
+• PageRank:   {pagerank:.4f}
 
-[dim]Press [/][cyan]n[/][dim] to view full note[/]
-[bold cyan]╰────────────────────────────────────╯[/]"""
+[dim italic]Press 'n' to explore this note's details[/]
+[bold cyan]╰──────────────────────────────────────────╯[/]"""
 
         viz_panel.update(viz_text)
 

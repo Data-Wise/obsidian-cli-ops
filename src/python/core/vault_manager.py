@@ -67,6 +67,22 @@ class VaultManager:
 
         return vaults
 
+    def register_vault(self, vault_path: str, vault_name: Optional[str] = None) -> str:
+        """
+        Register a vault in the database without scanning it.
+
+        Args:
+            vault_path: Absolute path to the vault.
+            vault_name: Optional vault name (defaults to directory name).
+
+        Returns:
+            The ID of the registered vault.
+        """
+        vault_path_obj = Path(vault_path).resolve()
+        name = vault_name or vault_path_obj.name
+        vault_id = self.db.add_vault(name, str(vault_path_obj))
+        return vault_id
+
     def list_vaults(self) -> List[Vault]:
         """
         List all registered vaults from database.
@@ -107,89 +123,56 @@ class VaultManager:
             return None
         return Vault.from_db_row(dict(row))
 
-    def scan_vault(
+    async def scan_vault(
         self,
         vault_path: str,
         vault_name: Optional[str] = None,
-        force: bool = False
+        force: bool = False,
+        progress_callback: Optional[Callable[[int, int], Coroutine]] = None
     ) -> ScanResult:
         """
-        Scan a vault and populate database.
+        Asynchronously scan a vault and populate database.
 
         Args:
             vault_path: Path to vault
             vault_name: Optional vault name (defaults to directory name)
             force: Force rescan even if vault hasn't changed
+            progress_callback: Async function to call with (current, total) progress.
 
         Returns:
             ScanResult with scan statistics
-
-        Raises:
-            VaultNotFoundError: If vault path is invalid
-            ScanError: If scan fails
         """
         vault_path_obj = Path(vault_path).resolve()
 
-        # Validate vault
-        if not vault_path_obj.exists():
-            raise VaultNotFoundError(f"Path does not exist: {vault_path}")
+        if not vault_path_obj.exists() or not vault_path_obj.is_dir():
+            raise VaultNotFoundError(f"Invalid vault path: {vault_path}")
 
-        if not vault_path_obj.is_dir():
-            raise VaultNotFoundError(f"Path is not a directory: {vault_path}")
-
-        # Check for .obsidian directory
         obsidian_dir = vault_path_obj / '.obsidian'
         if not obsidian_dir.exists():
-            raise VaultNotFoundError(
-                f"Not a valid Obsidian vault (no .obsidian directory): {vault_path}"
-            )
+            raise VaultNotFoundError(f"Not a valid Obsidian vault: {vault_path}")
 
-        # Determine vault name
-        if not vault_name:
-            vault_name = vault_path_obj.name
-
-        # Start timing
+        name = vault_name or vault_path_obj.name
         start_time = time.time()
-        errors = []
-        warnings = []
 
         try:
-            # Scan vault using VaultScanner (it handles database population)
-            stats = self.scanner.scan_vault(
-                str(vault_path_obj),
-                vault_name,
-                verbose=False
+            stats = await self.scanner.scan_vault(
+                str(vault_path_obj), name, progress_callback=progress_callback
             )
-
-            # Get vault from database
+            
             vault = self.db.get_vault_by_path(str(vault_path_obj))
             if not vault:
                 raise ScanError("Vault not found in database after scan")
 
-            vault_id = vault['id']
-
-            # Calculate duration
-            duration = time.time() - start_time
-
-            # Build result
-            result = ScanResult(
-                vault_id=vault_id,
-                vault_name=vault_name,
+            return ScanResult(
+                vault_id=vault['id'],
+                vault_name=name,
                 vault_path=str(vault_path_obj),
                 notes_scanned=stats.get('notes_scanned', 0),
-                links_found=stats.get('links_found', 0),
-                tags_found=stats.get('tags_found', 0),
-                orphans_detected=stats.get('orphan_count', 0),
-                hubs_detected=stats.get('hub_count', 0),
-                duration_seconds=duration,
-                errors=errors,
-                warnings=warnings,
+                links_found=stats.get('links_added', 0),
+                duration_seconds=time.time() - start_time
             )
 
-            return result
-
         except Exception as e:
-            duration = time.time() - start_time
             raise ScanError(f"Scan failed: {e}")
 
     def get_vault_stats(self, vault_id: str) -> VaultStats:

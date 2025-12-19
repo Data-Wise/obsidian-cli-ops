@@ -5,15 +5,14 @@ Vault Scanner for Obsidian CLI Ops v2.0
 Scans Obsidian vaults, parses markdown files, and populates the database
 with notes, links, tags, and metadata.
 """
-
+import asyncio
 import os
 import re
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Set, Optional, Tuple
+from typing import Dict, List, Set, Optional, Tuple, Callable, Coroutine
 from dataclasses import dataclass
 import frontmatter
-import hashlib
 
 from db_manager import DatabaseManager
 
@@ -179,15 +178,19 @@ class VaultScanner:
         self.db = db
         self.parser = MarkdownParser()
 
-    def scan_vault(self, vault_path: str, vault_name: Optional[str] = None,
-                   verbose: bool = False) -> Dict:
+    async def scan_vault(
+        self, 
+        vault_path: str, 
+        vault_name: Optional[str] = None,
+        progress_callback: Optional[Callable[[int, int], Coroutine]] = None
+    ) -> Dict:
         """
-        Scan an Obsidian vault and populate database.
+        Asynchronously scan an Obsidian vault and populate database.
 
         Args:
             vault_path: Path to vault directory
             vault_name: Display name (defaults to directory name)
-            verbose: Print progress information
+            progress_callback: Async function to call with (current, total) progress.
 
         Returns:
             Dictionary with scan statistics
@@ -200,10 +203,6 @@ class VaultScanner:
         if vault_name is None:
             vault_name = vault_path.name
 
-        if verbose:
-            print(f"📂 Scanning vault: {vault_name}")
-            print(f"   Path: {vault_path}")
-
         # Add vault to database
         vault_id = self.db.add_vault(vault_name, str(vault_path))
 
@@ -211,97 +210,67 @@ class VaultScanner:
         scan_id = self.db.start_scan(vault_id)
 
         try:
-            # Find all markdown files
-            md_files = list(vault_path.rglob('*.md'))
-
-            if verbose:
-                print(f"   Found {len(md_files)} markdown files")
-
+            md_files = [
+                p for p in vault_path.rglob('*.md') 
+                if not any(part.startswith('.') for part in p.parts)
+            ]
+            total_files = len(md_files)
+            
             stats = {
-                'notes_scanned': 0,
-                'notes_added': 0,
-                'notes_updated': 0,
-                'links_added': 0,
-                'tags_added': 0
+                'notes_scanned': 0, 'notes_added': 0, 'notes_updated': 0,
+                'links_added': 0, 'tags_added': 0
             }
 
-            # Process each file
-            for md_file in md_files:
-                # Skip hidden files and .obsidian directory
-                if any(part.startswith('.') for part in md_file.parts):
-                    continue
+            # Process files in batches to avoid blocking
+            batch_size = 50
+            for i in range(0, total_files, batch_size):
+                batch = md_files[i:i + batch_size]
+                for md_file in batch:
+                    relative_path = str(md_file.relative_to(vault_path))
+                    try:
+                        note_data = self.parser.parse_file(md_file)
+                        existing_note = self.db.get_note_by_path(vault_id, relative_path)
+                        
+                        metadata = note_data.frontmatter.copy()
+                        metadata['created_at'] = note_data.created_at.isoformat()
+                        metadata['modified_at'] = note_data.modified_at.isoformat()
 
-                relative_path = str(md_file.relative_to(vault_path))
+                        note_id = self.db.add_note(
+                            vault_id=vault_id, path=relative_path, title=note_data.title,
+                            content=note_data.content, metadata=metadata
+                        )
 
-                try:
-                    # Parse note
-                    note_data = self.parser.parse_file(md_file)
+                        if existing_note:
+                            stats['notes_updated'] += 1
+                        else:
+                            stats['notes_added'] += 1
+                        stats['notes_scanned'] += 1
 
-                    # Check if note exists
-                    existing_note = self.db.get_note_by_path(vault_id, relative_path)
+                        for tag in note_data.tags:
+                            self.db.add_note_tag(note_id, tag)
+                            stats['tags_added'] += 1
+                        for target, display_text in note_data.wikilinks:
+                            self.db.add_link(note_id, target, display_text)
+                            stats['links_added'] += 1
 
-                    # Add note to database
-                    metadata = note_data.frontmatter.copy()
-                    metadata['created_at'] = note_data.created_at.isoformat()
-                    metadata['modified_at'] = note_data.modified_at.isoformat()
+                    except Exception:
+                        continue
+                
+                # Report progress
+                if progress_callback:
+                    await progress_callback(i + len(batch), total_files)
+                
+                await asyncio.sleep(0.01) # Yield control to the event loop
 
-                    note_id = self.db.add_note(
-                        vault_id=vault_id,
-                        path=relative_path,
-                        title=note_data.title,
-                        content=note_data.content,
-                        metadata=metadata
-                    )
-
-                    if existing_note:
-                        stats['notes_updated'] += 1
-                    else:
-                        stats['notes_added'] += 1
-
-                    stats['notes_scanned'] += 1
-
-                    # Add tags
-                    for tag in note_data.tags:
-                        self.db.add_note_tag(note_id, tag)
-                        stats['tags_added'] += 1
-
-                    # Add links
-                    for target, display_text in note_data.wikilinks:
-                        self.db.add_link(note_id, target, display_text)
-                        stats['links_added'] += 1
-
-                    if verbose and stats['notes_scanned'] % 100 == 0:
-                        print(f"   Processed {stats['notes_scanned']} notes...")
-
-                except Exception as e:
-                    if verbose:
-                        print(f"   ⚠️  Error processing {relative_path}: {e}")
-                    continue
-
-            # Update vault scan time
             self.db.update_vault_scan_time(vault_id)
-
-            # Complete scan record
             self.db.complete_scan(
-                scan_id,
-                stats['notes_scanned'],
-                stats['notes_added'],
-                stats['notes_updated'],
-                0  # notes_deleted (not implemented yet)
+                scan_id, stats['notes_scanned'], stats['notes_added'],
+                stats['notes_updated'], 0
             )
-
-            if verbose:
-                print(f"\n✓ Scan complete!")
-                print(f"   Notes scanned: {stats['notes_scanned']}")
-                print(f"   Notes added: {stats['notes_added']}")
-                print(f"   Notes updated: {stats['notes_updated']}")
-                print(f"   Links found: {stats['links_added']}")
-                print(f"   Tags found: {stats['tags_added']}")
 
             return stats
 
         except Exception as e:
-            # Mark scan as failed
             self.db.fail_scan(scan_id, str(e))
             raise
 
@@ -358,7 +327,9 @@ def main():
 
     # Scan vault
     try:
-        stats = scanner.scan_vault(vault_path, verbose=True)
+        # Since this is a CLI, we don't have an event loop.
+        # We run the async scan_vault using asyncio.run
+        stats = asyncio.run(scanner.scan_vault(vault_path, verbose=True))
         print("\n📊 Database Stats:")
         db_stats = db.get_stats()
         for key, value in db_stats.items():

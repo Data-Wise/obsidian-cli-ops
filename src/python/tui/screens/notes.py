@@ -25,12 +25,14 @@ class NoteExplorerScreen(Screen):
     """Note explorer screen with searchable note list and preview pane."""
 
     BINDINGS = [
-        Binding("escape", "back", "Back", show=True),
-        Binding("enter", "view_note", "View", show=True),
-        Binding("/", "focus_search", "Search", show=True),
-        Binding("r", "refresh", "Refresh", show=True),
-        Binding("s", "toggle_sort", "Sort", show=True),
-        Binding("q", "quit", "Quit", show=True),
+        Binding("escape", "back", "Back"),
+        Binding("enter", "view_note", "View"),
+        Binding("/", "focus_search", "Search"),
+        Binding("ctrl+f", "focus_search", "Search", show=False),
+        Binding("r", "refresh", "Refresh"),
+        Binding("s", "toggle_sort", "Sort"),
+        Binding("q", "quit", "Quit"),
+        Binding("ctrl+q", "quit", "Quit", show=False),
     ]
 
     CSS = """

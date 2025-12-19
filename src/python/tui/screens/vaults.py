@@ -1,355 +1,155 @@
 """
 Vault Browser Screen
 
-Interactive vault browser showing all discovered vaults with statistics.
+Features on--demand, non-blocking scanning of vaults with real-time progress.
 """
-
+import asyncio
+from textual import work
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Header, Footer, DataTable, Static
-from textual.containers import Container, Vertical, Horizontal
+from textual.widgets import Header, Footer, DataTable, Static, ProgressBar
+from textual.containers import Container, Vertical
 from textual.binding import Binding
 from datetime import datetime
 from pathlib import Path
 import sys
 import os
 
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from core.vault_manager import VaultManager
 from core.graph_analyzer import GraphAnalyzer
+from core.models import Vault
 
 
 class VaultBrowserScreen(Screen):
-    """Vault browser screen with interactive vault list."""
+    """A screen for browsing and managing Obsidian vaults."""
 
     BINDINGS = [
-        Binding("escape", "back", "Back", show=True),
-        Binding("enter", "select_vault", "Open", show=True),
+        Binding("escape", "app.pop_screen", "Back", show=True),
         Binding("d", "discover_vaults", "Discover", show=True),
-        Binding("g", "view_graph", "Graph", show=True),
-        Binding("s", "view_stats", "Stats", show=True),
-        Binding("r", "refresh", "Refresh", show=True),
-        Binding("q", "quit", "Quit", show=True),
+        Binding("r", "refresh_vaults", "Refresh", show=True),
     ]
 
-    CSS = """
-    VaultBrowserScreen {
-        background: $surface;
-    }
-
-    #vault-container {
-        width: 100%;
-        height: 100%;
-        padding: 1 2;
-    }
-
-    #title {
-        width: 100%;
-        text-align: center;
-        padding: 1 0;
-        color: $primary;
-    }
-
-    #content {
-        width: 100%;
-        height: 1fr;
-    }
-
-    #vault-table {
-        width: 100%;
-        height: 1fr;
-        border: solid $primary;
-    }
-
-    #details-panel {
-        width: 100%;
-        height: auto;
-        padding: 1 2;
-        margin-top: 1;
-        border: solid $accent;
-        background: $panel;
-    }
-
-    #empty-message {
-        width: 100%;
-        height: 100%;
-        content-align: center middle;
-        padding: 2;
-        color: $warning;
-    }
-    """
+    CSS_PATH = "../styles/vault_browser.css"
 
     def __init__(self):
-        """Initialize vault browser screen."""
         super().__init__()
-        self.vault_manager = VaultManager()
+        self.vault_manager = VaultManager() # Ensures production DB is used
         self.graph_analyzer = GraphAnalyzer()
-        self.vaults = []
-        self.selected_vault = None
+        self.vaults: List[Vault] = []
+        self.scanning_vault_id: Optional[str] = None
 
     def compose(self) -> ComposeResult:
-        """Create vault browser widgets."""
         yield Header()
         yield Container(
             Static("[bold cyan]📁 Vault Browser[/]", id="title"),
-            Vertical(
-                DataTable(id="vault-table"),
-                Static("", id="details-panel"),
-                id="content",
-            ),
-            id="vault-container",
+            DataTable(id="vault-table"),
+            id="vault-container"
         )
         yield Footer()
 
-    def _format_last_scan(self, last_scanned) -> str:
-        """Format last scan timestamp as relative time.
-
-        Args:
-            last_scanned: datetime object or ISO timestamp string
-
-        Returns:
-            Human-readable relative time (e.g., "5 minutes ago")
-        """
-        from utils import format_relative_time
-        result = format_relative_time(last_scanned)
-        return "Never scanned" if result == "Never" else result
-
-    def update_header_timestamp(self):
-        """Update header with latest scan timestamp."""
-        if self.selected_vault:
-            last_scan = self.selected_vault.last_scanned
-            scan_text = self._format_last_scan(last_scan)
-            title = f"[bold cyan]📁 Vault Browser[/]  [dim]Last scan: {scan_text}[/]"
-        else:
-            title = "[bold cyan]📁 Vault Browser[/]"
-
-        title_widget = self.query_one("#title", Static)
-        title_widget.update(title)
-
     def on_mount(self) -> None:
-        """Set up the vault table when screen is mounted."""
-        table = self.query_one("#vault-table", DataTable)
-
-        # Configure table
+        table = self.query_one(DataTable)
         table.cursor_type = "row"
-        table.zebra_stripes = True
-
-        # Add columns
-        table.add_column("ID", width=6)
+        table.add_column("Status", width=12)
         table.add_column("Name", width=30)
-        table.add_column("Path", width=50)
+        table.add_column("Path", width=60)
         table.add_column("Notes", width=10)
-        table.add_column("Links", width=10)
-        table.add_column("Last Scanned", width=20)
-
-        # Load vaults
         self.refresh_vaults()
 
+    def action_refresh_vaults(self) -> None:
+        self.refresh_vaults()
+        self.notify("Vault list refreshed.")
+
+    @work(exclusive=True, group="discovery")
+    async def action_discover_vaults(self) -> None:
+        self.notify("Starting vault discovery...")
+        try:
+            default_path = Path.home() / "Library" / "Mobile Documents" / "iCloud~md~obsidian" / "Documents"
+            if not default_path.exists():
+                default_path = Path.home() / "Documents"
+
+            discovered = self.vault_manager.discover_vaults(str(default_path))
+            new_vaults = 0
+            for path in discovered:
+                if not self.vault_manager.get_vault_by_path(path):
+                    self.vault_manager.register_vault(path)
+                    new_vaults += 1
+            
+            if new_vaults > 0:
+                self.notify(f"Discovered {new_vaults} new vault(s).")
+                self.refresh_vaults()
+            else:
+                self.notify("No new vaults found.")
+        except Exception as e:
+            self.notify(f"Discovery failed: {e}", severity="error")
+
     def refresh_vaults(self) -> None:
-        """Load vaults from database."""
-        table = self.query_one("#vault-table", DataTable)
-
-        # Clear existing rows
+        table = self.query_one(DataTable)
+        current_cursor = table.cursor_row
         table.clear()
-
-        # Query vaults using VaultManager
         self.vaults = self.vault_manager.list_vaults()
 
         if not self.vaults:
-            # Show empty message
-            table.add_row("", "", "[dim]No vaults found. Run 'obs discover' to scan for vaults.[/]", "", "", "")
+            table.add_row("[dim]No vaults found. Press 'd' to discover.[/]")
             return
 
-        # Add vault rows
         for vault in self.vaults:
-            vault_id = str(vault.id)
-            name = vault.name or '[dim]Unnamed[/]'
-            path = vault.path
+            status = "[green]✓ Scanned[/]" if vault.last_scanned else "[yellow]⊘ Unscanned[/]"
+            if self.scanning_vault_id == vault.id:
+                status = "[cyan]◉ Scanning...[/]"
+            
+            table.add_row(status, vault.name, vault.path, str(vault.note_count), key=vault.id)
+        
+        if current_cursor < len(self.vaults):
+            table.cursor_row = current_cursor
 
-            # Shorten path if too long
-            if len(path) > 45:
-                path = "..." + path[-42:]
-
-            note_count = str(vault.note_count)
-            link_count = str(vault.link_count)
-
-            # Format last scanned time
-            last_scanned = vault.last_scanned
-            if last_scanned:
-                try:
-                    if isinstance(last_scanned, str):
-                        dt = datetime.fromisoformat(last_scanned)
-                    else:
-                        dt = last_scanned
-                    scanned_str = dt.strftime("%Y-%m-%d %H:%M")
-                except:
-                    scanned_str = "[dim]Unknown[/]"
-            else:
-                scanned_str = "[dim]Never[/]"
-
-            table.add_row(
-                vault_id,
-                name,
-                f"[dim]{path}[/]",
-                note_count,
-                link_count,
-                scanned_str,
-                key=vault_id,
-            )
-
-    def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
-        """Handle vault selection."""
-        if not self.vaults:
-            return
-
-        # Get selected vault ID from row key
+    async def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         vault_id = event.row_key.value
+        selected_vault = self.vault_manager.get_vault(vault_id)
 
-        # Find vault by ID
-        self.selected_vault = None
-        for vault in self.vaults:
-            if str(vault.id) == vault_id:
-                self.selected_vault = vault
-                break
-
-        if self.selected_vault:
-            # Update app state for last used vault
-            self.app.last_vault_id = str(self.selected_vault.id)
-            self.app.last_vault_name = self.selected_vault.name
-
-            self.update_header_timestamp()
-            self.show_vault_details()
-
-    def show_vault_details(self) -> None:
-        """Display details for selected vault."""
-        if not self.selected_vault:
+        if not selected_vault:
             return
 
-        details_panel = self.query_one("#details-panel", Static)
+        if self.scanning_vault_id:
+            self.notify("A scan is already in progress.", severity="warning")
+            return
 
-        vault = self.selected_vault
-        vault_id = str(vault.id)
-
-        # Get additional statistics using GraphAnalyzer
-        orphans = self.graph_analyzer.get_orphan_notes(vault_id)
-        hubs = self.graph_analyzer.get_hub_notes(vault_id, limit=3)
-        broken = self.graph_analyzer.get_broken_links(vault_id)
-
-        orphan_count = len(orphans)
-        hub_count = len(hubs)
-        broken_count = len(broken)
-        tag_count = vault.tag_count
-
-        # Build details text
-        details = f"""[bold]Vault Details:[/]
-
-[cyan]Name:[/] {vault.name}
-[cyan]Path:[/] {vault.path}
-[cyan]ID:[/] {vault.id}
-
-[bold]Statistics:[/]
-  📝 Notes: {vault.note_count}
-  🔗 Links: {vault.link_count}
-  🏷️  Tags: {tag_count}
-  🔴 Orphans: {orphan_count}
-  🌟 Hubs: {hub_count}
-  ❌ Broken Links: {broken_count}
-
-[dim]Last Scanned: {vault.last_scanned or 'Never'}[/]
-
-[dim italic]Press Enter to explore this vault's notes[/]
-"""
-
-        details_panel.update(details)
-
-    def action_back(self) -> None:
-        """Go back to home screen."""
-        self.app.pop_screen()
-
-    def action_select_vault(self) -> None:
-        """Open selected vault in note explorer."""
-        if self.selected_vault:
-            # Import at call site to avoid circular imports
-            from tui.screens.notes import NoteExplorerScreen
-
-            # Push screen instance directly with parameters
-            self.app.push_screen(
-                NoteExplorerScreen(
-                    vault_id=str(self.selected_vault.id),
-                    vault_name=self.selected_vault.name
-                )
-            )
+        if not selected_vault.last_scanned:
+            self.scan_vault(selected_vault)
         else:
-            # If no vault selected, show message
-            self.notify("Please select a vault first", severity="warning")
+            self.app.last_vault_id = selected_vault.id
+            self.app.last_vault_name = selected_vault.name
+            from .notes import NoteExplorerScreen
+            self.app.push_screen(NoteExplorerScreen(vault_id=selected_vault.id, vault_name=selected_vault.name))
 
-    def action_view_graph(self) -> None:
-        """Open graph visualizer for selected vault."""
-        if self.selected_vault:
-            # Import at call site to avoid circular imports
-            from tui.screens.graph import GraphVisualizerScreen
-
-            # Push screen instance directly with parameters
-            self.app.push_screen(
-                GraphVisualizerScreen(
-                    vault_id=str(self.selected_vault.id),
-                    vault_name=self.selected_vault.name
-                )
-            )
-        else:
-            self.notify("Please select a vault first", severity="warning")
-
-    def action_view_stats(self) -> None:
-        """Open statistics dashboard for selected vault."""
-        if self.selected_vault:
-            # Import at call site to avoid circular imports
-            from tui.screens.stats import StatisticsDashboardScreen
-
-            # Push screen instance directly with parameters
-            self.app.push_screen(
-                StatisticsDashboardScreen(
-                    vault_id=str(self.selected_vault.id),
-                    vault_name=self.selected_vault.name
-                )
-            )
-        else:
-            self.notify("Please select a vault first", severity="warning")
-
-    def action_refresh(self) -> None:
-        """Refresh vault list."""
+    @work(exclusive=True, group="scanning")
+    async def scan_vault(self, vault: Vault) -> None:
+        self.scanning_vault_id = vault.id
         self.refresh_vaults()
-        self.notify("Vault list refreshed", severity="information")
 
-    def action_discover_vaults(self) -> None:
-        """Discover vaults in default iCloud location."""
-        # Default to iCloud Obsidian location
-        default_path = Path.home() / "Library" / "Mobile Documents" / "iCloud~md~obsidian" / "Documents"
+        progress_bar = self.app.query_one("#scan-progress", expect_type=ProgressBar)
+        progress_bar.display = True
 
-        # Fallback to Documents if iCloud path doesn't exist
-        if not default_path.exists():
-            default_path = Path.home() / "Documents"
+        async def progress_callback(current, total):
+            if total > 0:
+                progress_bar.update(progress=current, total=total)
 
         try:
-            self.notify(f"Discovering vaults in {default_path}...", severity="information")
-            discovered = self.vault_manager.discover_vaults(str(default_path))
-
-            if discovered:
-                # Scan discovered vaults
-                for vault_path in discovered:
-                    try:
-                        self.vault_manager.scan_vault(vault_path, force=False)
-                    except Exception as e:
-                        self.notify(f"Error scanning {vault_path}: {str(e)}", severity="warning")
-
-                # Refresh the list
-                self.refresh_vaults()
-                self.notify(f"Discovered and scanned {len(discovered)} vault(s)", severity="information")
-            else:
-                self.notify(f"No vaults found in {default_path}", severity="warning")
+            await self.vault_manager.scan_vault(vault.path, progress_callback=progress_callback)
+            self.notify(f"Scan complete for '{vault.name}'.")
         except Exception as e:
-            self.notify(f"Error discovering vaults: {str(e)}", severity="error")
+            self.notify(f"Scan failed: {e}", severity="error")
+        finally:
+            self.scanning_vault_id = None
+            progress_bar.display = False
+            self.refresh_vaults()
 
     def action_quit(self) -> None:
-        """Quit the application."""
         self.app.exit()
+
+class VaultContainer(Container):
+    def compose(self) -> ComposeResult:
+        yield VaultBrowserScreen()
+        yield ProgressBar(id="scan-progress", total=100, show_eta=False)

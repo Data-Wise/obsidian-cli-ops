@@ -19,11 +19,12 @@ class StatisticsDashboardScreen(Screen):
     """Statistics dashboard screen showing vault analytics."""
 
     BINDINGS = [
-        Binding("escape", "back", "Back", show=True),
-        Binding("tab", "cycle_view", "Next View", show=True),
-        Binding("r", "refresh", "Refresh", show=True),
-        Binding("e", "export", "Export", show=True),
-        Binding("q", "quit", "Quit", show=True),
+        Binding("escape", "back", "Back"),
+        Binding("tab", "cycle_view", "Next View"),
+        Binding("r", "refresh", "Refresh"),
+        Binding("e", "export", "Export"),
+        Binding("q", "quit", "Quit"),
+        Binding("ctrl+q", "quit", "Quit", show=False),
     ]
 
     CSS = """
