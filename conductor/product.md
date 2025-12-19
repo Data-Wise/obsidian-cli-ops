@@ -8,6 +8,7 @@ The primary focus is on **users with ADHD** and power users who need to reduce c
 
 ## Hero Features
 - **Smart Defaults & Auto-Detection**: Zero-config startup by remembering the last vault and auto-detecting standard storage paths (like iCloud).
+- **Scan-as-Needed Architecture**: Instant startup by discovering vaults immediately while deferring heavy content scanning until explicitly requested, keeping the UI 100% responsive.
 - **Progressive Disclosure**: A single `obs` command provides a simple interface that reveals complexity only when needed, keeping the workspace clean.
 - **Contextual AI Assistant**: Automated semantic analysis for finding similar notes and detecting duplicates, helping to maintain vault health with minimal manual effort.
 

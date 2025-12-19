@@ -12,6 +12,14 @@
 
 **Current Version**: 2.2.0
 
+## 🚀 Quick Start
+
+To launch the interactive TUI application:
+
+```bash
+./run_tui.sh
+```
+
 ## ✨ Features
 
 ### 🔧 v1.x: Federated Vault Management
