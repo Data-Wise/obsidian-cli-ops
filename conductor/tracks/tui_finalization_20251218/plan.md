@@ -8,11 +8,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Note Explorer Implementation' (Protocol in workflow.md) [5bdceaf]
 
 ## Phase 2: Graph Visualizer Implementation
-- [ ] Task: Create GraphVisualizerScreen widget structure
-- [ ] Task: Implement ASCII graph rendering logic using NetworkX
-- [ ] Task: Add highlighting for hubs and orphans in the graph view
-- [ ] Task: Connect GraphVisualizerScreen to the main TUI app
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Graph Visualizer Implementation' (Protocol in workflow.md)
+- [x] Task: Create GraphVisualizerScreen widget structure
+- [x] Task: Implement ASCII graph rendering logic using NetworkX
+- [x] Task: Add highlighting for hubs and orphans in the graph view
+- [x] Task: Connect GraphVisualizerScreen to the main TUI app
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Graph Visualizer Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Polish and Release
 - [ ] Task: Add keyboard shortcuts for quick navigation between all screens
