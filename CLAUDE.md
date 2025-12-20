@@ -4,29 +4,29 @@ Developer guide for Claude Code when working with this repository.
 
 ## Project Overview
 
-**Obsidian CLI Ops (obs)** - Intelligent CLI tool for multi-vault Obsidian knowledge management with graph analysis and interactive TUI.
+**Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 2.2.0-dev (Phase 5 Complete)
-**Status**: Production ready (97% complete)
-**Priority**: P2
+**Current Version**: 3.0.0-dev (Phase 7.1 Simplification - In Progress)
+**Status**: Active development (Proposal A implementation)
+**Priority**: P1
 
-### Core Features
+### Core Features (v3.0.0)
 
-- **Vault Management**: Discovery, scanning, synchronization across multiple vaults
+- **Vault Management**: Discovery, scanning across multiple vaults
 - **Graph Analysis**: PageRank, centrality, clustering, orphan/hub detection
-- **Interactive TUI**: Full-screen terminal UI with vim-style navigation
 - **AI Features**: Multi-provider AI (Gemini API, Gemini CLI, Claude CLI, Ollama)
-- **R-Dev Integration**: Seamless R Project ↔ Obsidian workflow
+- **Rich CLI Output**: Beautiful terminal output with tables, colors, progress bars
+- **ZSH-First Architecture**: Fast shell integration with Python core
 
 ### Technology Stack
 
-- **ZSH**: CLI interface (`src/obs.zsh`)
-- **Python 3.9+**: Core logic (`src/python/`)
+- **ZSH**: CLI interface (`src/obs.zsh`) - 386 lines
+- **Python 3.9+**: Core logic (`src/python/`) - ~3,500 lines
 - **SQLite**: Knowledge graph database
 - **NetworkX**: Graph analysis
-- **Textual**: TUI framework
+- **Rich**: CLI output formatting
 - **Gemini/Claude/Ollama**: Multi-provider AI (optional)
-- **Jest**: Testing harness
+- **Pytest**: Testing harness
 
 ## Architecture
 
@@ -34,14 +34,16 @@ Developer guide for Claude Code when working with this repository.
 
 ```
 Presentation → Application → Data
-   (CLI/TUI)     (Core Logic)   (DB/Files)
+    (CLI)        (Core Logic)   (DB/Files)
 ```
 
-- **Presentation**: `obs.zsh` (CLI), `tui/` (TUI)
+- **Presentation**: `obs.zsh` (ZSH CLI wrapper)
 - **Application**: `core/vault_manager.py`, `core/graph_analyzer.py`
 - **Data**: `db_manager.py`, `vault_scanner.py`, `graph_builder.py`
 
-**Key Principle**: Business logic lives in Core layer only. CLI and TUI are thin presentation layers that share 100% of business logic.
+**Key Principle**: Business logic lives in Core layer only. CLI is a thin presentation layer.
+
+**v3.0.0 Changes**: Removed TUI (1,701 lines) and R-Dev integration (307 lines) to focus on core Obsidian management.
 
 **See `.claude/rules/architecture.md` for detailed documentation.**
 
@@ -62,25 +64,31 @@ ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 
 ### Essential Commands
 
-**Option D: Obsidian App Clone** - Just type `obs`!
+**v3.0.0 Simplified CLI** - 10 focused commands!
 
 ```bash
-# Primary commands (90% of usage)
-obs                             # Open last vault (or show picker)
-obs switch                      # Vault switcher
-obs manage                      # Manage vaults
+# PRIMARY COMMANDS
+obs                             # List vaults
+obs stats <vault_id>            # Show vault statistics
+obs discover <path>             # Find vaults in directory
 
-# Quick actions
-obs open <name>                 # Open specific vault
-obs graph [vault]               # Show graph visualization
-obs stats [vault]               # View statistics
+# GRAPH ANALYSIS
+obs analyze <vault_id>          # Analyze vault graph metrics
 
-# R integration (shortened)
-obs r link                      # Link R project (was: obs r-dev link)
-obs r log <file>                # Copy artifact (was: obs r-dev log)
+# AI FEATURES
+obs ai status                   # Show AI provider status
+obs ai setup                    # Interactive AI setup wizard
+obs ai test                     # Test all providers
+obs ai similar <note_id>        # Find similar notes
+obs ai analyze <note_id>        # Analyze note with AI
+obs ai duplicates <vault_id>    # Find duplicate notes
+
+# UTILITIES
+obs help [--all]                # Show help
+obs version                     # Show version
 
 # Development
-npm test                        # Run test suite (394+ tests)
+pytest src/python/tests/        # Run Python tests (35+ core tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -88,9 +96,8 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-npm test                          # Full test suite (394+ tests)
-pytest src/python/tests/          # Python tests only (197 tests)
-bash tests/test_r_dev.sh          # R-Dev integration tests
+pytest src/python/tests/        # Python tests (35+ core tests passing)
+obs --verbose <command>         # Run any command with verbose output
 ```
 
 ### Python Path Note
@@ -106,13 +113,14 @@ bash tests/test_r_dev.sh          # R-Dev integration tests
 - `CLAUDE.md` - This file
 
 ### Code Structure
-- `src/obs.zsh` - ZSH CLI interface (917 lines, Option D)
-- `src/python/` - Python backend (~11,500 lines)
+
+- `src/obs.zsh` - ZSH CLI interface (386 lines, v3.0.0)
+- `src/python/` - Python backend (~3,500 lines)
   - `core/` - Business logic (859 lines)
-  - `tui/` - TUI screens (1,701 lines)
   - `obs_cli.py` - CLI interface (318 lines)
+  - AI clients - Multi-provider AI (440+ lines)
 - `schema/vault_db.sql` - Database schema
-- `tests/` - Test suite (394+ tests)
+- `tests/` - Test suite (35+ core tests passing)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -134,23 +142,19 @@ Details in schema file and `docs/developer/architecture.md`.
 
 ### Adding a New Command (Three-Layer Approach)
 
-1. **Core Layer** (`src/python/core/vault_manager.py`):
+1. **Core Layer** (`src/python/core/vault_manager.py` or `graph_analyzer.py`):
    - Add business logic method (interface-agnostic)
    - Return domain model objects
 
-2. **CLI Interface** (`src/python/obs_cli.py`):
+2. **Python CLI** (`src/python/obs_cli.py`):
    - Add argparse subcommand
    - Call core method
-   - Format output for terminal
+   - Format output with Rich for terminal
 
-3. **TUI Interface** (`src/python/tui/screens/`):
-   - Add key binding or button
-   - Call same core method
-   - Update widgets with results
-
-4. **ZSH Wrapper** (`src/obs.zsh`):
-   - Add wrapper function (optional)
+3. **ZSH Wrapper** (`src/obs.zsh`):
+   - Add wrapper function
    - Use full Python path: `/opt/homebrew/bin/python3`
+   - Add to dispatcher case statement
 
 **See `.claude/rules/workflows.md` for detailed examples.**
 
@@ -166,7 +170,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ### Testing Requirements
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- TUI screen tests for major workflows
+- Keep core tests passing (35+ tests)
 - Update test count in documentation
 
 ### Documentation
@@ -181,41 +185,38 @@ Details in schema file and `docs/developer/architecture.md`.
 - Update relevant docs before committing
 - Run tests before pushing
 
-## Option D: Obsidian App Clone
+## v3.0.0 Simplification (Proposal A)
 
-**Version 2.1.0** implements Option D - a complete redesign that mimics the official Obsidian app.
+**Version 3.0.0-dev** implements Proposal A - "Do one thing exceptionally well - manage Obsidian vaults"
 
-### Key Features
+### Key Changes
 
-1. **Zero-Friction Start**: `obs` opens last vault automatically
-2. **iCloud-First**: Auto-detects `~/Library/Mobile Documents/iCloud~md~obsidian/Documents`
-3. **Last-Vault Tracking**: Saved to `~/.config/obs/last_vault`
-4. **Obsidian-Style Commands**:
-   - `obs` - Open last vault (like launching Obsidian)
-   - `obs switch` - Vault switcher (like "Open another vault")
-   - `obs manage` - Vault management (like "Manage Vaults" menu)
-5. **Shortened Namespaces**: `obs r` (was `obs r-dev`)
-6. **Progressive Help**: `obs help` (simple) vs `obs help --all` (detailed)
+1. **Simplified CLI**: 20+ commands → 10 focused commands
+2. **Removed Features**:
+   - TUI interface (1,701 lines) - CLI-only for simplicity
+   - R-Dev integration (307 lines) - Belongs in R package ecosystem
+   - Legacy v1.x commands (126 lines) - Plugin install, sync, audit
+3. **Code Reduction**: 11,500 → ~7,400 lines (36% so far, target 61%)
+4. **ZSH-First**: Fast shell integration with Python core
 
-### Command Structure
+### Command Structure (v3.0.0)
 
 ```
-Primary: obs, obs switch, obs manage
-Actions: obs open, obs graph, obs stats
-AI: obs ai similar, obs ai analyze, obs ai duplicates, obs ai status
-R: obs r link, obs r log, obs r context
-Legacy: obs discover, obs tui, obs vaults (still work)
+PRIMARY: obs, obs stats, obs discover
+GRAPH: obs analyze
+AI: obs ai status/setup/test/similar/analyze/duplicates
+UTILITIES: obs help, obs version
 ```
 
-### ADHD-Friendly Design
+### ADHD-Friendly Design (Retained)
 
 - **One command**: Just type `obs`
 - **Smart defaults**: iCloud auto-detect, last-vault memory
 - **Progressive disclosure**: Simple help by default
 - **Visual hierarchy**: Emojis, clear categories
-- **Reduced cognitive load**: 15 → 12 commands (-20%)
+- **Reduced cognitive load**: 20+ → 10 commands (50% reduction)
 
-**See `OPTION_D_IMPLEMENTATION.md` for complete details.**
+**See `PROPOSAL-REFOCUS-2025-12-20.md` and `REFOCUS-SUMMARY.md` for complete details.**
 
 ## Additional Resources
 
