@@ -1,10 +1,10 @@
 priority: P1
-status: active - strategic refocus
-progress: 99
+status: active - v3.0.0 implementation
+progress: 25
 updated: 2025-12-20
-version: 2.2.0 (planning v3.0.0 - Proposal A)
-next: Begin Phase 7.1 Simplification (remove TUI, R-Dev, consolidate CLI)
-target: v3.0.0 - Pure Obsidian Knowledge Manager (6-8 weeks)
+version: 3.0.0-dev (Phase 7.1 complete)
+next: Phase 7.2 - AI-Powered Note Operations OR merge to main and tag v3.0.0-alpha
+target: v3.0.0 - Pure Obsidian Knowledge Manager (4-6 weeks remaining)
 
 ## 🎯 Strategic Refocus (2025-12-20)
 
@@ -37,9 +37,42 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager (6-8 weeks)
 
 ---
 
-## ✅ Just Completed (2025-12-20 - Strategic Planning)
+## ✅ Just Completed (2025-12-20 - Phase 7.1 Complete)
 
-### Comprehensive Project Refocus
+### Phase 7.1: Simplification (100% Complete)
+
+- ✅ **Part 1: Delete TUI** (1,701 lines removed) [Commit: d5f69b9]
+  - Removed `src/python/tui/` directory
+  - Removed Textual from requirements.txt
+  - Removed TUI tests
+  - Updated documentation
+- ✅ **Part 2: Delete R-Dev Integration** (307 lines removed) [Commit: fc7d03b]
+  - Removed R-Dev functions from src/obs.zsh
+  - Removed R-Dev tests
+  - Updated CLI help text
+- ✅ **Part 3: Consolidate CLI** (323 lines removed) [Commit: 6562e0e]
+  - 20+ commands → 10 focused commands
+  - Removed Option D commands (switch, open, manage, graph)
+  - Removed legacy v1.x commands (check, audit, sync, install, search, list)
+  - Added AI feature wrappers (similar, analyze, duplicates)
+  - Updated help text and version
+- ✅ **Part 4: Update Documentation** [Commits: 8c8bf81, eb6eb01, e1fd272, b3735e7]
+  - Updated README.md for v3.0.0 (version, features, commands, status)
+  - Updated CLAUDE.md (architecture, commands, line counts)
+  - Created MIGRATION.md (456-line comprehensive guide)
+  - Archived TUI guides to docs/archive/v2.x/
+  - Updated mkdocs.yml navigation
+
+**Results:**
+
+- **Code Reduction:** 2,331 lines removed (20% of original 11,500)
+- **Current Size:** ~7,400 lines (target: 4,500 lines / 61% reduction)
+- **Commands:** 20+ → 10 focused commands (50% reduction)
+- **Documentation:** Fully updated and archived
+- **All commits pushed to GitHub**
+
+### Comprehensive Project Refocus (Earlier Today)
+
 - ✅ **Analyzed entire dev-tools ecosystem** - Identified overlaps with zsh-configuration, aiterm
 - ✅ **Created 4 comprehensive proposals** (~24,000 words total)
   - PROPOSAL-REFOCUS-2025-12-20.md (10,000+ words, 4 proposals)
