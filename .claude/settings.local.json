@@ -54,7 +54,8 @@
       "Bash(npm test:*)",
       "Bash(obs version:*)",
       "Bash(git checkout:*)",
-      "WebFetch(domain:data-wise.github.io)"
+      "WebFetch(domain:data-wise.github.io)",
+      "Bash(obs:*)"
     ]
   }
 }
