@@ -2,22 +2,22 @@
 
 > **Active work items and immediate next steps**
 >
-> **Last Updated:** 2025-12-16
-> **Status:** 98% Complete | v2.2.0
+> **Last Updated:** 2025-12-20
+> **Status:** 99% Complete | v2.2.0 Released
 
 ---
 
 ## 🎯 High Priority (Do Next)
 
-### v2.1.0 Release Prep
-- [ ] **Test iCloud vault discovery** - User hasn't tested the new `d` key feature yet
-- [x] **Complete Quick Wins** - 2 remaining items
-  - [x] JSON export in statistics dashboard (press 'e' in stats TUI)
-  - [x] Timestamp formatting improvements (human-readable relative times)
-- [ ] **Final testing pass** - Run full test suite, manual TUI testing
-- [ ] **Create v2.1.0 release notes**
-- [ ] **Tag release** - `git tag v2.1.0`
-- [ ] **Publish to GitHub Pages**
+### v2.2.1 Test Quality Release (or v2.3)
+- [ ] **Fix test_note_explorer.py** - Convert mock data to Note domain objects (27 failures) [60-90 min]
+- [ ] **Fix test_graph_visualizer.py** - Update mock method calls (14 failures) [30-45 min]
+- [ ] **Fix remaining test failures** - vault_scanner (6), quick_wins (5), ai_client (1) [30 min]
+- [ ] **Target:** 440+/461 tests passing (95%+)
+- [ ] **Create v2.2.1 release** - Test quality improvements only
+
+**OR** skip to Phase 6:
+- [ ] **Start v2.3 Learning System** - User feedback collection and rule generation
 
 ### Documentation
 - [x] Organize docs/ structure (user/developer/planning/releases)
@@ -77,6 +77,20 @@
 ---
 
 ## ✅ Recently Completed
+
+### 2025-12-20
+- [x] **v2.2.0 Release**
+  - Verified GitHub Pages deployment (navigation, badges, features all correct)
+  - Created annotated git tag `v2.2.0` with comprehensive release notes
+  - Pushed tag to GitHub: https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v2.2.0
+  - Updated .STATUS, IDEAS.md, TODOS.md
+
+### 2025-12-17
+- [x] **Documentation Quality Improvements**
+  - Fixed version mismatch (v2.1.0 → v2.2.0)
+  - Added 9 orphan pages to MkDocs navigation
+  - Added 5 badges to README
+  - Deployed to GitHub Pages
 
 ### 2025-12-16
 - [x] **Phase 5: Multi-Provider AI Architecture (v2.2.0)**

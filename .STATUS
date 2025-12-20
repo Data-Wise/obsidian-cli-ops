@@ -1,11 +1,30 @@
 priority: P2
 status: active
-progress: 98
-updated: 2025-12-17
+progress: 99
+updated: 2025-12-20
 version: 2.2.0
-next: Verify GitHub Pages deployment shows new navigation
+next: Fix remaining test failures (63 tests) or start v2.3 Learning System
 
-## ✅ Just Completed (2025-12-17 - Documentation Fixes)
+## ✅ Just Completed (2025-12-20 - v2.2.0 Release)
+
+### v2.2.0 Release Complete
+- ✅ Verified GitHub Pages deployment at https://data-wise.github.io/obsidian-cli-ops/
+- ✅ Confirmed v2.2.0 content showing correctly (navigation, badges, features)
+- ✅ Created annotated git tag `v2.2.0` with comprehensive release notes
+- ✅ Pushed tag to GitHub (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v2.2.0)
+- ✅ **Result:** v2.2.0 officially released and publicly tagged
+
+## 🎯 Next Action
+
+**Choose one:**
+- **A)** Fix remaining test failures (398/461 passing → target 440+/461) [60-90 min] 🟡
+  - test_note_explorer.py: 27 failures (mock data conversion)
+  - test_graph_visualizer.py: 14 failures (mock method calls)
+  - Remaining: 22 failures (vault_scanner, quick_wins, ai_client)
+- **B)** Start v2.3 Learning System features from IDEAS.md [2+ hours] 🟡
+- **C)** Plan v2.2.1 patch release (test fixes only) [15 min] 🟢
+
+## ✅ Previous Session (2025-12-17 - Documentation Fixes)
 
 ### Documentation Quality Fixes
 - ✅ Fixed version mismatch in src/obs.zsh (v2.1.0 → v2.2.0)
@@ -16,13 +35,6 @@ next: Verify GitHub Pages deployment shows new navigation
 - ✅ Committed and pushed to dev branch
 - ✅ Merged dev into main and deployed to GitHub Pages
 - ✅ **Result:** Documentation site fully updated and deployed
-
-## 🎯 Next Action
-
-**Choose one:**
-- **A)** Verify GitHub Pages at https://data-wise.github.io/obsidian-cli-ops/ [2 min] 🟢
-- **B)** Create v2.2.0 git tag for the release [5 min] 🟢
-- **C)** Start v2.3 Learning System features from roadmap [30+ min] 🟡
 
 ## ✅ Previous Session (2025-12-16 - Test Suite Fixes)
 
