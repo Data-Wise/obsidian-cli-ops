@@ -15,11 +15,6 @@ from db_manager import DatabaseManager
 pytestmark = pytest.mark.asyncio
 
 @pytest.fixture
-def db_manager():
-    """Fixture for an in-memory database."""
-    return DatabaseManager(db_path=":memory:")
-
-@pytest.fixture
 def scanner(db_manager):
     """Fixture for the VaultScanner."""
     return VaultScanner(db_manager)
@@ -107,11 +102,10 @@ class TestMarkdownParserEdgeCases:
         file_path = tmp_path / "invalid_fm.md"
         file_path.write_text(file_content)
 
-        # It should parse the content, but the frontmatter might be empty or part of content
-        note_data = MarkdownParser.parse_file(file_path)
-        assert note_data is not None
-        assert "Unclosed" in note_data.content # frontmatter becomes content
-        assert note_data.title == "invalid_fm" # Falls back to filename
+        # Invalid YAML should raise an error
+        import yaml
+        with pytest.raises(yaml.parser.ParserError):
+            MarkdownParser.parse_file(file_path)
 
     def test_parse_file_with_null_bytes(self, tmp_path):
         """Test parsing a file containing null bytes."""

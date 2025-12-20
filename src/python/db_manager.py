@@ -9,6 +9,7 @@ and maintenance for the vault knowledge base.
 import sqlite3
 import hashlib
 import json
+import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict, List, Any
@@ -28,30 +29,53 @@ class DatabaseManager:
         """
         if db_path is None:
             db_path = Path.home() / '.config' / 'obs' / 'vault_db.sqlite'
+            self.db_path = db_path
+            self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        elif db_path == ":memory:":
+            self.db_path = ":memory:"
         else:
             db_path = Path(db_path)
+            self.db_path = db_path
+            self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
-        self.db_path = db_path
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        # For in-memory databases, keep a persistent connection
+        # (each new connection to :memory: creates a separate database)
+        self._persistent_conn = None
+        if self.db_path == ":memory:":
+            self._persistent_conn = sqlite3.connect(str(self.db_path))
+            self._persistent_conn.row_factory = sqlite3.Row
+            self._persistent_conn.execute("PRAGMA foreign_keys = ON")
 
         # Initialize database if it doesn't exist
-        if not self.db_path.exists():
+        if self.db_path != ":memory:" and isinstance(self.db_path, Path) and not self.db_path.exists():
             self.initialize_database()
 
     @contextmanager
     def get_connection(self):
         """Context manager for database connections."""
-        conn = sqlite3.connect(str(self.db_path))
-        conn.row_factory = sqlite3.Row  # Enable column access by name
-        conn.execute("PRAGMA foreign_keys = ON")  # Enable foreign keys
-        try:
-            yield conn
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            raise e
-        finally:
-            conn.close()
+        # For in-memory databases, reuse the persistent connection
+        if self._persistent_conn is not None:
+            try:
+                yield self._persistent_conn
+                self._persistent_conn.commit()
+            except Exception as e:
+                logging.exception("Database error occurred")
+                self._persistent_conn.rollback()
+                raise e
+        else:
+            # For file-based databases, create a new connection each time
+            conn = sqlite3.connect(str(self.db_path))
+            conn.row_factory = sqlite3.Row  # Enable column access by name
+            conn.execute("PRAGMA foreign_keys = ON")  # Enable foreign keys
+            try:
+                yield conn
+                conn.commit()
+            except Exception as e:
+                logging.exception("Database error occurred")
+                conn.rollback()
+                raise e
+            finally:
+                conn.close()
 
     def initialize_database(self):
         """Initialize database with schema."""
@@ -134,6 +158,57 @@ class DatabaseManager:
                 WHERE id = ?
             """, (vault_id,))
 
+    def search_notes(self, query: str, vault_id: Optional[str] = None, tags: List[str] = None, limit: int = 50) -> List[Dict]:
+        """
+        Search notes across vaults or within a specific vault/tags.
+
+        Args:
+            query: Search term (searches title only, as content is not stored)
+            vault_id: Optional specific vault ID to scope search
+            tags: Optional list of tags to filter by (OR logic for tags)
+            limit: Max results
+
+        Returns:
+            List of dicts with note info and vault_name
+        """
+        sql = """
+            SELECT n.id, n.title, n.path, n.modified_at, v.name as vault_name
+            FROM notes n
+            JOIN vaults v ON n.vault_id = v.id
+            WHERE 1=1
+        """
+        params = []
+
+        # Text search (Title only - content is not stored in DB)
+        if query:
+            sql += " AND n.title LIKE ?"
+            wildcard = f"%{query}%"
+            params.append(wildcard)
+
+        # Vault Scope
+        if vault_id:
+            sql += " AND n.vault_id = ?"
+            params.append(vault_id)
+
+        # Tag Filter
+        if tags:
+            # Subquery to find notes having ANY of the specified tags
+            placeholders = ','.join(['?'] * len(tags))
+            sql += f""" AND n.id IN (
+                SELECT nt.note_id 
+                FROM note_tags nt 
+                JOIN tags t ON nt.tag_id = t.id 
+                WHERE t.tag IN ({placeholders})
+            )"""
+            params.extend(tags)
+
+        sql += " ORDER BY n.modified_at DESC LIMIT ?"
+        params.append(limit)
+
+        with self.get_connection() as conn:
+            cursor = conn.execute(sql, tuple(params))
+            return [dict(row) for row in cursor.fetchall()]
+
     # ========================================================================
     # NOTE OPERATIONS
     # ========================================================================
@@ -201,17 +276,30 @@ class DatabaseManager:
         note_id = self._generate_id(f"{vault_id}:{path}")
         return self.get_note(note_id)
 
-    def list_notes(self, vault_id: Optional[str] = None) -> List[Dict]:
+    def list_notes(self, vault_id: Optional[str] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> List[Dict]:
         """List all notes, optionally filtered by vault."""
+        query = "SELECT * FROM notes"
+        params = []
+
+        if vault_id:
+            query += " WHERE vault_id = ?"
+            params.append(vault_id)
+        
+        query += " ORDER BY title"
+
+        if limit is not None:
+            query += " LIMIT ?"
+            params.append(limit)
+        elif offset is not None:
+            # SQLite requires LIMIT if OFFSET is used. -1 means no limit.
+            query += " LIMIT -1"
+        
+        if offset is not None:
+            query += " OFFSET ?"
+            params.append(offset)
+
         with self.get_connection() as conn:
-            if vault_id:
-                cursor = conn.execute("""
-                    SELECT * FROM notes WHERE vault_id = ? ORDER BY title
-                """, (vault_id,))
-            else:
-                cursor = conn.execute("""
-                    SELECT * FROM notes ORDER BY title
-                """)
+            cursor = conn.execute(query, tuple(params))
             return [dict(row) for row in cursor.fetchall()]
 
     def note_exists(self, vault_id: str, path: str) -> bool:
@@ -386,10 +474,17 @@ class DatabaseManager:
         """Get graph metrics for a note."""
         with self.get_connection() as conn:
             cursor = conn.execute("""
-                SELECT * FROM graph_metrics WHERE note_id = ?
+                SELECT gm.*, n.vault_id
+                FROM graph_metrics gm
+                JOIN notes n ON gm.note_id = n.id
+                WHERE gm.note_id = ?
             """, (note_id,))
             row = cursor.fetchone()
             return dict(row) if row else None
+
+    def get_note_metrics(self, note_id: str) -> Optional[Dict]:
+        """Alias for get_graph_metrics."""
+        return self.get_graph_metrics(note_id)
 
     def get_orphaned_notes(self, vault_id: Optional[str] = None, limit: Optional[int] = None) -> List[Dict]:
         """Get notes with no links."""

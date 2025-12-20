@@ -200,6 +200,9 @@ class VaultScanner:
         if not vault_path.exists():
             raise FileNotFoundError(f"Vault not found: {vault_path}")
 
+        if not vault_path.is_dir():
+            raise FileNotFoundError(f"Vault path is not a directory: {vault_path}")
+
         if vault_name is None:
             vault_name = vault_path.name
 
@@ -295,13 +298,18 @@ class VaultScanner:
 
         for dirpath, dirnames, filenames in os.walk(root_path):
             # Check if this directory has .obsidian subdirectory
-            if '.obsidian' in dirnames:
-                vaults.append(dirpath)
-                if verbose:
-                    print(f"   Found vault: {dirpath}")
+            try:
+                if '.obsidian' in dirnames:
+                    vaults.append(dirpath)
+                    if verbose:
+                        print(f"   Found vault: {dirpath}")
 
-                # Don't recurse into found vaults
-                dirnames.clear()
+                    # Don't recurse into found vaults
+                    dirnames.clear()
+            except PermissionError:
+                if verbose:
+                    print(f"   Permission denied: {dirpath}")
+                continue
 
         if verbose:
             print(f"\n✓ Found {len(vaults)} vault(s)")

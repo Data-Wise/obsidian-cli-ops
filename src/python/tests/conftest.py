@@ -1,55 +1,32 @@
 """
-Pytest configuration and fixtures for all tests.
+Pytest configuration and shared fixtures for TUI tests.
 
-Provides shared fixtures including test database initialization.
+This conftest.py ensures the src/python directory is on the Python path
+so that imports like `from db_manager import DatabaseManager` work correctly.
 """
-
-import pytest
-import sqlite3
-import os
+import sys
 from pathlib import Path
+import pytest
 
+# Add src/python to path for imports - MUST happen before any other imports
+_python_src = Path(__file__).parent.parent.resolve()
+if str(_python_src) not in sys.path:
+    sys.path.insert(0, str(_python_src))
+
+# Now we can import from the project
+# DO NOT import from src.python package here - it will fail due to relative imports
+# Tests should import directly: from db_manager import DatabaseManager
 
 @pytest.fixture
-def test_db(tmp_path):
+def db_manager():
     """
-    Create a test database with schema initialized.
+    Shared fixture for an in-memory database with schema initialized.
 
-    This fixture:
-    - Creates a temporary SQLite database
-    - Loads and executes the schema from schema/vault_db.sql
-    - Returns a DatabaseManager instance
-    - Cleans up automatically after the test
-
-    Args:
-        tmp_path: pytest's temporary directory fixture
-
-    Returns:
-        DatabaseManager: Configured database manager with initialized schema
+    This fixture creates a properly initialized DatabaseManager that can be
+    used across all test files without duplicating the initialization logic.
     """
-    # Create temp database file
-    db_path = tmp_path / "test.db"
-    conn = sqlite3.connect(str(db_path))
-
-    # Load schema from project root
-    schema_path = Path(__file__).parent.parent.parent.parent / "schema" / "vault_db.sql"
-
-    if not schema_path.exists():
-        raise FileNotFoundError(f"Schema file not found at {schema_path}")
-
-    # Read and execute schema
-    with open(schema_path, 'r') as f:
-        schema_sql = f.read()
-
-    conn.executescript(schema_sql)
-    conn.commit()
-    conn.close()
-
-    # Import and return DatabaseManager
     from db_manager import DatabaseManager
-    db_manager = DatabaseManager(str(db_path))
 
-    yield db_manager
-
-    # Cleanup is automatic with tmp_path
-    # DatabaseManager will close connections when garbage collected
+    db = DatabaseManager(db_path=":memory:")
+    db.initialize_database()
+    return db
