@@ -63,9 +63,11 @@ nav:
       - Configuration: configuration.md
       - Usage: usage.md
   - Features:
-      - v2.0 Features: v2.0.md
+      - v3.0 Features: v3.0.md
       - AI Setup Guide: ai-setup.md
-      - R Integration: r-dev.md
+      - Migration Guide: migration.md
+  - Archive:
+      - v2.x Archive: archive/v2.x.md
   - Developer:
       - Testing:
           - Overview: developer/testing/overview.md
