@@ -3,9 +3,20 @@ status: active
 progress: 99
 updated: 2025-12-20
 version: 2.2.0
-next: Fix remaining test failures (63 tests) or start v2.3 Learning System
+next: Start v2.3 Learning System or continue test improvements
 
-## ✅ Just Completed (2025-12-20 - v2.2.0 Release)
+## ✅ Just Completed (2025-12-20 - Test Infrastructure Fixes)
+
+### Python Test Suite Fixed (35/35 passing)
+- ✅ Fixed in-memory database persistence bug (critical architectural fix)
+  - SQLite `:memory:` creates new DB per connection
+  - Added `_persistent_conn` to DatabaseManager for in-memory databases
+  - File-based databases still use connection-per-operation
+- ✅ Fixed `search_notes()` to match schema (title-only search, no content column)
+- ✅ Added directory validation to VaultScanner (prevents file-as-vault bugs)
+- ✅ Centralized `db_manager` fixture in conftest.py (DRY principle)
+- ✅ Fixed API mismatch: `init_db()` → `initialize_database()`
+- ✅ **Result:** All Python tests passing (was 29/35, now 35/35) 🎉
 
 ### v2.2.0 Release Complete
 - ✅ Verified GitHub Pages deployment at https://data-wise.github.io/obsidian-cli-ops/
@@ -17,12 +28,9 @@ next: Fix remaining test failures (63 tests) or start v2.3 Learning System
 ## 🎯 Next Action
 
 **Choose one:**
-- **A)** Fix remaining test failures (398/461 passing → target 440+/461) [60-90 min] 🟡
-  - test_note_explorer.py: 27 failures (mock data conversion)
-  - test_graph_visualizer.py: 14 failures (mock method calls)
-  - Remaining: 22 failures (vault_scanner, quick_wins, ai_client)
-- **B)** Start v2.3 Learning System features from IDEAS.md [2+ hours] 🟡
-- **C)** Plan v2.2.1 patch release (test fixes only) [15 min] 🟢
+- **A)** Start v2.3 Learning System features from IDEAS.md [2+ hours] 🟡
+- **B)** Continue test quality improvements (Jest tests, integration tests) [60-90 min] 🟡
+- **C)** Plan v2.2.1 patch release (test fixes + any remaining improvements) [15 min] 🟢
 
 ## ✅ Previous Session (2025-12-17 - Documentation Fixes)
 
