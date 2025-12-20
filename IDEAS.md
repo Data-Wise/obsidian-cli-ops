@@ -5,6 +5,35 @@
 > **Last Updated:** 2025-12-20
 >
 > **Current Release:** v2.2.0 (Released 2025-12-20)
+>
+> **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager (see PROPOSAL-REFOCUS-2025-12-20.md)
+
+---
+
+## 🎯 Strategic Refocus (2025-12-20)
+
+### Proposal A: Pure Obsidian Knowledge Manager
+**Philosophy:** "Do one thing exceptionally well - manage Obsidian vaults"
+
+**Core Focus:**
+- Remove features NOT directly related to Obsidian vault management
+- Focus on AI-assisted note operations (refactor, merge, split, tag-suggest)
+- Eliminate overlap with existing dev-tools (zsh-configuration, aiterm)
+- Simplify codebase: 11,500 → ~4,500 lines (61% reduction)
+
+**What's Removed:**
+- ❌ TUI (1,701 lines) - too much code for limited value
+- ❌ R-Dev integration (500 lines) - belongs in R package ecosystem
+- ❌ Sync features - use Obsidian's native sync
+- ❌ Generic graph visualization - focus on actionable insights
+
+**What's Enhanced:**
+- ✅ AI-powered refactoring (`obs refactor <vault>`)
+- ✅ Intelligent note operations (merge, split, quality)
+- ✅ Tag and folder suggestions based on content
+- ✅ Vault health monitoring (orphans, broken links, structure)
+
+**See:** PROPOSAL-REFOCUS-2025-12-20.md for complete details
 
 ---
 
@@ -136,6 +165,168 @@ src/python/ai/
     ├── claude_cli.py    # High-quality analysis
     └── ollama.py        # Local, free, private
 ```
+
+---
+
+## 🎯 Phase 7: Proposal A Implementation (v3.0.0 - Planned)
+
+### Overview
+**Goal:** Transform obs into a laser-focused Obsidian vault manager with AI-powered note operations
+
+**Timeline:** 6-8 weeks (53-75 hours total)
+**Code Impact:** 11,500 → 4,500 lines (61% reduction)
+
+### Phase 7.1: Simplification (Week 1-2, 12-17 hours)
+
+**Remove Low-Value Features:**
+- [ ] **Delete TUI** (1,701 lines)
+  - Remove `src/python/tui/` directory
+  - Remove Textual dependency
+  - Update tests (remove TUI tests)
+  - Update documentation
+
+- [ ] **Delete R-Dev Integration** (500 lines)
+  - Remove R-Dev functions from `src/obs.zsh`
+  - Remove `src/python/r_dev_manager.py`
+  - Remove R-Dev tests
+  - Update CLI help
+
+- [ ] **Consolidate CLI** (ZSH-first approach)
+  - Simplify command structure (15+ → 8-10 commands)
+  - Remove redundant options
+  - Unify Python/ZSH CLI layers
+  - Update shell completion
+
+**Deliverables:**
+- Simplified codebase (~8,300 lines, 28% reduction)
+- 8-10 core commands only
+- All core tests still passing (95%+ pass rate)
+
+### Phase 7.2: AI-Powered Note Operations (Week 3-4, 20-28 hours)
+
+**New AI Features:**
+
+1. **`obs refactor <vault>`** - AI-powered vault reorganization
+   - Analyze entire vault structure
+   - Suggest folder reorganization based on topics
+   - Propose note consolidations
+   - Interactive approval workflow
+   - Estimated: 6-8 hours
+
+2. **`obs tag-suggest <note|vault>`** - Intelligent tag suggestions
+   - Analyze note content with AI
+   - Suggest relevant tags based on themes
+   - Show tag co-occurrence patterns
+   - Batch apply suggested tags
+   - Estimated: 4-6 hours
+
+3. **`obs quality <note|vault>`** - Note quality assessment
+   - Check completeness (word count, structure)
+   - Identify missing backlinks
+   - Suggest improvements (headings, examples)
+   - Quality score with explanations
+   - Estimated: 4-6 hours
+
+4. **`obs merge-suggest <vault>`** - Find merge candidates
+   - Identify duplicate or highly similar notes
+   - Suggest intelligent merges
+   - Preview merged content
+   - Interactive merge workflow
+   - Estimated: 6-8 hours
+
+**Deliverables:**
+- 4 new AI-powered commands
+- ~1,200 lines of new code
+- 40+ new tests
+- Comprehensive documentation
+
+### Phase 7.3: Vault Health & Polish (Week 5-6, 15-20 hours)
+
+**Health Monitoring:**
+- [ ] **`obs health <vault>`** - Vault health dashboard
+  - Orphan percentage
+  - Broken link ratio
+  - Tag consistency score
+  - Average note connectivity
+  - Folder structure assessment
+
+**CLI Enhancements:**
+- [ ] Rich output formatting (tables, colors, progress bars)
+- [ ] JSON export for all commands (`--json` flag)
+- [ ] Interactive prompts for destructive operations
+- [ ] Better error messages with recovery suggestions
+
+**Documentation:**
+- [ ] Comprehensive CLI guide with examples
+- [ ] AI features tutorial
+- [ ] Migration guide from v2.x
+- [ ] Updated architecture docs
+
+**Deliverables:**
+- Production-ready v3.0.0
+- Complete documentation
+- Migration guide for users
+
+### Phase 7.4: Testing & Release (Week 7-8, 6-10 hours)
+
+**Testing:**
+- [ ] Full test suite passing (95%+ pass rate)
+- [ ] Manual testing of all AI features
+- [ ] Performance testing with large vaults
+- [ ] Cross-platform testing (macOS, Linux)
+
+**Release:**
+- [ ] Create v3.0.0 release notes
+- [ ] Update GitHub Pages documentation
+- [ ] Create git tag and GitHub release
+- [ ] Announce on GitHub Discussions
+
+**Success Metrics:**
+- 61% code reduction achieved
+- All AI features working
+- <5 bugs in first week
+- Positive user feedback
+
+---
+
+## 🔮 Future: Proposal D Features (v3.1+ - Deferred)
+
+**Note:** These features from Proposal D (Hub Integration) are deferred to future releases. Proposal A focuses on pure Obsidian management first.
+
+### Hub Integration (Future v3.1.0)
+- [ ] **`obs hub sync`** - Bi-directional sync with project-hub
+  - Sync .STATUS files to Obsidian dashboard note
+  - Extract action items from weekly notes
+  - Update project-hub from Obsidian TODOs
+
+- [ ] **`obs hub export <project>`** - Export project notes to hub
+  - Generate .STATUS from project notes
+  - Extract deadlines and milestones
+  - Create project summary
+
+- [ ] **`obs hub import <vault>`** - Import hub data to vault
+  - Create dashboard note from all .STATUS files
+  - Import project tasks as Obsidian tasks
+  - Link notes to project-hub projects
+
+**Estimated Effort:** 8-12 hours (future release)
+
+### Cross-Vault Operations (Future v3.2.0)
+- [ ] **`obs global-search <query>`** - Search across all vaults
+- [ ] **`obs cross-link <vault1> <vault2>`** - Find related notes across vaults
+- [ ] **`obs cross-merge <vault1> <vault2>`** - Merge similar cross-vault notes
+
+**Estimated Effort:** 6-8 hours (future release)
+
+### Advanced AI Features (Future v3.3.0)
+- [ ] **`obs watch <vault>`** - Real-time improvement suggestions
+- [ ] **`obs daily-digest <vault>`** - Daily vault health digest
+- [ ] **`obs batch-tag <vault>`** - Batch tag all untagged notes
+- [ ] **`obs batch-link <vault>`** - Add missing backlinks automatically
+
+**Estimated Effort:** 12-16 hours (future release)
+
+**See:** IMPLEMENTATION-ROADMAP.md and PROPOSAL-REFOCUS-2025-12-20.md for complete details
 
 ---
 

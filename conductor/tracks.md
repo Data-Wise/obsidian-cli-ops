@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Complete the Note Explorer and Graph Visualizer TUI screens to finalize the v2.1.0 release.
+## [x] Track: Complete the Note Explorer and Graph Visualizer TUI screens to finalize the v2.1.0 release.
 *Link: [./tracks/tui_finalization_20251218/](./tracks/tui_finalization_20251218/)*

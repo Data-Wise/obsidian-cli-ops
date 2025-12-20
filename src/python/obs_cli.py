@@ -13,11 +13,19 @@ import argparse
 from pathlib import Path
 from typing import Optional
 
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich import box
+
 from db_manager import DatabaseManager
 from core.vault_manager import VaultManager
 from core.graph_analyzer import GraphAnalyzer
 from core.exceptions import VaultNotFoundError, ScanError, AnalysisError
 from utils import format_relative_time
+
+# Rich console for formatted output
+console = Console()
 
 
 class ObsCLI:
@@ -144,7 +152,7 @@ class ObsCLI:
 
     def stats(self, vault_id: Optional[str] = None):
         """
-        Show database statistics.
+        Show database statistics with Rich panels.
 
         Args:
             vault_id: Optional vault ID to filter
@@ -152,64 +160,103 @@ class ObsCLI:
         if vault_id:
             vault = self.db.get_vault(vault_id)
             if not vault:
-                print(f"❌ Vault not found: {vault_id}")
+                console.print(f"[red]❌ Vault not found: {vault_id}[/]")
                 sys.exit(1)
 
-            print(f"\n📊 Vault Statistics: {vault['name']}")
-            print(f"   Path: {vault['path']}")
-            print(f"   Last scanned: {format_relative_time(vault.get('last_scanned'))}")
-
             notes = self.db.list_notes(vault_id)
-            print(f"\n   Notes: {len(notes)}")
-
-            # Count links
-            link_count = 0
-            for note in notes:
-                link_count += len(self.db.get_outgoing_links(note['id']))
-            print(f"   Links: {link_count}")
-
-            # Tag stats
+            link_count = sum(len(self.db.get_outgoing_links(note['id'])) for note in notes)
             tag_stats = self.db.get_tag_stats()
-            vault_tags = [t for t in tag_stats]  # TODO: Filter by vault
-            print(f"   Tags: {len(vault_tags)}")
 
-            # Graph stats
+            # Graph health
             orphans = self.db.get_orphaned_notes(vault_id)
-            hubs = self.db.get_hub_notes(vault_id, limit=1)
+            hubs = self.db.get_hub_notes(vault_id, limit=10)
             broken = self.db.get_broken_links(vault_id)
+            broken_count = sum(b['broken_count'] for b in broken)
 
-            print(f"\n   Orphaned notes: {len(orphans)}")
-            print(f"   Hub notes (>10 links): {len(hubs)}")
-            print(f"   Broken links: {sum(b['broken_count'] for b in broken)}")
+            # Build stats content
+            stats_content = f"""[bold]Path:[/] {vault['path']}
+[bold]Last Scanned:[/] {format_relative_time(vault.get('last_scanned'))}
+
+[cyan]Content[/]
+  Notes: [bold]{len(notes)}[/]
+  Links: [bold]{link_count}[/]
+  Tags: [bold]{len(tag_stats)}[/]
+
+[cyan]Graph Health[/]
+  Orphaned: [{'yellow' if len(orphans) > 0 else 'green'}]{len(orphans)}[/]
+  Hubs (>10 links): [green]{len(hubs)}[/]
+  Broken Links: [{'red' if broken_count > 0 else 'green'}]{broken_count}[/]"""
+
+            panel = Panel(
+                stats_content,
+                title=f"📊 {vault['name']}",
+                border_style="cyan",
+                box=box.ROUNDED,
+            )
+            console.print()
+            console.print(panel)
+            console.print()
 
         else:
             # Global stats
-            stats = self.db.get_stats()
-            print("\n📊 Database Statistics:")
-            print(f"   Vaults: {stats['vaults']}")
-            print(f"   Notes: {stats['notes']}")
-            print(f"   Links: {stats['links']}")
-            print(f"   Tags: {stats['tags']}")
-            print(f"   Orphaned notes: {stats['orphaned_notes']}")
-            print(f"   Broken links: {stats['broken_links']}")
+            db_stats = self.db.get_stats()
+
+            stats_content = f"""[cyan]Overview[/]
+  Vaults: [bold]{db_stats['vaults']}[/]
+  Notes: [bold]{db_stats['notes']}[/]
+  Links: [bold]{db_stats['links']}[/]
+  Tags: [bold]{db_stats['tags']}[/]
+
+[cyan]Graph Health[/]
+  Orphaned Notes: [{'yellow' if db_stats['orphaned_notes'] > 0 else 'green'}]{db_stats['orphaned_notes']}[/]
+  Broken Links: [{'red' if db_stats['broken_links'] > 0 else 'green'}]{db_stats['broken_links']}[/]"""
+
+            panel = Panel(
+                stats_content,
+                title="📊 Database Statistics",
+                border_style="cyan",
+                box=box.ROUNDED,
+            )
+            console.print()
+            console.print(panel)
+            console.print()
 
     def list_vaults(self):
-        """List all vaults in database."""
+        """List all vaults in database with Rich table."""
         vaults = self.vault_manager.list_vaults()
 
         if not vaults:
-            print("No vaults in database.")
-            print("\nUse 'obs discover' to find and scan vaults.")
+            console.print("[dim]No vaults in database.[/]")
+            console.print("\n[cyan]Use 'obs discover' to find and scan vaults.[/]")
             return
 
-        print("\n📚 Vaults:\n")
+        table = Table(
+            title="📚 Obsidian Vaults",
+            box=box.ROUNDED,
+            header_style="bold cyan",
+            title_style="bold white",
+        )
+        table.add_column("Status", style="dim", width=10)
+        table.add_column("Name", style="bold")
+        table.add_column("Notes", justify="right")
+        table.add_column("Links", justify="right")
+        table.add_column("Last Scanned", style="dim")
+        table.add_column("ID", style="dim")
+
         for vault in vaults:
-            print(f"  {vault.name}")
-            print(f"    Path: {vault.path}")
-            print(f"    Notes: {vault.note_count}")
-            print(f"    Last scanned: {format_relative_time(vault.last_scanned)}")
-            print(f"    ID: {vault.id}")
-            print("")
+            status = "[green]✓ Scanned[/]" if vault.last_scanned else "[yellow]⊘ Pending[/]"
+            table.add_row(
+                status,
+                vault.name,
+                str(vault.note_count),
+                str(vault.link_count),
+                format_relative_time(vault.last_scanned),
+                vault.id[:8] if vault.id else "-"
+            )
+
+        console.print()
+        console.print(table)
+        console.print()
 
     def _print_scan_result(self, result, verbose: bool = False):
         """
@@ -327,12 +374,6 @@ def main():
     duplicates_parser.add_argument('--limit', type=int, default=50, help='Max duplicate groups')
     duplicates_parser.add_argument('--provider', help='Use specific AI provider')
 
-    # tui command
-    tui_parser = subparsers.add_parser('tui',
-                                       help='Launch interactive TUI')
-    tui_parser.add_argument('--vault-id', type=int, help='Open specific vault')
-    tui_parser.add_argument('--screen', choices=['vaults', 'notes', 'graph', 'stats'],
-                           help='Open specific screen')
 
     args = parser.parse_args()
 
@@ -516,22 +557,6 @@ def main():
             else:
                 ai_parser.print_help()
 
-        elif args.command == 'tui':
-            # Import TUI app only when needed
-            try:
-                from tui.app import ObsidianTUI
-
-                app = ObsidianTUI()
-                app.run()
-
-            except ImportError as e:
-                print(f"❌ Error: TUI dependencies not available")
-                print(f"   Please ensure 'textual' is installed:")
-                print(f"   pip install textual")
-                sys.exit(1)
-            except Exception as e:
-                print(f"❌ Error launching TUI: {e}")
-                sys.exit(1)
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")

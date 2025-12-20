@@ -9,7 +9,7 @@ other presentation layer.
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Callable, Coroutine, Dict
 import time
 
 # Add parent directory to path for imports
@@ -219,19 +219,14 @@ class VaultManager:
             largest_component_size=stats_row.get('largest_component_size', 0),
         )
 
-    def get_notes(
-        self,
-        vault_id: str,
-        limit: Optional[int] = None,
-        offset: int = 0
-    ) -> List[Note]:
+    def get_notes(self, vault_id: str, limit: Optional[int] = None, offset: Optional[int] = None) -> List[Note]:
         """
-        Get notes from a vault.
+        Get all notes in a vault.
 
         Args:
             vault_id: Vault ID
-            limit: Maximum number of notes to return
-            offset: Number of notes to skip
+            limit: Max results
+            offset: Pagination offset
 
         Returns:
             List of Note objects
@@ -239,41 +234,62 @@ class VaultManager:
         rows = self.db.list_notes(vault_id, limit=limit, offset=offset)
         return [Note.from_db_row(dict(row)) for row in rows]
 
+    def search_notes(self, query: str, vault_id: Optional[str] = None, tags: List[str] = None) -> List[Dict]:
+        """
+        Search notes and generate context snippets.
+
+        Args:
+            query: Search term
+            vault_id: Optional vault ID
+            tags: Optional tags
+
+        Returns:
+            List of dicts with note info and 'snippet' field
+        """
+        results = self.db.search_notes(query, vault_id, tags)
+        processed = []
+        
+        lower_query = query.lower()
+        
+        for row in results:
+            content = row.get('content', '')
+            snippet = ""
+            
+            if content:
+                # Find query position (simple case-insensitive find)
+                idx = content.lower().find(lower_query)
+                if idx != -1:
+                    # Capture context around match
+                    start = max(0, idx - 40)
+                    end = min(len(content), idx + len(query) + 40)
+                    snippet = "..." + content[start:end].replace('\n', ' ') + "..."
+                else:
+                    # If match was in title, just show start of content
+                    snippet = content[:80].replace('\n', ' ') + "..."
+            
+            row['snippet'] = snippet
+            # Don't send full content to UI to save memory
+            if len(content) > 1000: 
+                row['content'] = content[:100] + "..." 
+            
+            processed.append(row)
+            
+        return processed
+
     def get_note(self, note_id: str) -> Optional[Note]:
         """
-        Get a specific note by ID.
+        Get note by ID.
 
         Args:
             note_id: Note ID
 
         Returns:
-            Note object or None if not found
+            Note object or None
         """
         row = self.db.get_note(note_id)
         if not row:
             return None
         return Note.from_db_row(dict(row))
-
-    def search_notes(
-        self,
-        vault_id: str,
-        query: str,
-        limit: Optional[int] = None
-    ) -> List[Note]:
-        """
-        Search notes by title or content.
-
-        Args:
-            vault_id: Vault ID
-            query: Search query
-            limit: Maximum number of results
-
-        Returns:
-            List of matching Note objects
-        """
-        # This would use a search method in DatabaseManager
-        # For now, return empty list (to be implemented)
-        return []
 
     def delete_vault(self, vault_id: str) -> bool:
         """

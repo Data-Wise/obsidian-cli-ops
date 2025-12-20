@@ -6,6 +6,113 @@ Shared helpers used across CLI, TUI, and core layers.
 
 from datetime import datetime
 from typing import Optional, Union
+import logging
+import os
+from pathlib import Path
+import subprocess
+import platform
+
+
+def copy_to_clipboard(text: str) -> bool:
+    """
+    Copy text to system clipboard using native tools.
+    
+    Args:
+        text: Text to copy
+        
+    Returns:
+        True if successful, False otherwise
+    """
+    system = platform.system()
+    try:
+        if system == 'Darwin':  # macOS
+            process = subprocess.Popen(['pbcopy'], stdin=subprocess.PIPE)
+            process.communicate(text.encode('utf-8'))
+            return process.returncode == 0
+            
+        elif system == 'Windows':
+            process = subprocess.Popen(['clip'], stdin=subprocess.PIPE, shell=True)
+            process.communicate(text.encode('utf-8'))
+            return process.returncode == 0
+            
+        elif system == 'Linux':
+            # Try wl-copy first (Wayland)
+            try:
+                process = subprocess.Popen(['wl-copy'], stdin=subprocess.PIPE)
+                process.communicate(text.encode('utf-8'))
+                return process.returncode == 0
+            except FileNotFoundError:
+                pass
+                
+            # Try xclip (X11)
+            try:
+                process = subprocess.Popen(['xclip', '-selection', 'clipboard'], stdin=subprocess.PIPE)
+                process.communicate(text.encode('utf-8'))
+                return process.returncode == 0
+            except FileNotFoundError:
+                pass
+                
+            # Try xsel (X11)
+            try:
+                process = subprocess.Popen(['xsel', '--clipboard', '--input'], stdin=subprocess.PIPE)
+                process.communicate(text.encode('utf-8'))
+                return process.returncode == 0
+            except FileNotFoundError:
+                pass
+
+    except Exception as e:
+        logging.error(f"Clipboard copy failed: {e}")
+        
+    return False
+
+
+def get_log_file_path() -> Path:
+    """Get the path to the log file."""
+    config_dir = Path.home() / ".config" / "obs"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    return config_dir / "obs.log"
+
+
+from logging.handlers import RotatingFileHandler
+
+def setup_logging(level=logging.INFO) -> Path:
+    """
+    Configure logging to file with rotation and return the log file path.
+    
+    Args:
+        level: Logging level (default: logging.INFO)
+        
+    Returns:
+        Path to the log file
+    """
+    log_file = get_log_file_path()
+    
+    # Create a rotating file handler
+    # Max size: 5MB, Backup count: 3
+    handler = RotatingFileHandler(
+        log_file,
+        maxBytes=5*1024*1024,
+        backupCount=3,
+        encoding='utf-8'
+    )
+    
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - [%(levelname)s] - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    handler.setFormatter(formatter)
+    
+    # Configure root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+    
+    # Remove existing handlers to avoid duplicates
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+        
+    root_logger.addHandler(handler)
+    
+    return log_file
 
 
 def format_relative_time(timestamp: Optional[Union[datetime, str]]) -> str:

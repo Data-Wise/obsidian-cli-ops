@@ -8,16 +8,17 @@
 
 **An Intelligent Command-Line Tool for Multi-Vault Obsidian Knowledge Management.**
 
-`obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis and an interactive TUI interface.
+`obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis.
 
 **Current Version**: 2.2.0
 
 ## 🚀 Quick Start
 
-To launch the interactive TUI application:
-
 ```bash
-./run_tui.sh
+obs                    # Open last vault
+obs switch             # Vault switcher
+obs scan <vault>       # Scan vault
+obs stats <vault>      # Show statistics
 ```
 
 ## ✨ Features
@@ -42,12 +43,7 @@ To launch the interactive TUI application:
 - **Obsidian-Style Commands**: Works exactly like the official Obsidian app
 - **iCloud-First**: Auto-detects standard Obsidian iCloud location
 - **Last-Vault Tracking**: Remembers where you were (like Obsidian app)
-- **Full-Screen TUI**: Beautiful terminal UI with Textual framework
-- **Vault Browser**: Interactive vault selection with real-time statistics
-- **Note Explorer**: Search, filter, and preview notes with metadata
-- **Graph Visualizer**: ASCII art graph with hub/orphan detection
-- **Statistics Dashboard**: Tag analytics, link distribution, scan history
-- **Keyboard Navigation**: Vim-style keys, arrow keys, and shortcuts
+- **Rich CLI Output**: Beautiful terminal output with tables, colors, progress bars
 - **ADHD-Friendly**: One command, smart defaults, progressive disclosure
 
 ### 🤖 v2.2: AI-Powered Features (NEW!)
@@ -133,15 +129,9 @@ obs r log result.png
 - **[Full Documentation](https://data-wise.github.io/obsidian-cli-ops/)** - Published guides and API reference
 - **[CLAUDE.md](CLAUDE.md)** - Developer guide for contributing
 
-### TUI Navigation (New to Vim?)
-- **[Vim Tutorial](docs/user/guides/tui/vim-tutorial.md)** - Complete beginner's guide to vim navigation
-- **[Quick Reference](docs/user/guides/tui/quick-reference.md)** - Detailed keyboard shortcuts reference
-- **[Cheat Sheet](docs/user/guides/tui/cheat-sheet.txt)** - Printable one-page cheat sheet
-
 ### User Guides
 - **[Unified Command Guide](docs/user/guides/unified-command.md)** - Using the unified `obs` command
 - **[AI Setup Guide](docs/user/guides/ai-setup.md)** - Setting up AI features (100% local)
-- **[Keyboard Shortcuts](docs/user/guides/keyboard-shortcuts.md)** - All TUI shortcuts
 
 ### Developer Docs
 - **[Architecture](docs/developer/architecture.md)** - Three-layer system design

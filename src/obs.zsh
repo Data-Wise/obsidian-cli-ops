@@ -180,7 +180,7 @@ obs_help() {
 
     if [[ "$show_all" == "true" ]]; then
         echo "⚡ QUICK ACTIONS"
-        echo "  obs open <name>           Open specific vault in TUI"
+        echo "  obs open <name>           Open specific vault"
         echo "  obs graph [vault]         Show graph visualization"
         echo "  obs stats [vault]         Show statistics"
         echo "  obs search <query>        Search across all vaults"
@@ -622,39 +622,10 @@ obs_ai() {
     esac
 }
 
-# --- TUI Commands (v2.0) ---
-
-obs_tui() {
-    local python_cli=$(_get_python_cli) || return 1
-
-    _log_verbose "Launching TUI"
-
-    # Build command
-    local cmd=("$python_cli" "tui")
-
-    # Add flags
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            --vault-id)
-                cmd+=(--vault-id "$2")
-                # Save last vault
-                _save_last_vault "$2"
-                shift 2
-                ;;
-            --screen)
-                cmd+=(--screen "$2")
-                shift 2
-                ;;
-            *)
-                shift
-                ;;
-        esac
-    done
-
-    /opt/homebrew/bin/python3 "${cmd[@]}"
-}
-
 # --- Option D Commands ---
+# NOTE: These commands currently call TUI which has been removed.
+# They will be reimplemented for CLI-only operation in Phase 7.1.3 (CLI consolidation).
+# For now, they will fail with "unknown command: tui" error.
 
 obs_switch() {
     # Vault switcher (like Obsidian's "Open another vault")
@@ -875,10 +846,6 @@ obs() {
             ;;
         "stats")
             obs_stats "$@"
-            return $?
-            ;;
-        "tui")
-            obs_tui "$@"
             return $?
             ;;
 

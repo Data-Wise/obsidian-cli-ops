@@ -70,17 +70,37 @@ Complete guides for navigating the Obsidian CLI Ops Terminal UI (TUI) using vim-
 
 ```bash
 # Launch TUI
-obs graph tui
+obs
 
 # Basic navigation
 j j j           # Move down (or use arrow keys)
 Enter           # Open something
 Esc             # Go back
 q               # Quit
-
-# Discover vaults (new feature!)
-d               # Find vaults in iCloud Obsidian
 ```
+
+## ✨ New in v2.2.0: ADHD-Friendly Dashboard
+
+We've redesigned the TUI to be more focused and navigable.
+
+### 1. Vault-First Workflow
+The app now opens directly to the **Vault Browser**.
+1. Select a vault.
+2. You land on the **Vault Dashboard**.
+3. Choose your task (Notes, Graph, Stats).
+
+### 2. Global Navigation Keys
+Jump anywhere instantly with these keys:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `h` | **Home** | Go to Vault Dashboard |
+| `v` | **Vaults** | Switch Vault / Open Browser |
+| `n` | **Notes** | Open Note Explorer |
+| `g` | **Graph** | Open Graph Visualizer |
+| `s` | **Stats** | Open Statistics |
+| `l` | **Logs** | View Error Logs (New!) |
+| `?` | **Help** | Show Key Bindings |
 
 ---
 

@@ -1,11 +1,62 @@
-priority: P2
-status: active
+priority: P1
+status: active - strategic refocus
 progress: 99
 updated: 2025-12-20
-version: 2.2.0
-next: Start v2.3 Learning System or continue test improvements
+version: 2.2.0 (planning v3.0.0 - Proposal A)
+next: Begin Phase 7.1 Simplification (remove TUI, R-Dev, consolidate CLI)
+target: v3.0.0 - Pure Obsidian Knowledge Manager (6-8 weeks)
 
-## ✅ Just Completed (2025-12-20 - Test Infrastructure Fixes)
+## 🎯 Strategic Refocus (2025-12-20)
+
+### Decision: Proposal A - Pure Obsidian Knowledge Manager
+
+**Rationale:**
+- **Eliminate overlap** with existing dev-tools (zsh-configuration, aiterm)
+- **Laser focus** on Obsidian vault management + AI-powered note operations
+- **Simplify** codebase: 11,500 → 4,500 lines (61% reduction)
+- **Add unique value** with AI features: refactor, tag-suggest, quality, merge-suggest
+
+**What's Removed (v3.0.0):**
+- ❌ TUI (1,701 lines) - Limited value for code invested
+- ❌ R-Dev integration (500 lines) - Belongs in R package ecosystem
+- ❌ Sync features - Use Obsidian's native sync
+- ❌ Generic graph viz - Focus on actionable insights
+
+**What's Enhanced (v3.0.0):**
+- ✅ AI-powered vault refactoring
+- ✅ Intelligent note operations (merge, split, quality)
+- ✅ Tag and folder suggestions
+- ✅ Vault health monitoring
+
+**Future (v3.1+):**
+- Hub integration (Proposal D features deferred)
+- Cross-vault operations
+- Advanced AI features (watch mode, batch operations)
+
+**See:** PROPOSAL-REFOCUS-2025-12-20.md, IDEAS.md, TODOS.md for complete details
+
+---
+
+## ✅ Just Completed (2025-12-20 - Strategic Planning)
+
+### Comprehensive Project Refocus
+- ✅ **Analyzed entire dev-tools ecosystem** - Identified overlaps with zsh-configuration, aiterm
+- ✅ **Created 4 comprehensive proposals** (~24,000 words total)
+  - PROPOSAL-REFOCUS-2025-12-20.md (10,000+ words, 4 proposals)
+  - ECOSYSTEM-ANALYSIS.md (6,000+ words, ecosystem mapping)
+  - IMPLEMENTATION-ROADMAP.md (8,000+ words, 3-phase plan)
+  - REFOCUS-SUMMARY.md (2,000+ words, quick reference)
+- ✅ **Selected Proposal A** - Pure Obsidian Knowledge Manager
+  - CLI-first approach (ZSH-first architecture)
+  - Remove TUI (1,701 lines), R-Dev (500 lines)
+  - Add AI features: refactor, tag-suggest, quality, merge-suggest
+  - Target: 61% code reduction (11,500 → 4,500 lines)
+- ✅ **Updated planning documents**
+  - IDEAS.md - Added Phase 7 (Proposal A) + future features (Proposal D)
+  - TODOS.md - Updated with Phase 7.1 and 7.2 tasks
+  - .STATUS - Updated with strategic direction and metrics
+  - PHASE1-IMPLEMENTATION-PLAN.md - Created implementation guide
+- ✅ **Result:** Clear roadmap for v3.0.0 with focused scope and unique value proposition
 
 ### Python Test Suite Fixed (35/35 passing)
 - ✅ Fixed in-memory database persistence bug (critical architectural fix)

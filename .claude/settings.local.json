@@ -48,7 +48,13 @@
       "Bash(git stash:*)",
       "Bash(PYTHONPATH=/Users/dt/projects/dev-tools/obsidian-cli-ops/src/python:$PYTHONPATH python3 -m pytest:*)",
       "Bash(npm run test:py:*)",
-      "Bash(PYTHONPATH=src/python pytest:*)"
+      "Bash(PYTHONPATH=src/python pytest:*)",
+      "Bash(/opt/homebrew/bin/python3 -m mkdocs build:*)",
+      "Bash(mkdocs build:*)",
+      "Bash(npm test:*)",
+      "Bash(obs version:*)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:data-wise.github.io)"
     ]
   }
 }
