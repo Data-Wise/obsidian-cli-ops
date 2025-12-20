@@ -18,7 +18,7 @@
 
 # --- Load Configuration ---
 CONFIG_FILE="$HOME/.config/obs/config"
-MAP_FILE="$HOME/.config/obs/project_map.json"
+# MAP_FILE removed (R-Dev integration removed in v3.0.0)
 LAST_VAULT_FILE="$HOME/.config/obs/last_vault"
 
 # iCloud Obsidian location (default root - Option D)
@@ -117,43 +117,6 @@ _get_plugin_url() {
     fi
 
     echo "$repo"
-}
-
-_get_r_root() {
-    # Climb up directories to find DESCRIPTION or .Rproj
-    local d="$PWD"
-    _log_verbose "Searching for R project root starting from: $PWD"
-    while [[ "$d" != "/" ]]; do
-        _log_verbose "Checking directory: $d"
-        if [[ -f "$d/DESCRIPTION" ]] || compgen -G "$d/*.Rproj" > /dev/null; then
-            _log_verbose "Found R project root: $d"
-            echo "$d"
-            return 0
-        fi
-        d=$(dirname "$d")
-    done
-    _log_verbose "No R project root found"
-    return 1
-}
-
-_get_mapped_path() {
-    # Returns the Obsidian path relative to OBS_ROOT for the current R project
-    local r_root=$1
-    _log_verbose "Looking up mapping for: $r_root"
-    if [[ ! -f "$MAP_FILE" ]]; then
-        _log_verbose "Mapping file not found: $MAP_FILE"
-        echo ""
-        return 1
-    fi
-
-    # Use jq to lookup the path. We assume the map keys are absolute paths to R projects
-    local obs_path=$(jq -r --arg p "$r_root" '.[$p] // empty' "$MAP_FILE")
-    if [[ -n "$obs_path" ]]; then
-        _log_verbose "Found mapping: $r_root -> $obs_path"
-    else
-        _log_verbose "No mapping found for: $r_root"
-    fi
-    echo "$obs_path"
 }
 
 # --- Subcommands ---
@@ -345,151 +308,6 @@ obs_list() {
     else
         _log "INFO" "R Project Mappings: 0 (no mapping file)"
     fi
-}
-
-# --- R-Dev Subcommands ---
-
-obs_r_dev() {
-    local subcmd=$1
-    shift
-
-    # 1. LINK
-    if [[ "$subcmd" == "link" ]]; then
-        local obs_folder=$1
-        local r_root=$(_get_r_root)
-        if [[ -z "$r_root" ]]; then _log "ERROR" "Not inside an R Project (no DESCRIPTION/.Rproj)."; return 1; fi
-        if [[ ! -d "$OBS_ROOT/$obs_folder" ]]; then _log "ERROR" "Obsidian folder not found: $OBS_ROOT/$obs_folder"; return 1; fi
-
-        # Init map file if needed
-        if [[ ! -f "$MAP_FILE" ]]; then echo "{}" > "$MAP_FILE"; fi
-
-        # Update JSON
-        local temp=$(mktemp)
-        jq --arg k "$r_root" --arg v "$obs_folder" '.[$k] = $v' "$MAP_FILE" > "$temp" && mv "$temp" "$MAP_FILE"
-        _log "SUCCESS" "Linked '$r_root' -> '$obs_folder'"
-        return 0
-    fi
-
-    # 1b. UNLINK
-    if [[ "$subcmd" == "unlink" ]]; then
-        local r_root=$(_get_r_root)
-        if [[ -z "$r_root" ]]; then _log "ERROR" "Not inside an R Project (no DESCRIPTION/.Rproj)."; return 1; fi
-
-        if [[ ! -f "$MAP_FILE" ]]; then
-            _log "WARN" "No mapping file exists."
-            return 0
-        fi
-
-        # Check if mapping exists
-        local current_mapping=$(_get_mapped_path "$r_root")
-        if [[ -z "$current_mapping" ]]; then
-            _log "WARN" "Project is not linked."
-            return 0
-        fi
-
-        # Remove from JSON
-        local temp=$(mktemp)
-        jq --arg k "$r_root" 'del(.[$k])' "$MAP_FILE" > "$temp" && mv "$temp" "$MAP_FILE"
-        _log "SUCCESS" "Unlinked '$r_root' from '$current_mapping'"
-        return 0
-    fi
-
-    # 1c. STATUS
-    if [[ "$subcmd" == "status" ]]; then
-        local r_root=$(_get_r_root)
-        if [[ -z "$r_root" ]]; then
-            _log "ERROR" "Not inside an R Project (no DESCRIPTION/.Rproj)."
-            return 1
-        fi
-
-        _log "INFO" "R Project Status"
-        echo ""
-        echo "R Project Root: $r_root"
-
-        if [[ ! -f "$MAP_FILE" ]]; then
-            echo "Mapping Status: ✗ Not linked (no mapping file)"
-            echo ""
-            echo "To link this project, run:"
-            echo "  obs r-dev link <obsidian_folder>"
-            return 1
-        fi
-
-        local current_mapping=$(_get_mapped_path "$r_root")
-        if [[ -z "$current_mapping" ]]; then
-            echo "Mapping Status: ✗ Not linked"
-            echo ""
-            echo "To link this project, run:"
-            echo "  obs r-dev link <obsidian_folder>"
-            return 1
-        else
-            echo "Mapping Status: ✓ Linked"
-            echo "Obsidian Folder: $current_mapping"
-            echo "Full Path: $OBS_ROOT/$current_mapping"
-
-            if [[ -d "$OBS_ROOT/$current_mapping" ]]; then
-                echo "Folder Exists: ✓ Yes"
-            else
-                echo "Folder Exists: ✗ No (will be created on first use)"
-            fi
-        fi
-        echo ""
-        return 0
-    fi
-
-    # 2. CONTEXT (Theory Fetch)
-    if [[ "$subcmd" == "context" ]]; then
-        local term=$1
-        _log "INFO" "Searching Knowledge_Base for '$term'..."
-        # Uses grep to find files, then head to show snippet. 
-        # Future: Use intelligent semantic search if available.
-        grep -r "$term" "$OBS_ROOT/Knowledge_Base" | head -n 5
-        return 0
-    fi
-
-    # Auto-detect context for LOG and DRAFT
-    local r_root=$(_get_r_root)
-    if [[ -z "$r_root" ]]; then _log "ERROR" "Must be in an R Project."; return 1; fi
-    local obs_rel_path=$(_get_mapped_path "$r_root")
-    if [[ -z "$obs_rel_path" ]]; then _log "ERROR" "Project not linked. Run 'obs r-dev link <folder>' first."; return 1; fi
-    local target_base="$OBS_ROOT/$obs_rel_path"
-
-    # 3. LOG (Artifacts)
-    if [[ "$subcmd" == "log" ]]; then
-        local file=$1
-        shift
-        local msg="Logged artifact"
-        while getopts "m:" opt; do case $opt in m) msg="$OPTARG";; esac; done
-
-        if [[ ! -f "$file" ]]; then _log "ERROR" "File not found: $file"; return 1; fi
-        
-        local dest_dir="$target_base/06_Analysis"
-        mkdir -p "$dest_dir"
-        
-        local timestamp=$(date "+%Y%m%d_%H%M%S")
-        local ext="${file##*.}"
-        local new_name="${timestamp}_${file}"
-        
-        cp "$file" "$dest_dir/$new_name"
-        _log "SUCCESS" "Logged to $dest_dir/$new_name"
-        # Optional: Append to a daily log md file?
-        return 0
-    fi
-
-    # 4. DRAFT (Manuscripts/Vignettes)
-    if [[ "$subcmd" == "draft" ]]; then
-        local file=$1
-        if [[ ! -f "$file" ]]; then _log "ERROR" "File not found: $file"; return 1; fi
-        
-        local dest_dir="$target_base/02_Drafts"
-        mkdir -p "$dest_dir"
-        
-        cp "$file" "$dest_dir/"
-        _log "SUCCESS" "Copied draft to $dest_dir/"
-        return 0
-    fi
-    
-    _log "ERROR" "Unknown r-dev command: $subcmd"
-    echo "Usage: obs r-dev {link|unlink|status|log|context|draft}"
 }
 
 # --- Knowledge Graph Commands (v2.0) ---
@@ -852,12 +670,6 @@ obs() {
         # AI commands
         "ai")
             obs_ai "$@"
-            return $?
-            ;;
-
-        # R integration (renamed from r-dev to r)
-        "r"|"r-dev")
-            obs_r_dev "$@"
             return $?
             ;;
 
