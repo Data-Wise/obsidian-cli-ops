@@ -107,10 +107,10 @@ python3 src/python/obs_cli.py discover "/Users/dt/Library/Mobile Documents/iClou
 
 ## Verification Checklist
 
-- [ ] `obs scan <path>` completes without coroutine errors
-- [ ] `obs analyze <vault-name>` finds vault by name
-- [ ] `obs analyze <partial-id>` finds vault by ID prefix
-- [ ] `obs discover <path>` scans found vaults without errors
-- [ ] `obs vaults` still lists vaults correctly
-- [ ] `obs db stats` still works
-- [ ] Existing tests pass (if any — `jest.config.js` and `pytest.ini` exist)
+- [x] `obs scan <path>` completes without coroutine errors
+- [x] `obs analyze <vault-name>` finds vault by name
+- [x] `obs analyze <partial-id>` finds vault by ID prefix
+- [x] `obs discover <path>` scans found vaults without errors
+- [x] `obs vaults` still lists vaults correctly
+- [x] `obs db stats` still works
+- [x] Existing tests pass (35/35 pytest)
