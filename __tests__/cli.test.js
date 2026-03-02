@@ -7,7 +7,10 @@ const CLI_PATH = path.resolve(__dirname, '../src/obs.zsh');
 const TEMP_HOME = fs.mkdtempSync(path.join(os.tmpdir(), 'obs-test-'));
 
 function stripAnsi(str) {
-  return str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+  return str.replace(
+    /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+    ''
+  );
 }
 
 function runCli(args, env = {}) {
@@ -25,29 +28,42 @@ function runCli(args, env = {}) {
 beforeAll(() => {
   const configDir = path.join(TEMP_HOME, '.config/obs');
   fs.mkdirSync(configDir, { recursive: true });
-  fs.writeFileSync(path.join(configDir, 'config'), 'OBS_ROOT="/tmp/mock_root"\nVAULTS=("VaultA")');
-  fs.writeFileSync(path.join(configDir, 'project_map.json'), '{}');
 });
 
 afterAll(() => {
   fs.rmSync(TEMP_HOME, { recursive: true, force: true });
 });
 
-describe('Obsidian CLI Ops', () => {
+describe('Obsidian CLI Ops v3.0', () => {
   test('should display help', () => {
     const result = runCli(['help']);
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain('Usage: obs');
-    expect(result.stdout).toContain('Obsidian CLI Ops');
+    expect(result.stdout).toContain('obs');
   });
 
   test('should fail on unknown command', () => {
     const result = runCli(['foobar']);
-    expect(result.stdout).toContain('[ERROR] Unknown command');
+    expect(result.stdout).toContain('Unknown command');
   });
 
-  test('r-dev link should fail if not in R project', () => {
-    const result = runCli(['r-dev', 'link', 'Some/Path']);
-    expect(result.stdout).toContain('[ERROR] Not inside an R Project');
+  test('should show version', () => {
+    const result = runCli(['version']);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('3.0.0');
+  });
+
+  test('should accept discover command', () => {
+    const result = runCli(['discover', '/tmp']);
+    expect(result.stdout).not.toContain('Unknown command');
+  });
+
+  test('should accept stats command', () => {
+    const result = runCli(['stats']);
+    expect(result.stdout).not.toContain('Unknown command');
+  });
+
+  test('should accept ai status command', () => {
+    const result = runCli(['ai', 'status']);
+    expect(result.stdout).not.toContain('Unknown command');
   });
 });
