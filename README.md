@@ -1,16 +1,16 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-3.0.0--dev-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0--beta-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-35%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-42%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.0.0-dev (Proposal A - Pure Obsidian Manager)
+**Current Version**: 3.0.0-beta
 
 ## 🚀 Quick Start
 
@@ -23,7 +23,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 ## ✨ Features
 
-### 📊 Core Features (v3.0.0-dev)
+### 📊 Core Features (v3.0.0-beta)
 
 - **Vault Discovery**: Automatically find and scan Obsidian vaults
 - **Graph Analysis**: PageRank, centrality, clustering coefficients
@@ -112,7 +112,7 @@ obs version                # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.0.0-dev - Phase 7.1 Simplification (In Progress)
+**Current Status:** v3.0.0-beta — Phase 7.1 Complete
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now

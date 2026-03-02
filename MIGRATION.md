@@ -453,4 +453,4 @@ A: Yes! All AI features (similar, analyze, duplicates) are retained and improved
 ---
 
 **Last Updated:** 2025-12-20
-**Version:** v3.0.0-dev (Phase 7.1)
+**Version:** v3.0.0-beta

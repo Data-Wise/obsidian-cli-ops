@@ -4,7 +4,7 @@
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with knowledge graph analysis and multi-provider AI features.
 
-**Current Version**: 3.0.0-dev
+**Current Version**: 3.0.0-beta
 
 ## Key Features
 
@@ -128,7 +128,7 @@ obs ai duplicates <vault>
 - ✅ **Async & Lookup Fix**: Vault name/prefix lookup, async operations (PR #2)
 - 📋 **Phase 7.2 Planned**: AI-Powered Note Operations
 
-**Current Status:** v3.0.0-dev — Active Development
+**Current Status:** v3.0.0-beta — Phase 7.1 Complete
 
 See [TODOS.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md) for current work items.
 
