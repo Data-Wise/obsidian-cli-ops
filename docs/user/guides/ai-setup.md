@@ -85,10 +85,10 @@ obs ai config
 obs ai test
 
 # Find similar notes (coming soon)
-obs ai similar <vault_id>
+obs ai similar <vault>
 
 # Detect duplicates (coming soon)
-obs ai duplicates <vault_id>
+obs ai duplicates <vault>
 ```
 
 ## Troubleshooting
@@ -148,9 +148,9 @@ A: Yes, after initial setup.
 
 After setup completes, you'll be ready to use AI features as they're released:
 
-- `obs ai similar <vault_id>` - Find similar notes
-- `obs ai duplicates <vault_id>` - Detect duplicates
-- `obs ai topics <vault_id>` - Analyze topics
-- `obs ai suggest <vault_id>` - Get merge suggestions
+- `obs ai similar <vault>` - Find similar notes
+- `obs ai duplicates <vault>` - Detect duplicates
+- `obs ai topics <vault>` - Analyze topics
+- `obs ai suggest <vault>` - Get merge suggestions
 
 Stay tuned for Phase 3!

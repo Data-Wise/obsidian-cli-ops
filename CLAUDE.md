@@ -88,7 +88,7 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (35+ core tests)
+pytest src/python/tests/        # Run Python tests (42 core tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -96,7 +96,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # Python tests (35+ core tests passing)
+pytest src/python/tests/        # Python tests (42 core tests passing)
 obs --verbose <command>         # Run any command with verbose output
 ```
 
@@ -120,7 +120,7 @@ obs --verbose <command>         # Run any command with verbose output
   - `obs_cli.py` - CLI interface (318 lines)
   - AI clients - Multi-provider AI (440+ lines)
 - `schema/vault_db.sql` - Database schema
-- `tests/` - Test suite (35+ core tests passing)
+- `tests/` - Test suite (42 core tests passing)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -170,7 +170,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ### Testing Requirements
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- Keep core tests passing (35+ tests)
+- Keep core tests passing (42+ tests)
 - Update test count in documentation
 
 ### Documentation

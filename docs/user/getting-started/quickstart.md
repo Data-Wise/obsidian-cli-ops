@@ -107,11 +107,11 @@ obs manage info <id>    # Show vault details
 
 ```bash
 # Analyze vault graph
-obs analyze <vault_id>
+obs analyze <vault>
 
 # View statistics
 obs stats                  # All vaults
-obs stats <vault_id>       # Specific vault
+obs stats <vault>       # Specific vault
 ```
 
 ### Interactive TUI
@@ -122,7 +122,7 @@ obs                           # Opens last vault or shows picker
 
 # Legacy commands (still work)
 obs tui                       # Same as obs
-obs tui --vault-id <vault_id> # Open specific vault
+obs tui --vault-id <vault> # Open specific vault
 obs tui --screen vaults       # Open specific screen
 ```
 

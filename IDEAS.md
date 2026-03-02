@@ -105,17 +105,17 @@ TIER 3: Local (Free, Private, Offline)
 
 - **Duplicate Detection**
   ```bash
-  obs ai duplicates <vault_id>
+  obs ai duplicates <vault>
   ```
 
 - **Topic Analysis**
   ```bash
-  obs ai topics <vault_id>
+  obs ai topics <vault>
   ```
 
 - **Smart Merge Suggestions**
   ```bash
-  obs ai suggest <vault_id>
+  obs ai suggest <vault>
   ```
 
 - **Provider Management**

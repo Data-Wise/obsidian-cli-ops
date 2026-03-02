@@ -48,9 +48,9 @@
 | Command | Status | Changes |
 |---------|--------|---------|
 | `obs` | ✅ Enhanced | Now lists vaults (was TUI launcher) |
-| `obs stats <vault_id>` | ✅ Retained | Same functionality |
+| `obs stats <vault>` | ✅ Retained | Same functionality |
 | `obs discover <path>` | ✅ Retained | Same functionality |
-| `obs analyze <vault_id>` | ✅ Retained | Same functionality |
+| `obs analyze <vault>` | ✅ Retained | Same functionality |
 | `obs vaults` | ✅ Retained | Same as `obs` (alias) |
 | `obs ai status` | ✅ Retained | Same functionality |
 | `obs ai setup` | ✅ Retained | Same functionality |
@@ -116,10 +116,10 @@ Instead of navigating TUI screens:
 | TUI Screen | CLI Equivalent |
 |------------|----------------|
 | Vault Browser | `obs` (list vaults) |
-| Vault Stats | `obs stats <vault_id>` |
-| Note Explorer | `obs analyze <vault_id>` |
-| Graph View | `obs analyze <vault_id>` |
-| Statistics | `obs stats <vault_id>` |
+| Vault Stats | `obs stats <vault>` |
+| Note Explorer | `obs analyze <vault>` |
+| Graph View | `obs analyze <vault>` |
+| Statistics | `obs stats <vault>` |
 
 **Example Migration:**
 
@@ -184,7 +184,7 @@ write_to_obsidian("# Analysis Results\n\n...", "~/Vaults/Research")
 
 **Alternatives:**
 - Plugin management: Use Obsidian's built-in Community Plugins interface
-- Vault auditing: Use `obs stats <vault_id>`
+- Vault auditing: Use `obs stats <vault>`
 - Configuration sync: Use git or cloud storage directly
 
 ---
@@ -205,7 +205,7 @@ obs          # Lists all vaults in database
 
 **Migration:**
 - Update scripts that relied on TUI launching
-- Use `obs stats <vault_id>` for specific vault info
+- Use `obs stats <vault>` for specific vault info
 
 ### 2. Vault Selection
 
@@ -217,12 +217,12 @@ obs tui --vault-id abc123   # Open by ID
 
 **v3.0.0:**
 ```bash
-obs stats <vault_id>        # Use ID only
+obs stats <vault>        # Use vault name or ID
 ```
 
 **Migration:**
-- Update scripts to use vault IDs instead of names
-- Get IDs with `obs` command
+- Update scripts to use vault name or ID
+- Get vault names/IDs with `obs` command
 
 ### 3. R Integration Workflow
 
@@ -331,10 +331,10 @@ After upgrading, verify everything works:
 obs
 
 # 2. Check a vault's statistics
-obs stats <vault_id>
+obs stats <vault>
 
 # 3. Analyze graph (should show existing metrics)
-obs analyze <vault_id>
+obs analyze <vault>
 
 # 4. Test AI features (if configured)
 obs ai status
@@ -444,7 +444,7 @@ A: Yes! All AI features (similar, analyze, duplicates) are retained and improved
 **Action Items:**
 1. ✅ Update dependencies (`pip3 install -r requirements.txt`)
 2. ✅ Update scripts to use new command syntax
-3. ✅ Test with `obs` and `obs stats <vault_id>`
+3. ✅ Test with `obs` and `obs stats <vault>`
 4. ✅ For R integration, create dedicated R package
 5. ✅ Join us for Phase 7.2 AI features!
 

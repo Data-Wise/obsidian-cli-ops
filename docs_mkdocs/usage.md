@@ -1,15 +1,17 @@
 # Usage Guide
 
-> **Works exactly like the Obsidian app - just type `obs`!**
+> **Just type `obs` - it does the right thing!**
 
 ## Philosophy
 
-**Version 2.2.0** implements **Option D** - a complete redesign that mimics the official Obsidian app's behavior, plus AI-powered features.
+**Version 3.0** focuses on doing one thing exceptionally well: managing Obsidian vaults from the command line.
 
-- **Zero-Friction Start**: Just type `obs` (like clicking the Obsidian icon)
-- **iCloud-First**: Auto-detects `~/Library/Mobile Documents/iCloud~md~obsidian/Documents`
-- **Last-Vault Tracking**: Remembers where you were (like Obsidian app)
-- **ADHD-Friendly**: One command, smart defaults, progressive disclosure
+- **Zero-Friction Start**: Just type `obs`
+- **iCloud-First**: Auto-detects your Obsidian vaults
+- **ADHD-Friendly**: 10 focused commands, smart defaults, progressive disclosure
+- **AI-Powered**: Optional AI features for deeper vault analysis
+
+---
 
 ## The One Command
 
@@ -17,264 +19,154 @@
 obs
 ```
 
-**What it does:**
-1. Opens your last-used vault automatically (like Obsidian app)
-2. Shows vault picker if no last vault
-3. Auto-detects iCloud vaults on first run
+Lists all your registered vaults with stats at a glance. This is your starting point for everything.
 
-**That's it!** Works exactly like launching Obsidian.
+---
 
-## Primary Commands (90% of usage)
+## Command Reference
 
-```bash
-obs                     # Open last vault (or show picker)
-obs switch [name]       # Vault switcher (like "Open another vault")
-obs manage              # Manage vaults (like "Manage Vaults" menu)
-```
+### Primary Commands
 
-**Obsidian App Equivalent:**
-- `obs` = Clicking Obsidian icon
-- `obs switch` = "Open another vault" command
-- `obs manage` = "Manage Vaults" menu
+| Command | What It Does |
+|---------|-------------|
+| `obs` | List all vaults |
+| `obs stats <vault>` | Show vault statistics |
+| `obs discover <path>` | Find vaults in a directory |
 
-## Quick Actions
+### Graph Analysis
 
-### Open Specific Vault
+| Command | What It Does |
+|---------|-------------|
+| `obs analyze <vault>` | Analyze vault graph metrics |
 
-```bash
-obs open <name>         # Open vault by name
-```
+### AI Features
 
-**Example:**
-```bash
-obs open Research_Lab
-```
+| Command | What It Does |
+|---------|-------------|
+| `obs ai status` | Check AI provider availability |
+| `obs ai setup` | Interactive setup wizard |
+| `obs ai test` | Test provider connections |
+| `obs ai similar <note_id>` | Find semantically similar notes |
+| `obs ai analyze <note_id>` | Deep AI analysis of a note |
+| `obs ai duplicates <vault>` | Detect potential duplicate content |
 
-### Graph Visualization
+### Utilities
 
-```bash
-obs graph [vault]       # Show graph (current vault or specified)
-```
+| Command | What It Does |
+|---------|-------------|
+| `obs help` | Quick help (essential commands) |
+| `obs help --all` | Full command reference |
+| `obs version` | Show version |
 
-**Examples:**
-```bash
-obs graph               # Graph of current/last vault
-obs graph <vault_id>    # Graph of specific vault
-```
-
-### Statistics
-
-```bash
-obs stats [vault]       # Show stats (all vaults or specified)
-```
-
-**Examples:**
-```bash
-obs stats               # Global statistics
-obs stats <vault_id>    # Vault-specific statistics
-```
-
-## Vault Management
-
-### Manage Vaults Menu
-
-```bash
-obs manage              # Show manage menu (like Obsidian)
-```
-
-**Subcommands:**
-
-```bash
-obs manage create       # Create new vault
-obs manage open <path>  # Open folder as vault
-obs manage remove <id>  # Remove vault from database
-obs manage rename       # Rename vault
-obs manage info <id>    # Show vault details
-```
-
-**Examples:**
-```bash
-# Open folder as vault (discovers and scans)
-obs manage open ~/Documents/MyVault
-
-# Show vault information
-obs manage info vault_123
-```
-
-## AI Features
-
-**Version 2.2.0** adds powerful AI-powered note analysis with multi-provider support.
-
-### AI Provider Management
-
-```bash
-obs ai status           # Check provider availability
-obs ai setup            # Interactive setup wizard
-obs ai test             # Test provider functionality
-```
-
-**Supported Providers:**
-- `gemini-api` - Fast batch operations (default)
-- `gemini-cli` - CLI fallback
-- `claude-cli` - High-quality analysis
-- `ollama` - Local, free, private
-
-### Find Similar Notes
-
-```bash
-obs ai similar <note_id>              # Find similar notes
-obs ai similar <note_id> --limit 20   # Limit results
-obs ai similar <note_id> --threshold 0.5  # Min similarity
-```
-
-**Example:**
-```bash
-obs ai similar abc123 --limit 10
-```
-
-### Analyze Note
-
-```bash
-obs ai analyze <note_id>              # Deep note analysis
-obs ai analyze <note_id> --provider gemini-api
-```
-
-**Returns:**
-- Topics and themes
-- Suggested tags
-- Quality scores
-- Improvement suggestions
-
-### Find Duplicates
-
-```bash
-obs ai duplicates <vault_id>          # Scan vault for duplicates
-obs ai duplicates <vault_id> --threshold 0.85
-obs ai duplicates <vault_id> --limit 50
-```
-
-**Example:**
-```bash
-obs ai duplicates my-vault --threshold 0.9
-```
-
-## R Integration
-
-**Shortened from `obs r-dev` to `obs r`** (ADHD-friendly!)
-
-### Link R Project
-
-```bash
-obs r link              # Link current R project to vault folder
-obs r unlink            # Remove R project mapping
-obs r status            # Show current link status
-```
-
-### Copy Artifacts
-
-```bash
-obs r log <file>        # Copy result to vault (06_Analysis)
-obs r draft <file>      # Copy draft to vault (02_Drafts)
-```
-
-**Example:**
-```bash
-obs r log result.png -m "Analysis complete"
-```
-
-### Search Theory Notes
-
-```bash
-obs r context <term>    # Search Knowledge_Base for theory
-```
-
-**Example:**
-```bash
-obs r context "mediation analysis"
-```
-
-## Legacy Commands
-
-**All old commands still work** (backward compatible):
-
-| Legacy Command | New Command | Notes |
-|----------------|-------------|-------|
-| `obs tui` | `obs` | Now the default! |
-| `obs discover` | `obs manage open` | Still works |
-| `obs vaults` | `obs switch` | Still works |
-| `obs r-dev` | `obs r` | Both work |
-
-## Getting Help
-
-### Simple Help (5 commands)
-
-```bash
-obs help                # Quick start guide
-```
-
-### Detailed Help (12 commands)
-
-```bash
-obs help --all          # Show all commands
-```
-
-### Namespace Help
-
-```bash
-obs manage              # Show manage subcommands
-obs ai                  # Show AI subcommands
-obs r                   # Show R subcommands
-```
+---
 
 ## Common Workflows
+
+### First-Time Setup
+
+```bash
+# Install dependencies
+pip3 install -r src/python/requirements.txt
+
+# Initialize the database
+python3 src/python/obs_cli.py db init
+
+# Discover your vaults
+obs discover ~/Documents
+obs discover ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents
+```
 
 ### Daily Usage
 
 ```bash
-# Open last vault (works like Obsidian app)
+# See all your vaults
 obs
 
-# Navigate with vim keys or arrows
-# Press 'g' for graph, 's' for stats
-# Press 'q' to quit
+# Check a vault's health
+obs stats MyVault
+
+# Analyze the knowledge graph
+obs analyze MyVault
 ```
 
-### Switch Between Vaults
+### Vault Lookup
+
+Commands that take `<vault>` accept either a vault name or an ID prefix:
 
 ```bash
-# Show vault switcher
-obs switch
-
-# Or open specific vault directly
-obs open Research_Lab
+obs stats MyVault        # By name
+obs stats a812           # By ID prefix
+obs analyze Research_Lab # By name
 ```
 
-### Discover New Vaults
+If a prefix matches multiple vaults, obs tells you which ones matched so you can be more specific.
+
+### AI-Powered Analysis
 
 ```bash
-# Open folder as vault
-obs manage open ~/Documents/NewVault
+# Check which providers are available
+obs ai status
 
-# Or in TUI: press 'd' to discover from iCloud
-obs
-# (then press 'd')
+# Set up a provider
+obs ai setup
+
+# Find similar notes
+obs ai similar <note_id>
+
+# Detect duplicates across a vault
+obs ai duplicates MyVault
 ```
 
-### R Project Workflow
+??? tip "Choosing an AI provider"
+    - **Privacy first**: Use `ollama` (100% local)
+    - **Quality first**: Use `claude-cli`
+    - **Speed first**: Use `gemini-api`
+    - **No API key**: Use `gemini-cli` or `claude-cli`
+
+---
+
+## Vault Discovery
+
+obs finds Obsidian vaults by looking for directories containing `.obsidian` folders.
 
 ```bash
-# In your R project directory
-cd ~/projects/my-r-project
+# Search a directory
+obs discover ~/Documents
 
-# Link to vault folder
-obs r link Research_Lab
+# Auto-discover from iCloud
+obs discover ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents
 
-# Copy a plot
-obs r log figure1.png -m "Final version"
-
-# Search for theory
-obs r context "regression"
+# Discover and scan in one step
+obs discover ~/Documents --scan
 ```
+
+---
+
+## Graph Analysis
+
+The `analyze` command calculates knowledge graph metrics:
+
+```bash
+obs analyze MyVault
+```
+
+**Metrics include:**
+
+- **Density** - How interconnected your vault is (0.0 to 1.0)
+- **Clusters** - Groups of tightly related notes
+- **Hub notes** - Highly connected central notes
+- **Orphans** - Notes with no links (may need integration)
+- **Broken links** - Wikilinks pointing to non-existent notes
+
+Add `-v` for detailed output including top hub notes:
+
+```bash
+obs analyze MyVault -v
+```
+
+See the [Graph Analysis Tutorial](tutorials/graph-analysis.md) for a deep dive.
+
+---
 
 ## Configuration
 
@@ -284,49 +176,38 @@ obs r context "regression"
 ~/Library/Mobile Documents/iCloud~md~obsidian/Documents
 ```
 
-**Auto-detected on first run** - no configuration needed!
+Auto-detected on first run - no configuration needed.
 
-### Last Vault Tracking
-
-```
-~/.config/obs/last_vault
-```
-
-Updated automatically when you open a vault.
-
-### Custom Configuration (Optional)
+### Database Location
 
 ```
-~/.config/obs/config
+~/.config/obs/vault_db.sqlite
 ```
 
-Set `OBS_ROOT` to override iCloud default:
+All data is stored locally. No data leaves your machine.
+
+### Custom Root (Optional)
+
+Set `OBS_ROOT` to override the default vault search location:
 
 ```bash
 OBS_ROOT="/path/to/my/vaults"
 ```
 
+---
+
 ## Progressive Disclosure
 
-**ADHD-Friendly Design:**
+obs is designed for ADHD-friendly progressive learning:
 
 1. **Level 1**: Just type `obs` (one command)
-2. **Level 2**: Learn `switch` and `manage` (3 commands)
-3. **Level 3**: Explore quick actions (6 commands)
-4. **Level 4**: Use AI and R features (advanced)
+2. **Level 2**: Learn `stats` and `discover` (3 commands)
+3. **Level 3**: Use `analyze` for graph insights (4 commands)
+4. **Level 4**: Explore AI features (10 commands)
 
-**You only need Level 1 to get started!**
+**You only need Level 1 to get started.**
 
-## Keyboard Shortcuts in TUI
-
-Press `?` in TUI for complete keyboard reference.
-
-**Quick shortcuts:**
-- `g` - Show graph visualization
-- `s` - Show statistics
-- `d` - Discover vaults from iCloud
-- `r` - Refresh current view
-- `q` - Quit TUI
+---
 
 ## Troubleshooting
 
@@ -336,8 +217,8 @@ Press `?` in TUI for complete keyboard reference.
 # Check iCloud location
 ls ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/
 
-# Or discover in specific location
-obs manage open ~/Documents
+# Or discover in a specific location
+obs discover ~/Documents
 ```
 
 ### "Command not found: obs"
@@ -346,18 +227,24 @@ obs manage open ~/Documents
 # Reload shell
 source ~/.zshrc
 
-# Or check symlink
+# Check symlink
 ls -la ~/.config/zsh/functions/obs.zsh
 ```
 
 ### "Python CLI not found"
 
 ```bash
-# Check Python path in obs.zsh
-# Should be: /opt/homebrew/bin/python3
+# Check Python path (should be /opt/homebrew/bin/python3)
 which python3
 ```
 
 ---
 
-**Remember:** Just type `obs` - it does the right thing! 🚀
+## Next Steps
+
+| Want to... | Go to |
+|------------|-------|
+| Follow a step-by-step guide | [Getting Started Tutorial](tutorials/getting-started.md) |
+| Learn graph analysis | [Graph Analysis Tutorial](tutorials/graph-analysis.md) |
+| Set up AI features | [AI Features Tutorial](tutorials/ai-features.md) |
+| See all commands | `obs help --all` |

@@ -98,7 +98,7 @@ python3 src/python/obs_cli.py discover ~/Documents/TestVault --scan
 **Statistics empty?**
 ```bash
 python3 src/python/obs_cli.py vaults  # Get vault ID
-python3 src/python/obs_cli.py analyze <vault_id>
+python3 src/python/obs_cli.py analyze <vault>
 ```
 
 **Want to start fresh?**

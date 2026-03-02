@@ -69,7 +69,7 @@ obs graph [vault]       # Show graph (current vault or specified)
 **Examples:**
 ```bash
 obs graph               # Graph of current/last vault
-obs graph <vault_id>    # Graph of specific vault
+obs graph <vault>    # Graph of specific vault
 ```
 
 ### Statistics
@@ -81,7 +81,7 @@ obs stats [vault]       # Show stats (all vaults or specified)
 **Examples:**
 ```bash
 obs stats               # Global statistics
-obs stats <vault_id>    # Vault-specific statistics
+obs stats <vault>    # Vault-specific statistics
 ```
 
 ### Search (Coming Soon)

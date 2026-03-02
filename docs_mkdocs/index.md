@@ -1,46 +1,34 @@
 # Obsidian CLI Ops
 
-**An Intelligent Command-Line Tool for Multi-Vault Obsidian Knowledge Management.**
+**An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
-`obs` is a powerful CLI tool that combines federated vault management with intelligent knowledge graph analysis. It bridges your Knowledge Base (Obsidian), your Computational Environment (R/Python), and your System Shell (ZSH).
+`obs` is a laser-focused CLI tool for managing Obsidian vaults with knowledge graph analysis and multi-provider AI features.
 
-**Current Version**: 2.2.0
+**Current Version**: 3.0.0-dev
 
 ## Key Features
 
-### v1.x: Federated Vault Management
-*   **⚡️ Core Sync**: Keep themes, hotkeys, and settings consistent across multiple vaults
-*   **📦 Plugin Manager**: Install community plugins directly from GitHub
-*   **🔬 R-Dev Integration**: Seamlessly log plots, fetch theory, and sync drafts between R Projects and Obsidian
-*   **🛡️ Audit**: Ensure your file structure stays organized
-
-### v2.0: Knowledge Graph Analysis
-*   **🔍 Vault Discovery**: Automatically find and scan all Obsidian vaults
-*   **📊 Graph Metrics**: PageRank, centrality, clustering coefficients
+### Vault Management
+*   **🔍 Vault Discovery**: Automatically find and scan Obsidian vaults (iCloud auto-detect)
+*   **📊 Graph Analysis**: PageRank, centrality, clustering coefficients
 *   **🔗 Link Resolution**: Resolve wikilinks and detect broken links
 *   **🏝️ Orphan Detection**: Find notes with no connections
 *   **🌟 Hub Detection**: Identify highly connected notes
 *   **📈 Analytics**: Comprehensive vault statistics and insights
-*   **🤖 AI-Powered Features**: Note similarity, duplicate detection, topic analysis (100% free, local, private)
 
-### v2.1: Obsidian App Clone
-*   **🎯 Zero-Friction Start**: Just type `obs` - opens last vault automatically (like Obsidian app)
-*   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
-*   **🔄 Last-Vault Tracking**: Remembers where you were (like Obsidian app)
-*   **🖥️ Full-Screen TUI**: Beautiful terminal UI with vault browser, note explorer, graph visualizer
-*   **⌨️ Obsidian-Style Commands**: `obs switch`, `obs manage`, `obs open` - works like the official app
-*   **🎨 ADHD-Friendly**: One command, smart defaults, progressive disclosure
-*   **📦 Shortened R Integration**: `obs r` (from `obs r-dev`) for less typing
-*   **✅ Backward Compatible**: All legacy commands still work
-
-### v2.2: AI-Powered Features (NEW!)
+### AI-Powered Features
 *   **🤖 Multi-Provider AI**: Gemini API, Gemini CLI, Claude CLI, Ollama
-*   **🔍 Find Similar Notes**: `obs ai similar` - semantic similarity using embeddings
-*   **🔬 Analyze Notes**: `obs ai analyze` - deep analysis with topics, themes, suggestions
-*   **📋 Detect Duplicates**: `obs ai duplicates` - find potential duplicate notes
+*   **🔍 Find Similar Notes**: `obs ai similar` — semantic similarity using embeddings
+*   **🔬 Analyze Notes**: `obs ai analyze` — deep analysis with topics, themes, suggestions
+*   **📋 Detect Duplicates**: `obs ai duplicates` — find potential duplicate notes
 *   **🔧 Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 *   **⚡ Smart Routing**: Auto-selects best provider for each operation
-*   **📦 Easy Setup**: `pip install obs[gemini]` or `pip install obs[ollama]`
+
+### Developer Experience
+*   **🎯 Zero-Friction**: Just type `obs` — lists your vaults immediately
+*   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
+*   **🎨 ADHD-Friendly**: 10 focused commands, smart defaults, progressive disclosure
+*   **🏷️ Flexible Lookup**: Use vault names or ID prefixes (`obs analyze Knowledge_Base`)
 
 ## Quick Start
 
@@ -59,28 +47,17 @@ pip3 install -r src/python/requirements.txt
 python3 src/python/obs_cli.py db init
 ```
 
-### Start Using (Zero Configuration!)
+### Start Using
 ```bash
-# Just type obs - it auto-detects iCloud vaults!
+# List your vaults
 obs
 
-# If no vaults found, discover in specific directory
-obs manage open ~/Documents
+# Discover vaults in a directory
+obs discover ~/Documents --scan
 
-# Or use vault picker (press 'd' to discover iCloud vaults)
-obs switch
-```
-
-**That's it!** Works exactly like launching the Obsidian app.
-
-### Option D Commands (Obsidian-Style)
-```bash
-obs                     # Open last vault (or show picker)
-obs switch              # Vault switcher (like "Open another vault")
-obs manage              # Manage vaults (like "Manage Vaults" menu)
-obs open <name>         # Open specific vault
-obs graph               # Show graph visualization
-obs stats               # View statistics
+# Analyze a vault by name or ID
+obs analyze Knowledge_Base
+obs stats --vault Knowledge_Base
 ```
 
 ### Setup AI Features (Optional)
@@ -103,7 +80,7 @@ obs ai duplicates <vault>
 
 [Full Installation Guide](installation.md){ .md-button .md-button--primary }
 [AI Setup Guide](ai-setup.md){ .md-button }
-[v2.0 Features](v2.0.md){ .md-button }
+[v3.0 Features](v3.0.md){ .md-button }
 
 ## Use Cases
 
@@ -113,24 +90,23 @@ obs ai duplicates <vault>
 - Identify hub notes (highly connected)
 - Detect broken wikilinks
 
-### R Development
-- Link R projects to Obsidian folders
-- Log analysis results automatically
-- Fetch theory notes while coding
-- Sync vignettes and drafts
+### AI-Powered Insights
+- Find semantically similar notes across your vault
+- Detect potential duplicate content
+- Get AI analysis of note quality and connections
 
 ### Vault Maintenance
-- Sync themes and settings across vaults
-- Install plugins to multiple vaults
-- Audit file organization
+- Discover and scan vaults automatically
 - Track vault statistics over time
+- Monitor graph health (orphans, broken links)
 
 ## Architecture
 
-**Two-Layer Design:**
+**Three-Layer Design (Zero Duplication):**
 
-1. **ZSH Layer** (`src/obs.zsh`): Main CLI interface, configuration, vault operations
-2. **Python Layer** (`src/python/`): Knowledge graph analysis, scanning, metrics
+1. **ZSH Layer** (`src/obs.zsh`): CLI interface (386 lines)
+2. **Python Core** (`src/python/core/`): Business logic (859 lines)
+3. **Python Data** (`src/python/`): Database, scanning, graph building
 
 **Database:** SQLite (`~/.config/obs/vault_db.sqlite`)
 
@@ -140,20 +116,19 @@ obs ai duplicates <vault>
 
 - [Installation](installation.md) - Get obs installed and configured
 - [Usage](usage.md) - Core commands and workflows
-- [v2.0 Features](v2.0.md) - Knowledge graph analysis
-- [AI Setup Guide](ai-setup.md) - Set up free AI features (similarity, duplicates, topics)
-- [R-Dev Integration](r-dev.md) - R development workflow
+- [v3.0 Features](v3.0.md) - Current version features
+- [AI Setup Guide](ai-setup.md) - Set up AI features (Gemini, Claude, Ollama)
+- [Migration Guide](migration.md) - Upgrading from v2.x
 - [Configuration](configuration.md) - Advanced setup
 
 ## Project Status
 
-- ✅ **Phase 1 Complete**: Database, scanner, graph analysis
-- ✅ **Phase 2 Complete**: AI integration (HuggingFace + Ollama - free, local, private)
-- ✅ **Phase 4 Complete**: TUI visualization, Option D (Obsidian App Clone)
-- ✅ **Phase 5 Complete**: Multi-provider AI (Gemini, Claude, Ollama) + AI features
-- 📋 **Phase 6 Planned**: Learning system
+- ✅ **Phase 1-5 Complete**: Database, scanner, graph, AI features
+- ✅ **Phase 7.1 Complete**: v3.0.0 simplification (TUI removed, 10 focused commands)
+- ✅ **Async & Lookup Fix**: Vault name/prefix lookup, async operations (PR #2)
+- 📋 **Phase 7.2 Planned**: AI-Powered Note Operations
 
-**Current Status:** v2.2.0 (98% complete) - Production Ready
+**Current Status:** v3.0.0-dev — Active Development
 
 See [TODOS.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md) for current work items.
 

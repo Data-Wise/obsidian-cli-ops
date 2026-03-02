@@ -327,7 +327,7 @@ python3 src/python/obs_cli.py discover ~/Documents/TestVault-Small --scan
 python3 src/python/obs_cli.py vaults
 
 # Run analysis
-python3 src/python/obs_cli.py analyze <vault_id>
+python3 src/python/obs_cli.py analyze <vault>
 ```
 
 ---

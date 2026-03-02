@@ -68,9 +68,9 @@ Phase 1 of the v2.0 roadmap is **complete**! The foundation for intelligent mult
   - `db init`: Initialize database
 - **ZSH Integration**: Seamless integration with obs command
   - `obs discover [path]`: Discover vaults
-  - `obs analyze <vault_id>`: Analyze graph
+  - `obs analyze <vault>`: Analyze graph
   - `obs vaults`: List vaults
-  - `obs stats [vault_id]`: Show statistics
+  - `obs stats [vault]`: Show statistics
   - All commands support `--verbose` flag
 
 ---
@@ -128,10 +128,10 @@ python3 src/python/obs_cli.py scan ~/Documents/MyVault -v
 python3 src/python/obs_cli.py vaults
 
 # Then analyze
-python3 src/python/obs_cli.py analyze <vault_id> -v
+python3 src/python/obs_cli.py analyze <vault> -v
 
 # Or through ZSH
-zsh src/obs.zsh analyze <vault_id> -v
+zsh src/obs.zsh analyze <vault> -v
 ```
 
 ### View Statistics
@@ -141,11 +141,11 @@ zsh src/obs.zsh analyze <vault_id> -v
 python3 src/python/obs_cli.py stats
 
 # Vault-specific stats
-python3 src/python/obs_cli.py stats --vault <vault_id>
+python3 src/python/obs_cli.py stats --vault <vault>
 
 # Or through ZSH
 zsh src/obs.zsh stats
-zsh src/obs.zsh stats <vault_id>
+zsh src/obs.zsh stats <vault>
 ```
 
 ### List Vaults
@@ -239,7 +239,7 @@ python3 src/python/obs_cli.py scan ~/Documents/YourVault --analyze -v
 
 # 5. View results
 python3 src/python/obs_cli.py vaults
-python3 src/python/obs_cli.py stats --vault <vault_id>
+python3 src/python/obs_cli.py stats --vault <vault>
 ```
 
 ### Verify ZSH Integration

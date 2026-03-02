@@ -1,5 +1,5 @@
 site_name: Obsidian CLI Ops
-site_description: An Intelligent Multi-Vault Knowledge Management Tool for Obsidian
+site_description: An Intelligent Command-Line Tool for Obsidian Vault Management
 site_author: Data-Wise
 site_url: https://data-wise.github.io/obsidian-cli-ops/
 docs_dir: docs_mkdocs
@@ -51,7 +51,12 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
-  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist
@@ -66,8 +71,15 @@ nav:
       - v3.0 Features: v3.0.md
       - AI Setup Guide: ai-setup.md
       - Migration Guide: migration.md
+  - Tutorials:
+      - Overview: tutorials/index.md
+      - Getting Started: tutorials/getting-started.md
+      - Graph Analysis: tutorials/graph-analysis.md
+      - AI Features: tutorials/ai-features.md
   - Archive:
       - v2.x Archive: archive/v2.x.md
+      - v2.0 Features: archive/v2.0.md
+      - R-Dev Integration: archive/r-dev.md
   - Developer:
       - Testing:
           - Overview: developer/testing/overview.md

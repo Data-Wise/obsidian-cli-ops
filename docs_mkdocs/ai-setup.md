@@ -240,13 +240,13 @@ Once setup is complete, you can use AI features:
 obs ai test
 
 # Find similar notes (coming soon)
-obs ai similar <vault_id>
+obs ai similar <vault>
 
 # Detect duplicates (coming soon)
-obs ai duplicates <vault_id>
+obs ai duplicates <vault>
 
 # Analyze topics (coming soon)
-obs ai topics <vault_id>
+obs ai topics <vault>
 ```
 
 ## Troubleshooting
@@ -536,10 +536,10 @@ print(f"Reason: {score.reason}")
 
 After setup, you'll be able to use these upcoming features:
 
-- `obs ai similar <vault_id>` - Find similar notes
-- `obs ai duplicates <vault_id>` - Detect duplicates
-- `obs ai topics <vault_id>` - Analyze topics
-- `obs ai suggest <vault_id>` - Get merge suggestions
+- `obs ai similar <vault>` - Find similar notes
+- `obs ai duplicates <vault>` - Detect duplicates
+- `obs ai topics <vault>` - Analyze topics
+- `obs ai suggest <vault>` - Get merge suggestions
 - `obs ai analyze <note_id>` - Analyze single note
 
 Stay tuned for Phase 2 feature implementation!

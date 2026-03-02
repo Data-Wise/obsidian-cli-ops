@@ -1,7 +1,7 @@
 priority: P1
 status: active - v3.0.0 implementation
 progress: 25
-updated: 2025-12-20
+updated: 2026-03-02
 version: 3.0.0-dev (Phase 7.1 complete)
 next: Phase 7.2 - AI-Powered Note Operations OR merge to main and tag v3.0.0-alpha
 target: v3.0.0 - Pure Obsidian Knowledge Manager (4-6 weeks remaining)
@@ -37,7 +37,22 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager (4-6 weeks remaining)
 
 ---
 
-## ✅ Just Completed (2025-12-20 - Phase 7.1 Complete)
+## ✅ Just Completed (2026-03-02 - Async & Vault Lookup Fix)
+
+### Fix: Async Vault Operations & Name/Prefix Lookup (PR #2)
+
+- ✅ **Fixed async/await mismatch**: `scan_vault()` called synchronously, wrapped with `asyncio.run()`
+- ✅ **Added vault name/prefix lookup**: 3-tier lookup (name → exact ID → prefix) in `db_manager.py`
+- ✅ **Extended to stats command**: Both `analyze` and `stats` now accept vault names and ID prefixes
+- ✅ **Ambiguous prefix feedback**: Clear error message when prefix matches multiple vaults
+- ✅ **Added 7 unit tests**: Full branch coverage for `get_vault_by_name_or_id()`
+- ✅ **Updated 20+ docs**: `<vault_id>` → `<vault>` in all user-facing CLI references
+- ✅ **Removed working artifacts**: ORCHESTRATE/SPEC files cleaned before merge
+- ✅ **Result:** 42/42 tests passing, vault commands work by name or ID
+
+---
+
+## ✅ Previously Completed (2025-12-20 - Phase 7.1 Complete)
 
 ### Phase 7.1: Simplification (100% Complete)
 
@@ -91,7 +106,7 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager (4-6 weeks remaining)
   - PHASE1-IMPLEMENTATION-PLAN.md - Created implementation guide
 - ✅ **Result:** Clear roadmap for v3.0.0 with focused scope and unique value proposition
 
-### Python Test Suite Fixed (35/35 passing)
+### Python Test Suite Fixed (42/42 passing)
 - ✅ Fixed in-memory database persistence bug (critical architectural fix)
   - SQLite `:memory:` creates new DB per connection
   - Added `_persistent_conn` to DatabaseManager for in-memory databases
@@ -100,7 +115,7 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager (4-6 weeks remaining)
 - ✅ Added directory validation to VaultScanner (prevents file-as-vault bugs)
 - ✅ Centralized `db_manager` fixture in conftest.py (DRY principle)
 - ✅ Fixed API mismatch: `init_db()` → `initialize_database()`
-- ✅ **Result:** All Python tests passing (was 29/35, now 35/35) 🎉
+- ✅ **Result:** All Python tests passing (was 29/35, now 42/42) 🎉
 
 ### v2.2.0 Release Complete
 - ✅ Verified GitHub Pages deployment at https://data-wise.github.io/obsidian-cli-ops/
