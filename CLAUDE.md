@@ -116,8 +116,8 @@ obs --verbose <command>         # Run any command with verbose output
 
 - `src/obs.zsh` - ZSH CLI interface (386 lines, v3.0.0)
 - `src/python/` - Python backend (~3,500 lines)
-  - `core/` - Business logic (859 lines)
-  - `obs_cli.py` - CLI interface (318 lines)
+  - `core/` - Business logic (931 lines)
+  - `obs_cli.py` - CLI interface (584 lines)
   - AI clients - Multi-provider AI (440+ lines)
 - `schema/vault_db.sql` - Database schema
 - `tests/` - Test suite (42 core tests passing)
@@ -185,57 +185,11 @@ Details in schema file and `docs/developer/architecture.md`.
 - Update relevant docs before committing
 - Run tests before pushing
 
-## v3.0.0 Simplification (Proposal A)
-
-**Version 3.0.0-dev** implements Proposal A - "Do one thing exceptionally well - manage Obsidian vaults"
-
-### Key Changes
-
-1. **Simplified CLI**: 20+ commands → 10 focused commands
-2. **Removed Features**:
-   - TUI interface (1,701 lines) - CLI-only for simplicity
-   - R-Dev integration (307 lines) - Belongs in R package ecosystem
-   - Legacy v1.x commands (126 lines) - Plugin install, sync, audit
-3. **Code Reduction**: 11,500 → ~7,400 lines (36% so far, target 61%)
-4. **ZSH-First**: Fast shell integration with Python core
-
-### Command Structure (v3.0.0)
-
-```
-PRIMARY: obs, obs stats, obs discover
-GRAPH: obs analyze
-AI: obs ai status/setup/test/similar/analyze/duplicates
-UTILITIES: obs help, obs version
-```
-
-### ADHD-Friendly Design (Retained)
-
-- **One command**: Just type `obs`
-- **Smart defaults**: iCloud auto-detect, last-vault memory
-- **Progressive disclosure**: Simple help by default
-- **Visual hierarchy**: Emojis, clear categories
-- **Reduced cognitive load**: 20+ → 10 commands (50% reduction)
-
-**See `PROPOSAL-REFOCUS-2025-12-20.md` and `REFOCUS-SUMMARY.md` for complete details.**
-
 ## Additional Resources
 
-### Detailed Documentation
-- **Architecture**: `.claude/rules/architecture.md` (890 lines)
+- **Architecture**: `.claude/rules/architecture.md` (297 lines)
 - **Workflows**: `.claude/rules/workflows.md`
 - **Troubleshooting**: `.claude/rules/troubleshooting.md`
-- **Skills**: `.claude/rules/skills.md`
-
-### Planning & Status
-- **Project Hub**: `docs/planning/project-hub.md` (ADHD-friendly)
-- **Project Plan**: `docs/planning/project-plan.md` (complete roadmap)
-- **Phase Summaries**: `docs/planning/phases/`
-- **Test Overview**: `docs/developer/testing/overview.md`
-
-### External Links
+- **v3.0 Details**: `PROPOSAL-REFOCUS-2025-12-20.md`, `REFOCUS-SUMMARY.md`
+- **Project Hub**: `docs/planning/project-hub.md`
 - **Published Docs**: https://data-wise.github.io/obsidian-cli-ops/
-- **Repository**: https://github.com/Data-Wise/obsidian-cli-ops
-
----
-
-**Note**: This file focuses on quick developer reference. For comprehensive documentation, see `docs/` directory and `.claude/rules/`.
