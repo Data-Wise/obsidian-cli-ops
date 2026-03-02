@@ -177,6 +177,12 @@ class DatabaseManager:
             rows = cursor.fetchall()
             if len(rows) == 1:
                 return dict(rows[0])
+            if len(rows) > 1:
+                names = [r['name'] for r in rows]
+                raise ValueError(
+                    f"Ambiguous ID prefix '{identifier}' matches {len(rows)} vaults: "
+                    + ", ".join(names)
+                )
 
             return None
 

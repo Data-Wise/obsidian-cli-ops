@@ -110,7 +110,11 @@ class ObsCLI:
         """
         try:
             # Resolve vault name/prefix to actual ID
-            vault = self.db.get_vault_by_name_or_id(vault_identifier)
+            try:
+                vault = self.db.get_vault_by_name_or_id(vault_identifier)
+            except ValueError as e:
+                print(f"❌ {e}")
+                sys.exit(1)
             if not vault:
                 print(f"❌ Vault not found: {vault_identifier}")
                 sys.exit(1)
@@ -158,18 +162,23 @@ class ObsCLI:
             print(f"❌ Error: {e}")
             sys.exit(1)
 
-    def stats(self, vault_id: Optional[str] = None):
+    def stats(self, vault_identifier: Optional[str] = None):
         """
         Show database statistics with Rich panels.
 
         Args:
-            vault_id: Optional vault ID to filter
+            vault_identifier: Optional vault name or ID (full or prefix)
         """
-        if vault_id:
-            vault = self.db.get_vault(vault_id)
-            if not vault:
-                console.print(f"[red]❌ Vault not found: {vault_id}[/]")
+        if vault_identifier:
+            try:
+                vault = self.db.get_vault_by_name_or_id(vault_identifier)
+            except ValueError as e:
+                console.print(f"[red]❌ {e}[/]")
                 sys.exit(1)
+            if not vault:
+                console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+                sys.exit(1)
+            vault_id = vault['id']
 
             notes = self.db.list_notes(vault_id)
             link_count = sum(len(self.db.get_outgoing_links(note['id'])) for note in notes)
@@ -342,7 +351,7 @@ def main():
     # stats command
     stats_parser = subparsers.add_parser('stats',
                                         help='Show statistics')
-    stats_parser.add_argument('--vault', help='Vault ID')
+    stats_parser.add_argument('--vault', help='Vault name or ID')
 
     # vaults command
     subparsers.add_parser('vaults',
@@ -405,7 +414,7 @@ def main():
             cli.analyze(args.vault, verbose=args.verbose)
 
         elif args.command == 'stats':
-            cli.stats(vault_id=args.vault)
+            cli.stats(vault_identifier=args.vault)
 
         elif args.command == 'vaults':
             cli.list_vaults()
