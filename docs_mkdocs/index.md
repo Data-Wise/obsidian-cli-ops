@@ -98,7 +98,7 @@ obs ai similar <note_id>
 obs ai analyze <note_id>
 
 # Find duplicates in vault
-obs ai duplicates <vault_id>
+obs ai duplicates <vault>
 ```
 
 [Full Installation Guide](installation.md){ .md-button .md-button--primary }

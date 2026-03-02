@@ -97,7 +97,7 @@ obs_help() {
         echo ""
 
         echo "📊 GRAPH ANALYSIS"
-        echo "  obs analyze <vault_id>    Analyze vault graph metrics"
+        echo "  obs analyze <vault>       Analyze vault graph metrics"
         echo ""
 
         echo "🤖 AI FEATURES"
@@ -120,7 +120,7 @@ obs_help() {
         echo "  obs stats <vault>         Show vault statistics"
         echo "  obs discover <path>       Find new vaults"
         echo ""
-        echo "💡 TIP: Use 'obs stats <vault_id>' to see vault details!"
+        echo "💡 TIP: Use 'obs stats <vault>' to see vault details!"
         echo ""
         echo "More commands: obs help --all"
     fi
@@ -188,20 +188,20 @@ obs_discover() {
 
 obs_analyze() {
     local python_cli=$(_get_python_cli) || return 1
-    local vault_id=$1
+    local vault=$1
 
-    if [[ -z "$vault_id" ]]; then
-        _log "ERROR" "Vault ID required"
-        echo "Usage: obs analyze <vault_id>"
+    if [[ -z "$vault" ]]; then
+        _log "ERROR" "Vault name or ID required"
+        echo "Usage: obs analyze <vault>"
         echo ""
-        echo "Get vault IDs with: obs vaults"
+        echo "Use vault name or ID prefix (see: obs vaults)"
         return 1
     fi
 
-    _log_verbose "Analyzing vault: $vault_id"
+    _log_verbose "Analyzing vault: $vault"
 
     # Build command
-    local cmd=("$python_cli" "analyze" "$vault_id")
+    local cmd=("$python_cli" "analyze" "$vault")
 
     # Add verbose flag if enabled
     if [[ "$VERBOSE" == "true" ]]; then

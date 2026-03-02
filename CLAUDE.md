@@ -69,11 +69,11 @@ ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 ```bash
 # PRIMARY COMMANDS
 obs                             # List vaults
-obs stats <vault_id>            # Show vault statistics
+obs stats <vault>               # Show vault statistics
 obs discover <path>             # Find vaults in directory
 
 # GRAPH ANALYSIS
-obs analyze <vault_id>          # Analyze vault graph metrics
+obs analyze <vault>             # Analyze vault graph metrics
 
 # AI FEATURES
 obs ai status                   # Show AI provider status
@@ -81,7 +81,7 @@ obs ai setup                    # Interactive AI setup wizard
 obs ai test                     # Test all providers
 obs ai similar <note_id>        # Find similar notes
 obs ai analyze <note_id>        # Analyze note with AI
-obs ai duplicates <vault_id>    # Find duplicate notes
+obs ai duplicates <vault>       # Find duplicate notes
 
 # UTILITIES
 obs help [--all]                # Show help

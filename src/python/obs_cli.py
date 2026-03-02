@@ -9,6 +9,7 @@ Main CLI for v2.0 Python functionality:
 """
 
 import sys
+import asyncio
 import argparse
 from pathlib import Path
 from typing import Optional
@@ -66,7 +67,7 @@ class ObsCLI:
             for vault_path in vaults:
                 vault_name = Path(vault_path).name
                 try:
-                    result = self.vault_manager.scan_vault(vault_path, vault_name)
+                    result = asyncio.run(self.vault_manager.scan_vault(vault_path, vault_name))
                     self._print_scan_result(result, verbose)
                     print("")
                 except (VaultNotFoundError, ScanError) as e:
@@ -85,7 +86,7 @@ class ObsCLI:
         """
         try:
             # Scan vault using core layer
-            result = self.vault_manager.scan_vault(vault_path, vault_name)
+            result = asyncio.run(self.vault_manager.scan_vault(vault_path, vault_name))
 
             # Print scan result
             self._print_scan_result(result, verbose)
@@ -99,15 +100,26 @@ class ObsCLI:
             print(f"❌ Error: {e}")
             sys.exit(1)
 
-    def analyze(self, vault_id: str, verbose: bool = False):
+    def analyze(self, vault_identifier: str, verbose: bool = False):
         """
         Analyze vault graph and calculate metrics.
 
         Args:
-            vault_id: Vault ID to analyze
+            vault_identifier: Vault name or ID (full or prefix)
             verbose: Print detailed output
         """
         try:
+            # Resolve vault name/prefix to actual ID
+            try:
+                vault = self.db.get_vault_by_name_or_id(vault_identifier)
+            except ValueError as e:
+                print(f"❌ {e}")
+                sys.exit(1)
+            if not vault:
+                print(f"❌ Vault not found: {vault_identifier}")
+                sys.exit(1)
+            vault_id = vault['id']
+
             # Run analysis using core layer
             result = self.graph_analyzer.analyze_vault(vault_id)
 
@@ -150,18 +162,23 @@ class ObsCLI:
             print(f"❌ Error: {e}")
             sys.exit(1)
 
-    def stats(self, vault_id: Optional[str] = None):
+    def stats(self, vault_identifier: Optional[str] = None):
         """
         Show database statistics with Rich panels.
 
         Args:
-            vault_id: Optional vault ID to filter
+            vault_identifier: Optional vault name or ID (full or prefix)
         """
-        if vault_id:
-            vault = self.db.get_vault(vault_id)
-            if not vault:
-                console.print(f"[red]❌ Vault not found: {vault_id}[/]")
+        if vault_identifier:
+            try:
+                vault = self.db.get_vault_by_name_or_id(vault_identifier)
+            except ValueError as e:
+                console.print(f"[red]❌ {e}[/]")
                 sys.exit(1)
+            if not vault:
+                console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+                sys.exit(1)
+            vault_id = vault['id']
 
             notes = self.db.list_notes(vault_id)
             link_count = sum(len(self.db.get_outgoing_links(note['id'])) for note in notes)
@@ -329,12 +346,12 @@ def main():
     # analyze command
     analyze_parser = subparsers.add_parser('analyze',
                                           help='Analyze vault graph')
-    analyze_parser.add_argument('vault_id', help='Vault ID')
+    analyze_parser.add_argument('vault', help='Vault name or ID')
 
     # stats command
     stats_parser = subparsers.add_parser('stats',
                                         help='Show statistics')
-    stats_parser.add_argument('--vault', help='Vault ID')
+    stats_parser.add_argument('--vault', help='Vault name or ID')
 
     # vaults command
     subparsers.add_parser('vaults',
@@ -394,10 +411,10 @@ def main():
                     analyze=args.analyze, verbose=args.verbose)
 
         elif args.command == 'analyze':
-            cli.analyze(args.vault_id, verbose=args.verbose)
+            cli.analyze(args.vault, verbose=args.verbose)
 
         elif args.command == 'stats':
-            cli.stats(vault_id=args.vault)
+            cli.stats(vault_identifier=args.vault)
 
         elif args.command == 'vaults':
             cli.list_vaults()

@@ -88,11 +88,11 @@ pip3 install -r src/python/requirements.txt
 ```bash
 # PRIMARY COMMANDS
 obs                        # List your vaults
-obs stats <vault_id>       # Show vault statistics
+obs stats <vault>          # Show vault statistics
 obs discover <path>        # Find vaults in directory
 
 # GRAPH ANALYSIS
-obs analyze <vault_id>     # Analyze vault graph metrics
+obs analyze <vault>        # Analyze vault graph metrics
 
 # AI FEATURES (optional)
 obs ai status              # Check provider status
