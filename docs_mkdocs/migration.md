@@ -30,7 +30,7 @@
 | `obs tui` | `obs` | TUI removed - use CLI commands |
 | `obs tui --vault-id <id>` | `obs stats <id>` | CLI vault statistics |
 | `obs switch` | `obs` | Vault list is the default view |
-| `obs open <name>` | `obs stats <id>` | Use vault name or ID |
+| `obs open <name>` | `obs stats <id>` | Use vault ID instead of name |
 | `obs manage` | `obs discover` + `obs stats` | Split into focused commands |
 | `obs graph` | `obs analyze <id>` | Graph analysis via CLI |
 | `obs r link` | *(removed)* | Use R package ecosystem instead |
@@ -50,7 +50,7 @@
 | `obs` | ✅ Enhanced | Now lists vaults (was TUI launcher) |
 | `obs stats <vault>` | ✅ Retained | Same functionality |
 | `obs discover <path>` | ✅ Retained | Same functionality |
-| `obs analyze <vault>` | ✅ Enhanced | Now accepts vault name or ID prefix |
+| `obs analyze <vault>` | ✅ Retained | Same functionality |
 | `obs vaults` | ✅ Retained | Same as `obs` (alias) |
 | `obs ai status` | ✅ Retained | Same functionality |
 | `obs ai setup` | ✅ Retained | Same functionality |

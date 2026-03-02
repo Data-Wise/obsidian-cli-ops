@@ -108,11 +108,11 @@ class TestRichCLIOutput:
     @patch('obs_cli.console')
     def test_stats_vault_not_found(self, mock_console, mock_ga, mock_vm, mock_db_class):
         """Test stats command with non-existent vault."""
-        mock_db_class.return_value.get_vault.return_value = None
-        
+        mock_db_class.return_value.get_vault_by_name_or_id.return_value = None
+
         cli = ObsCLI()
         with pytest.raises(SystemExit):
-            cli.stats(vault_id="nonexistent")
+            cli.stats(vault_identifier="nonexistent")
 
 
 class TestCLICommands:

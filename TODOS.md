@@ -136,10 +136,10 @@
 
 ### AI Features (Phase 5 - Future Enhancements)
 - [x] Find similar notes - `obs ai similar <note_id>` ✅ v2.2.0
-- [x] Detect duplicates - `obs ai duplicates <vault_id>` ✅ v2.2.0
+- [x] Detect duplicates - `obs ai duplicates <vault>` ✅ v2.2.0
 - [x] Analyze notes - `obs ai analyze <note_id>` ✅ v2.2.0
-- [ ] Topic analysis - `obs ai topics <vault_id>`
-- [ ] Merge suggestions - `obs ai suggest <vault_id>`
+- [ ] Topic analysis - `obs ai topics <vault>`
+- [ ] Merge suggestions - `obs ai suggest <vault>`
 
 ### Learning System (Phase 6 - Deferred)
 - [ ] User feedback collection

@@ -1,0 +1,5 @@
+site/
+node_modules/
+src/python/
+*.sql
+*.zsh

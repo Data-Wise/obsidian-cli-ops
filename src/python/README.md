@@ -49,14 +49,14 @@ python3 src/python/obs_cli.py discover ~/Documents
 python3 src/python/obs_cli.py scan ~/Documents/MyVault --analyze -v
 
 # Analyze vault graph
-python3 src/python/obs_cli.py analyze <vault_id> -v
+python3 src/python/obs_cli.py analyze <vault> -v
 
 # List vaults
 python3 src/python/obs_cli.py vaults
 
 # Show statistics
 python3 src/python/obs_cli.py stats
-python3 src/python/obs_cli.py stats --vault <vault_id>
+python3 src/python/obs_cli.py stats --vault <vault>
 
 # Database management
 python3 src/python/obs_cli.py db init
@@ -72,14 +72,14 @@ The Python CLI is integrated with the `obs` ZSH command:
 obs discover ~/Documents --scan
 
 # Analyze vault
-obs analyze <vault_id> -v
+obs analyze <vault> -v
 
 # List vaults
 obs vaults
 
 # Show stats
 obs stats
-obs stats <vault_id>
+obs stats <vault>
 ```
 
 ### Python API

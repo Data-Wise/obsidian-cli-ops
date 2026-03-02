@@ -1,7 +1,7 @@
 # Obsidian CLI Ops v2.0 - Python Dependencies
 
 # Core dependencies
-python>=3.9
+# Requires Python >= 3.9 (not a pip package)
 
 # Database
 # (sqlite3 is built-in)

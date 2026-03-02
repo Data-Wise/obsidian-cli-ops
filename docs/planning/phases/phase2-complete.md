@@ -250,10 +250,10 @@ Root:
 
 ```bash
 # Planned commands
-obs ai similar <vault_id>       # Find similar notes
-obs ai duplicates <vault_id>    # Detect duplicates
-obs ai topics <vault_id>        # Analyze topics
-obs ai suggest <vault_id>       # Merge suggestions
+obs ai similar <vault>       # Find similar notes
+obs ai duplicates <vault>    # Detect duplicates
+obs ai topics <vault>        # Analyze topics
+obs ai suggest <vault>       # Merge suggestions
 obs ai analyze <note_id>        # Single note analysis
 ```
 

@@ -111,11 +111,11 @@ class TestStatsEdgeCases:
         """Test stats for vault that doesn't exist."""
         from obs_cli import ObsCLI
         
-        mock_db.return_value.get_vault.return_value = None
-        
+        mock_db.return_value.get_vault_by_name_or_id.return_value = None
+
         cli = ObsCLI()
         with pytest.raises(SystemExit) as exc_info:
-            cli.stats(vault_id="nonexistent123")
+            cli.stats(vault_identifier="nonexistent123")
         
         assert exc_info.value.code == 1
 

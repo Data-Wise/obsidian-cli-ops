@@ -136,6 +136,56 @@ class DatabaseManager:
             row = cursor.fetchone()
             return dict(row) if row else None
 
+    def get_vault_by_name_or_id(self, identifier: str) -> Optional[Dict]:
+        """Get vault by name (exact match) or ID prefix.
+
+        Lookup order:
+        1. Exact name match (case-insensitive)
+        2. Exact ID match
+        3. ID prefix match
+
+        Args:
+            identifier: Vault name or (partial) ID
+
+        Returns:
+            Vault dict or None if not found
+        """
+        with self.get_connection() as conn:
+            # Try exact name match first (case-insensitive)
+            cursor = conn.execute(
+                "SELECT * FROM vaults WHERE LOWER(name) = LOWER(?)",
+                (identifier,)
+            )
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+
+            # Try exact ID match
+            cursor = conn.execute(
+                "SELECT * FROM vaults WHERE id = ?",
+                (identifier,)
+            )
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+
+            # Try ID prefix match
+            cursor = conn.execute(
+                "SELECT * FROM vaults WHERE id LIKE ? || '%'",
+                (identifier,)
+            )
+            rows = cursor.fetchall()
+            if len(rows) == 1:
+                return dict(rows[0])
+            if len(rows) > 1:
+                names = [r['name'] for r in rows]
+                raise ValueError(
+                    f"Ambiguous ID prefix '{identifier}' matches {len(rows)} vaults: "
+                    + ", ".join(names)
+                )
+
+            return None
+
     def get_vault_by_path(self, path: str) -> Optional[Dict]:
         """Get vault information by path."""
         vault_id = self._generate_id(path)

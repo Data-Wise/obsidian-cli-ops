@@ -50,9 +50,11 @@ def is_package_installed(package: str) -> bool:
     """Check if a Python package is installed."""
     import_name = IMPORT_NAMES.get(package, package.replace("-", "_"))
 
-    # Handle nested imports like google.generativeai
-    top_level = import_name.split(".")[0]
-    return importlib.util.find_spec(top_level) is not None
+    try:
+        # Check full import path (e.g. google.generativeai)
+        return importlib.util.find_spec(import_name) is not None
+    except (ImportError, ValueError):
+        return False
 
 
 def get_missing_deps(provider: str) -> List[str]:
@@ -116,7 +118,6 @@ def prompt_install_choice(provider: str, missing: List[str]) -> str:
         print()
         return "cancel"
 
-
 def ensure_provider_available(
     provider: str,
     mode: InstallMode = InstallMode.PROMPT
@@ -176,7 +177,6 @@ def ensure_provider_available(
     else:
         return False, "Installation cancelled"
 
-
 def _check_api_key_needed(provider: str) -> Tuple[bool, str]:
     """Check if provider needs an API key and prompt if missing."""
     import os
@@ -203,7 +203,6 @@ def _check_api_key_needed(provider: str) -> Tuple[bool, str]:
             return True, "Packages installed (API key not set)"
 
     return True, "Ready"
-
 
 def print_install_help(provider: str):
     """Print installation help for a provider."""

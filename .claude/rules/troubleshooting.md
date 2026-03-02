@@ -22,7 +22,7 @@ paths:
 ## Link Resolution Issues
 - Verify wikilinks are in standard format: `[[target]]` or `[[target|display]]`
 - Check for relative path issues
-- Review broken links: `obs stats <vault_id>`
+- Review broken links: `obs stats <vault>`
 
 ## Performance Considerations
 
