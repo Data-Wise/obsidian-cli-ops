@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="An Intelligent Multi-Vault Knowledge Management Tool for Obsidian">
+        <meta name="description" content="An Intelligent Command-Line Tool for Obsidian Vault Management">
       
       
         <meta name="author" content="Data-Wise">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -275,6 +275,26 @@
   
   
   Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorials/" class="md-tabs__link">
+          
+  
+  
+  Tutorials
 
         </a>
       </li>
@@ -656,33 +676,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#primary-commands-90-of-usage" class="md-nav__link">
+  <a href="#command-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Primary Commands (90% of usage)
+        Command Reference
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Actions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Actions">
+    <nav class="md-nav" aria-label="Command Reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#open-specific-vault" class="md-nav__link">
+  <a href="#primary-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Open Specific Vault
+        Primary Commands
       
     </span>
   </a>
@@ -690,10 +699,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#graph-visualization" class="md-nav__link">
+  <a href="#graph-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Graph Visualization
+        Graph Analysis
       
     </span>
   </a>
@@ -701,50 +710,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#statistics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Statistics
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vault-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vault Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Vault Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manage-vaults-menu" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manage Vaults Menu
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ai-features" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -753,158 +718,13 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="AI Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ai-provider-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Provider Management
-      
-    </span>
-  </a>
-  
 </li>
         
           <li class="md-nav__item">
-  <a href="#find-similar-notes" class="md-nav__link">
+  <a href="#utilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Find Similar Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analyze-note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analyze Note
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#find-duplicates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Find Duplicates
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#r-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        R Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="R Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#link-r-project" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Link R Project
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#copy-artifacts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Copy Artifacts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#search-theory-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Search Theory Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#legacy-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Legacy Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Help
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting Help">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#simple-help-5-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Simple Help (5 commands)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#detailed-help-12-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Detailed Help (12 commands)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#namespace-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Namespace Help
+        Utilities
       
     </span>
   </a>
@@ -929,6 +749,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#first-time-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#daily-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -940,10 +771,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#switch-between-vaults" class="md-nav__link">
+  <a href="#vault-lookup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Switch Between Vaults
+        Vault Lookup
       
     </span>
   </a>
@@ -951,21 +782,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#discover-new-vaults" class="md-nav__link">
+  <a href="#ai-powered-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discover New Vaults
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#r-project-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        R Project Workflow
+        AI-Powered Analysis
       
     </span>
   </a>
@@ -974,6 +794,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vault-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-analysis_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Analysis
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1001,10 +843,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#last-vault-tracking" class="md-nav__link">
+  <a href="#database-location" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Last Vault Tracking
+        Database Location
       
     </span>
   </a>
@@ -1012,10 +854,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-configuration-optional" class="md-nav__link">
+  <a href="#custom-root-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Configuration (Optional)
+        Custom Root (Optional)
       
     </span>
   </a>
@@ -1032,17 +874,6 @@
     <span class="md-ellipsis">
       
         Progressive Disclosure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#keyboard-shortcuts-in-tui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Keyboard Shortcuts in TUI
       
     </span>
   </a>
@@ -1096,6 +927,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1288,7 +1130,7 @@
   <span class="md-ellipsis">
     
   
-    Archive
+    Tutorials
   
 
     
@@ -1304,7 +1146,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Archive
+    Tutorials
   
 
           </label>
@@ -1317,14 +1159,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../archive/v2.x/" class="md-nav__link">
+      <a href="../tutorials/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    v2.x Archive
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/graph-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/ai-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Features
   
 
     
@@ -1375,7 +1301,7 @@
   <span class="md-ellipsis">
     
   
-    Developer
+    Archive
   
 
     
@@ -1388,6 +1314,149 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v2.x/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2.x Archive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v2.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2.0 Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/r-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    R-Dev Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1417,10 +1486,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
         
           
-          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
             
   
   
@@ -1438,8 +1507,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1568,10 +1637,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1589,8 +1658,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1620,10 +1689,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
         
           
-          <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
             
   
   
@@ -1641,8 +1710,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_1">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1827,10 +1896,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1848,8 +1917,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1971,33 +2040,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#primary-commands-90-of-usage" class="md-nav__link">
+  <a href="#command-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Primary Commands (90% of usage)
+        Command Reference
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Actions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Actions">
+    <nav class="md-nav" aria-label="Command Reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#open-specific-vault" class="md-nav__link">
+  <a href="#primary-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Open Specific Vault
+        Primary Commands
       
     </span>
   </a>
@@ -2005,10 +2063,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#graph-visualization" class="md-nav__link">
+  <a href="#graph-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Graph Visualization
+        Graph Analysis
       
     </span>
   </a>
@@ -2016,50 +2074,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#statistics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Statistics
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vault-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vault Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Vault Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manage-vaults-menu" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manage Vaults Menu
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ai-features" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2068,158 +2082,13 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="AI Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ai-provider-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Provider Management
-      
-    </span>
-  </a>
-  
 </li>
         
           <li class="md-nav__item">
-  <a href="#find-similar-notes" class="md-nav__link">
+  <a href="#utilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Find Similar Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analyze-note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analyze Note
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#find-duplicates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Find Duplicates
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#r-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        R Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="R Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#link-r-project" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Link R Project
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#copy-artifacts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Copy Artifacts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#search-theory-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Search Theory Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#legacy-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Legacy Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Help
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting Help">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#simple-help-5-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Simple Help (5 commands)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#detailed-help-12-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Detailed Help (12 commands)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#namespace-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Namespace Help
+        Utilities
       
     </span>
   </a>
@@ -2244,6 +2113,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#first-time-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#daily-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2255,10 +2135,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#switch-between-vaults" class="md-nav__link">
+  <a href="#vault-lookup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Switch Between Vaults
+        Vault Lookup
       
     </span>
   </a>
@@ -2266,21 +2146,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#discover-new-vaults" class="md-nav__link">
+  <a href="#ai-powered-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discover New Vaults
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#r-project-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        R Project Workflow
+        AI-Powered Analysis
       
     </span>
   </a>
@@ -2289,6 +2158,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vault-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-analysis_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Analysis
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2316,10 +2207,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#last-vault-tracking" class="md-nav__link">
+  <a href="#database-location" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Last Vault Tracking
+        Database Location
       
     </span>
   </a>
@@ -2327,10 +2218,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-configuration-optional" class="md-nav__link">
+  <a href="#custom-root-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Configuration (Optional)
+        Custom Root (Optional)
       
     </span>
   </a>
@@ -2347,17 +2238,6 @@
     <span class="md-ellipsis">
       
         Progressive Disclosure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#keyboard-shortcuts-in-tui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Keyboard Shortcuts in TUI
       
     </span>
   </a>
@@ -2414,6 +2294,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2436,265 +2327,272 @@
 
 <h1 id="usage-guide">Usage Guide<a class="headerlink" href="#usage-guide" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p><strong>Works exactly like the Obsidian app - just type <code>obs</code>!</strong></p>
+<p><strong>Just type <code>obs</code> - it does the right thing!</strong></p>
 </blockquote>
 <h2 id="philosophy">Philosophy<a class="headerlink" href="#philosophy" title="Permanent link">&para;</a></h2>
-<p><strong>Version 2.2.0</strong> implements <strong>Option D</strong> - a complete redesign that mimics the official Obsidian app's behavior, plus AI-powered features.</p>
+<p><strong>Version 3.0</strong> focuses on doing one thing exceptionally well: managing Obsidian vaults from the command line.</p>
 <ul>
-<li><strong>Zero-Friction Start</strong>: Just type <code>obs</code> (like clicking the Obsidian icon)</li>
-<li><strong>iCloud-First</strong>: Auto-detects <code>~/Library/Mobile Documents/iCloud~md~obsidian/Documents</code></li>
-<li><strong>Last-Vault Tracking</strong>: Remembers where you were (like Obsidian app)</li>
-<li><strong>ADHD-Friendly</strong>: One command, smart defaults, progressive disclosure</li>
+<li><strong>Zero-Friction Start</strong>: Just type <code>obs</code></li>
+<li><strong>iCloud-First</strong>: Auto-detects your Obsidian vaults</li>
+<li><strong>ADHD-Friendly</strong>: 10 focused commands, smart defaults, progressive disclosure</li>
+<li><strong>AI-Powered</strong>: Optional AI features for deeper vault analysis</li>
 </ul>
+<hr />
 <h2 id="the-one-command">The One Command<a class="headerlink" href="#the-one-command" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs
 </code></pre></div>
-<p><strong>What it does:</strong>
-1. Opens your last-used vault automatically (like Obsidian app)
-2. Shows vault picker if no last vault
-3. Auto-detects iCloud vaults on first run</p>
-<p><strong>That's it!</strong> Works exactly like launching Obsidian.</p>
-<h2 id="primary-commands-90-of-usage">Primary Commands (90% of usage)<a class="headerlink" href="#primary-commands-90-of-usage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w">                     </span><span class="c1"># Open last vault (or show picker)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs<span class="w"> </span>switch<span class="w"> </span><span class="o">[</span>name<span class="o">]</span><span class="w">       </span><span class="c1"># Vault switcher (like &quot;Open another vault&quot;)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>obs<span class="w"> </span>manage<span class="w">              </span><span class="c1"># Manage vaults (like &quot;Manage Vaults&quot; menu)</span>
-</code></pre></div>
-<p><strong>Obsidian App Equivalent:</strong>
-- <code>obs</code> = Clicking Obsidian icon
-- <code>obs switch</code> = "Open another vault" command
-- <code>obs manage</code> = "Manage Vaults" menu</p>
-<h2 id="quick-actions">Quick Actions<a class="headerlink" href="#quick-actions" title="Permanent link">&para;</a></h2>
-<h3 id="open-specific-vault">Open Specific Vault<a class="headerlink" href="#open-specific-vault" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>open<span class="w"> </span>&lt;name&gt;<span class="w">         </span><span class="c1"># Open vault by name</span>
-</code></pre></div>
-<p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>open<span class="w"> </span>Research_Lab
-</code></pre></div></p>
-<h3 id="graph-visualization">Graph Visualization<a class="headerlink" href="#graph-visualization" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>graph<span class="w"> </span><span class="o">[</span>vault<span class="o">]</span><span class="w">       </span><span class="c1"># Show graph (current vault or specified)</span>
-</code></pre></div>
-<p><strong>Examples:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>graph<span class="w">               </span><span class="c1"># Graph of current/last vault</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w"> </span>graph<span class="w"> </span>&lt;vault_id&gt;<span class="w">    </span><span class="c1"># Graph of specific vault</span>
-</code></pre></div></p>
-<h3 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>vault<span class="o">]</span><span class="w">       </span><span class="c1"># Show stats (all vaults or specified)</span>
-</code></pre></div>
-<p><strong>Examples:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>stats<span class="w">               </span><span class="c1"># Global statistics</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault_id&gt;<span class="w">    </span><span class="c1"># Vault-specific statistics</span>
-</code></pre></div></p>
-<h2 id="vault-management">Vault Management<a class="headerlink" href="#vault-management" title="Permanent link">&para;</a></h2>
-<h3 id="manage-vaults-menu">Manage Vaults Menu<a class="headerlink" href="#manage-vaults-menu" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>manage<span class="w">              </span><span class="c1"># Show manage menu (like Obsidian)</span>
-</code></pre></div>
-<p><strong>Subcommands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>obs<span class="w"> </span>manage<span class="w"> </span>create<span class="w">       </span><span class="c1"># Create new vault</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>obs<span class="w"> </span>manage<span class="w"> </span>open<span class="w"> </span>&lt;path&gt;<span class="w">  </span><span class="c1"># Open folder as vault</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>obs<span class="w"> </span>manage<span class="w"> </span>remove<span class="w"> </span>&lt;id&gt;<span class="w">  </span><span class="c1"># Remove vault from database</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>obs<span class="w"> </span>manage<span class="w"> </span>rename<span class="w">       </span><span class="c1"># Rename vault</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>obs<span class="w"> </span>manage<span class="w"> </span>info<span class="w"> </span>&lt;id&gt;<span class="w">    </span><span class="c1"># Show vault details</span>
-</code></pre></div>
-<p><strong>Examples:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Open folder as vault (discovers and scans)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>obs<span class="w"> </span>manage<span class="w"> </span>open<span class="w"> </span>~/Documents/MyVault
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Show vault information</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>obs<span class="w"> </span>manage<span class="w"> </span>info<span class="w"> </span>vault_123
-</code></pre></div></p>
-<h2 id="ai-features">AI Features<a class="headerlink" href="#ai-features" title="Permanent link">&para;</a></h2>
-<p><strong>Version 2.2.0</strong> adds powerful AI-powered note analysis with multi-provider support.</p>
-<h3 id="ai-provider-management">AI Provider Management<a class="headerlink" href="#ai-provider-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">           </span><span class="c1"># Check provider availability</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup<span class="w">            </span><span class="c1"># Interactive setup wizard</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span><span class="w">             </span><span class="c1"># Test provider functionality</span>
-</code></pre></div>
-<p><strong>Supported Providers:</strong>
-- <code>gemini-api</code> - Fast batch operations (default)
-- <code>gemini-cli</code> - CLI fallback
-- <code>claude-cli</code> - High-quality analysis
-- <code>ollama</code> - Local, free, private</p>
-<h3 id="find-similar-notes">Find Similar Notes<a class="headerlink" href="#find-similar-notes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w">              </span><span class="c1"># Find similar notes</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span><span class="w">   </span><span class="c1"># Limit results</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.5<span class="w">  </span><span class="c1"># Min similarity</span>
-</code></pre></div>
-<p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>abc123<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</code></pre></div></p>
-<h3 id="analyze-note">Analyze Note<a class="headerlink" href="#analyze-note" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span>&lt;note_id&gt;<span class="w">              </span><span class="c1"># Deep note analysis</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--provider<span class="w"> </span>gemini-api
-</code></pre></div>
-<p><strong>Returns:</strong>
-- Topics and themes
-- Suggested tags
-- Quality scores
-- Improvement suggestions</p>
-<h3 id="find-duplicates">Find Duplicates<a class="headerlink" href="#find-duplicates" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>&lt;vault_id&gt;<span class="w">          </span><span class="c1"># Scan vault for duplicates</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>&lt;vault_id&gt;<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.85
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>&lt;vault_id&gt;<span class="w"> </span>--limit<span class="w"> </span><span class="m">50</span>
-</code></pre></div>
-<p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>my-vault<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.9
-</code></pre></div></p>
-<h2 id="r-integration">R Integration<a class="headerlink" href="#r-integration" title="Permanent link">&para;</a></h2>
-<p><strong>Shortened from <code>obs r-dev</code> to <code>obs r</code></strong> (ADHD-friendly!)</p>
-<h3 id="link-r-project">Link R Project<a class="headerlink" href="#link-r-project" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>r<span class="w"> </span>link<span class="w">              </span><span class="c1"># Link current R project to vault folder</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>obs<span class="w"> </span>r<span class="w"> </span>unlink<span class="w">            </span><span class="c1"># Remove R project mapping</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>obs<span class="w"> </span>r<span class="w"> </span>status<span class="w">            </span><span class="c1"># Show current link status</span>
-</code></pre></div>
-<h3 id="copy-artifacts">Copy Artifacts<a class="headerlink" href="#copy-artifacts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>obs<span class="w"> </span>r<span class="w"> </span>log<span class="w"> </span>&lt;file&gt;<span class="w">        </span><span class="c1"># Copy result to vault (06_Analysis)</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>obs<span class="w"> </span>r<span class="w"> </span>draft<span class="w"> </span>&lt;file&gt;<span class="w">      </span><span class="c1"># Copy draft to vault (02_Drafts)</span>
-</code></pre></div>
-<p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>obs<span class="w"> </span>r<span class="w"> </span>log<span class="w"> </span>result.png<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Analysis complete&quot;</span>
-</code></pre></div></p>
-<h3 id="search-theory-notes">Search Theory Notes<a class="headerlink" href="#search-theory-notes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>obs<span class="w"> </span>r<span class="w"> </span>context<span class="w"> </span>&lt;term&gt;<span class="w">    </span><span class="c1"># Search Knowledge_Base for theory</span>
-</code></pre></div>
-<p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>obs<span class="w"> </span>r<span class="w"> </span>context<span class="w"> </span><span class="s2">&quot;mediation analysis&quot;</span>
-</code></pre></div></p>
-<h2 id="legacy-commands">Legacy Commands<a class="headerlink" href="#legacy-commands" title="Permanent link">&para;</a></h2>
-<p><strong>All old commands still work</strong> (backward compatible):</p>
+<p>Lists all your registered vaults with stats at a glance. This is your starting point for everything.</p>
+<hr />
+<h2 id="command-reference">Command Reference<a class="headerlink" href="#command-reference" title="Permanent link">&para;</a></h2>
+<h3 id="primary-commands">Primary Commands<a class="headerlink" href="#primary-commands" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Legacy Command</th>
-<th>New Command</th>
-<th>Notes</th>
+<th>Command</th>
+<th>What It Does</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>obs tui</code></td>
 <td><code>obs</code></td>
-<td>Now the default!</td>
+<td>List all vaults</td>
 </tr>
 <tr>
-<td><code>obs discover</code></td>
-<td><code>obs manage open</code></td>
-<td>Still works</td>
+<td><code>obs stats &lt;vault&gt;</code></td>
+<td>Show vault statistics</td>
 </tr>
 <tr>
-<td><code>obs vaults</code></td>
-<td><code>obs switch</code></td>
-<td>Still works</td>
-</tr>
-<tr>
-<td><code>obs r-dev</code></td>
-<td><code>obs r</code></td>
-<td>Both work</td>
+<td><code>obs discover &lt;path&gt;</code></td>
+<td>Find vaults in a directory</td>
 </tr>
 </tbody>
 </table>
-<h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
-<h3 id="simple-help-5-commands">Simple Help (5 commands)<a class="headerlink" href="#simple-help-5-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w">                </span><span class="c1"># Quick start guide</span>
-</code></pre></div>
-<h3 id="detailed-help-12-commands">Detailed Help (12 commands)<a class="headerlink" href="#detailed-help-12-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span>--all<span class="w">          </span><span class="c1"># Show all commands</span>
-</code></pre></div>
-<h3 id="namespace-help">Namespace Help<a class="headerlink" href="#namespace-help" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>obs<span class="w"> </span>manage<span class="w">              </span><span class="c1"># Show manage subcommands</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obs<span class="w"> </span>ai<span class="w">                  </span><span class="c1"># Show AI subcommands</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>obs<span class="w"> </span>r<span class="w">                   </span><span class="c1"># Show R subcommands</span>
-</code></pre></div>
+<h3 id="graph-analysis">Graph Analysis<a class="headerlink" href="#graph-analysis" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs analyze &lt;vault&gt;</code></td>
+<td>Analyze vault graph metrics</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-features">AI Features<a class="headerlink" href="#ai-features" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs ai status</code></td>
+<td>Check AI provider availability</td>
+</tr>
+<tr>
+<td><code>obs ai setup</code></td>
+<td>Interactive setup wizard</td>
+</tr>
+<tr>
+<td><code>obs ai test</code></td>
+<td>Test provider connections</td>
+</tr>
+<tr>
+<td><code>obs ai similar &lt;note_id&gt;</code></td>
+<td>Find semantically similar notes</td>
+</tr>
+<tr>
+<td><code>obs ai analyze &lt;note_id&gt;</code></td>
+<td>Deep AI analysis of a note</td>
+</tr>
+<tr>
+<td><code>obs ai duplicates &lt;vault&gt;</code></td>
+<td>Detect potential duplicate content</td>
+</tr>
+</tbody>
+</table>
+<h3 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs help</code></td>
+<td>Quick help (essential commands)</td>
+</tr>
+<tr>
+<td><code>obs help --all</code></td>
+<td>Full command reference</td>
+</tr>
+<tr>
+<td><code>obs version</code></td>
+<td>Show version</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
+<h3 id="first-time-setup">First-Time Setup<a class="headerlink" href="#first-time-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install dependencies</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Initialize the database</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Discover your vaults</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Library/Mobile<span class="se">\ </span>Documents/iCloud~md~obsidian/Documents
+</code></pre></div>
 <h3 id="daily-usage">Daily Usage<a class="headerlink" href="#daily-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Open last vault (works like Obsidian app)</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>obs
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Navigate with vim keys or arrows</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># Press &#39;g&#39; for graph, &#39;s&#39; for stats</span>
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Press &#39;q&#39; to quit</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># See all your vaults</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check a vault&#39;s health</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Analyze the knowledge graph</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault
 </code></pre></div>
-<h3 id="switch-between-vaults">Switch Between Vaults<a class="headerlink" href="#switch-between-vaults" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Show vault switcher</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>obs<span class="w"> </span>switch
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Or open specific vault directly</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>obs<span class="w"> </span>open<span class="w"> </span>Research_Lab
+<h3 id="vault-lookup">Vault Lookup<a class="headerlink" href="#vault-lookup" title="Permanent link">&para;</a></h3>
+<p>Commands that take <code>&lt;vault&gt;</code> accept either a vault name or an ID prefix:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault<span class="w">        </span><span class="c1"># By name</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>a812<span class="w">           </span><span class="c1"># By ID prefix</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Research_Lab<span class="w"> </span><span class="c1"># By name</span>
 </code></pre></div>
-<h3 id="discover-new-vaults">Discover New Vaults<a class="headerlink" href="#discover-new-vaults" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Open folder as vault</span>
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>obs<span class="w"> </span>manage<span class="w"> </span>open<span class="w"> </span>~/Documents/NewVault
-<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Or in TUI: press &#39;d&#39; to discover from iCloud</span>
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>obs
-<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># (then press &#39;d&#39;)</span>
+<p>If a prefix matches multiple vaults, obs tells you which ones matched so you can be more specific.</p>
+<h3 id="ai-powered-analysis">AI-Powered Analysis<a class="headerlink" href="#ai-powered-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check which providers are available</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set up a provider</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Find similar notes</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Detect duplicates across a vault</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>MyVault
 </code></pre></div>
-<h3 id="r-project-workflow">R Project Workflow<a class="headerlink" href="#r-project-workflow" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># In your R project directory</span>
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="nb">cd</span><span class="w"> </span>~/projects/my-r-project
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Link to vault folder</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>obs<span class="w"> </span>r<span class="w"> </span>link<span class="w"> </span>Research_Lab
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># Copy a plot</span>
-<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>obs<span class="w"> </span>r<span class="w"> </span>log<span class="w"> </span>figure1.png<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Final version&quot;</span>
-<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
-<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c1"># Search for theory</span>
-<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>obs<span class="w"> </span>r<span class="w"> </span>context<span class="w"> </span><span class="s2">&quot;regression&quot;</span>
-</code></pre></div>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<h3 id="default-icloud-location">Default iCloud Location<a class="headerlink" href="#default-icloud-location" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>~/Library/Mobile Documents/iCloud~md~obsidian/Documents
-</code></pre></div>
-<p><strong>Auto-detected on first run</strong> - no configuration needed!</p>
-<h3 id="last-vault-tracking">Last Vault Tracking<a class="headerlink" href="#last-vault-tracking" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>~/.config/obs/last_vault
-</code></pre></div>
-<p>Updated automatically when you open a vault.</p>
-<h3 id="custom-configuration-optional">Custom Configuration (Optional)<a class="headerlink" href="#custom-configuration-optional" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>~/.config/obs/config
-</code></pre></div>
-<p>Set <code>OBS_ROOT</code> to override iCloud default:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">OBS_ROOT</span><span class="o">=</span><span class="s2">&quot;/path/to/my/vaults&quot;</span>
-</code></pre></div>
-<h2 id="progressive-disclosure">Progressive Disclosure<a class="headerlink" href="#progressive-disclosure" title="Permanent link">&para;</a></h2>
-<p><strong>ADHD-Friendly Design:</strong></p>
-<ol>
-<li><strong>Level 1</strong>: Just type <code>obs</code> (one command)</li>
-<li><strong>Level 2</strong>: Learn <code>switch</code> and <code>manage</code> (3 commands)</li>
-<li><strong>Level 3</strong>: Explore quick actions (6 commands)</li>
-<li><strong>Level 4</strong>: Use AI and R features (advanced)</li>
-</ol>
-<p><strong>You only need Level 1 to get started!</strong></p>
-<h2 id="keyboard-shortcuts-in-tui">Keyboard Shortcuts in TUI<a class="headerlink" href="#keyboard-shortcuts-in-tui" title="Permanent link">&para;</a></h2>
-<p>Press <code>?</code> in TUI for complete keyboard reference.</p>
-<p><strong>Quick shortcuts:</strong>
-- <code>g</code> - Show graph visualization
-- <code>s</code> - Show statistics
-- <code>d</code> - Discover vaults from iCloud
-- <code>r</code> - Refresh current view
-- <code>q</code> - Quit TUI</p>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="no-vaults-found">"No vaults found"<a class="headerlink" href="#no-vaults-found" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Check iCloud location</span>
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>ls<span class="w"> </span>~/Library/Mobile<span class="se">\ </span>Documents/iCloud~md~obsidian/Documents/
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
-<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Or discover in specific location</span>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>obs<span class="w"> </span>manage<span class="w"> </span>open<span class="w"> </span>~/Documents
-</code></pre></div>
-<h3 id="command-not-found-obs">"Command not found: obs"<a class="headerlink" href="#command-not-found-obs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Reload shell</span>
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="nb">source</span><span class="w"> </span>~/.zshrc
-<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
-<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Or check symlink</span>
-<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>~/.config/zsh/functions/obs.zsh
-</code></pre></div>
-<h3 id="python-cli-not-found">"Python CLI not found"<a class="headerlink" href="#python-cli-not-found" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Check Python path in obs.zsh</span>
-<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1"># Should be: /opt/homebrew/bin/python3</span>
-<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>which<span class="w"> </span>python3
+<details class="tip">
+<summary>Choosing an AI provider</summary>
+<ul>
+<li><strong>Privacy first</strong>: Use <code>ollama</code> (100% local)</li>
+<li><strong>Quality first</strong>: Use <code>claude-cli</code></li>
+<li><strong>Speed first</strong>: Use <code>gemini-api</code></li>
+<li><strong>No API key</strong>: Use <code>gemini-cli</code> or <code>claude-cli</code></li>
+</ul>
+</details>
+<hr />
+<h2 id="vault-discovery">Vault Discovery<a class="headerlink" href="#vault-discovery" title="Permanent link">&para;</a></h2>
+<p>obs finds Obsidian vaults by looking for directories containing <code>.obsidian</code> folders.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Search a directory</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Auto-discover from iCloud</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Library/Mobile<span class="se">\ </span>Documents/iCloud~md~obsidian/Documents
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Discover and scan in one step</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
 </code></pre></div>
 <hr />
-<p><strong>Remember:</strong> Just type <code>obs</code> - it does the right thing! 🚀</p>
+<h2 id="graph-analysis_1">Graph Analysis<a class="headerlink" href="#graph-analysis_1" title="Permanent link">&para;</a></h2>
+<p>The <code>analyze</code> command calculates knowledge graph metrics:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault
+</code></pre></div>
+<p><strong>Metrics include:</strong></p>
+<ul>
+<li><strong>Density</strong> - How interconnected your vault is (0.0 to 1.0)</li>
+<li><strong>Clusters</strong> - Groups of tightly related notes</li>
+<li><strong>Hub notes</strong> - Highly connected central notes</li>
+<li><strong>Orphans</strong> - Notes with no links (may need integration)</li>
+<li><strong>Broken links</strong> - Wikilinks pointing to non-existent notes</li>
+</ul>
+<p>Add <code>-v</code> for detailed output including top hub notes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v
+</code></pre></div>
+<p>See the <a href="../tutorials/graph-analysis/">Graph Analysis Tutorial</a> for a deep dive.</p>
+<hr />
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="default-icloud-location">Default iCloud Location<a class="headerlink" href="#default-icloud-location" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>~/Library/Mobile Documents/iCloud~md~obsidian/Documents
+</code></pre></div>
+<p>Auto-detected on first run - no configuration needed.</p>
+<h3 id="database-location">Database Location<a class="headerlink" href="#database-location" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>~/.config/obs/vault_db.sqlite
+</code></pre></div>
+<p>All data is stored locally. No data leaves your machine.</p>
+<h3 id="custom-root-optional">Custom Root (Optional)<a class="headerlink" href="#custom-root-optional" title="Permanent link">&para;</a></h3>
+<p>Set <code>OBS_ROOT</code> to override the default vault search location:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">OBS_ROOT</span><span class="o">=</span><span class="s2">&quot;/path/to/my/vaults&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="progressive-disclosure">Progressive Disclosure<a class="headerlink" href="#progressive-disclosure" title="Permanent link">&para;</a></h2>
+<p>obs is designed for ADHD-friendly progressive learning:</p>
+<ol>
+<li><strong>Level 1</strong>: Just type <code>obs</code> (one command)</li>
+<li><strong>Level 2</strong>: Learn <code>stats</code> and <code>discover</code> (3 commands)</li>
+<li><strong>Level 3</strong>: Use <code>analyze</code> for graph insights (4 commands)</li>
+<li><strong>Level 4</strong>: Explore AI features (10 commands)</li>
+</ol>
+<p><strong>You only need Level 1 to get started.</strong></p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="no-vaults-found">"No vaults found"<a class="headerlink" href="#no-vaults-found" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check iCloud location</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ls<span class="w"> </span>~/Library/Mobile<span class="se">\ </span>Documents/iCloud~md~obsidian/Documents/
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Or discover in a specific location</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
+</code></pre></div>
+<h3 id="command-not-found-obs">"Command not found: obs"<a class="headerlink" href="#command-not-found-obs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Reload shell</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">source</span><span class="w"> </span>~/.zshrc
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check symlink</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>~/.config/zsh/functions/obs.zsh
+</code></pre></div>
+<h3 id="python-cli-not-found">"Python CLI not found"<a class="headerlink" href="#python-cli-not-found" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check Python path (should be /opt/homebrew/bin/python3)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>which<span class="w"> </span>python3
+</code></pre></div>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Want to...</th>
+<th>Go to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Follow a step-by-step guide</td>
+<td><a href="../tutorials/getting-started/">Getting Started Tutorial</a></td>
+</tr>
+<tr>
+<td>Learn graph analysis</td>
+<td><a href="../tutorials/graph-analysis/">Graph Analysis Tutorial</a></td>
+</tr>
+<tr>
+<td>Set up AI features</td>
+<td><a href="../tutorials/ai-features/">AI Features Tutorial</a></td>
+</tr>
+<tr>
+<td>See all commands</td>
+<td><code>obs help --all</code></td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -2754,10 +2652,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

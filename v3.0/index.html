@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="An Intelligent Multi-Vault Knowledge Management Tool for Obsidian">
+        <meta name="description" content="An Intelligent Command-Line Tool for Obsidian Vault Management">
       
       
         <meta name="author" content="Data-Wise">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#obsidian-cli-ops" class="md-skip">
+        <a href="#v30-features" class="md-skip">
           Skip to content
         </a>
       
@@ -275,6 +275,26 @@
   
   
   Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorials/" class="md-tabs__link">
+          
+  
+  
+  Tutorials
 
         </a>
       </li>
@@ -721,33 +741,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#whats-new-in-v30" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🚀 Quick Start
+        What's New in v3.0
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ✨ Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="✨ Features">
+    <nav class="md-nav" aria-label="What&#39;s New in v3.0">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#core-features-v300-dev" class="md-nav__link">
+  <a href="#simplified-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Core Features (v3.0.0-dev)
+        Simplified CLI
       
     </span>
   </a>
@@ -755,10 +764,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ai-powered-features" class="md-nav__link">
+  <a href="#code-reduction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🤖 AI-Powered Features
+        Code Reduction
       
     </span>
   </a>
@@ -766,10 +775,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#v300-simplification-proposal-a" class="md-nav__link">
+  <a href="#removed-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎯 v3.0.0 Simplification (Proposal A)
+        Removed Features
       
     </span>
   </a>
@@ -782,22 +791,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start_1" class="md-nav__link">
+  <a href="#core-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🚀 Quick Start
+        Core Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🚀 Quick Start">
+    <nav class="md-nav" aria-label="Core Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#vault-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Vault Discovery
       
     </span>
   </a>
@@ -805,10 +814,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#graph-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Usage
+        Graph Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rich-cli-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rich CLI Output
       
     </span>
   </a>
@@ -821,22 +841,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#planning-development" class="md-nav__link">
+  <a href="#ai-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📋 Planning &amp; Development
+        AI Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📋 Planning &amp; Development">
+    <nav class="md-nav" aria-label="AI Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#active-planning-files" class="md-nav__link">
+  <a href="#supported-providers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Active Planning Files
+        Supported Providers
       
     </span>
   </a>
@@ -844,10 +864,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#for-contributors" class="md-nav__link">
+  <a href="#ai-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For Contributors
+        AI Commands
       
     </span>
   </a>
@@ -860,22 +880,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📖 Documentation
+        Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📖 Documentation">
+    <nav class="md-nav" aria-label="Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#three-layer-design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        Three-Layer Design
       
     </span>
   </a>
@@ -883,32 +903,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-guides" class="md-nav__link">
+  <a href="#technology-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Guides
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#developer-docs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Developer Docs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#planning-releases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planning &amp; Releases
+        Technology Stack
       
     </span>
   </a>
@@ -921,13 +919,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-coverage" class="md-nav__link">
+  <a href="#roadmap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Test Coverage
+        Roadmap
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-phase-71-simplification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current: Phase 7.1 — Simplification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-phase-72-ai-powered-note-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned: Phase 7.2 — AI-Powered Note Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-phase-73-vault-health-polish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned: Phase 7.3 — Vault Health &amp; Polish
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-phase-74-testing-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned: Phase 7.4 — Testing &amp; Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -935,7 +983,7 @@
   <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📦 Requirements
+        Requirements
       
     </span>
   </a>
@@ -943,32 +991,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🤝 Contributing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📄 License
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🌟 Status
+        Getting Started
       
     </span>
   </a>
@@ -1077,7 +1103,7 @@
   <span class="md-ellipsis">
     
   
-    Archive
+    Tutorials
   
 
     
@@ -1093,7 +1119,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Archive
+    Tutorials
   
 
           </label>
@@ -1106,14 +1132,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../archive/v2.x/" class="md-nav__link">
+      <a href="../tutorials/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    v2.x Archive
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/graph-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/ai-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Features
   
 
     
@@ -1164,7 +1274,7 @@
   <span class="md-ellipsis">
     
   
-    Developer
+    Archive
   
 
     
@@ -1177,6 +1287,149 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v2.x/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2.x Archive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v2.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2.0 Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/r-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    R-Dev Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1206,10 +1459,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
         
           
-          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
             
   
   
@@ -1227,8 +1480,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1357,10 +1610,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1378,8 +1631,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1409,10 +1662,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
         
           
-          <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
             
   
   
@@ -1430,8 +1683,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_1">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1616,10 +1869,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1637,8 +1890,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1738,33 +1991,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#whats-new-in-v30" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🚀 Quick Start
+        What's New in v3.0
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ✨ Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="✨ Features">
+    <nav class="md-nav" aria-label="What&#39;s New in v3.0">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#core-features-v300-dev" class="md-nav__link">
+  <a href="#simplified-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Core Features (v3.0.0-dev)
+        Simplified CLI
       
     </span>
   </a>
@@ -1772,10 +2014,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ai-powered-features" class="md-nav__link">
+  <a href="#code-reduction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🤖 AI-Powered Features
+        Code Reduction
       
     </span>
   </a>
@@ -1783,10 +2025,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#v300-simplification-proposal-a" class="md-nav__link">
+  <a href="#removed-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎯 v3.0.0 Simplification (Proposal A)
+        Removed Features
       
     </span>
   </a>
@@ -1799,22 +2041,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start_1" class="md-nav__link">
+  <a href="#core-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🚀 Quick Start
+        Core Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🚀 Quick Start">
+    <nav class="md-nav" aria-label="Core Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#vault-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Vault Discovery
       
     </span>
   </a>
@@ -1822,10 +2064,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#graph-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Usage
+        Graph Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rich-cli-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rich CLI Output
       
     </span>
   </a>
@@ -1838,22 +2091,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#planning-development" class="md-nav__link">
+  <a href="#ai-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📋 Planning &amp; Development
+        AI Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📋 Planning &amp; Development">
+    <nav class="md-nav" aria-label="AI Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#active-planning-files" class="md-nav__link">
+  <a href="#supported-providers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Active Planning Files
+        Supported Providers
       
     </span>
   </a>
@@ -1861,10 +2114,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#for-contributors" class="md-nav__link">
+  <a href="#ai-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For Contributors
+        AI Commands
       
     </span>
   </a>
@@ -1877,22 +2130,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📖 Documentation
+        Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📖 Documentation">
+    <nav class="md-nav" aria-label="Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#three-layer-design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        Three-Layer Design
       
     </span>
   </a>
@@ -1900,32 +2153,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-guides" class="md-nav__link">
+  <a href="#technology-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Guides
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#developer-docs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Developer Docs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#planning-releases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planning &amp; Releases
+        Technology Stack
       
     </span>
   </a>
@@ -1938,13 +2169,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-coverage" class="md-nav__link">
+  <a href="#roadmap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Test Coverage
+        Roadmap
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-phase-71-simplification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current: Phase 7.1 — Simplification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-phase-72-ai-powered-note-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned: Phase 7.2 — AI-Powered Note Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-phase-73-vault-health-polish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned: Phase 7.3 — Vault Health &amp; Polish
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-phase-74-testing-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned: Phase 7.4 — Testing &amp; Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1952,7 +2233,7 @@
   <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📦 Requirements
+        Requirements
       
     </span>
   </a>
@@ -1960,32 +2241,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🤝 Contributing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📄 License
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🌟 Status
+        Getting Started
       
     </span>
   </a>
@@ -2012,177 +2271,264 @@
   
 
 
-<h1 id="obsidian-cli-ops">Obsidian CLI Ops<a class="headerlink" href="#obsidian-cli-ops" title="Permanent link">&para;</a></h1>
-<p><a href="https://github.com/Data-Wise/obsidian-cli-ops/actions"><img alt="Build Status" src="https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg" /></a>
-<a href="https://github.com/Data-Wise/obsidian-cli-ops/releases"><img alt="Version" src="https://img.shields.io/badge/version-3.0.0--dev-blue.svg" /></a>
-<a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg" /></a>
+<h1 id="v30-features">v3.0 Features<a class="headerlink" href="#v30-features" title="Permanent link">&para;</a></h1>
+<p><a href="https://github.com/Data-Wise/obsidian-cli-ops/releases"><img alt="Version" src="https://img.shields.io/badge/version-3.0.0--dev-blue.svg" /></a>
 <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/python-3.9%2B-blue.svg" /></a>
-<a href="https://github.com/Data-Wise/obsidian-cli-ops"><img alt="Tests" src="https://img.shields.io/badge/tests-35%2B%20passing-brightgreen.svg" /></a></p>
-<p><strong>An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.</strong></p>
-<p><code>obs</code> is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.</p>
-<p><strong>Current Version</strong>: 3.0.0-dev (Proposal A - Pure Obsidian Manager)</p>
-<h2 id="quick-start">🚀 Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w">                    </span><span class="c1"># List your vaults</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault&gt;<span class="w">      </span><span class="c1"># Show vault statistics</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>obs<span class="w"> </span>discover<span class="w"> </span>&lt;path&gt;<span class="w">    </span><span class="c1"># Find new vaults</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>obs<span class="w"> </span>analyze<span class="w"> </span>&lt;vault&gt;<span class="w">    </span><span class="c1"># Analyze knowledge graph</span>
+<a href="https://github.com/Data-Wise/obsidian-cli-ops"><img alt="Tests" src="https://img.shields.io/badge/tests-42%20passing-brightgreen.svg" /></a></p>
+<p><strong>Version 3.0.0</strong> implements Proposal A: "Do one thing exceptionally well — manage Obsidian vaults."</p>
+<hr />
+<h2 id="whats-new-in-v30">What's New in v3.0<a class="headerlink" href="#whats-new-in-v30" title="Permanent link">&para;</a></h2>
+<h3 id="simplified-cli">Simplified CLI<a class="headerlink" href="#simplified-cli" title="Permanent link">&para;</a></h3>
+<p>20+ commands reduced to <strong>10 focused commands</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># PRIMARY COMMANDS</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w">                        </span><span class="c1"># List your vaults</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault&gt;<span class="w">          </span><span class="c1"># Show vault statistics</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>obs<span class="w"> </span>discover<span class="w"> </span>&lt;path&gt;<span class="w">        </span><span class="c1"># Find vaults in directory</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># GRAPH ANALYSIS</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>obs<span class="w"> </span>analyze<span class="w"> </span>&lt;vault&gt;<span class="w">        </span><span class="c1"># Analyze vault graph metrics</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># AI FEATURES (optional)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">              </span><span class="c1"># Check provider status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup<span class="w">               </span><span class="c1"># Interactive setup wizard</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span><span class="w">                </span><span class="c1"># Test all providers</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w">   </span><span class="c1"># Find similar notes</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span>&lt;note_id&gt;<span class="w">   </span><span class="c1"># Analyze a note with AI</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>&lt;vault&gt;<span class="w">  </span><span class="c1"># Find duplicate notes</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># UTILITIES</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w">                   </span><span class="c1"># Show simple help</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span>--all<span class="w">             </span><span class="c1"># Show all commands</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>obs<span class="w"> </span>version<span class="w">                </span><span class="c1"># Show version</span>
 </code></pre></div>
-<h2 id="features">✨ Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<h3 id="core-features-v300-dev">📊 Core Features (v3.0.0-dev)<a class="headerlink" href="#core-features-v300-dev" title="Permanent link">&para;</a></h3>
+<h3 id="code-reduction">Code Reduction<a class="headerlink" href="#code-reduction" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Vault Discovery</strong>: Automatically find and scan Obsidian vaults</li>
-<li><strong>Graph Analysis</strong>: PageRank, centrality, clustering coefficients</li>
-<li><strong>Link Resolution</strong>: Resolve wikilinks and detect broken links</li>
-<li><strong>Orphan Detection</strong>: Find notes with no connections</li>
-<li><strong>Hub Detection</strong>: Identify highly connected notes</li>
-<li><strong>Analytics</strong>: Comprehensive vault statistics and insights</li>
-<li><strong>Rich CLI Output</strong>: Beautiful terminal output with tables, colors, progress bars</li>
+<li><strong>Before</strong>: ~11,500 lines across 20+ commands</li>
+<li><strong>After</strong>: ~7,400 lines across 10 commands (36% reduction)</li>
 </ul>
-<h3 id="ai-powered-features">🤖 AI-Powered Features<a class="headerlink" href="#ai-powered-features" title="Permanent link">&para;</a></h3>
+<h3 id="removed-features">Removed Features<a class="headerlink" href="#removed-features" title="Permanent link">&para;</a></h3>
+<p>These features were removed to focus on core Obsidian management:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Lines Removed</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TUI interface</td>
+<td>1,701</td>
+<td>CLI-only for simplicity</td>
+</tr>
+<tr>
+<td>R-Dev integration</td>
+<td>307</td>
+<td>Belongs in R package ecosystem</td>
+</tr>
+<tr>
+<td>Legacy v1.x commands</td>
+<td>126</td>
+<td>Plugin install, sync, audit</td>
+</tr>
+</tbody>
+</table>
+<details class="info">
+<summary>Looking for removed features?</summary>
 <ul>
-<li><strong>Multi-Provider AI</strong>: Choose from Gemini API, Gemini CLI, Claude CLI, or Ollama</li>
-<li><strong>Find Similar Notes</strong>: <code>obs ai similar</code> - semantic similarity using embeddings</li>
-<li><strong>Analyze Notes</strong>: <code>obs ai analyze</code> - deep analysis with topics, themes, suggestions</li>
-<li><strong>Detect Duplicates</strong>: <code>obs ai duplicates</code> - find potential duplicate notes</li>
-<li><strong>Provider Management</strong>: <code>obs ai status</code>, <code>obs ai setup</code>, <code>obs ai test</code></li>
-<li><strong>Smart Routing</strong>: Auto-selects best provider for each operation type</li>
-<li><strong>100% Local &amp; Private</strong>: Default providers run entirely on your machine</li>
+<li>TUI and R-Dev documentation is preserved in the <a href="../archive/v2.x/">v2.x Archive</a></li>
+<li>R-Dev integration details: <a href="../archive/r-dev/">R-Dev Archive</a></li>
+<li>v2.0 knowledge graph details: <a href="../archive/v2.0/">v2.0 Archive</a></li>
 </ul>
-<h3 id="v300-simplification-proposal-a">🎯 v3.0.0 Simplification (Proposal A)<a class="headerlink" href="#v300-simplification-proposal-a" title="Permanent link">&para;</a></h3>
-<p><strong>Philosophy:</strong> "Do one thing exceptionally well - manage Obsidian vaults"</p>
-<p><strong>What's New:</strong></p>
-<ul>
-<li><strong>Simplified CLI</strong>: 20+ commands → 10 focused commands</li>
-<li><strong>ZSH-First</strong>: Fast shell integration with Python core</li>
-<li><strong>Laser Focus</strong>: Removed features unrelated to Obsidian vault management</li>
-<li><strong>Code Reduction</strong>: 11,500 → ~7,400 lines (36% reduction so far, target: 61%)</li>
-</ul>
-<p><strong>Removed (still in v2.2.0):</strong></p>
-<ul>
-<li>TUI interface (1,701 lines) - CLI-only for simplicity</li>
-<li>R-Dev integration (307 lines) - Belongs in R package ecosystem</li>
-<li>Legacy v1.x commands (126 lines) - Plugin install, sync, audit</li>
-</ul>
-<p><strong>Coming Soon (Phase 7.2):</strong></p>
-<ul>
-<li><code>obs refactor &lt;vault&gt;</code> - AI-powered vault reorganization</li>
-<li><code>obs tag-suggest</code> - Intelligent tag suggestions</li>
-<li><code>obs quality</code> - Note quality assessment</li>
-<li><code>obs merge-suggest</code> - Find merge candidates</li>
-</ul>
-<h2 id="quick-start_1">🚀 Quick Start<a class="headerlink" href="#quick-start_1" title="Permanent link">&para;</a></h2>
-<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Symlink the script</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/src/obs.zsh&quot;</span><span class="w"> </span>~/.config/zsh/functions/obs.zsh
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Autoload in .zshrc</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;autoload -Uz obs&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Install Python dependencies</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
+</details>
+<hr />
+<h2 id="core-features">Core Features<a class="headerlink" href="#core-features" title="Permanent link">&para;</a></h2>
+<h3 id="vault-discovery">Vault Discovery<a class="headerlink" href="#vault-discovery" title="Permanent link">&para;</a></h3>
+<p>Automatically find and register Obsidian vaults by scanning for <code>.obsidian</code> directories.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Library/Mobile<span class="se">\ </span>Documents/iCloud~md~obsidian/Documents
 </code></pre></div>
-<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
-<p><strong>v3.0.0 - Simplified CLI</strong> - 10 focused commands!</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PRIMARY COMMANDS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w">                        </span><span class="c1"># List your vaults</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault_id&gt;<span class="w">       </span><span class="c1"># Show vault statistics</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>discover<span class="w"> </span>&lt;path&gt;<span class="w">        </span><span class="c1"># Find vaults in directory</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># GRAPH ANALYSIS</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>obs<span class="w"> </span>analyze<span class="w"> </span>&lt;vault_id&gt;<span class="w">     </span><span class="c1"># Analyze vault graph metrics</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># AI FEATURES (optional)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">              </span><span class="c1"># Check provider status</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup<span class="w">               </span><span class="c1"># Interactive setup wizard</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span><span class="w">                </span><span class="c1"># Test all providers</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w">   </span><span class="c1"># Find similar notes</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span>&lt;note_id&gt;<span class="w">   </span><span class="c1"># Analyze a note with AI</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>&lt;vault&gt;<span class="w">  </span><span class="c1"># Find duplicate notes</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># UTILITIES</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w">                   </span><span class="c1"># Show simple help</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span>--all<span class="w">             </span><span class="c1"># Show all commands</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>obs<span class="w"> </span>version<span class="w">                </span><span class="c1"># Show version</span>
+<h3 id="graph-analysis">Graph Analysis<a class="headerlink" href="#graph-analysis" title="Permanent link">&para;</a></h3>
+<p>Analyze your vault's knowledge graph structure:</p>
+<ul>
+<li><strong>PageRank</strong> — Note importance based on link structure</li>
+<li><strong>Centrality</strong> — Betweenness, closeness, degree metrics</li>
+<li><strong>Clustering</strong> — Identify topic clusters</li>
+<li><strong>Orphan Detection</strong> — Find unlinked notes</li>
+<li><strong>Hub Detection</strong> — Find highly connected notes</li>
+<li><strong>Broken Links</strong> — Detect wikilinks pointing nowhere</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v<span class="w">   </span><span class="c1"># Verbose with top hubs</span>
 </code></pre></div>
-<p><strong>Pro Tip:</strong> All commands have <code>--verbose</code> flag for detailed output!</p>
-<h2 id="planning-development">📋 Planning &amp; Development<a class="headerlink" href="#planning-development" title="Permanent link">&para;</a></h2>
-<p><strong>Current Status:</strong> v3.0.0-dev - Phase 7.1 Simplification (In Progress)</p>
-<h3 id="active-planning-files">Active Planning Files<a class="headerlink" href="#active-planning-files" title="Permanent link">&para;</a></h3>
+<p>See the <a href="../tutorials/graph-analysis/">Graph Analysis Tutorial</a> for a deep dive.</p>
+<h3 id="rich-cli-output">Rich CLI Output<a class="headerlink" href="#rich-cli-output" title="Permanent link">&para;</a></h3>
+<p>Beautiful terminal output powered by Rich:</p>
 <ul>
-<li><strong><a href="TODOS.md">TODOS.md</a></strong> - Current work items and immediate next steps ⭐ What to work on now</li>
-<li><strong><a href="IDEAS.md">IDEAS.md</a></strong> - Future features and brainstorming 💡 What could be built</li>
-</ul>
-<h3 id="for-contributors">For Contributors<a class="headerlink" href="#for-contributors" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><a href="CLAUDE.md">CLAUDE.md</a></strong> - Developer guide and architecture quick reference</li>
-<li><strong><a href="docs/planning/project-hub.md">Project Hub</a></strong> - ADHD-friendly control center with current status</li>
-<li><strong><a href=".STATUS">.STATUS</a></strong> - Project metrics and progress tracking</li>
-</ul>
-<p><strong>Want to contribute?</strong> Start with <a href="TODOS.md">TODOS.md</a> to see what needs doing!</p>
-<h2 id="documentation">📖 Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
-<h3 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><a href="docs/README.md">Documentation Index</a></strong> - Complete documentation structure</li>
-<li><strong><a href="docs/user/getting-started/quickstart.md">Quickstart Guide</a></strong> - Get up and running with v2.0</li>
-<li><strong><a href="https://data-wise.github.io/obsidian-cli-ops/">Full Documentation</a></strong> - Published guides and API reference</li>
-<li><strong><a href="CLAUDE.md">CLAUDE.md</a></strong> - Developer guide for contributing</li>
-</ul>
-<h3 id="user-guides">User Guides<a class="headerlink" href="#user-guides" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><a href="docs/user/guides/unified-command.md">Unified Command Guide</a></strong> - Using the unified <code>obs</code> command</li>
-<li><strong><a href="docs/user/guides/ai-setup.md">AI Setup Guide</a></strong> - Setting up AI features (100% local)</li>
-</ul>
-<h3 id="developer-docs">Developer Docs<a class="headerlink" href="#developer-docs" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><a href="docs/developer/architecture.md">Architecture</a></strong> - Three-layer system design</li>
-<li><strong><a href="docs/developer/testing/overview.md">Testing Guide</a></strong> - Test suite overview</li>
-<li><strong><a href="docs/developer/testing/sandbox.md">Sandbox Testing</a></strong> - Comprehensive testing guide</li>
-</ul>
-<h3 id="planning-releases">Planning &amp; Releases<a class="headerlink" href="#planning-releases" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><a href="docs/planning/project-hub.md">Project Hub</a></strong> - ADHD-friendly control center</li>
-<li><strong><a href="docs/planning/project-plan.md">Project Plan</a></strong> - Complete v2.0 roadmap</li>
-<li><strong><a href="docs/releases/v2.2.0.md">Latest Release</a></strong> - v2.2.0 release notes</li>
-</ul>
-<h2 id="test-coverage">🧪 Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>394+ tests</strong> across all components</li>
-<li><strong>72% code coverage</strong> (AI: 80%, Core: 85%)</li>
-<li>All tests passing</li>
-</ul>
-<h2 id="requirements">📦 Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>ZSH</strong>: Shell integration</li>
-<li><strong>Python 3.9+</strong>: Core functionality</li>
-<li><strong>Dependencies</strong>: See <code>src/python/requirements.txt</code></li>
-<li><strong>Optional</strong>: Ollama or HuggingFace for AI features</li>
-</ul>
-<h2 id="contributing">🤝 Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
-<p>See <a href="CLAUDE.md">CLAUDE.md</a> for development guidelines and architecture details.</p>
-<h2 id="license">📄 License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
-<p>MIT License - See LICENSE file for details.</p>
-<h2 id="status">🌟 Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<ul>
-<li>✅ v2.0: Knowledge Graph - Complete</li>
-<li>✅ v2.2: AI Features - Complete</li>
-<li>Multi-provider AI (Gemini, Claude, Ollama)</li>
-<li>Find similar notes, analyze, detect duplicates</li>
-<li>96 AI tests, smart routing</li>
-<li>🚧 v3.0.0: Simplification (In Progress)</li>
-<li>Phase 7.1: Simplification (75% complete)<ul>
-<li>✅ TUI removed (1,701 lines)</li>
-<li>✅ R-Dev removed (307 lines)</li>
-<li>✅ CLI consolidated (323 lines)</li>
-<li>🚧 Documentation updates</li>
-</ul>
-</li>
-<li>Phase 7.2: AI-Powered Note Operations (Planned)</li>
-<li>Phase 7.3: Vault Health &amp; Polish (Planned)</li>
-<li>Phase 7.4: Testing &amp; Release (Planned)</li>
+<li>Color-coded tables and stats</li>
+<li>Progress bars for long operations</li>
+<li>Emoji indicators for quick scanning</li>
+<li>Verbose mode (<code>-v</code>) on every command</li>
 </ul>
 <hr />
-<p><strong>Repository</strong>: https://github.com/Data-Wise/obsidian-cli-ops
-<strong>Documentation</strong>: https://data-wise.github.io/obsidian-cli-ops/</p>
+<h2 id="ai-features">AI Features<a class="headerlink" href="#ai-features" title="Permanent link">&para;</a></h2>
+<p>Multi-provider AI for advanced vault analysis. All AI features are <strong>optional</strong> — obs works perfectly without them.</p>
+<h3 id="supported-providers">Supported Providers<a class="headerlink" href="#supported-providers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Speed</th>
+<th>Quality</th>
+<th>Privacy</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gemini-api</code></td>
+<td>Fast</td>
+<td>High</td>
+<td>Cloud</td>
+<td>API key</td>
+</tr>
+<tr>
+<td><code>gemini-cli</code></td>
+<td>Medium</td>
+<td>High</td>
+<td>Cloud</td>
+<td>Free</td>
+</tr>
+<tr>
+<td><code>claude-cli</code></td>
+<td>Medium</td>
+<td>Highest</td>
+<td>Cloud</td>
+<td>Free</td>
+</tr>
+<tr>
+<td><code>ollama</code></td>
+<td>Slow</td>
+<td>Good</td>
+<td>Local</td>
+<td>Free</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-commands">AI Commands<a class="headerlink" href="#ai-commands" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs ai status</code></td>
+<td>Check which providers are available</td>
+</tr>
+<tr>
+<td><code>obs ai setup</code></td>
+<td>Interactive setup wizard</td>
+</tr>
+<tr>
+<td><code>obs ai test</code></td>
+<td>Test provider connections</td>
+</tr>
+<tr>
+<td><code>obs ai similar &lt;note_id&gt;</code></td>
+<td>Find semantically similar notes</td>
+</tr>
+<tr>
+<td><code>obs ai analyze &lt;note_id&gt;</code></td>
+<td>Deep analysis: topics, themes, suggestions</td>
+</tr>
+<tr>
+<td><code>obs ai duplicates &lt;vault&gt;</code></td>
+<td>Detect potential duplicate content</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../tutorials/ai-features/">AI Features Tutorial</a> for setup and usage.</p>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<h3 id="three-layer-design">Three-Layer Design<a class="headerlink" href="#three-layer-design" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Presentation → Application → Data
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    (CLI)        (Core Logic)   (DB/Files)
+</code></pre></div>
+<ul>
+<li><strong>Presentation</strong>: <code>obs.zsh</code> — ZSH CLI wrapper (386 lines)</li>
+<li><strong>Application</strong>: <code>vault_manager.py</code>, <code>graph_analyzer.py</code> — Core logic</li>
+<li><strong>Data</strong>: <code>db_manager.py</code>, <code>vault_scanner.py</code> — SQLite + file I/O</li>
+</ul>
+<h3 id="technology-stack">Technology Stack<a class="headerlink" href="#technology-stack" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ZSH</strong>: CLI interface with fast shell integration</li>
+<li><strong>Python 3.9+</strong>: Core logic (~3,500 lines)</li>
+<li><strong>SQLite</strong>: Local knowledge graph database</li>
+<li><strong>NetworkX</strong>: Graph analysis algorithms</li>
+<li><strong>Rich</strong>: Terminal output formatting</li>
+</ul>
+<hr />
+<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
+<h3 id="current-phase-71-simplification">Current: Phase 7.1 — Simplification<a class="headerlink" href="#current-phase-71-simplification" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled checked/> Remove TUI interface (1,701 lines)</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> Remove R-Dev integration (307 lines)</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> Consolidate CLI (323 lines)</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> Update documentation</li>
+</ul>
+<h3 id="planned-phase-72-ai-powered-note-operations">Planned: Phase 7.2 — AI-Powered Note Operations<a class="headerlink" href="#planned-phase-72-ai-powered-note-operations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>obs refactor &lt;vault&gt;</code> — AI-powered vault reorganization</li>
+<li><code>obs tag-suggest</code> — Intelligent tag suggestions</li>
+<li><code>obs quality</code> — Note quality assessment</li>
+<li><code>obs merge-suggest</code> — Find merge candidates</li>
+</ul>
+<h3 id="planned-phase-73-vault-health-polish">Planned: Phase 7.3 — Vault Health &amp; Polish<a class="headerlink" href="#planned-phase-73-vault-health-polish" title="Permanent link">&para;</a></h3>
+<h3 id="planned-phase-74-testing-release">Planned: Phase 7.4 — Testing &amp; Release<a class="headerlink" href="#planned-phase-74-testing-release" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>ZSH</strong> — Shell integration</li>
+<li><strong>Python 3.9+</strong> — Core functionality</li>
+<li><strong>Dependencies</strong> — <code>pip3 install -r src/python/requirements.txt</code></li>
+<li><strong>Optional</strong> — Ollama or Gemini/Claude CLI for AI features</li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Want to...</th>
+<th>Go to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install and scan your first vault</td>
+<td><a href="../tutorials/getting-started/">Getting Started Tutorial</a></td>
+</tr>
+<tr>
+<td>Analyze your knowledge graph</td>
+<td><a href="../tutorials/graph-analysis/">Graph Analysis Tutorial</a></td>
+</tr>
+<tr>
+<td>Set up AI features</td>
+<td><a href="../tutorials/ai-features/">AI Features Tutorial</a></td>
+</tr>
+<tr>
+<td>See the full usage guide</td>
+<td><a href="../usage/">Usage Guide</a></td>
+</tr>
+<tr>
+<td>Configure obs</td>
+<td><a href="../configuration/">Configuration</a></td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -2242,10 +2588,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
