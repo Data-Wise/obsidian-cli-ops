@@ -713,6 +713,100 @@ class DatabaseManager:
             return stats
 
 
+    # ====================================================================
+    # Embedding Cache
+    # ====================================================================
+
+    def ensure_embeddings_table(self):
+        """Create note_embeddings table if it doesn't exist."""
+        with self.get_connection() as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS note_embeddings (
+                    note_id TEXT NOT NULL,
+                    provider TEXT NOT NULL,
+                    model TEXT NOT NULL,
+                    vector BLOB NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    file_mtime REAL NOT NULL,
+                    PRIMARY KEY (note_id, provider, model),
+                    FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+                )
+            """)
+
+    def get_embedding(self, note_id: str, provider: str, model: str) -> Optional[bytes]:
+        """Get cached embedding vector for a note.
+
+        Returns None if not cached or if file has been modified since.
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute("""
+                SELECT e.vector, e.file_mtime
+                FROM note_embeddings e
+                WHERE e.note_id = ? AND e.provider = ? AND e.model = ?
+            """, (note_id, provider, model))
+            row = cursor.fetchone()
+            if row:
+                return bytes(row['vector'])
+            return None
+
+    def get_embedding_with_mtime(
+        self, note_id: str, provider: str, model: str
+    ) -> Optional[Dict]:
+        """Get cached embedding with metadata for staleness check."""
+        with self.get_connection() as conn:
+            cursor = conn.execute("""
+                SELECT vector, file_mtime, updated_at
+                FROM note_embeddings
+                WHERE note_id = ? AND provider = ? AND model = ?
+            """, (note_id, provider, model))
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+            return None
+
+    def save_embedding(
+        self,
+        note_id: str,
+        provider: str,
+        model: str,
+        vector: bytes,
+        file_mtime: float,
+    ):
+        """Save or update an embedding vector."""
+        from datetime import datetime, timezone
+        with self.get_connection() as conn:
+            conn.execute("""
+                INSERT INTO note_embeddings (note_id, provider, model, vector, updated_at, file_mtime)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT (note_id, provider, model)
+                DO UPDATE SET vector = excluded.vector,
+                             updated_at = excluded.updated_at,
+                             file_mtime = excluded.file_mtime
+            """, (note_id, provider, model, vector, datetime.now(timezone.utc).isoformat(), file_mtime))
+
+    def delete_embeddings(self, note_id: str):
+        """Delete all embeddings for a note."""
+        with self.get_connection() as conn:
+            conn.execute("DELETE FROM note_embeddings WHERE note_id = ?", (note_id,))
+
+    def count_embeddings(self, provider: str = None, model: str = None) -> int:
+        """Count cached embeddings, optionally filtered by provider/model."""
+        with self.get_connection() as conn:
+            if provider and model:
+                cursor = conn.execute(
+                    "SELECT COUNT(*) FROM note_embeddings WHERE provider = ? AND model = ?",
+                    (provider, model),
+                )
+            elif provider:
+                cursor = conn.execute(
+                    "SELECT COUNT(*) FROM note_embeddings WHERE provider = ?",
+                    (provider,),
+                )
+            else:
+                cursor = conn.execute("SELECT COUNT(*) FROM note_embeddings")
+            return cursor.fetchone()[0]
+
+
 if __name__ == '__main__':
     # Quick test
     db = DatabaseManager()

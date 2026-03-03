@@ -12,7 +12,7 @@
 **v3.0.0**: Laser-focused Obsidian vault manager
 
 **Key Changes:**
-- ✅ **Simplified CLI**: 20+ commands → 10 focused commands
+- ✅ **Simplified CLI**: 20+ commands → 13 focused commands
 - ❌ **Removed TUI**: Full-screen interface removed (CLI-only)
 - ❌ **Removed R-Dev**: R project integration removed
 - ❌ **Removed Legacy**: v1.x commands removed
@@ -437,7 +437,7 @@ A: Yes! All AI features (similar, analyze, duplicates) are retained and improved
 - ❌ TUI removed (1,701 lines)
 - ❌ R-Dev removed (307 lines)
 - ❌ Legacy commands removed (126 lines)
-- ✅ Simplified to 10 focused commands
+- ✅ Simplified to 13 focused commands
 - ✅ Database 100% compatible
 - ✅ All AI features retained
 
