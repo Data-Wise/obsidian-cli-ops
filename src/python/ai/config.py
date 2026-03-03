@@ -27,6 +27,7 @@ class AIConfig:
     preferred_provider: Optional[str] = None
     provider_priority: List[str] = field(default_factory=lambda: [
         "gemini-api",
+        "anthropic-api",
         "ollama",
         "gemini-cli",
         "claude-cli",
@@ -35,6 +36,7 @@ class AIConfig:
     # Model settings
     gemini_model: str = "gemini-2.5-flash"
     gemini_embedding_model: str = "text-embedding-004"
+    anthropic_model: str = "claude-sonnet-4-6"
     ollama_chat_model: str = "llama3.1"
     ollama_embedding_model: str = "nomic-embed-text"
 

@@ -22,6 +22,7 @@ from .models import AnalysisResult, ComparisonResult
 from .providers.gemini_api import GeminiAPIProvider
 from .providers.gemini_cli import GeminiCLIProvider
 from .providers.claude_cli import ClaudeCLIProvider
+from .providers.anthropic_api import AnthropicAPIProvider
 from .providers.ollama import OllamaProvider
 
 
@@ -36,6 +37,7 @@ class OperationType(str, Enum):
 # Default provider priority
 DEFAULT_PRIORITY = [
     "gemini-api",
+    "anthropic-api",
     "ollama",
     "gemini-cli",
     "claude-cli",
@@ -44,6 +46,7 @@ DEFAULT_PRIORITY = [
 # Provider classes
 PROVIDER_CLASSES: Dict[str, Type[AIProvider]] = {
     "gemini-api": GeminiAPIProvider,
+    "anthropic-api": AnthropicAPIProvider,
     "gemini-cli": GeminiCLIProvider,
     "claude-cli": ClaudeCLIProvider,
     "ollama": OllamaProvider,

@@ -1,12 +1,15 @@
 """
-Gemini API Provider - Default provider for Obsidian CLI Ops.
+Anthropic API Provider - Direct Claude API access via official SDK.
 
-Uses Google's Gemini API for:
-- Embeddings (text-embedding-004)
-- Analysis (gemini-2.5-flash)
-- Batch processing
+Best for:
+- High-quality analysis (Claude's reasoning)
+- Complex note comparisons
+- When you have an Anthropic API key
 
-Free tier: 1000 RPD, 1M TPM
+Limitations:
+- No embeddings (Anthropic doesn't offer them — use Gemini/Ollama)
+- Paid API (no free tier)
+- API key required via ANTHROPIC_API_KEY env var
 """
 
 import os
@@ -32,14 +35,14 @@ _COMPARISON_SCHEMA = '''{
 }'''
 
 
-class GeminiAPIProvider(AIProvider):
-    """Gemini API provider - fast, supports embeddings and batch."""
+class AnthropicAPIProvider(AIProvider):
+    """Direct Anthropic API provider using official SDK."""
 
-    name = "gemini-api"
+    name = "anthropic-api"
     provider_type = ProviderType.API
     capabilities = ProviderCapabilities(
-        embeddings=True,
-        batch_embeddings=True,
+        embeddings=False,
+        batch_embeddings=False,
         analysis=True,
         comparison=True,
     )
@@ -47,32 +50,30 @@ class GeminiAPIProvider(AIProvider):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash",
-        embedding_model: str = "text-embedding-004",
+        model: str = "claude-sonnet-4-6",
+        max_tokens: int = 1024,
         **kwargs,
     ):
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         self.model = model
-        self.embedding_model = embedding_model
+        self.max_tokens = max_tokens
         self._client = None
-        self._genai = None
 
     def _get_client(self):
-        """Lazy load the Gemini client (new google-genai SDK)."""
+        """Lazy load the Anthropic client."""
         if self._client is None:
             try:
-                from google import genai
-                self._genai = genai
-                self._client = genai.Client(api_key=self.api_key)
+                import anthropic
+                self._client = anthropic.Anthropic(api_key=self.api_key)
             except ImportError:
                 raise ImportError(
-                    "google-genai not installed. "
-                    "Install with: pip install google-genai"
+                    "anthropic not installed. "
+                    "Install with: pip install anthropic"
                 )
         return self._client
 
     def is_available(self) -> bool:
-        """Check if Gemini API is available."""
+        """Check if Anthropic API is available."""
         if not self.api_key:
             return False
         try:
@@ -88,35 +89,15 @@ class GeminiAPIProvider(AIProvider):
             "available": self.is_available(),
             "api_key_set": bool(self.api_key),
             "model": self.model,
-            "embedding_model": self.embedding_model,
             "capabilities": {
                 "embeddings": self.capabilities.embeddings,
                 "batch_embeddings": self.capabilities.batch_embeddings,
             }
         }
 
-    def get_embedding(self, text: str) -> List[float]:
-        """Get embedding vector using Gemini."""
-        client = self._get_client()
-        result = client.models.embed_content(
-            model=self.embedding_model,
-            contents=text,
-        )
-        return result.embeddings[0].values
-
-    def get_embeddings_batch(self, texts: List[str]) -> List[List[float]]:
-        """Get embeddings for multiple texts in a true batch call."""
-        client = self._get_client()
-        result = client.models.embed_content(
-            model=self.embedding_model,
-            contents=texts,
-        )
-        return [e.values for e in result.embeddings]
-
     def analyze_note(self, content: str, title: str = "") -> AnalysisResult:
-        """Analyze a note using Gemini with structured output."""
+        """Analyze a note using Anthropic Claude API."""
         client = self._get_client()
-        genai = self._genai
 
         prompt = f"""Analyze this Obsidian note and extract key information.
 
@@ -127,14 +108,14 @@ Title: {title or "Untitled"}
 Respond with ONLY valid JSON matching this schema:
 {_ANALYSIS_SCHEMA}"""
 
-        response = client.models.generate_content(
+        response = client.messages.create(
             model=self.model,
-            contents=prompt,
-            config=genai.types.GenerateContentConfig(
-                response_mime_type="application/json",
-            ),
+            max_tokens=self.max_tokens,
+            messages=[{"role": "user", "content": prompt}],
         )
-        return AnalysisResult.from_json(response.text)
+        text = response.content[0].text
+        json_str = self._extract_json(text)
+        return AnalysisResult.from_json(json_str)
 
     def compare_notes(
         self,
@@ -143,9 +124,8 @@ Respond with ONLY valid JSON matching this schema:
         note1_title: str = "",
         note2_title: str = ""
     ) -> ComparisonResult:
-        """Compare two notes using Gemini with structured output."""
+        """Compare two notes using Anthropic Claude API."""
         client = self._get_client()
-        genai = self._genai
 
         prompt = f"""Compare these two Obsidian notes for similarity.
 
@@ -161,11 +141,11 @@ Analyze topic overlap, content similarity, and their relationship.
 Respond with ONLY valid JSON matching this schema:
 {_COMPARISON_SCHEMA}"""
 
-        response = client.models.generate_content(
+        response = client.messages.create(
             model=self.model,
-            contents=prompt,
-            config=genai.types.GenerateContentConfig(
-                response_mime_type="application/json",
-            ),
+            max_tokens=self.max_tokens,
+            messages=[{"role": "user", "content": prompt}],
         )
-        return ComparisonResult.from_json(response.text)
+        text = response.content[0].text
+        json_str = self._extract_json(text)
+        return ComparisonResult.from_json(json_str)
