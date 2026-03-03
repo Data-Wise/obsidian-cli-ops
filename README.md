@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-3.0.0--beta-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-42%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-120%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
@@ -35,12 +35,16 @@ obs analyze <vault>    # Analyze knowledge graph
 
 ### 🤖 AI-Powered Features
 
-- **Multi-Provider AI**: Choose from Gemini API, Gemini CLI, Claude CLI, or Ollama
+- **Multi-Provider AI**: Choose from Gemini API, Anthropic API, Gemini CLI, Claude CLI, or Ollama
 - **Find Similar Notes**: `obs ai similar` - semantic similarity using embeddings
 - **Analyze Notes**: `obs ai analyze` - deep analysis with topics, themes, suggestions
 - **Detect Duplicates**: `obs ai duplicates` - find potential duplicate notes
+- **Suggest Links**: `obs ai suggest-links` - find unlinked related notes
+- **Knowledge Gaps**: `obs ai gaps` - detect stub notes and orphans
+- **Vault Summary**: `obs ai summarize` - generate theme analysis across vault
 - **Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 - **Smart Routing**: Auto-selects best provider for each operation type
+- **Embedding Cache**: SQLite-backed cache with mtime invalidation
 - **100% Local & Private**: Default providers run entirely on your machine
 
 ### 🎯 v3.0.0 Simplification (Proposal A)
@@ -49,7 +53,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 **What's New:**
 
-- **Simplified CLI**: 20+ commands → 10 focused commands
+- **Simplified CLI**: 20+ commands → 13 focused commands
 - **ZSH-First**: Fast shell integration with Python core
 - **Laser Focus**: Removed features unrelated to Obsidian vault management
 - **Code Reduction**: 11,500 → ~7,400 lines (36% reduction so far, target: 61%)
@@ -83,29 +87,32 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.0.0 - Simplified CLI** - 10 focused commands!
+**v3.0.0 - Simplified CLI** - 13 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
-obs                        # List your vaults
-obs stats <vault>          # Show vault statistics
-obs discover <path>        # Find vaults in directory
+obs                             # List your vaults
+obs stats <vault>               # Show vault statistics
+obs discover <path>             # Find vaults in directory
 
 # GRAPH ANALYSIS
-obs analyze <vault>        # Analyze vault graph metrics
+obs analyze <vault>             # Analyze vault graph metrics
 
 # AI FEATURES (optional)
-obs ai status              # Check provider status
-obs ai setup               # Interactive setup wizard
-obs ai test                # Test all providers
-obs ai similar <note_id>   # Find similar notes
-obs ai analyze <note_id>   # Analyze a note with AI
-obs ai duplicates <vault>  # Find duplicate notes
+obs ai status                   # Check provider status
+obs ai setup                    # Interactive setup wizard
+obs ai test                     # Test all providers
+obs ai similar <note_id>        # Find similar notes
+obs ai analyze <note_id>        # Analyze a note with AI
+obs ai duplicates <vault>       # Find duplicate notes
+obs ai suggest-links <note_id>  # Suggest new links
+obs ai gaps <vault>             # Find knowledge gaps
+obs ai summarize <vault>        # Summarize vault themes
 
 # UTILITIES
-obs help                   # Show simple help
-obs help --all             # Show all commands
-obs version                # Show version
+obs help                        # Show simple help
+obs help --all                  # Show all commands
+obs version                     # Show version
 ```
 
 **Pro Tip:** All commands have `--verbose` flag for detailed output!
@@ -158,7 +165,7 @@ obs version                # Show version
 - **ZSH**: Shell integration
 - **Python 3.9+**: Core functionality
 - **Dependencies**: See `src/python/requirements.txt`
-- **Optional**: Ollama or HuggingFace for AI features
+- **Optional**: Ollama, Gemini API, or Anthropic API for AI features
 
 ## 🤝 Contributing
 
@@ -175,13 +182,12 @@ MIT License - See LICENSE file for details.
   - Multi-provider AI (Gemini, Claude, Ollama)
   - Find similar notes, analyze, detect duplicates
   - 96 AI tests, smart routing
-- 🚧 v3.0.0: Simplification (In Progress)
-  - Phase 7.1: Simplification (75% complete)
-    - ✅ TUI removed (1,701 lines)
-    - ✅ R-Dev removed (307 lines)
-    - ✅ CLI consolidated (323 lines)
-    - 🚧 Documentation updates
-  - Phase 7.2: AI-Powered Note Operations (Planned)
+- 🚧 v3.0.0: Simplification + AI Enhancement (In Progress)
+  - ✅ Phase 7.1: Simplification (TUI removed, CLI consolidated)
+  - ✅ Phase 7.2: AI Enhancement (modern SDKs, new commands)
+    - Gemini SDK migration (google-genai), Anthropic API provider
+    - New commands: suggest-links, gaps, summarize
+    - Embedding cache, retry with backoff, 120 tests
   - Phase 7.3: Vault Health & Polish (Planned)
   - Phase 7.4: Testing & Release (Planned)
 
