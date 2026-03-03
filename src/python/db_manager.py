@@ -773,7 +773,7 @@ class DatabaseManager:
         file_mtime: float,
     ):
         """Save or update an embedding vector."""
-        from datetime import datetime
+        from datetime import datetime, timezone
         with self.get_connection() as conn:
             conn.execute("""
                 INSERT INTO note_embeddings (note_id, provider, model, vector, updated_at, file_mtime)
@@ -782,7 +782,7 @@ class DatabaseManager:
                 DO UPDATE SET vector = excluded.vector,
                              updated_at = excluded.updated_at,
                              file_mtime = excluded.file_mtime
-            """, (note_id, provider, model, vector, datetime.utcnow().isoformat(), file_mtime))
+            """, (note_id, provider, model, vector, datetime.now(timezone.utc).isoformat(), file_mtime))
 
     def delete_embeddings(self, note_id: str):
         """Delete all embeddings for a note."""

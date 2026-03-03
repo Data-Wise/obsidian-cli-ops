@@ -37,6 +37,7 @@ class ObsidianBridge:
                 result = subprocess.run(
                     ["obsidian", "--version"],
                     capture_output=True,
+                    text=True,
                     timeout=5,
                 )
                 self._available = result.returncode == 0

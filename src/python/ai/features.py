@@ -11,6 +11,7 @@ Features:
 """
 
 import os
+import sqlite3
 import time
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional, Tuple
@@ -441,19 +442,19 @@ def _get_cached_embedding(
         cached = db_manager.get_embedding_with_mtime(note_id, provider_name, model_name)
         if cached and cached['file_mtime'] == file_mtime:
             return list(np.frombuffer(cached['vector'], dtype=np.float32))
-    except Exception:
-        pass  # Table might not exist yet
+    except (OSError, KeyError):
+        pass  # Table might not exist yet or row format unexpected
 
     # Compute fresh
     embedding = router.get_embedding(content)
 
-    # Cache it
+    # Cache it (failures are non-fatal — caching is an optimization)
     try:
         db_manager.ensure_embeddings_table()
         vector_bytes = np.array(embedding, dtype=np.float32).tobytes()
         db_manager.save_embedding(note_id, provider_name, model_name, vector_bytes, file_mtime)
-    except Exception:
-        pass  # Caching failure shouldn't block the operation
+    except (OSError, sqlite3.OperationalError):
+        pass
 
     return embedding
 
@@ -495,7 +496,6 @@ def suggest_links(
     # Get existing links from this note (to exclude them)
     existing_links = set()
     try:
-        from db_manager import DatabaseManager
         with db_manager.get_connection() as conn:
             cursor = conn.execute(
                 "SELECT target_note_id FROM links WHERE source_note_id = ? AND target_note_id IS NOT NULL",
