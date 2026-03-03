@@ -132,7 +132,7 @@ def print_status():
             caps = prov.get("capabilities", {})
             if caps.get("embeddings"):
                 caps_list.append("embeddings")
-            if caps.get("batch"):
+            if caps.get("batch_embeddings"):
                 caps_list.append("batch")
             caps_str = ", ".join(caps_list) if caps_list else "analysis"
         else:

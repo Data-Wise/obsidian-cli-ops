@@ -515,17 +515,14 @@ def main():
                     # Print analysis results
                     print("📊 Analysis Results:\n")
 
-                    if result.topics:
-                        print(f"  Topics: {', '.join(result.topics)}")
+                    if result.summary:
+                        print(f"  Summary: {result.summary}")
                     if result.themes:
                         print(f"  Themes: {', '.join(result.themes)}")
-                    if result.suggested_tags:
-                        print(f"  Suggested Tags: {', '.join(result.suggested_tags)}")
-
-                    print()
-                    print("  Quality Scores:")
-                    for key, value in result.quality.items():
-                        print(f"    • {key}: {value}/10")
+                    if result.quality_score > 0:
+                        print(f"  Quality: {result.quality_score:.0%}")
+                    if result.connections:
+                        print(f"  Connections: {', '.join(result.connections)}")
 
                     if result.suggestions:
                         print()

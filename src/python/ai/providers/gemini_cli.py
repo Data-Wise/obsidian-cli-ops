@@ -14,12 +14,26 @@ Limitations:
 
 import subprocess
 import shutil
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 
-from .base import (
-    AIProvider, ProviderType, ProviderCapabilities,
-    AnalysisResult, ComparisonResult
-)
+from .base import AIProvider, ProviderType, ProviderCapabilities
+from ..models import AnalysisResult, ComparisonResult
+
+# JSON schema templates for prompts
+_ANALYSIS_SCHEMA = '''{
+    "summary": "Brief summary of the note",
+    "themes": ["theme1", "theme2"],
+    "quality_score": 0.8,
+    "suggestions": ["suggestion1", "suggestion2"],
+    "connections": ["related topic 1", "related topic 2"]
+}'''
+
+_COMPARISON_SCHEMA = '''{
+    "similarity_score": 0.75,
+    "common_themes": ["shared theme 1"],
+    "differences": ["key difference 1"],
+    "relationship": "complementary notes on the same topic"
+}'''
 
 
 class GeminiCLIProvider(AIProvider):
@@ -28,28 +42,19 @@ class GeminiCLIProvider(AIProvider):
     name = "gemini-cli"
     provider_type = ProviderType.CLI
     capabilities = ProviderCapabilities(
-        embeddings=False,  # CLI doesn't support embeddings
+        embeddings=False,
+        batch_embeddings=False,
         analysis=True,
         comparison=True,
-        batch=False,  # Too slow for batch
-        streaming=True
     )
 
-    def __init__(self, timeout: int = 60):
-        """Initialize Gemini CLI provider.
-
-        Args:
-            timeout: Command timeout in seconds
-        """
+    def __init__(self, timeout: int = 60, **kwargs):
         self.timeout = timeout
-        self._cli_path = None
 
     def _get_cli_command(self) -> List[str]:
         """Get the CLI command to use."""
-        # Check if gemini is installed globally
         if shutil.which("gemini"):
             return ["gemini"]
-        # Fall back to npx
         if shutil.which("npx"):
             return ["npx", "@google/gemini-cli"]
         raise RuntimeError(
@@ -57,14 +62,7 @@ class GeminiCLIProvider(AIProvider):
         )
 
     def _run_cli(self, prompt: str) -> str:
-        """Run a prompt through the Gemini CLI.
-
-        Args:
-            prompt: The prompt to send
-
-        Returns:
-            CLI response text
-        """
+        """Run a prompt through the Gemini CLI."""
         cmd = self._get_cli_command()
         cmd.extend(["-p", prompt])
 
@@ -106,21 +104,9 @@ class GeminiCLIProvider(AIProvider):
             "timeout": self.timeout,
             "capabilities": {
                 "embeddings": self.capabilities.embeddings,
-                "batch": self.capabilities.batch,
+                "batch_embeddings": self.capabilities.batch_embeddings,
             }
         }
-
-    def get_embedding(self, text: str) -> List[float]:
-        """Not supported by CLI."""
-        raise NotImplementedError(
-            "Gemini CLI doesn't support embeddings. Use gemini-api or ollama."
-        )
-
-    def get_embeddings_batch(self, texts: List[str]) -> List[List[float]]:
-        """Not supported by CLI."""
-        raise NotImplementedError(
-            "Gemini CLI doesn't support embeddings. Use gemini-api or ollama."
-        )
 
     def analyze_note(self, content: str, title: str = "") -> AnalysisResult:
         """Analyze a note using Gemini CLI."""
@@ -130,29 +116,12 @@ Title: {title or "Untitled"}
 ---
 {self._truncate(content)}
 
-Extract and respond with ONLY valid JSON:
-{{
-    "topics": ["topic1", "topic2", "topic3"],
-    "themes": ["theme1", "theme2"],
-    "suggested_tags": ["tag1", "tag2"],
-    "quality": {{"completeness": 7, "clarity": 8}},
-    "suggestions": ["suggestion1", "suggestion2"]
-}}"""
+Respond with ONLY valid JSON matching this schema:
+{_ANALYSIS_SCHEMA}"""
 
         response = self._run_cli(prompt)
-        data = self._parse_json_response(
-            response,
-            {"topics": [], "themes": [], "suggested_tags": [], "quality": {}, "suggestions": []}
-        )
-
-        return AnalysisResult(
-            topics=data.get("topics", []),
-            themes=data.get("themes", []),
-            suggested_tags=data.get("suggested_tags", []),
-            quality=data.get("quality", {"completeness": 0, "clarity": 0}),
-            suggestions=data.get("suggestions", []),
-            raw_response=response
-        )
+        json_str = self._extract_json(response)
+        return AnalysisResult.from_json(json_str)
 
     def compare_notes(
         self,
@@ -172,24 +141,10 @@ Note 2: {note2_title or "Untitled"}
 ---
 {self._truncate(note2_content, 1000)}
 
-Analyze topic overlap, content similarity, and whether they should be merged.
-Respond with ONLY valid JSON:
-{{
-    "similarity_score": 0.75,
-    "reason": "Both notes discuss similar topics...",
-    "should_merge": false,
-    "merge_strategy": null
-}}"""
+Analyze topic overlap, content similarity, and their relationship.
+Respond with ONLY valid JSON matching this schema:
+{_COMPARISON_SCHEMA}"""
 
         response = self._run_cli(prompt)
-        data = self._parse_json_response(
-            response,
-            {"similarity_score": 0.0, "reason": "", "should_merge": False}
-        )
-
-        return ComparisonResult(
-            similarity_score=float(data.get("similarity_score", 0.0)),
-            reason=data.get("reason", ""),
-            should_merge=data.get("should_merge", False),
-            merge_strategy=data.get("merge_strategy")
-        )
+        json_str = self._extract_json(response)
+        return ComparisonResult.from_json(json_str)

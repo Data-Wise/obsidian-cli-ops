@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 
 from .router import get_ai_client, AIRouter
-from .providers.base import AnalysisResult, ComparisonResult, SimilarNote
+from .models import AnalysisResult, ComparisonResult, SimilarNote
 
 
 @dataclass

@@ -17,10 +17,8 @@ Priority Order (configurable):
 from typing import List, Dict, Any, Optional, Type
 from enum import Enum
 
-from .providers.base import (
-    AIProvider, ProviderCapabilities,
-    AnalysisResult, ComparisonResult
-)
+from .providers.base import AIProvider, ProviderCapabilities
+from .models import AnalysisResult, ComparisonResult
 from .providers.gemini_api import GeminiAPIProvider
 from .providers.gemini_cli import GeminiCLIProvider
 from .providers.claude_cli import ClaudeCLIProvider
@@ -134,7 +132,7 @@ class AIRouter:
         if operation == OperationType.EMBEDDING:
             return caps.embeddings
         elif operation == OperationType.EMBEDDINGS_BATCH:
-            return caps.embeddings and caps.batch
+            return caps.embeddings and caps.batch_embeddings
         elif operation == OperationType.ANALYSIS:
             return caps.analysis
         elif operation == OperationType.COMPARISON:

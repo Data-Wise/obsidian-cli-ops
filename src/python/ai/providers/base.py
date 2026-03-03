@@ -2,13 +2,16 @@
 Base AI Provider interface.
 
 All AI providers must implement this interface for consistent behavior
-across Gemini API, CLI tools, and local models.
+across Gemini API, Anthropic API, CLI tools, and local models.
 """
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Any
+from dataclasses import dataclass
+from typing import List, Dict, Any
 from enum import Enum
+
+# Import shared models — all providers use these types
+from ..models import AnalysisResult, ComparisonResult, SimilarNote
 
 
 class ProviderType(Enum):
@@ -22,39 +25,9 @@ class ProviderType(Enum):
 class ProviderCapabilities:
     """Capabilities of an AI provider."""
     embeddings: bool = False
+    batch_embeddings: bool = False
     analysis: bool = False
     comparison: bool = False
-    batch: bool = False
-    streaming: bool = False
-
-
-@dataclass
-class AnalysisResult:
-    """Result of note analysis."""
-    topics: List[str] = field(default_factory=list)
-    themes: List[str] = field(default_factory=list)
-    suggested_tags: List[str] = field(default_factory=list)
-    quality: Dict[str, int] = field(default_factory=lambda: {"completeness": 0, "clarity": 0})
-    suggestions: List[str] = field(default_factory=list)
-    raw_response: Optional[str] = None
-
-
-@dataclass
-class ComparisonResult:
-    """Result of note comparison."""
-    similarity_score: float = 0.0
-    reason: str = ""
-    should_merge: bool = False
-    merge_strategy: Optional[str] = None
-
-
-@dataclass
-class SimilarNote:
-    """A similar note with score."""
-    note_id: str
-    title: str
-    score: float
-    reason: Optional[str] = None
 
 
 class AIProvider(ABC):
@@ -86,7 +59,7 @@ class AIProvider(ABC):
     # Analysis operations (all providers)
     @abstractmethod
     def analyze_note(self, content: str, title: str = "") -> AnalysisResult:
-        """Analyze a note for topics, themes, and suggestions."""
+        """Analyze a note and return structured AnalysisResult."""
         pass
 
     # Comparison operations (all providers)
@@ -98,7 +71,7 @@ class AIProvider(ABC):
         note1_title: str = "",
         note2_title: str = ""
     ) -> ComparisonResult:
-        """Compare two notes for similarity."""
+        """Compare two notes and return structured ComparisonResult."""
         pass
 
     # Utility methods
@@ -108,15 +81,14 @@ class AIProvider(ABC):
             return text
         return text[:max_chars] + "..."
 
-    def _parse_json_response(self, response: str, default: Dict) -> Dict:
-        """Safely parse JSON from response."""
-        import json
-        try:
-            # Try to find JSON in response
-            start = response.find('{')
-            end = response.rfind('}') + 1
-            if start >= 0 and end > start:
-                return json.loads(response[start:end])
-        except json.JSONDecodeError:
-            pass
-        return default
+    def _extract_json(self, response: str) -> str:
+        """Extract JSON object from a response that may contain extra text.
+
+        Finds the first { ... } block. Used by CLI/Ollama providers
+        before passing to Model.from_json().
+        """
+        start = response.find('{')
+        end = response.rfind('}') + 1
+        if start >= 0 and end > start:
+            return response[start:end]
+        raise ValueError(f"No JSON object found in response: {response[:100]}")
