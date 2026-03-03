@@ -235,3 +235,70 @@ class TestRouterWithNewProviders:
         router = AIRouter()
         provider = router._get_provider("anthropic-api")
         assert provider.name == "anthropic-api"
+
+
+# --- Retry decorator tests ---
+
+class TestRetryWithBackoff:
+    """Tests for retry_with_backoff decorator."""
+
+    def test_succeeds_on_first_try(self):
+        from ai.providers.base import retry_with_backoff
+
+        call_count = 0
+
+        @retry_with_backoff(max_retries=3, base_delay=0.01)
+        def succeed():
+            nonlocal call_count
+            call_count += 1
+            return "ok"
+
+        assert succeed() == "ok"
+        assert call_count == 1
+
+    def test_retries_on_failure_then_succeeds(self):
+        from ai.providers.base import retry_with_backoff
+
+        call_count = 0
+
+        @retry_with_backoff(max_retries=3, base_delay=0.01)
+        def fail_then_succeed():
+            nonlocal call_count
+            call_count += 1
+            if call_count < 3:
+                raise ConnectionError("transient")
+            return "ok"
+
+        assert fail_then_succeed() == "ok"
+        assert call_count == 3
+
+    def test_raises_after_max_retries(self):
+        from ai.providers.base import retry_with_backoff
+
+        @retry_with_backoff(max_retries=2, base_delay=0.01)
+        def always_fail():
+            raise ValueError("permanent")
+
+        with pytest.raises(ValueError, match="permanent"):
+            always_fail()
+
+
+# --- Legacy import verification ---
+
+class TestNoLegacyImports:
+    """Verify legacy ai_client files are deleted."""
+
+    def test_no_legacy_ai_client(self):
+        import importlib
+        with pytest.raises(ModuleNotFoundError):
+            importlib.import_module("ai_client")
+
+    def test_no_legacy_ai_client_hf(self):
+        import importlib
+        with pytest.raises(ModuleNotFoundError):
+            importlib.import_module("ai_client_hf")
+
+    def test_no_legacy_ai_client_ollama(self):
+        import importlib
+        with pytest.raises(ModuleNotFoundError):
+            importlib.import_module("ai_client_ollama")

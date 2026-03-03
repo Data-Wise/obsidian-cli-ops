@@ -5,6 +5,9 @@ All AI providers must implement this interface for consistent behavior
 across Gemini API, Anthropic API, CLI tools, and local models.
 """
 
+import functools
+import time
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Dict, Any
@@ -92,3 +95,20 @@ class AIProvider(ABC):
         if start >= 0 and end > start:
             return response[start:end]
         raise ValueError(f"No JSON object found in response: {response[:100]}")
+
+
+def retry_with_backoff(max_retries=3, base_delay=1.0, exceptions=(Exception,)):
+    """Decorator for API calls with exponential backoff."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    if attempt == max_retries - 1:
+                        raise
+                    delay = base_delay * (2 ** attempt)
+                    time.sleep(delay)
+        return wrapper
+    return decorator

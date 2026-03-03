@@ -15,7 +15,7 @@ Limitations:
 import os
 from typing import List, Dict, Any, Optional
 
-from .base import AIProvider, ProviderType, ProviderCapabilities
+from .base import AIProvider, ProviderType, ProviderCapabilities, retry_with_backoff
 from ..models import AnalysisResult, ComparisonResult
 
 # JSON schema templates for prompts
@@ -95,6 +95,7 @@ class AnthropicAPIProvider(AIProvider):
             }
         }
 
+    @retry_with_backoff(max_retries=3, base_delay=1.0)
     def analyze_note(self, content: str, title: str = "") -> AnalysisResult:
         """Analyze a note using Anthropic Claude API."""
         client = self._get_client()
@@ -117,6 +118,7 @@ Respond with ONLY valid JSON matching this schema:
         json_str = self._extract_json(text)
         return AnalysisResult.from_json(json_str)
 
+    @retry_with_backoff(max_retries=3, base_delay=1.0)
     def compare_notes(
         self,
         note1_content: str,

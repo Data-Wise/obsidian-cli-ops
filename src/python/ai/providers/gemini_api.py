@@ -12,7 +12,7 @@ Free tier: 1000 RPD, 1M TPM
 import os
 from typing import List, Dict, Any, Optional
 
-from .base import AIProvider, ProviderType, ProviderCapabilities
+from .base import AIProvider, ProviderType, ProviderCapabilities, retry_with_backoff
 from ..models import AnalysisResult, ComparisonResult
 
 # JSON schema templates for prompts
@@ -95,6 +95,7 @@ class GeminiAPIProvider(AIProvider):
             }
         }
 
+    @retry_with_backoff(max_retries=3, base_delay=1.0)
     def get_embedding(self, text: str) -> List[float]:
         """Get embedding vector using Gemini."""
         client = self._get_client()
@@ -113,6 +114,7 @@ class GeminiAPIProvider(AIProvider):
         )
         return [e.values for e in result.embeddings]
 
+    @retry_with_backoff(max_retries=3, base_delay=1.0)
     def analyze_note(self, content: str, title: str = "") -> AnalysisResult:
         """Analyze a note using Gemini with structured output."""
         client = self._get_client()
@@ -136,6 +138,7 @@ Respond with ONLY valid JSON matching this schema:
         )
         return AnalysisResult.from_json(response.text)
 
+    @retry_with_backoff(max_retries=3, base_delay=1.0)
     def compare_notes(
         self,
         note1_content: str,

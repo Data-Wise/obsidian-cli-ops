@@ -1,9 +1,9 @@
 priority: P1
 status: beta - v3.0.0-beta released
-progress: 75
-updated: 2026-03-02
+progress: 85
+updated: 2026-03-03
 version: 3.0.0-beta
-next: Phase 7.2 - AI-Powered Note Operations
+next: PR to dev, integration testing
 target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🎯 Strategic Refocus (2025-12-20)
@@ -34,6 +34,24 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 - Advanced AI features (watch mode, batch operations)
 
 **See:** PROPOSAL-REFOCUS-2025-12-20.md, IDEAS.md, TODOS.md for complete details
+
+---
+
+## ✅ Just Completed (2026-03-03 - AI Enhancement: Modern SDKs + New Commands)
+
+### AI Provider Modernization (feature/ai-enhance)
+
+- ✅ **Shared structured output models**: `ai/models.py` with AnalysisResult, ComparisonResult, SimilarNote dataclasses
+- ✅ **Gemini SDK migration**: `google-generativeai` → `google-genai` (new SDK with native batch + structured output)
+- ✅ **Anthropic API provider**: New `anthropic_api.py` (claude-sonnet-4-6, analysis + comparison)
+- ✅ **Obsidian CLI bridge**: `obsidian_bridge.py` with Null Object pattern (silent fallback)
+- ✅ **3 new AI commands**: `suggest-links`, `gaps`, `summarize` with embedding cache
+- ✅ **Embedding cache**: SQLite `note_embeddings` table with mtime-based invalidation
+- ✅ **Retry with backoff**: Exponential backoff decorator on all API provider methods
+- ✅ **Legacy cleanup**: Deleted `ai_client.py`, `ai_client_hf.py`, `ai_client_ollama.py`, `setup_wizard.py`, `similarity_analyzer.py`
+- ✅ **Updated requirements.txt**: Removed `sentence-transformers`, `google-generativeai`, added `google-genai`, `anthropic`
+- ✅ **Documentation**: `docs/developer/ai-providers.md` — architecture, providers, cache, retry
+- ✅ **Result:** 120/120 tests passing (42 original + 78 new), 5 providers, 13 AI commands
 
 ---
 
