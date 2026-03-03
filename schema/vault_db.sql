@@ -270,6 +270,25 @@ END;
 -- INITIAL DATA
 -- ============================================================================
 
+-- ============================================================================
+-- NOTE_EMBEDDINGS TABLE
+-- Cached embedding vectors for notes (AI similarity/clustering)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS note_embeddings (
+    note_id TEXT NOT NULL,
+    provider TEXT NOT NULL,              -- e.g. 'gemini-api', 'ollama'
+    model TEXT NOT NULL,                 -- e.g. 'text-embedding-004'
+    vector BLOB NOT NULL,               -- numpy array serialized
+    updated_at TEXT NOT NULL,            -- ISO 8601
+    file_mtime REAL NOT NULL,           -- file modification time at embedding creation
+    PRIMARY KEY (note_id, provider, model),
+    FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_embeddings_note ON note_embeddings(note_id);
+CREATE INDEX IF NOT EXISTS idx_embeddings_provider ON note_embeddings(provider, model);
+
 -- Schema version tracking
 CREATE TABLE IF NOT EXISTS schema_version (
     version INTEGER PRIMARY KEY,
