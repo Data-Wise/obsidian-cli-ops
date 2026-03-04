@@ -25,13 +25,8 @@ Usage:
 
 from .router import AIRouter, get_ai_client, OperationType
 from .config import AIConfig, get_config, print_status, setup_wizard
-from .providers.base import (
-    AIProvider,
-    ProviderType,
-    ProviderCapabilities,
-    AnalysisResult,
-    ComparisonResult,
-)
+from .providers.base import AIProvider, ProviderType, ProviderCapabilities
+from .models import AnalysisResult, ComparisonResult, SimilarNote
 
 __all__ = [
     # Main entry points
@@ -49,4 +44,5 @@ __all__ = [
     'ProviderCapabilities',
     'AnalysisResult',
     'ComparisonResult',
+    'SimilarNote',
 ]

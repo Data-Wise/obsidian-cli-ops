@@ -27,6 +27,7 @@ class AIConfig:
     preferred_provider: Optional[str] = None
     provider_priority: List[str] = field(default_factory=lambda: [
         "gemini-api",
+        "anthropic-api",
         "ollama",
         "gemini-cli",
         "claude-cli",
@@ -35,6 +36,7 @@ class AIConfig:
     # Model settings
     gemini_model: str = "gemini-2.5-flash"
     gemini_embedding_model: str = "text-embedding-004"
+    anthropic_model: str = "claude-sonnet-4-6"
     ollama_chat_model: str = "llama3.1"
     ollama_embedding_model: str = "nomic-embed-text"
 
@@ -132,7 +134,7 @@ def print_status():
             caps = prov.get("capabilities", {})
             if caps.get("embeddings"):
                 caps_list.append("embeddings")
-            if caps.get("batch"):
+            if caps.get("batch_embeddings"):
                 caps_list.append("batch")
             caps_str = ", ".join(caps_list) if caps_list else "analysis"
         else:

@@ -4,7 +4,7 @@
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with knowledge graph analysis and multi-provider AI features.
 
-**Current Version**: 3.0.0-beta
+**Current Version**: 3.0.0-beta.2
 
 ## Key Features
 
@@ -17,17 +17,20 @@
 *   **📈 Analytics**: Comprehensive vault statistics and insights
 
 ### AI-Powered Features
-*   **🤖 Multi-Provider AI**: Gemini API, Gemini CLI, Claude CLI, Ollama
+*   **🤖 Multi-Provider AI**: Gemini API, Anthropic API, Gemini CLI, Claude CLI, Ollama
 *   **🔍 Find Similar Notes**: `obs ai similar` — semantic similarity using embeddings
 *   **🔬 Analyze Notes**: `obs ai analyze` — deep analysis with topics, themes, suggestions
 *   **📋 Detect Duplicates**: `obs ai duplicates` — find potential duplicate notes
+*   **🔗 Suggest Links**: `obs ai suggest-links` — find unlinked related notes
+*   **🕳️ Knowledge Gaps**: `obs ai gaps` — detect stub notes and orphans
+*   **📊 Vault Summary**: `obs ai summarize` — theme analysis across vault
 *   **🔧 Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 *   **⚡ Smart Routing**: Auto-selects best provider for each operation
 
 ### Developer Experience
 *   **🎯 Zero-Friction**: Just type `obs` — lists your vaults immediately
 *   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
-*   **🎨 ADHD-Friendly**: 10 focused commands, smart defaults, progressive disclosure
+*   **🎨 ADHD-Friendly**: 13 focused commands, smart defaults, progressive disclosure
 *   **🏷️ Flexible Lookup**: Use vault names or ID prefixes (`obs analyze Knowledge_Base`)
 
 ## Quick Start
@@ -124,11 +127,12 @@ obs ai duplicates <vault>
 ## Project Status
 
 - ✅ **Phase 1-5 Complete**: Database, scanner, graph, AI features
-- ✅ **Phase 7.1 Complete**: v3.0.0 simplification (TUI removed, 10 focused commands)
+- ✅ **Phase 7.1 Complete**: v3.0.0 simplification (TUI removed, CLI consolidated)
 - ✅ **Async & Lookup Fix**: Vault name/prefix lookup, async operations (PR #2)
-- 📋 **Phase 7.2 Planned**: AI-Powered Note Operations
+- ✅ **Phase 7.2 Complete**: AI Enhancement (modern SDKs, 3 new commands, 125 tests)
+- 📋 **Phase 7.3 Planned**: Vault Health & Polish
 
-**Current Status:** v3.0.0-beta — Phase 7.1 Complete
+**Current Status:** v3.0.0-beta.2 — Phase 7.2 Complete
 
 See [TODOS.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md) for current work items.
 

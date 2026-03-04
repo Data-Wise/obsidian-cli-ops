@@ -24,7 +24,8 @@ class InstallMode(str, Enum):
 
 # Provider dependency mappings
 PROVIDER_DEPS: Dict[str, List[str]] = {
-    "gemini-api": ["google-generativeai"],
+    "gemini-api": ["google-genai"],
+    "anthropic-api": ["anthropic"],
     "gemini-cli": [],  # Uses npx, no pip deps
     "claude-cli": [],  # Uses system claude command
     "ollama": ["numpy"],  # For embedding similarity
@@ -32,7 +33,7 @@ PROVIDER_DEPS: Dict[str, List[str]] = {
 
 # Package to import name mapping (when different)
 IMPORT_NAMES: Dict[str, str] = {
-    "google-generativeai": "google.generativeai",
+    "google-genai": "google.genai",
     "python-frontmatter": "frontmatter",
     "PyYAML": "yaml",
     "scikit-learn": "sklearn",
@@ -41,8 +42,9 @@ IMPORT_NAMES: Dict[str, str] = {
 # Provider setup URLs
 PROVIDER_URLS: Dict[str, str] = {
     "gemini-api": "https://aistudio.google.com/apikey",
+    "anthropic-api": "https://console.anthropic.com/settings/keys",
     "ollama": "https://ollama.com/download",
-    "gemini-cli": "https://github.com/anthropics/anthropic-cookbook",
+    "gemini-cli": "https://github.com/google/generative-ai-cli",
 }
 
 
@@ -218,6 +220,11 @@ def print_install_help(provider: str):
         print(f"\n   Then set API key:")
         print(f"   export GOOGLE_API_KEY='your-key'")
         print(f"\n   Get a free key at: {url}")
+
+    elif provider == "anthropic-api":
+        print(f"\n   Then set API key:")
+        print(f"   export ANTHROPIC_API_KEY='your-key'")
+        print(f"\n   Get a key at: {url}")
 
     elif provider == "ollama":
         print(f"\n   Install Ollama:")

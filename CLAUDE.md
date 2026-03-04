@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 3.0.0-beta
+**Current Version**: 3.0.0-beta.2
 **Status**: Beta release (Phase 7.1 complete)
 **Priority**: P1
 
@@ -14,7 +14,7 @@ Developer guide for Claude Code when working with this repository.
 
 - **Vault Management**: Discovery, scanning across multiple vaults
 - **Graph Analysis**: PageRank, centrality, clustering, orphan/hub detection
-- **AI Features**: Multi-provider AI (Gemini API, Gemini CLI, Claude CLI, Ollama)
+- **AI Features**: Multi-provider AI (Gemini API, Anthropic API, Gemini CLI, Claude CLI, Ollama)
 - **Rich CLI Output**: Beautiful terminal output with tables, colors, progress bars
 - **ZSH-First Architecture**: Fast shell integration with Python core
 
@@ -25,7 +25,7 @@ Developer guide for Claude Code when working with this repository.
 - **SQLite**: Knowledge graph database
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
-- **Gemini/Claude/Ollama**: Multi-provider AI (optional)
+- **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
 - **Pytest**: Testing harness
 
 ## Architecture
@@ -64,7 +64,7 @@ ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 
 ### Essential Commands
 
-**v3.0.0 Simplified CLI** - 10 focused commands!
+**v3.0.0 Simplified CLI** - 13 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -82,13 +82,16 @@ obs ai test                     # Test all providers
 obs ai similar <note_id>        # Find similar notes
 obs ai analyze <note_id>        # Analyze note with AI
 obs ai duplicates <vault>       # Find duplicate notes
+obs ai suggest-links <note_id>  # Suggest new links
+obs ai gaps <vault>             # Find knowledge gaps
+obs ai summarize <vault>        # Summarize vault themes
 
 # UTILITIES
 obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (42 core tests)
+pytest src/python/tests/        # Run Python tests (125 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -96,7 +99,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # Python tests (42 core tests passing)
+pytest src/python/tests/        # Python tests (125 tests passing)
 obs --verbose <command>         # Run any command with verbose output
 ```
 
@@ -118,9 +121,9 @@ obs --verbose <command>         # Run any command with verbose output
 - `src/python/` - Python backend (~3,500 lines)
   - `core/` - Business logic (931 lines)
   - `obs_cli.py` - CLI interface (584 lines)
-  - AI clients - Multi-provider AI (440+ lines)
-- `schema/vault_db.sql` - Database schema
-- `tests/` - Test suite (42 core tests passing)
+  - `ai/` - Multi-provider AI package (5 providers, 900+ lines)
+- `schema/vault_db.sql` - Database schema (+ note_embeddings table)
+- `tests/` - Test suite (125 tests passing)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -133,7 +136,7 @@ obs --verbose <command>         # Run any command with verbose output
 
 **Location**: `schema/vault_db.sql`
 
-**Core Tables**: vaults, notes, links, tags, graph_metrics, scan_history
+**Core Tables**: vaults, notes, links, tags, graph_metrics, scan_history, note_embeddings
 **Views**: orphaned_notes, hub_notes, broken_links
 
 Details in schema file and `docs/developer/architecture.md`.
@@ -170,7 +173,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ### Testing Requirements
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- Keep core tests passing (42+ tests)
+- Keep core tests passing (120+ tests)
 - Update test count in documentation
 
 ### Documentation

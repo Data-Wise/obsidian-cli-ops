@@ -15,10 +15,24 @@ Requirements:
 import requests
 from typing import List, Dict, Any, Optional
 
-from .base import (
-    AIProvider, ProviderType, ProviderCapabilities,
-    AnalysisResult, ComparisonResult
-)
+from .base import AIProvider, ProviderType, ProviderCapabilities
+from ..models import AnalysisResult, ComparisonResult
+
+# JSON schema templates for prompts
+_ANALYSIS_SCHEMA = '''{
+    "summary": "Brief summary of the note",
+    "themes": ["theme1", "theme2"],
+    "quality_score": 0.8,
+    "suggestions": ["suggestion1", "suggestion2"],
+    "connections": ["related topic 1", "related topic 2"]
+}'''
+
+_COMPARISON_SCHEMA = '''{
+    "similarity_score": 0.75,
+    "common_themes": ["shared theme 1"],
+    "differences": ["key difference 1"],
+    "relationship": "complementary notes on the same topic"
+}'''
 
 
 class OllamaProvider(AIProvider):
@@ -28,10 +42,9 @@ class OllamaProvider(AIProvider):
     provider_type = ProviderType.LOCAL
     capabilities = ProviderCapabilities(
         embeddings=True,
+        batch_embeddings=True,
         analysis=True,
         comparison=True,
-        batch=True,  # Can do batch locally
-        streaming=True
     )
 
     def __init__(
@@ -39,16 +52,9 @@ class OllamaProvider(AIProvider):
         base_url: str = "http://localhost:11434",
         embedding_model: str = "nomic-embed-text",
         chat_model: str = "llama3.1",
-        timeout: int = 60
+        timeout: int = 60,
+        **kwargs,
     ):
-        """Initialize Ollama provider.
-
-        Args:
-            base_url: Ollama server URL
-            embedding_model: Model for embeddings (768 dims)
-            chat_model: Model for text generation
-            timeout: Request timeout in seconds
-        """
         self.base_url = base_url.rstrip('/')
         self.embedding_model = embedding_model
         self.chat_model = chat_model
@@ -100,7 +106,7 @@ class OllamaProvider(AIProvider):
             "has_chat_model": self._check_model(self.chat_model),
             "capabilities": {
                 "embeddings": self.capabilities.embeddings,
-                "batch": self.capabilities.batch,
+                "batch_embeddings": self.capabilities.batch_embeddings,
             }
         }
 
@@ -134,7 +140,6 @@ class OllamaProvider(AIProvider):
 
     def get_embeddings_batch(self, texts: List[str]) -> List[List[float]]:
         """Get embeddings for multiple texts."""
-        # Ollama handles batch internally
         return [self.get_embedding(text) for text in texts]
 
     def _generate(self, prompt: str) -> str:
@@ -171,88 +176,21 @@ Title: {title or "Untitled"}
 ---
 {self._truncate(content)}
 
-Extract and respond with ONLY valid JSON:
-{{
-    "topics": ["topic1", "topic2", "topic3"],
-    "themes": ["theme1", "theme2"],
-    "suggested_tags": ["tag1", "tag2"],
-    "quality": {{"completeness": 7, "clarity": 8}},
-    "suggestions": ["suggestion1", "suggestion2"]
-}}"""
+Respond with ONLY valid JSON matching this schema:
+{_ANALYSIS_SCHEMA}"""
 
         response = self._generate(prompt)
-        data = self._parse_json_response(
-            response,
-            {"topics": [], "themes": [], "suggested_tags": [], "quality": {}, "suggestions": []}
-        )
-
-        return AnalysisResult(
-            topics=data.get("topics", []),
-            themes=data.get("themes", []),
-            suggested_tags=data.get("suggested_tags", []),
-            quality=data.get("quality", {"completeness": 0, "clarity": 0}),
-            suggestions=data.get("suggestions", []),
-            raw_response=response
-        )
+        json_str = self._extract_json(response)
+        return AnalysisResult.from_json(json_str)
 
     def compare_notes(
         self,
         note1_content: str,
         note2_content: str,
         note1_title: str = "",
-        note2_title: str = "",
-        use_embeddings: bool = True
+        note2_title: str = ""
     ) -> ComparisonResult:
-        """Compare two notes using Ollama.
-
-        Args:
-            note1_content: First note content
-            note2_content: Second note content
-            note1_title: First note title
-            note2_title: Second note title
-            use_embeddings: Use fast embedding comparison (default True)
-        """
-        if use_embeddings:
-            return self._compare_with_embeddings(note1_content, note2_content)
-        return self._compare_with_reasoning(
-            note1_content, note2_content,
-            note1_title, note2_title
-        )
-
-    def _compare_with_embeddings(
-        self,
-        note1_content: str,
-        note2_content: str
-    ) -> ComparisonResult:
-        """Fast comparison using embedding similarity."""
-        import numpy as np
-
-        emb1 = self.get_embedding(note1_content)
-        emb2 = self.get_embedding(note2_content)
-
-        emb1_arr = np.array(emb1)
-        emb2_arr = np.array(emb2)
-
-        similarity = float(
-            np.dot(emb1_arr, emb2_arr) /
-            (np.linalg.norm(emb1_arr) * np.linalg.norm(emb2_arr))
-        )
-
-        return ComparisonResult(
-            similarity_score=similarity,
-            reason=f"Embedding cosine similarity ({self.embedding_model})",
-            should_merge=similarity > 0.85,
-            merge_strategy="Review and combine" if similarity > 0.85 else None
-        )
-
-    def _compare_with_reasoning(
-        self,
-        note1_content: str,
-        note2_content: str,
-        note1_title: str,
-        note2_title: str
-    ) -> ComparisonResult:
-        """Detailed comparison using chat model."""
+        """Compare two notes using Ollama."""
         prompt = f"""Compare these two Obsidian notes for similarity.
 
 Note 1: {note1_title or "Untitled"}
@@ -263,27 +201,13 @@ Note 2: {note2_title or "Untitled"}
 ---
 {self._truncate(note2_content, 1000)}
 
-Analyze topic overlap, content similarity, and whether they should be merged.
-Respond with ONLY valid JSON:
-{{
-    "similarity_score": 0.75,
-    "reason": "Both notes discuss similar topics...",
-    "should_merge": false,
-    "merge_strategy": null
-}}"""
+Analyze topic overlap, content similarity, and their relationship.
+Respond with ONLY valid JSON matching this schema:
+{_COMPARISON_SCHEMA}"""
 
         response = self._generate(prompt)
-        data = self._parse_json_response(
-            response,
-            {"similarity_score": 0.0, "reason": "", "should_merge": False}
-        )
-
-        return ComparisonResult(
-            similarity_score=max(0.0, min(1.0, float(data.get("similarity_score", 0.0)))),
-            reason=data.get("reason", ""),
-            should_merge=data.get("should_merge", False),
-            merge_strategy=data.get("merge_strategy")
-        )
+        json_str = self._extract_json(response)
+        return ComparisonResult.from_json(json_str)
 
     def list_models(self) -> List[str]:
         """List available Ollama models."""

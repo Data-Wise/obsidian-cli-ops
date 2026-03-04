@@ -391,6 +391,22 @@ def main():
     duplicates_parser.add_argument('--limit', type=int, default=50, help='Max duplicate groups')
     duplicates_parser.add_argument('--provider', help='Use specific AI provider')
 
+    # New AI commands (Increment 5)
+    suggest_parser = ai_subparsers.add_parser('suggest-links', help='Suggest new links for a note')
+    suggest_parser.add_argument('note_id', help='Note ID to suggest links for')
+    suggest_parser.add_argument('--limit', type=int, default=5, help='Number of suggestions')
+    suggest_parser.add_argument('--provider', help='Use specific AI provider')
+
+    gaps_parser = ai_subparsers.add_parser('gaps', help='Find knowledge gaps in vault')
+    gaps_parser.add_argument('vault_id', help='Vault ID to analyze')
+    gaps_parser.add_argument('--provider', help='Use specific AI provider')
+
+    summarize_parser = ai_subparsers.add_parser('summarize', help='Summarize vault themes and stats')
+    summarize_parser.add_argument('vault_id', help='Vault ID to summarize')
+    summarize_parser.add_argument('--folder', help='Scope to folder path')
+    summarize_parser.add_argument('--tag', help='Scope to tag')
+    summarize_parser.add_argument('--provider', help='Use specific AI provider')
+
 
     args = parser.parse_args()
 
@@ -515,17 +531,14 @@ def main():
                     # Print analysis results
                     print("📊 Analysis Results:\n")
 
-                    if result.topics:
-                        print(f"  Topics: {', '.join(result.topics)}")
+                    if result.summary:
+                        print(f"  Summary: {result.summary}")
                     if result.themes:
                         print(f"  Themes: {', '.join(result.themes)}")
-                    if result.suggested_tags:
-                        print(f"  Suggested Tags: {', '.join(result.suggested_tags)}")
-
-                    print()
-                    print("  Quality Scores:")
-                    for key, value in result.quality.items():
-                        print(f"    • {key}: {value}/10")
+                    if result.quality_score > 0:
+                        print(f"  Quality: {result.quality_score:.0%}")
+                    if result.connections:
+                        print(f"  Connections: {', '.join(result.connections)}")
 
                     if result.suggestions:
                         print()
@@ -568,6 +581,103 @@ def main():
                     print(f"❌ {e}")
                     sys.exit(1)
                 except RuntimeError as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'suggest-links':
+                from ai.features import suggest_links
+
+                print(f"🔗 Suggesting links for note: {args.note_id}\n")
+                try:
+                    suggestions = suggest_links(
+                        args.note_id,
+                        cli.db,
+                        limit=args.limit,
+                        provider=args.provider,
+                        verbose=args.verbose,
+                    )
+
+                    if suggestions:
+                        print(f"Found {len(suggestions)} link suggestions:\n")
+                        for i, s in enumerate(suggestions, 1):
+                            print(f"  {i}. [[{s.target_title}]] ({s.similarity:.0%})")
+                            print(f"     {s.target_path}")
+                            if s.reason:
+                                print(f"     {s.reason}")
+                            print()
+                    else:
+                        print("No link suggestions found.")
+                except (ValueError, RuntimeError) as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'gaps':
+                from ai.features import find_gaps
+
+                print(f"🔍 Analyzing knowledge gaps: {args.vault_id}\n")
+                try:
+                    gaps = find_gaps(
+                        args.vault_id,
+                        cli.db,
+                        provider=args.provider,
+                        verbose=args.verbose,
+                    )
+
+                    if gaps:
+                        print(f"Found {len(gaps)} knowledge gaps:\n")
+                        for i, gap in enumerate(gaps, 1):
+                            print(f"  {i}. {gap.description}")
+                            if gap.related_notes:
+                                for note in gap.related_notes[:3]:
+                                    print(f"     • {note}")
+                            if gap.suggested_action:
+                                print(f"     → {gap.suggested_action}")
+                            print()
+                    else:
+                        print("No knowledge gaps found.")
+                except (ValueError, RuntimeError) as e:
+                    print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'summarize':
+                from ai.features import summarize_vault
+
+                scope = args.vault_id
+                if args.folder:
+                    scope += f" (folder: {args.folder})"
+                if args.tag:
+                    scope += f" (tag: {args.tag})"
+                print(f"📊 Summarizing vault: {scope}\n")
+
+                try:
+                    def progress(current, total):
+                        pct = current / total * 100 if total > 0 else 0
+                        print(f"\r  Processing: {current}/{total} ({pct:.0f}%)", end="", flush=True)
+
+                    summary = summarize_vault(
+                        args.vault_id,
+                        cli.db,
+                        folder=args.folder,
+                        tag=args.tag,
+                        provider=args.provider,
+                        verbose=args.verbose,
+                        progress_callback=progress,
+                    )
+                    print("\r" + " " * 40 + "\r", end="")  # Clear progress line
+
+                    print(f"  Notes: {summary.note_count}")
+                    if summary.themes:
+                        print(f"  Themes: {', '.join(summary.themes[:5])}")
+                    if summary.top_hubs:
+                        print(f"  Top hubs:")
+                        for hub in summary.top_hubs:
+                            print(f"    • {hub['title']} ({hub['connections']} connections)")
+                    print(f"  Orphans: {summary.orphan_count}")
+                    print()
+                    if summary.summary_text:
+                        print(f"  {summary.summary_text}")
+
+                except (ValueError, RuntimeError) as e:
                     print(f"❌ {e}")
                     sys.exit(1)
 

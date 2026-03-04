@@ -1,576 +1,117 @@
 priority: P1
-status: beta - v3.0.0-beta released
-progress: 75
-updated: 2026-03-02
-version: 3.0.0-beta
-next: Phase 7.2 - AI-Powered Note Operations
+status: beta - v3.0.0-beta.2 released
+progress: 85
+updated: 2026-03-04
+version: 3.0.0-beta.2
+next: Phase 7.3 - Vault Health & Polish
 target: v3.0.0 - Pure Obsidian Knowledge Manager
-
-## 🎯 Strategic Refocus (2025-12-20)
-
-### Decision: Proposal A - Pure Obsidian Knowledge Manager
-
-**Rationale:**
-- **Eliminate overlap** with existing dev-tools (zsh-configuration, aiterm)
-- **Laser focus** on Obsidian vault management + AI-powered note operations
-- **Simplify** codebase: 11,500 → 4,500 lines (61% reduction)
-- **Add unique value** with AI features: refactor, tag-suggest, quality, merge-suggest
-
-**What's Removed (v3.0.0):**
-- ❌ TUI (1,701 lines) - Limited value for code invested
-- ❌ R-Dev integration (500 lines) - Belongs in R package ecosystem
-- ❌ Sync features - Use Obsidian's native sync
-- ❌ Generic graph viz - Focus on actionable insights
-
-**What's Enhanced (v3.0.0):**
-- ✅ AI-powered vault refactoring
-- ✅ Intelligent note operations (merge, split, quality)
-- ✅ Tag and folder suggestions
-- ✅ Vault health monitoring
-
-**Future (v3.1+):**
-- Hub integration (Proposal D features deferred)
-- Cross-vault operations
-- Advanced AI features (watch mode, batch operations)
-
-**See:** PROPOSAL-REFOCUS-2025-12-20.md, IDEAS.md, TODOS.md for complete details
-
----
-
-## ✅ Just Completed (2026-03-02 - Async & Vault Lookup Fix)
-
-### Fix: Async Vault Operations & Name/Prefix Lookup (PR #2)
-
-- ✅ **Fixed async/await mismatch**: `scan_vault()` called synchronously, wrapped with `asyncio.run()`
-- ✅ **Added vault name/prefix lookup**: 3-tier lookup (name → exact ID → prefix) in `db_manager.py`
-- ✅ **Extended to stats command**: Both `analyze` and `stats` now accept vault names and ID prefixes
-- ✅ **Ambiguous prefix feedback**: Clear error message when prefix matches multiple vaults
-- ✅ **Added 7 unit tests**: Full branch coverage for `get_vault_by_name_or_id()`
-- ✅ **Updated 20+ docs**: `<vault_id>` → `<vault>` in all user-facing CLI references
-- ✅ **Removed working artifacts**: ORCHESTRATE/SPEC files cleaned before merge
-- ✅ **Result:** 42/42 tests passing, vault commands work by name or ID
-
----
-
-## ✅ Previously Completed (2025-12-20 - Phase 7.1 Complete)
-
-### Phase 7.1: Simplification (100% Complete)
-
-- ✅ **Part 1: Delete TUI** (1,701 lines removed) [Commit: d5f69b9]
-  - Removed `src/python/tui/` directory
-  - Removed Textual from requirements.txt
-  - Removed TUI tests
-  - Updated documentation
-- ✅ **Part 2: Delete R-Dev Integration** (307 lines removed) [Commit: fc7d03b]
-  - Removed R-Dev functions from src/obs.zsh
-  - Removed R-Dev tests
-  - Updated CLI help text
-- ✅ **Part 3: Consolidate CLI** (323 lines removed) [Commit: 6562e0e]
-  - 20+ commands → 10 focused commands
-  - Removed Option D commands (switch, open, manage, graph)
-  - Removed legacy v1.x commands (check, audit, sync, install, search, list)
-  - Added AI feature wrappers (similar, analyze, duplicates)
-  - Updated help text and version
-- ✅ **Part 4: Update Documentation** [Commits: 8c8bf81, eb6eb01, e1fd272, b3735e7]
-  - Updated README.md for v3.0.0 (version, features, commands, status)
-  - Updated CLAUDE.md (architecture, commands, line counts)
-  - Created MIGRATION.md (456-line comprehensive guide)
-  - Archived TUI guides to docs/archive/v2.x/
-  - Updated mkdocs.yml navigation
-
-**Results:**
-
-- **Code Reduction:** 2,331 lines removed (20% of original 11,500)
-- **Current Size:** ~7,400 lines (target: 4,500 lines / 61% reduction)
-- **Commands:** 20+ → 10 focused commands (50% reduction)
-- **Documentation:** Fully updated and archived
-- **All commits pushed to GitHub**
-
-### Comprehensive Project Refocus (Earlier Today)
-
-- ✅ **Analyzed entire dev-tools ecosystem** - Identified overlaps with zsh-configuration, aiterm
-- ✅ **Created 4 comprehensive proposals** (~24,000 words total)
-  - PROPOSAL-REFOCUS-2025-12-20.md (10,000+ words, 4 proposals)
-  - ECOSYSTEM-ANALYSIS.md (6,000+ words, ecosystem mapping)
-  - IMPLEMENTATION-ROADMAP.md (8,000+ words, 3-phase plan)
-  - REFOCUS-SUMMARY.md (2,000+ words, quick reference)
-- ✅ **Selected Proposal A** - Pure Obsidian Knowledge Manager
-  - CLI-first approach (ZSH-first architecture)
-  - Remove TUI (1,701 lines), R-Dev (500 lines)
-  - Add AI features: refactor, tag-suggest, quality, merge-suggest
-  - Target: 61% code reduction (11,500 → 4,500 lines)
-- ✅ **Updated planning documents**
-  - IDEAS.md - Added Phase 7 (Proposal A) + future features (Proposal D)
-  - TODOS.md - Updated with Phase 7.1 and 7.2 tasks
-  - .STATUS - Updated with strategic direction and metrics
-  - PHASE1-IMPLEMENTATION-PLAN.md - Created implementation guide
-- ✅ **Result:** Clear roadmap for v3.0.0 with focused scope and unique value proposition
-
-### Python Test Suite Fixed (42/42 passing)
-- ✅ Fixed in-memory database persistence bug (critical architectural fix)
-  - SQLite `:memory:` creates new DB per connection
-  - Added `_persistent_conn` to DatabaseManager for in-memory databases
-  - File-based databases still use connection-per-operation
-- ✅ Fixed `search_notes()` to match schema (title-only search, no content column)
-- ✅ Added directory validation to VaultScanner (prevents file-as-vault bugs)
-- ✅ Centralized `db_manager` fixture in conftest.py (DRY principle)
-- ✅ Fixed API mismatch: `init_db()` → `initialize_database()`
-- ✅ **Result:** All Python tests passing (was 29/35, now 42/42) 🎉
-
-### v2.2.0 Release Complete
-- ✅ Verified GitHub Pages deployment at https://data-wise.github.io/obsidian-cli-ops/
-- ✅ Confirmed v2.2.0 content showing correctly (navigation, badges, features)
-- ✅ Created annotated git tag `v2.2.0` with comprehensive release notes
-- ✅ Pushed tag to GitHub (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v2.2.0)
-- ✅ **Result:** v2.2.0 officially released and publicly tagged
-
-## 🎯 Next Action
-
-**Choose one:**
-- **A)** Start v2.3 Learning System features from IDEAS.md [2+ hours] 🟡
-- **B)** Continue test quality improvements (Jest tests, integration tests) [60-90 min] 🟡
-- **C)** Plan v2.2.1 patch release (test fixes + any remaining improvements) [15 min] 🟢
-
-## ✅ Previous Session (2025-12-17 - Documentation Fixes)
-
-### Documentation Quality Fixes
-- ✅ Fixed version mismatch in src/obs.zsh (v2.1.0 → v2.2.0)
-- ✅ Added 9 orphan pages to MkDocs navigation (testing, phases, releases)
-- ✅ Added 5 badges to README.md (build, version, license, python, tests)
-- ✅ Reorganized MkDocs nav with Getting Started and Features sections
-- ✅ Fixed broken link in v1.1.0 release notes
-- ✅ Committed and pushed to dev branch
-- ✅ Merged dev into main and deployed to GitHub Pages
-- ✅ **Result:** Documentation site fully updated and deployed
-
-## ✅ Previous Session (2025-12-16 - Test Suite Fixes)
-
-### Major Test Infrastructure Improvements
-- ✅ Fixed 109 tests! (289 → 398 passing, 67% failure reduction)
-- ✅ **test_db_manager.py**: 25/25 passing (fixed all 15 failures)
-- ✅ **test_vault_browser.py**: All TUI tests passing
-- ✅ **test_graph_builder.py**: All tests passing
-- ✅ Created shared test fixtures in conftest.py
-- ✅ Fixed database schema initialization across all test files
-- ✅ Corrected API mismatches (add_vault, add_note, add_link signatures)
-- ✅ Updated TUI mocks to use VaultManager/GraphAnalyzer (not DatabaseManager)
-- ✅ Converted mock data from dicts to proper Vault domain objects
-- ✅ Documentation: TUI_TEST_FIXES_SUMMARY.md, GRAPH_BUILDER_TEST_FIXES.md
-- ✅ **Result:** 398/461 tests passing (86% pass rate), 53 failures remaining
-
-## 🎯 Next Action
-
-**Choose one (or both in order):**
-- **A)** Fix test_note_explorer.py - convert mock data to Note domain objects (27 failures) [est. 30-45min] 🟢
-- **B)** Fix test_graph_visualizer.py - update mock method calls (14 failures) [est. 20-30min] 🟢
-
-**Remaining after A+B:** 12 failures (vault_scanner: 6, quick_wins: 5, ai_client: 1)
-
-## ✅ Previous Session (2025-12-16 - Phase 5B: AI Features)
-
-### Phase 5B: AI-Powered Features
-- ✅ Implemented `obs ai similar <note_id>` - Find similar notes using embeddings
-- ✅ Implemented `obs ai analyze <note_id>` - Deep analysis of a single note
-- ✅ Implemented `obs ai duplicates <vault_id>` - Detect potential duplicate notes
-- ✅ Created ai/features.py module with full feature implementations
-- ✅ Added CLI commands with proper argument parsing
-- ✅ Added 23 new tests for AI features module
-- ✅ **Result:** Complete AI feature set ready for use
-
-### Phase 5A: Multi-Provider AI Architecture
-- ✅ Implemented multi-provider AI system with 4 providers:
-  - gemini-api (default, embeddings, batch)
-  - gemini-cli (CLI fallback)
-  - claude-cli (high-quality analysis)
-  - ollama (local, free, private)
-- ✅ Created smart router with auto-fallback based on operation type
-- ✅ Added user-friendly dependency management:
-  - pyproject.toml with optional extras (pip install obs[gemini])
-  - Interactive setup wizard (obs ai setup)
-  - Auto-install prompts when deps missing
-- ✅ Wired up CLI commands: obs ai status/setup/test
-- ✅ Added 73 new tests for AI module (config, install, router, providers)
-- ✅ **Result:** Modern AI architecture ready for Phase 5B features
-
-### Quick Wins Completion (v2.1.0)
-- ✅ JSON export already implemented in TUI stats screen (press 'e')
-- ✅ Added human-friendly timestamp formatting (relative times)
-  - Created shared utils.py module with format_relative_time()
-  - Updated all TUI screens (vaults, stats, notes) to use relative times
-  - Updated CLI (obs_cli.py) to use relative times
-  - Added 22 new tests for utility functions
-- ✅ MkDocs site built and ready for deployment (gh-pages push blocked)
-- ✅ Removed minify plugin from mkdocs.yml (build dependency issue)
-- ✅ **Result:** All quick wins complete, +22 tests, cleaner codebase
-
-## ✅ Previous Session (2025-12-15 - MkDocs Documentation Sync)
-
-### MkDocs Site Updates (Major - v2.1.0)
-- ✅ Fixed documentation-code mismatch (docs_mkdocs/ had v2.0.0-beta content)
-- ✅ Updated index.md with v2.1.0 and Option D features
-- ✅ Completely rewrote usage.md (328 lines) with Obsidian-style commands
-- ✅ Enhanced installation.md with zero-configuration iCloud setup
-- ✅ Started MkDocs server and verified preview shows correct content
-- ✅ **Result:** Published site ready for deployment with accurate Option D docs
-
-### Documentation Organization (Major - v2.1.0)
-- ✅ Organized docs into professional structure (user/developer/planning/releases)
-- ✅ Created 5 README.md index files for navigation
-- ✅ Created comprehensive TUI guides (tutorial, reference, cheat sheet)
-- ✅ Expanded IDEAS.md with future features and brainstorming
-- ✅ Created TODOS.md for current work items
-- ✅ **Result:** Industry-standard documentation structure
-
-### Bug Fixes (Minor - v2.1.0)
-- ✅ Added limit parameters to get_orphaned_notes() and get_broken_links()
-- ✅ Fixed TUI TypeErrors when loading large result sets
-- ✅ Added 'd' key binding for vault discovery in TUI
-- ✅ **Result:** TUI now handles large vaults without errors
-
-### Git Management
-- ✅ 2 commits created and pushed to GitHub (35 files, +3029/-941 lines)
-- ✅ Working tree clean, all changes committed and synced
-- ✅ **Result:** All documentation updates safely pushed to remote
-
-## 🎯 Next Actions
-
-**Choose one (or do in order):**
-- **A)** Deploy MkDocs site to GitHub Pages (`mkdocs gh-deploy --force`) [5 min] 🟢
-- **B)** Test Option D features (verify `obs`, `obs switch`, `obs manage` work) [15 min] 🟢
-- **C)** Complete remaining quick wins (JSON export, timestamp formatting) [30 min] 🟡
-
-## ✅ Previously Completed (2025-12-15 - Option D: Obsidian App Clone)
-
-### Option D Implementation (Major - v2.1.0)
-- ✅ Implemented zero-friction start (`obs` opens last vault)
-- ✅ Added iCloud-first defaults (`~/Library/Mobile Documents/iCloud~md~obsidian/Documents`)
-- ✅ Implemented last-vault tracking (`~/.config/obs/last_vault`)
-- ✅ Created Obsidian-style commands (switch, manage, open, graph)
-- ✅ Shortened R integration (`obs r` from `obs r-dev`)
-- ✅ Implemented progressive help (`obs help` vs `obs help --all`)
-- ✅ Updated obs.zsh (680 → 917 lines) with new command structure
-- ✅ Updated shell completion for Option D commands
-- ✅ 100% backward compatible (all legacy commands work)
-- ✅ **Result:** CLI works exactly like Obsidian app (15 → 12 commands, -20%)
-
-### Documentation Updates for Option D
-- ✅ Updated README.md (version 2.1.0, Option D features, new Quick Start)
-- ✅ Updated CLAUDE.md (production ready, Option D section added)
-- ✅ Rewrote quickstart.md (zero-configuration workflow)
-- ✅ Completely rewrote unified-command.md (402 lines, accurate Option D guide)
-- ✅ Created OPTION_D_IMPLEMENTATION.md (complete implementation summary)
-- ✅ **Result:** All documentation matches Option D implementation
-
-## ✅ Previously Completed (2025-12-15 - Documentation & Planning)
-
-### Documentation Organization (Major)
-- ✅ Created organized docs/ structure (user/developer/planning/releases)
-- ✅ Moved 25+ files to appropriate locations
-- ✅ Created 5 README.md index files for navigation
-- ✅ Updated all documentation to v2.1-beta
-- ✅ Optimized CLAUDE.md (217 → 194 lines)
-- ✅ Created comprehensive TUI guides (tutorial, reference, cheat sheet)
-- ✅ **Result:** Professional documentation structure following industry best practices
-
-### Planning Consolidation
-- ✅ Created TODOS.md (183 lines) - Current work items by priority
-- ✅ Updated IDEAS.md (520+ lines) - Future features and brainstorming
-- ✅ Added research appendix to IDEAS.md (CLI/GUI best practices)
-- ✅ Updated docs/planning/README.md with consolidation explanation
-- ✅ Updated main README.md with Planning & Development section
-- ✅ **Result:** ADHD-friendly planning (2 files instead of 9)
-
-### User Documentation Updates
-- ✅ Completely rewrote quickstart.md (338 → 299 lines, practical guide)
-- ✅ Transformed unified-command.md to user guide (248 → 402 lines)
-- ✅ Enhanced keyboard-shortcuts.md with new features (84 → 255 lines)
-- ✅ All docs reflect current v2.1-beta state
-- ✅ **Result:** Production-ready user documentation
-
-## ✅ Previously Completed (2025-12-15)
-
-### TUI Improvements
-- ✅ Added vault discovery with `d` key in TUI (iCloud default)
-- ✅ Fixed Python path issues in obs.zsh (7 locations)
-- ✅ Fixed TUI TypeErrors (added limit parameters)
-- ✅ Created comprehensive TUI navigation guides
-- ✅ **Result:** Enhanced TUI usability
-
-### Architecture Refactoring (2025-12-14)
-- ✅ Refactored to three-layer architecture (Presentation → Application → Data)
-- ✅ Created core layer (src/python/core/) with 859 lines
-  - VaultManager (311 lines): Vault business logic
-  - GraphAnalyzer (311 lines): Graph business logic
-  - Domain models (237 lines): Vault, Note, ScanResult, GraphMetrics, VaultStats
-- ✅ CLI and TUI share 100% of business logic (zero duplication)
-- ✅ Created ARCHITECTURE.md (890 lines)
-- ✅ **Result:** Production-ready architecture, ready for GUI
-
-### Quick Wins Implementation (2025-12-14)
-- ✅ Implemented 4 quick wins with comprehensive tests
-- ✅ Created test suite (28 tests, all passing)
-- ✅ Files: test_quick_wins.py (481 lines), generate_bindings_docs.py (169 lines)
-- ✅ **Result:** ~860 lines (implementation + tests), 100% passing
-
-## 🎯 Next Actions
-
-**High Priority (Do This Week):**
-1. [ ] Test iCloud vault discovery (user hasn't tested `d` key yet)
-2. [ ] Complete remaining quick wins (JSON export, timestamp formatting)
-3. [ ] Final testing pass (full test suite + manual TUI testing)
-4. [ ] Create v2.1.0 release notes
-5. [ ] Tag and publish v2.1.0 release
-
-**See TODOS.md for complete task list**
-
----
-
-# Project Status
-
-**Project:** Obsidian CLI Ops (obs)
-**Version:** 2.1.0-beta
-**Status:** 92% Complete - Active Development
-**Last Updated:** 2025-12-15
-
----
 
 ## 🎯 Current State
 
-**Phase:** Testing & Validation (95% complete)
-**Production Ready:** v1.x features + Phases 1-4 complete
-**Test Coverage:** ~70% (298 tests across all components)
-**Documentation:** ✅ Complete and organized
+**Phase**: 7.2 complete, 7.3 planned
+**Architecture**: Three-layer (CLI → Core → Data), ZSH-first
+**Tests**: 125/125 passing (pytest)
+**Commands**: 13 focused commands under `obs`
+**AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
+**Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
+**Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 
 ---
 
-## ✅ Completed Phases
+## 🔄 In Progress
 
-### Phase 1: Foundation (100%) ✅
-**Status:** Production Ready
-**Completed:** 2025-12-12
-
-**Components:**
-- [x] SQLite database schema (7 tables, 3 views, triggers)
-- [x] DatabaseManager (469 lines, 48 tests)
-- [x] VaultScanner with MarkdownParser (373 lines, 35+ tests)
-- [x] GraphBuilder with NetworkX (307 lines, 20+ tests)
-- [x] CLI integration (Python + ZSH)
-- [x] Documentation (docs/planning/phases/phase1-complete.md)
-
-**Key Commands:**
-- `obs graph discover` - Find Obsidian vaults
-- `obs graph vaults` - List all vaults
-- `obs graph stats` - Show statistics
-- `obs graph scan` - Scan vault for notes/links
-
-### Phase 2: AI Integration (100%) ✅
-**Status:** Production Ready
-**Completed:** 2025-12-13
-
-**Components:**
-- [x] FREE local AI providers (HuggingFace + Ollama)
-- [x] Interactive setup wizard with auto-detection
-- [x] Embedding generation (384-1024 dimensions)
-- [x] Note similarity using cosine similarity
-- [x] 100% local, free, private (no cloud APIs)
-- [x] Documentation (docs/planning/phases/phase2-complete.md)
-
-**Key Commands:**
-- `obs ai setup --quick` - Interactive AI setup
-- `obs ai config` - View configuration
-- Future: `obs ai similar`, `obs ai duplicates`
-
-### Phase 3: v1.x Features (100%) ✅
-**Status:** Production Ready
-**Original Version:** v1.1.0
-
-**Components:**
-- [x] Vault management (sync, install, audit)
-- [x] R-Dev integration (link, log, context, draft)
-- [x] Shell completion (Zsh & Bash)
-- [x] Configuration system
-- [x] 26 tests (22 Jest + 4 Shell)
-
-**Key Commands:**
-- `obs sync` - Sync settings across vaults
-- `obs install` - Install Obsidian plugins
-- `obs r-dev link/log/context` - R project integration
-
-### Phase 4: TUI/Visualization (100%) ✅
-**Status:** Production Ready
-**Completed:** 2025-12-14
-
-**Components:**
-- [x] Interactive vault browser (Textual framework)
-- [x] Note explorer with search/preview
-- [x] ASCII art graph visualization
-- [x] Statistics dashboard with analytics
-- [x] Vim-style keyboard navigation
-- [x] Comprehensive documentation (3 guides)
-- [x] Documentation (docs/planning/phases/phase4-plan.md)
-
-**Key Features:**
-- Launch: `obs graph tui` or `obs tui`
-- Navigate: Arrow keys or vim (j/k)
-- Discover: Press `d` to find vaults in iCloud
-- Shortcuts: `g` (graph), `s` (stats), `r` (refresh), `q` (quit)
-
-**TUI Guides:**
-- docs/user/guides/tui/vim-tutorial.md - Beginner's guide
-- docs/user/guides/tui/quick-reference.md - Detailed shortcuts
-- docs/user/guides/tui/cheat-sheet.txt - Printable reference
+Nothing currently in progress.
 
 ---
 
-## 🟡 In Progress Phases
+## 🎯 Next Actions
 
-### Phase 5: AI-Powered Features (100%) ✅
-**Status:** Complete
-**Dependencies:** Phase 2 AI integration ✅
-
-**Phase 5A - Multi-Provider Architecture (✅ Complete):**
-- [x] Multi-provider system (gemini-api, gemini-cli, claude-cli, ollama)
-- [x] Smart routing based on operation type
-- [x] User-friendly dependency management (pyproject.toml, wizard)
-- [x] CLI commands (obs ai status/setup/test)
-- [x] 73 new tests
-
-**Phase 5B - AI Features (✅ Complete):**
-- [x] Find similar notes (`obs ai similar <note>`)
-- [x] Analyze note (`obs ai analyze <note>`)
-- [x] Detect duplicates (`obs ai duplicates`)
-- [x] 23 new tests
-
-**See IDEAS.md for details**
-
-### Phase 6: Learning System (Deferred)
-**Status:** Planned for future release
-**Dependencies:** Phase 5 completion
-
-**Planned Features:**
-- [ ] User feedback collection
-- [ ] Rule generation from corrections
-- [ ] Confidence adaptation
-- [ ] Interactive tuning
-
-**See IDEAS.md for details**
+- **A)** Phase 7.3: Vault Health & Polish [2+ hrs] 🟡
+- **B)** Release v3.0.0-beta.2 (in progress) 🟢
 
 ---
 
-## 📊 Project Metrics
+## ✅ Completed (v3.0.0 Development)
 
-### Code Statistics
-- **Total Lines:** ~11,500
-- **Python:** ~7,500 lines (15 modules)
-  - Core layer: 859 lines (VaultManager, GraphAnalyzer, Models)
-  - Presentation: 2,019 lines (CLI 318 + TUI 1,701)
-  - Data layer: 1,149 lines (Database, Scanner, Builder)
-- **ZSH:** ~680 lines
-- **Documentation:** 20+ files, ~3,000 lines
+### PR #5: Review Follow-ups (2026-03-04) — PR #5
 
-### Test Coverage
-- **Total Tests:** 394+
-  - Python: 220 tests (core, database, scanning, AI module)
-  - Jest: 40 tests (CLI, integration)
-  - Shell: 4 tests (R-Dev module)
-  - AI Module: 96 tests (config, install, router, providers, features)
-- **Coverage:** ~72% overall
-  - Core layer: 85%
-  - Database layer: 75%
-  - AI layer: 80%
-  - Overall: 72%
+- Wired `--verbose` flag to suggest-links, gaps, summarize commands
+- Added verbose logging to ObsidianBridge (conditional stderr output)
+- Narrowed `except Exception` to specific types (OSError, sqlite3.OperationalError, etc.)
+- **Result**: 125/125 tests, all verbose paths tested
 
-### Documentation
-- **User Docs:** 8 files (quickstart, guides, TUI, commands)
-- **Developer Docs:** 5 files (architecture, testing, research)
-- **Planning Docs:** 2 active (TODOS.md, IDEAS.md) + 9 historical
-- **Status:** ✅ Complete and organized
+### Phase 7.2: AI Enhancement (2026-03-03) — PR #4
+
+- Shared structured output models (`ai/models.py` — dataclasses with `from_json()`)
+- Gemini SDK migration: `google-generativeai` → `google-genai` (native batch + structured output)
+- Anthropic API provider: `anthropic_api.py` (claude-sonnet-4-6)
+- Obsidian CLI bridge: `obsidian_bridge.py` (Null Object pattern, silent fallback)
+- 3 new AI commands: `suggest-links`, `gaps`, `summarize` with embedding cache
+- Embedding cache: SQLite `note_embeddings` table, mtime invalidation
+- Retry with backoff: exponential backoff decorator on all API methods
+- Legacy cleanup: deleted 5 files (ai_client*.py, setup_wizard.py, similarity_analyzer.py)
+- Review fixes: narrowed exceptions, removed dead import, datetime.utcnow() → timezone-aware
+- **Result**: 5 providers, 13 commands, net -92 lines
+
+### Async & Vault Lookup Fix (2026-03-02) — PR #2
+
+- Fixed async/await mismatch in scan_vault() with asyncio.run()
+- Added 3-tier vault lookup (name → exact ID → prefix) in db_manager.py
+- Extended to stats + analyze commands, ambiguous prefix feedback
+- Updated 20+ docs: `<vault_id>` → `<vault>`
+- **Result**: 42/42 tests, vault commands work by name or ID
+
+### Phase 7.1: Simplification (2025-12-20) — PR #3
+
+- Deleted TUI (1,701 lines), R-Dev integration (307 lines), legacy commands (126 lines)
+- Consolidated 20+ commands → 10 focused commands
+- Created MIGRATION.md (456 lines)
+- Released v3.0.0-beta via CI pipeline (4 fix cycles)
+- **Result**: 2,331 lines removed, ~7,400 lines remaining
+
+### v3.0.0 Strategic Refocus (2025-12-20)
+
+- Selected Proposal A: Pure Obsidian Knowledge Manager
+- Eliminated overlap with zsh-configuration and aiterm
+- Laser focus on vault management + AI-powered graph analysis
+- Created 4 comprehensive proposals (~24,000 words)
+
+---
+
+## 📈 Timeline
+
+- **2025-12-10**: v1.1.0 (quick wins)
+- **2025-12-12**: Phase 1 (foundation, database, scanner)
+- **2025-12-13**: Phase 2 (AI integration, local providers)
+- **2025-12-14**: Phase 4 (TUI, architecture refactor)
+- **2025-12-15**: v2.1.0 (Option D, docs, planning)
+- **2025-12-17**: v2.2.0 release (docs fixes, GitHub Pages)
+- **2025-12-20**: v3.0.0 refocus, Phase 7.1 simplification
+- **2026-03-02**: PR #2 (async fix, vault lookup)
+- **2026-03-03**: PR #3 (v3.0.0-beta release), PR #4 (AI enhancement)
+- **2026-03-04**: PR #5 (verbose wiring, exception narrowing, 125 tests)
 
 ---
 
 ## 🏗️ Architecture
 
-**Three-Layer Design (Zero Duplication):**
-
 ```
-Presentation Layer (CLI/TUI)
+Presentation (obs.zsh, 386 lines)
         ↓
-Application Layer (Core)
+Application (core/, 931 lines)
         ↓
-Data Layer (Database/Files)
+Data (db_manager, scanner, ai/, schema)
 ```
 
-**Key Achievement:** CLI and TUI share 100% of business logic
-
-**Future Ready:** Can add GUI or Web API without changing core
-
-**Documentation:** docs/developer/architecture.md (890 lines)
+**AI Router**: gemini-api > anthropic-api > ollama > gemini-cli > claude-cli
+**Database**: SQLite (8 tables + note_embeddings cache, 3 views)
+**Key Principle**: Business logic in Core only. CLI is thin presentation.
 
 ---
 
-## 📋 Active Planning Files
+## 📋 Planning Files
 
-**Daily Use:**
-- **TODOS.md** - Current work items by priority (High/Medium/Low)
-- **IDEAS.md** - Future features and brainstorming
-
-**Reference:**
-- **docs/planning/project-hub.md** - ADHD-friendly control center
-- **docs/planning/project-plan.md** - Complete technical roadmap
-- **docs/planning/phases/** - Phase completion summaries
-- **.STATUS** - This file (project status and metrics)
-
----
-
-## 🔗 Key Files
-
-**Root:**
-- README.md - User-facing documentation
-- CLAUDE.md - Developer quick reference (194 lines)
-- TODOS.md - Active work items
-- IDEAS.md - Future features
-- .STATUS - This file
-
-**Documentation:**
-- docs/ - All documentation (organized structure)
-- docs/user/ - End-user guides
-- docs/developer/ - Architecture and testing
-- docs/planning/ - Project management
-- docs/releases/ - Release notes
-
-**Code:**
-- src/obs.zsh - ZSH CLI interface (680 lines)
-- src/python/ - Python backend (~11,500 lines)
-- src/python/core/ - Business logic (859 lines)
-- src/python/tui/ - TUI screens (1,701 lines)
-- tests/ - Test suite (298 tests)
-
----
-
-## 🎯 Success Criteria for v2.1.0 Release
-
-- [x] Phase 1-4 complete (100%)
-- [x] Test coverage > 70% (currently ~70%)
-- [x] Documentation complete and organized (✅)
-- [x] Architecture refactored to three layers (✅)
-- [x] TUI fully functional with vim navigation (✅)
-- [ ] All manual testing complete
-- [ ] Release notes written
-- [ ] Version tagged and published
-
-**Status:** 5/8 complete (62.5%)
-
----
-
-## 📈 Progress Timeline
-
-- **2025-12-10:** v1.1.0 released (Quick wins)
-- **2025-12-12:** Phase 1 complete (Foundation)
-- **2025-12-13:** Phase 2 complete (AI integration)
-- **2025-12-14:** Phase 4 complete (TUI), Architecture refactored
-- **2025-12-15:** Documentation organized, Planning consolidated
-- **Next:** v2.1.0 release (testing + release notes)
-
----
-
-**Remember:** Check TODOS.md for current work items and IDEAS.md for future features! 🚀
+- **IDEAS.md** — Future features and brainstorming
+- **TODOS.md** — Current work items
+- **docs/planning/project-hub.md** — ADHD-friendly control center
+- **docs/developer/ai-providers.md** — AI architecture reference
