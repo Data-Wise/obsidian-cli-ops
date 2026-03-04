@@ -2155,7 +2155,7 @@
 <h1 id="obsidian-cli-ops">Obsidian CLI Ops<a class="headerlink" href="#obsidian-cli-ops" title="Permanent link">&para;</a></h1>
 <p><strong>An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.</strong></p>
 <p><code>obs</code> is a laser-focused CLI tool for managing Obsidian vaults with knowledge graph analysis and multi-provider AI features.</p>
-<p><strong>Current Version</strong>: 3.0.0-beta</p>
+<p><strong>Current Version</strong>: 3.0.0-beta.2</p>
 <h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <h3 id="vault-management">Vault Management<a class="headerlink" href="#vault-management" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2168,10 +2168,13 @@
 </ul>
 <h3 id="ai-powered-features">AI-Powered Features<a class="headerlink" href="#ai-powered-features" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>🤖 Multi-Provider AI</strong>: Gemini API, Gemini CLI, Claude CLI, Ollama</li>
+<li><strong>🤖 Multi-Provider AI</strong>: Gemini API, Anthropic API, Gemini CLI, Claude CLI, Ollama</li>
 <li><strong>🔍 Find Similar Notes</strong>: <code>obs ai similar</code> — semantic similarity using embeddings</li>
 <li><strong>🔬 Analyze Notes</strong>: <code>obs ai analyze</code> — deep analysis with topics, themes, suggestions</li>
 <li><strong>📋 Detect Duplicates</strong>: <code>obs ai duplicates</code> — find potential duplicate notes</li>
+<li><strong>🔗 Suggest Links</strong>: <code>obs ai suggest-links</code> — find unlinked related notes</li>
+<li><strong>🕳️ Knowledge Gaps</strong>: <code>obs ai gaps</code> — detect stub notes and orphans</li>
+<li><strong>📊 Vault Summary</strong>: <code>obs ai summarize</code> — theme analysis across vault</li>
 <li><strong>🔧 Provider Management</strong>: <code>obs ai status</code>, <code>obs ai setup</code>, <code>obs ai test</code></li>
 <li><strong>⚡ Smart Routing</strong>: Auto-selects best provider for each operation</li>
 </ul>
@@ -2179,7 +2182,7 @@
 <ul>
 <li><strong>🎯 Zero-Friction</strong>: Just type <code>obs</code> — lists your vaults immediately</li>
 <li><strong>🌥️ iCloud-First</strong>: Auto-detects standard Obsidian iCloud location</li>
-<li><strong>🎨 ADHD-Friendly</strong>: 10 focused commands, smart defaults, progressive disclosure</li>
+<li><strong>🎨 ADHD-Friendly</strong>: 13 focused commands, smart defaults, progressive disclosure</li>
 <li><strong>🏷️ Flexible Lookup</strong>: Use vault names or ID prefixes (<code>obs analyze Knowledge_Base</code>)</li>
 </ul>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
@@ -2265,11 +2268,12 @@
 <h2 id="project-status">Project Status<a class="headerlink" href="#project-status" title="Permanent link">&para;</a></h2>
 <ul>
 <li>✅ <strong>Phase 1-5 Complete</strong>: Database, scanner, graph, AI features</li>
-<li>✅ <strong>Phase 7.1 Complete</strong>: v3.0.0 simplification (TUI removed, 10 focused commands)</li>
+<li>✅ <strong>Phase 7.1 Complete</strong>: v3.0.0 simplification (TUI removed, CLI consolidated)</li>
 <li>✅ <strong>Async &amp; Lookup Fix</strong>: Vault name/prefix lookup, async operations (PR #2)</li>
-<li>📋 <strong>Phase 7.2 Planned</strong>: AI-Powered Note Operations</li>
+<li>✅ <strong>Phase 7.2 Complete</strong>: AI Enhancement (modern SDKs, 3 new commands, 125 tests)</li>
+<li>📋 <strong>Phase 7.3 Planned</strong>: Vault Health &amp; Polish</li>
 </ul>
-<p><strong>Current Status:</strong> v3.0.0-beta — Phase 7.1 Complete</p>
+<p><strong>Current Status:</strong> v3.0.0-beta.2 — Phase 7.2 Complete</p>
 <p>See <a href="https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md">TODOS.md</a> for current work items.</p>
 <h2 id="community">Community<a class="headerlink" href="#community" title="Permanent link">&para;</a></h2>
 <ul>
