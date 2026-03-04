@@ -180,8 +180,8 @@ describe('obs CLI v3.0 — Script Structure', () => {
     expect(content).toContain('_get_python_cli()');
   });
 
-  test('obs.zsh should have v3.0.0-beta version', () => {
+  test('obs.zsh should have v3.0.0-beta.2 version', () => {
     const content = fs.readFileSync(OBS_SCRIPT, 'utf8');
-    expect(content).toContain('VERSION="3.0.0-beta"');
+    expect(content).toContain('VERSION="3.0.0-beta.2"');
   });
 });
