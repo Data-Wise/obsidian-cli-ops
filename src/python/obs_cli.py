@@ -594,6 +594,7 @@ def main():
                         cli.db,
                         limit=args.limit,
                         provider=args.provider,
+                        verbose=args.verbose,
                     )
 
                     if suggestions:
@@ -619,6 +620,7 @@ def main():
                         args.vault_id,
                         cli.db,
                         provider=args.provider,
+                        verbose=args.verbose,
                     )
 
                     if gaps:
@@ -658,6 +660,7 @@ def main():
                         folder=args.folder,
                         tag=args.tag,
                         provider=args.provider,
+                        verbose=args.verbose,
                         progress_callback=progress,
                     )
                     print("\r" + " " * 40 + "\r", end="")  # Clear progress line
