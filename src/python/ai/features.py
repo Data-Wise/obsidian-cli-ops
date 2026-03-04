@@ -69,7 +69,7 @@ def _get_note_content(note: Dict, vault_path: str) -> Optional[str]:
         note_path = Path(vault_path) / note['path']
         if note_path.exists():
             return note_path.read_text(encoding='utf-8')
-    except Exception:
+    except (OSError, UnicodeDecodeError):
         pass
     return None
 
