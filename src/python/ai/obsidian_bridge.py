@@ -24,8 +24,9 @@ class ObsidianBridge:
     unavailable, so callers don't need to check availability.
     """
 
-    def __init__(self):
+    def __init__(self, verbose: bool = False):
         self._available: Optional[bool] = None
+        self._verbose = verbose
 
     def is_available(self) -> bool:
         """Check if Obsidian CLI is installed and Obsidian is running.
@@ -43,6 +44,9 @@ class ObsidianBridge:
                 self._available = result.returncode == 0
             except (FileNotFoundError, subprocess.TimeoutExpired):
                 self._available = False
+        if self._available is False and self._verbose:
+            import sys
+            print("  [verbose] Obsidian CLI not available, using file scanning fallback", file=sys.stderr)
         return self._available
 
     def reset(self):

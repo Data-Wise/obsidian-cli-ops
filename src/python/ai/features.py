@@ -69,7 +69,7 @@ def _get_note_content(note: Dict, vault_path: str) -> Optional[str]:
         note_path = Path(vault_path) / note['path']
         if note_path.exists():
             return note_path.read_text(encoding='utf-8')
-    except Exception:
+    except (OSError, UnicodeDecodeError):
         pass
     return None
 
@@ -464,6 +464,7 @@ def suggest_links(
     db_manager,
     limit: int = 5,
     provider: Optional[str] = None,
+    verbose: bool = False,
 ) -> List[LinkSuggestion]:
     """Suggest new links for a note based on embedding similarity.
 
@@ -502,7 +503,7 @@ def suggest_links(
                 (note_id,),
             )
             existing_links = {row['target_note_id'] for row in cursor.fetchall()}
-    except Exception:
+    except (sqlite3.OperationalError, KeyError):
         pass
 
     # Get all other notes
@@ -517,6 +518,9 @@ def suggest_links(
 
     # Get source embedding
     source_mtime = os.path.getmtime(Path(vault['path']) / source_note['path']) if Path(vault['path']).joinpath(source_note['path']).exists() else 0
+    if verbose:
+        import sys
+        print(f"  [verbose] Computing embedding for {source_note['title']}", file=sys.stderr)
     source_embedding = _get_cached_embedding(
         note_id, source_content, source_mtime,
         db_manager, router,
@@ -554,6 +558,7 @@ def find_gaps(
     vault_id: str,
     db_manager,
     provider: Optional[str] = None,
+    verbose: bool = False,
 ) -> List[KnowledgeGap]:
     """Identify knowledge gaps in the vault.
 
@@ -595,7 +600,7 @@ def find_gaps(
                     related_notes=[stub['title']],
                     suggested_action=f"Expand '{stub['title']}' — it's referenced by {stub['in_degree']} other notes",
                 ))
-    except Exception:
+    except sqlite3.OperationalError:
         pass
 
     # 2. Find orphaned notes
@@ -610,7 +615,7 @@ def find_gaps(
 
     # 3. Use Obsidian bridge for additional data
     from .obsidian_bridge import ObsidianBridge
-    bridge = ObsidianBridge()
+    bridge = ObsidianBridge(verbose=verbose)
     bridge_orphans = bridge.get_orphans()
     if bridge_orphans:
         bridge_only = [o for o in bridge_orphans if o not in [n['path'] for n in orphans]]
@@ -633,6 +638,7 @@ def summarize_vault(
     batch_size: int = 10,
     batch_delay: float = 4.0,
     progress_callback=None,
+    verbose: bool = False,
 ) -> VaultSummary:
     """Generate a summary of the vault or a subset.
 
@@ -675,6 +681,11 @@ def summarize_vault(
 
     for i in range(0, len(all_notes), batch_size):
         batch = all_notes[i:i + batch_size]
+        if verbose:
+            import sys
+            batch_num = i // batch_size + 1
+            total_batches = (len(all_notes) + batch_size - 1) // batch_size
+            print(f"  [verbose] Processing batch {batch_num}/{total_batches}", file=sys.stderr)
 
         for note in batch:
             content = _get_note_content(note, vault['path'])
