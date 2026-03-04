@@ -1,8 +1,8 @@
 # Architecture Documentation
 
 **Project:** Obsidian CLI Ops (obs)
-**Version:** 2.0.0-beta
-**Last Updated:** 2025-12-15
+**Version:** 3.0.0-beta
+**Last Updated:** 2026-03-04
 
 ---
 
@@ -23,20 +23,26 @@
 
 ## Overview
 
-Obsidian CLI Ops follows a clean **three-layer architecture** that separates:
-- **Presentation** (UI/CLI/TUI)
-- **Application** (business logic)
+Obsidian CLI Ops follows a clean **three-layer architecture** with an **AI feature layer** that separates:
+- **Presentation** (CLI)
+- **Application** (business logic + AI features)
 - **Data** (persistence)
 
-This architecture enables multiple user interfaces (CLI, TUI, GUI) to share the same core business logic without duplication.
+This architecture enables clean separation of concerns with AI features as an independent module.
 
 ### Architecture Goals
 
-1. **Code Reusability:** CLI and TUI share 100% of business logic
-2. **Testability:** Core layer can be tested independently of UI
-3. **Flexibility:** Easy to add new interfaces (GUI, web API, mobile)
+1. **Code Reusability:** Core business logic is interface-agnostic
+2. **Testability:** Core and AI layers can be tested independently of CLI
+3. **Flexibility:** Easy to add new interfaces (web API, GUI)
 4. **Maintainability:** Clear separation of concerns
-5. **Type Safety:** Domain models provide compile-time checking
+5. **Type Safety:** Domain models and AI dataclasses provide compile-time checking
+
+### v3.0.0 Changes
+
+- **Removed:** TUI (1,701 lines) and R-Dev integration (307 lines)
+- **Added:** Multi-provider AI layer with 5 providers, embedding cache, and 7 AI commands
+- **Focused:** 13 CLI commands for core Obsidian vault management + AI analysis
 
 ---
 
@@ -46,77 +52,58 @@ This architecture enables multiple user interfaces (CLI, TUI, GUI) to share the 
 ┌─────────────────────────────────────────────────────────────┐
 │                    PRESENTATION LAYER                       │
 │                                                             │
-│  ┌───────────┐    ┌───────────┐    ┌───────────┐          │
-│  │           │    │           │    │           │          │
-│  │    CLI    │    │    TUI    │    │    GUI    │          │
-│  │           │    │           │    │           │          │
-│  │ obs_cli.py│    │  Textual  │    │  (Future) │          │
-│  │           │    │   app.py  │    │           │          │
-│  └─────┬─────┘    └─────┬─────┘    └─────┬─────┘          │
-│        │                │                │                │
-│        └────────────────┼────────────────┘                │
-│                         │                                 │
-└─────────────────────────┼─────────────────────────────────┘
-                          │
-                          │ Uses
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   APPLICATION LAYER (CORE)                  │
-│                                                             │
-│  ┌───────────────────────────────────────────────────┐     │
-│  │                                                   │     │
-│  │           VaultManager (311 lines)                │     │
-│  │    - discover_vaults()                            │     │
-│  │    - scan_vault() → ScanResult                    │     │
-│  │    - list_vaults() → List[Vault]                  │     │
-│  │    - get_vault_stats() → VaultStats               │     │
-│  │                                                   │     │
-│  │           GraphAnalyzer (311 lines)               │     │
-│  │    - analyze_vault() → Dict                       │     │
-│  │    - calculate_metrics()                          │     │
-│  │    - get_hub_notes() → List[Dict]                 │     │
-│  │    - get_orphan_notes() → List[Dict]              │     │
-│  │                                                   │     │
-│  │           Domain Models (237 lines)               │     │
-│  │    - Vault, Note, ScanResult                      │     │
-│  │    - GraphMetrics, VaultStats                     │     │
-│  │                                                   │     │
-│  │           Custom Exceptions                       │     │
-│  │    - VaultNotFoundError                           │     │
-│  │    - ScanError, AnalysisError                     │     │
-│  │                                                   │     │
-│  └───────────────────────────────────────────────────┘     │
-│                         │                                  │
-└─────────────────────────┼──────────────────────────────────┘
-                          │
-                          │ Uses
-                          ▼
+│  ┌───────────────┐    ┌───────────────┐                    │
+│  │   ZSH CLI     │    │  Python CLI   │                    │
+│  │  (obs.zsh)    │───▶│ (obs_cli.py)  │                    │
+│  │   386 lines   │    │   692 lines   │                    │
+│  └───────────────┘    └───────┬───────┘                    │
+│                               │                            │
+└───────────────────────────────┼────────────────────────────┘
+                                │ Uses
+                ┌───────────────┼───────────────┐
+                ▼                               ▼
+┌──────────────────────────┐  ┌──────────────────────────────┐
+│  APPLICATION LAYER (CORE)│  │       AI FEATURES LAYER      │
+│                          │  │                              │
+│  VaultManager (311 lines)│  │  AIRouter (312 lines)        │
+│  - discover_vaults()     │  │  - get_ai_client()           │
+│  - scan_vault()          │  │  - auto-select provider      │
+│  - list_vaults()         │  │                              │
+│                          │  │  features.py (725 lines)     │
+│  GraphAnalyzer (311 ln)  │  │  - find_similar_notes()      │
+│  - analyze_vault()       │  │  - analyze_note()            │
+│  - get_hub_notes()       │  │  - find_duplicates()         │
+│  - get_orphan_notes()    │  │  - suggest_links()           │
+│                          │  │  - find_gaps()               │
+│  Domain Models (237 ln)  │  │  - summarize_vault()         │
+│  - Vault, Note           │  │                              │
+│  - ScanResult            │  │  ObsidianBridge (123 lines)  │
+│  - GraphMetrics          │  │  - Null Object pattern       │
+│                          │  │  - backlinks, orphans, tags  │
+│  Exceptions              │  │                              │
+│  - VaultNotFoundError    │  │  AI Models (112 lines)       │
+│  - ScanError             │  │  - AnalysisResult            │
+│  - AnalysisError         │  │  - ComparisonResult          │
+│                          │  │  - SimilarNote               │
+└────────────┬─────────────┘  └──────────────┬───────────────┘
+             │                               │
+             │ Uses                          │ Uses
+             ▼                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                       DATA LAYER                            │
 │                                                             │
-│  ┌───────────────────────────────────────────────────┐     │
-│  │                                                   │     │
-│  │    DatabaseManager (469 lines)                    │     │
-│  │    - get_connection()                             │     │
-│  │    - add_vault(), get_vault(), list_vaults()      │     │
-│  │    - add_note(), get_note(), list_notes()         │     │
-│  │    - get_orphaned_notes(), get_hub_notes()        │     │
-│  │                                                   │     │
-│  │    VaultScanner (373 lines)                       │     │
-│  │    - discover_vaults()                            │     │
-│  │    - scan_vault()                                 │     │
-│  │    - MarkdownParser                               │     │
-│  │                                                   │     │
-│  │    GraphBuilder (307 lines)                       │     │
-│  │    - build_graph() → nx.DiGraph                   │     │
-│  │    - calculate_metrics()                          │     │
-│  │    - find_clusters()                              │     │
-│  │    - LinkResolver                                 │     │
-│  │                                                   │     │
-│  └───────────────────────────────────────────────────┘     │
+│  DatabaseManager (469+ lines)   VaultScanner (373 lines)   │
+│  - get_connection()             - discover_vaults()         │
+│  - CRUD: vaults, notes, links   - scan_vault()             │
+│  - get_orphaned_notes()         - MarkdownParser            │
+│  - embedding cache methods                                  │
 │                                                             │
-└─────────────────────────────────────────────────────────────┘
-                          │
+│  GraphBuilder (307 lines)       note_embeddings table       │
+│  - build_graph() → nx.DiGraph   - cached AI embeddings      │
+│  - calculate_metrics()          - mtime invalidation        │
+│  - find_clusters()              - numpy float32 BLOBs       │
+│                                                             │
+└─────────────────────────┬───────────────────────────────────┘
                           │ Stores
                           ▼
                 ┌──────────────────────┐
@@ -129,41 +116,33 @@ This architecture enables multiple user interfaces (CLI, TUI, GUI) to share the 
 
 ## Layer Details
 
-### Layer 1: Presentation (Interfaces)
+### Layer 1: Presentation (CLI)
 
-**Location:** `src/obs.zsh`, `src/python/obs_cli.py`, `src/python/tui/`
+**Location:** `src/obs.zsh`, `src/python/obs_cli.py`
 
 **Purpose:** Handle user interaction and format output
 
 **Components:**
 
-1. **ZSH CLI** (`src/obs.zsh`, 680 lines)
-   - Shell integration
-   - v1.x features (sync, install, r-dev)
+1. **ZSH CLI** (`src/obs.zsh`, 386 lines)
+   - Shell integration and dispatcher
    - Wrapper for Python CLI
+   - Uses full Python path: `/opt/homebrew/bin/python3`
 
-2. **Python CLI** (`src/python/obs_cli.py`, 318 lines)
-   - Argparse-based command line
-   - v2.0 features (discover, analyze, stats)
-   - JSON output support
-   - Verbose mode
-
-3. **TUI** (`src/python/tui/`, 1,701 lines)
-   - Textual framework
-   - Interactive screens: Vaults, Notes, Graph, Stats
-   - Real-time updates
-   - Keyboard navigation (vim keys)
-
-4. **GUI** (planned, future)
-   - PySide6/Qt framework
-   - Visual graph exploration
-   - Point-and-click operations
+2. **Python CLI** (`src/python/obs_cli.py`, 692 lines)
+   - Argparse-based command line (13 commands)
+   - Core commands: discover, scan, analyze, stats, vaults
+   - AI commands: similar, analyze, duplicates, suggest-links, gaps, summarize
+   - AI management: status, setup, test
+   - Rich formatting for terminal output
+   - Verbose mode (`--verbose` flag)
 
 **Responsibilities:**
-- Parse user input (CLI args, keyboard, mouse)
-- Format output (text, colors, widgets, dialogs)
+- Parse user input (CLI args)
+- Format output (text, colors, Rich panels/tables)
 - Display errors with context
-- Call application layer methods
+- Call core layer and AI feature layer methods
+- Pass `--verbose` through to feature functions
 - **NO business logic**
 
 **Example:**
@@ -174,11 +153,14 @@ def scan_command(args):
     result = vault_manager.scan_vault(args.path)  # Core layer
     print(f"✓ Scanned {result.notes_scanned} notes")  # Presentation
 
-# TUI presentation
-class VaultBrowserScreen(Screen):
-    def on_scan_clicked(self):
-        result = vault_manager.scan_vault(self.vault_path)  # Core layer
-        self.update_status(result)  # Presentation
+# AI command presentation
+elif args.ai_command == 'suggest-links':
+    suggestions = suggest_links(                   # AI feature layer
+        args.note_id, cli.db,
+        limit=args.limit, verbose=args.verbose,
+    )
+    for s in suggestions:
+        print(f"  [[{s.target_title}]] ({s.similarity:.0%})")  # Presentation
 ```
 
 ---
@@ -302,10 +284,36 @@ class AnalysisError(Exception):
 
 **Responsibilities:**
 - All business logic lives here
-- Interface-agnostic (no CLI/TUI dependencies)
+- Interface-agnostic (no CLI dependencies)
 - Returns structured data (not formatted strings)
 - Raises domain exceptions
 - Orchestrates data layer operations
+
+---
+
+### Layer 2b: AI Features (Optional Module)
+
+**Location:** `src/python/ai/`
+
+**Purpose:** AI-powered note analysis, similarity, and knowledge graph insights
+
+**Components:**
+
+1. **AIRouter** (`ai/router.py`, 312 lines) — Smart provider selection with fallback
+2. **Features** (`ai/features.py`, 725 lines) — 7 AI feature functions
+3. **Models** (`ai/models.py`, 112 lines) — Shared dataclasses (AnalysisResult, ComparisonResult, SimilarNote)
+4. **Providers** (`ai/providers/`, 5 providers) — Gemini API, Anthropic API, Ollama, Gemini CLI, Claude CLI
+5. **ObsidianBridge** (`ai/obsidian_bridge.py`, 123 lines) — Bridge to Obsidian's native CLI
+
+**Key design decisions:**
+- AI layer sits alongside core, not inside it — AI features depend on `db_manager` but not on `VaultManager`
+- Providers implement a common `AIProvider` interface with `capabilities` declaration
+- All providers return the same dataclass types (no provider-specific return types)
+- Dataclasses over Pydantic (zero new dependencies)
+- Embedding cache uses SQLite (`note_embeddings` table) with mtime invalidation
+- ObsidianBridge uses the Null Object pattern — returns empty results when CLI unavailable
+
+**See [`ai-api-reference.md`](ai-api-reference.md) for complete API documentation.**
 
 ---
 
@@ -463,30 +471,49 @@ class GraphBuilder:
 └──────────┘
 ```
 
-### Same Flow for TUI
+### AI Feature Flow: Suggesting Links
 
 ```
-┌──────────────────────┐
-│  VaultManager        │  ← Same core logic!
-└────┬─────────────────┘
-     │
-     │ ScanResult(notes=150, links=300, ...)
-     ▼
-┌──────────────────────┐
-│  TUI Screen          │  ← Formats as widgets
-│  (tui/screens/)      │
-│                      │
-│  self.status_label.update("Scanned 150 notes")
-└────┬─────────────────┘
-     │
-     │ Widget update
-     ▼
 ┌──────────┐
-│   User   │  ← Sees widget: "Scanned 150 notes"
-└──────────┘
+│   User   │
+└────┬─────┘
+     │
+     │ obs ai suggest-links note-1 --verbose
+     ▼
+┌──────────────────────┐
+│  Python CLI          │  ← Presentation Layer
+│  (obs_cli.py)        │
+│                      │
+│  suggest_links(      │
+│    note_id, db,      │
+│    verbose=True)     │
+└────┬─────────────────┘
+     │
+     │ suggest_links(note_id, db, verbose=True)
+     ▼
+┌──────────────────────┐
+│  AI Features         │  ← AI Layer
+│  (ai/features.py)    │
+│                      │
+│  1. Get note content │
+│  2. Get embedding    │
+│     (cached)         │
+│  3. Compare to all   │
+│     candidates       │
+│  4. Exclude existing │
+│     links            │
+│  5. Return top-N     │
+└────┬─────────────────┘
+     │
+     │ _get_cached_embedding()
+     ▼
+┌──────────────────────┐
+│  DatabaseManager     │  ← Data Layer
+│  (note_embeddings)   │
+└──────────────────────┘
 ```
 
-**Key point:** Same business logic, different presentation!
+**Key point:** AI features use `db_manager` directly (not through VaultManager) because they operate at the note/embedding level, not the vault management level.
 
 ---
 
@@ -1008,30 +1035,42 @@ src/python/
 │   ├── models.py              # Domain models (237 lines)
 │   └── exceptions.py          # Custom exceptions
 │
-├── obs_cli.py                 # PRESENTATION - CLI (318 lines)
-├── tui/                       # PRESENTATION - TUI (1,701 lines)
+├── ai/                        # AI FEATURES LAYER
+│   ├── features.py            # 7 AI feature functions (725 lines)
+│   ├── router.py              # Smart provider selection (312 lines)
+│   ├── models.py              # AI dataclasses (112 lines)
+│   ├── obsidian_bridge.py     # Obsidian CLI bridge (123 lines)
+│   ├── config.py              # AI configuration
+│   ├── install.py             # Dependency management
+│   └── providers/             # 5 AI providers
+│       ├── base.py            # AIProvider base class
+│       ├── gemini_api.py      # Google Gemini API
+│       ├── anthropic_api.py   # Anthropic API
+│       ├── ollama.py          # Ollama (local)
+│       ├── gemini_cli.py      # Gemini CLI
+│       └── claude_cli.py      # Claude CLI
 │
-├── db_manager.py              # DATA LAYER (469 lines)
+├── obs_cli.py                 # PRESENTATION - CLI (692 lines)
+│
+├── db_manager.py              # DATA LAYER (469+ lines)
 ├── vault_scanner.py           # DATA LAYER (373 lines)
 └── graph_builder.py           # DATA LAYER (307 lines)
 ```
 
 ### Benefits Achieved
 
-1. ✅ CLI and TUI share 100% of business logic
-2. ✅ Core layer is testable independently
-3. ✅ Easy to add GUI - just create new presentation layer
-4. ✅ Clear separation of concerns
-5. ✅ Type-safe domain models
+1. Core layer is testable independently (124 tests passing)
+2. AI layer is optional — core commands work without AI providers
+3. Clear separation: CLI → Core/AI → Data
+4. Type-safe domain models and AI dataclasses
+5. Multi-provider AI with automatic fallback
 
-### Next Steps
+### Related Documentation
 
-- Complete TUI implementation
-- Add GUI (PySide6) if needed
-- Add web API for remote access
-- Consider mobile app
+- **[AI API Reference](ai-api-reference.md)** — Complete AI features documentation
+- **[AI Provider Architecture](ai-providers.md)** — Provider details and setup
 
 ---
 
-**Last Updated:** 2025-12-15
-**Architecture Version:** 3-layer (refactored from 2-layer on 2025-12-14)
+**Last Updated:** 2026-03-04
+**Architecture Version:** 3-layer + AI (v3.0.0-beta)
