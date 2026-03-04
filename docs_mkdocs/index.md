@@ -129,7 +129,7 @@ obs ai duplicates <vault>
 - ✅ **Phase 1-5 Complete**: Database, scanner, graph, AI features
 - ✅ **Phase 7.1 Complete**: v3.0.0 simplification (TUI removed, CLI consolidated)
 - ✅ **Async & Lookup Fix**: Vault name/prefix lookup, async operations (PR #2)
-- ✅ **Phase 7.2 Complete**: AI Enhancement (modern SDKs, 3 new commands, 120 tests)
+- ✅ **Phase 7.2 Complete**: AI Enhancement (modern SDKs, 3 new commands, 125 tests)
 - 📋 **Phase 7.3 Planned**: Vault Health & Polish
 
 **Current Status:** v3.0.0-beta — Phase 7.2 Complete

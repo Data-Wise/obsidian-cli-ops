@@ -119,7 +119,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.0.0-beta — Phase 7.1 Complete
+**Current Status:** v3.0.0-beta — Phase 7.2 Complete
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -187,7 +187,7 @@ MIT License - See LICENSE file for details.
   - ✅ Phase 7.2: AI Enhancement (modern SDKs, new commands)
     - Gemini SDK migration (google-genai), Anthropic API provider
     - New commands: suggest-links, gaps, summarize
-    - Embedding cache, retry with backoff, 120 tests
+    - Embedding cache, retry with backoff, 125 tests
   - Phase 7.3: Vault Health & Polish (Planned)
   - Phase 7.4: Testing & Release (Planned)
 

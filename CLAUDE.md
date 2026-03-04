@@ -91,7 +91,7 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (120 tests)
+pytest src/python/tests/        # Run Python tests (125 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -99,7 +99,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # Python tests (120 tests passing)
+pytest src/python/tests/        # Python tests (125 tests passing)
 obs --verbose <command>         # Run any command with verbose output
 ```
 
@@ -123,7 +123,7 @@ obs --verbose <command>         # Run any command with verbose output
   - `obs_cli.py` - CLI interface (584 lines)
   - `ai/` - Multi-provider AI package (5 providers, 900+ lines)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
-- `tests/` - Test suite (120 tests passing)
+- `tests/` - Test suite (125 tests passing)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
