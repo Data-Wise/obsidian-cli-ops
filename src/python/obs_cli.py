@@ -11,6 +11,7 @@ Main CLI for v2.0 Python functionality:
 import sys
 import asyncio
 import argparse
+import json
 from pathlib import Path
 from typing import Optional
 
@@ -325,6 +326,8 @@ def main():
 
     parser.add_argument('-v', '--verbose', action='store_true',
                        help='Verbose output')
+    parser.add_argument('--json', action='store_true',
+                       help='Output as JSON')
 
     subparsers = parser.add_subparsers(dest='command', help='Commands')
 
@@ -427,13 +430,68 @@ def main():
                     analyze=args.analyze, verbose=args.verbose)
 
         elif args.command == 'analyze':
-            cli.analyze(args.vault, verbose=args.verbose)
+            if args.json:
+                try:
+                    vault = cli.db.get_vault_by_name_or_id(args.vault)
+                except ValueError as e:
+                    print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    sys.exit(1)
+                if not vault:
+                    print(json.dumps({"error": f"Vault not found: {args.vault}"}), file=sys.stderr)
+                    sys.exit(1)
+                result = cli.graph_analyzer.analyze_vault(vault['id'])
+                print(json.dumps(result, indent=2, default=str))
+            else:
+                cli.analyze(args.vault, verbose=args.verbose)
 
         elif args.command == 'stats':
-            cli.stats(vault_identifier=args.vault)
+            if args.json:
+                if args.vault:
+                    try:
+                        vault = cli.db.get_vault_by_name_or_id(args.vault)
+                    except ValueError as e:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                        sys.exit(1)
+                    if not vault:
+                        print(json.dumps({"error": f"Vault not found: {args.vault}"}), file=sys.stderr)
+                        sys.exit(1)
+                    vault_id = vault['id']
+                    notes = cli.db.list_notes(vault_id)
+                    link_count = sum(len(cli.db.get_outgoing_links(note['id'])) for note in notes)
+                    tag_stats = cli.db.get_tag_stats()
+                    orphans = cli.db.get_orphaned_notes(vault_id)
+                    hubs = cli.db.get_hub_notes(vault_id, limit=10)
+                    broken = cli.db.get_broken_links(vault_id)
+                    broken_count = sum(b['broken_count'] for b in broken)
+                    print(json.dumps({
+                        "vault": vault['name'],
+                        "path": vault['path'],
+                        "notes": len(notes),
+                        "links": link_count,
+                        "tags": len(tag_stats),
+                        "orphaned": len(orphans),
+                        "hubs": len(hubs),
+                        "broken_links": broken_count,
+                    }, indent=2, default=str))
+                else:
+                    db_stats = cli.db.get_stats()
+                    print(json.dumps({
+                        "vaults": db_stats['vaults'],
+                        "notes": db_stats['notes'],
+                        "links": db_stats['links'],
+                        "tags": db_stats['tags'],
+                        "orphaned_notes": db_stats['orphaned_notes'],
+                        "broken_links": db_stats['broken_links'],
+                    }, indent=2, default=str))
+            else:
+                cli.stats(vault_identifier=args.vault)
 
         elif args.command == 'vaults':
-            cli.list_vaults()
+            if args.json:
+                vaults = cli.vault_manager.list_vaults()
+                print(json.dumps([v.to_dict() for v in vaults], indent=2, default=str))
+            else:
+                cli.list_vaults()
 
         elif args.command == 'db':
             if args.db_command == 'init':
@@ -489,7 +547,6 @@ def main():
                 # Find similar notes
                 from ai.features import find_similar_notes
 
-                print(f"🔍 Finding similar notes to: {args.note_id}\n")
                 try:
                     matches = find_similar_notes(
                         args.note_id,
@@ -499,28 +556,42 @@ def main():
                         provider=args.provider
                     )
 
-                    if matches:
-                        print(f"Found {len(matches)} similar notes:\n")
-                        for i, match in enumerate(matches, 1):
-                            print(f"  {i}. {match.title}")
-                            print(f"     Similarity: {match.similarity:.1%}")
-                            print(f"     Path: {match.path}")
-                            print(f"     ID: {match.note_id}")
-                            print()
+                    if args.json:
+                        print(json.dumps([{
+                            "note_id": m.note_id,
+                            "title": m.title,
+                            "similarity": m.similarity,
+                            "path": m.path,
+                        } for m in matches], indent=2, default=str))
                     else:
-                        print("No similar notes found.")
+                        print(f"🔍 Finding similar notes to: {args.note_id}\n")
+                        if matches:
+                            print(f"Found {len(matches)} similar notes:\n")
+                            for i, match in enumerate(matches, 1):
+                                print(f"  {i}. {match.title}")
+                                print(f"     Similarity: {match.similarity:.1%}")
+                                print(f"     Path: {match.path}")
+                                print(f"     ID: {match.note_id}")
+                                print()
+                        else:
+                            print("No similar notes found.")
                 except ValueError as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
                 except RuntimeError as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
 
             elif args.ai_command == 'analyze':
                 # Analyze a note
                 from ai.features import analyze_note as ai_analyze_note
 
-                print(f"🔬 Analyzing note: {args.note_id}\n")
                 try:
                     result = ai_analyze_note(
                         args.note_id,
@@ -528,36 +599,50 @@ def main():
                         provider=args.provider
                     )
 
-                    # Print analysis results
-                    print("📊 Analysis Results:\n")
+                    if args.json:
+                        print(json.dumps({
+                            "summary": result.summary,
+                            "themes": result.themes,
+                            "quality_score": result.quality_score,
+                            "connections": result.connections,
+                            "suggestions": result.suggestions,
+                        }, indent=2, default=str))
+                    else:
+                        print(f"🔬 Analyzing note: {args.note_id}\n")
+                        print("📊 Analysis Results:\n")
 
-                    if result.summary:
-                        print(f"  Summary: {result.summary}")
-                    if result.themes:
-                        print(f"  Themes: {', '.join(result.themes)}")
-                    if result.quality_score > 0:
-                        print(f"  Quality: {result.quality_score:.0%}")
-                    if result.connections:
-                        print(f"  Connections: {', '.join(result.connections)}")
+                        if result.summary:
+                            print(f"  Summary: {result.summary}")
+                        if result.themes:
+                            print(f"  Themes: {', '.join(result.themes)}")
+                        if result.quality_score > 0:
+                            print(f"  Quality: {result.quality_score:.0%}")
+                        if result.connections:
+                            print(f"  Connections: {', '.join(result.connections)}")
 
-                    if result.suggestions:
-                        print()
-                        print("  💡 Suggestions:")
-                        for suggestion in result.suggestions:
-                            print(f"    • {suggestion}")
+                        if result.suggestions:
+                            print()
+                            print("  💡 Suggestions:")
+                            for suggestion in result.suggestions:
+                                print(f"    • {suggestion}")
 
                 except ValueError as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
                 except RuntimeError as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
 
             elif args.ai_command == 'duplicates':
                 # Find duplicate notes
                 from ai.features import find_duplicates
 
-                print(f"🔍 Scanning vault for duplicates: {args.vault_id}\n")
                 try:
                     groups = find_duplicates(
                         args.vault_id,
@@ -567,27 +652,39 @@ def main():
                         provider=args.provider
                     )
 
-                    if groups:
-                        print(f"Found {len(groups)} potential duplicate groups:\n")
-                        for i, group in enumerate(groups, 1):
-                            print(f"  Group {i} ({group.similarity:.1%} similarity):")
-                            for note in group.notes:
-                                print(f"    • {note['title']}")
-                                print(f"      {note['path']}")
-                            print()
+                    if args.json:
+                        print(json.dumps([{
+                            "similarity": g.similarity,
+                            "notes": [{"title": n['title'], "path": n['path']} for n in g.notes],
+                        } for g in groups], indent=2, default=str))
                     else:
-                        print("No duplicate notes found.")
+                        print(f"🔍 Scanning vault for duplicates: {args.vault_id}\n")
+                        if groups:
+                            print(f"Found {len(groups)} potential duplicate groups:\n")
+                            for i, group in enumerate(groups, 1):
+                                print(f"  Group {i} ({group.similarity:.1%} similarity):")
+                                for note in group.notes:
+                                    print(f"    • {note['title']}")
+                                    print(f"      {note['path']}")
+                                print()
+                        else:
+                            print("No duplicate notes found.")
                 except ValueError as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
                 except RuntimeError as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
 
             elif args.ai_command == 'suggest-links':
                 from ai.features import suggest_links
 
-                print(f"🔗 Suggesting links for note: {args.note_id}\n")
                 try:
                     suggestions = suggest_links(
                         args.note_id,
@@ -597,24 +694,35 @@ def main():
                         verbose=args.verbose,
                     )
 
-                    if suggestions:
-                        print(f"Found {len(suggestions)} link suggestions:\n")
-                        for i, s in enumerate(suggestions, 1):
-                            print(f"  {i}. [[{s.target_title}]] ({s.similarity:.0%})")
-                            print(f"     {s.target_path}")
-                            if s.reason:
-                                print(f"     {s.reason}")
-                            print()
+                    if args.json:
+                        print(json.dumps([{
+                            "target_title": s.target_title,
+                            "target_path": s.target_path,
+                            "similarity": s.similarity,
+                            "reason": s.reason,
+                        } for s in suggestions], indent=2, default=str))
                     else:
-                        print("No link suggestions found.")
+                        print(f"🔗 Suggesting links for note: {args.note_id}\n")
+                        if suggestions:
+                            print(f"Found {len(suggestions)} link suggestions:\n")
+                            for i, s in enumerate(suggestions, 1):
+                                print(f"  {i}. [[{s.target_title}]] ({s.similarity:.0%})")
+                                print(f"     {s.target_path}")
+                                if s.reason:
+                                    print(f"     {s.reason}")
+                                print()
+                        else:
+                            print("No link suggestions found.")
                 except (ValueError, RuntimeError) as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
 
             elif args.ai_command == 'gaps':
                 from ai.features import find_gaps
 
-                print(f"🔍 Analyzing knowledge gaps: {args.vault_id}\n")
                 try:
                     gaps = find_gaps(
                         args.vault_id,
@@ -623,36 +731,50 @@ def main():
                         verbose=args.verbose,
                     )
 
-                    if gaps:
-                        print(f"Found {len(gaps)} knowledge gaps:\n")
-                        for i, gap in enumerate(gaps, 1):
-                            print(f"  {i}. {gap.description}")
-                            if gap.related_notes:
-                                for note in gap.related_notes[:3]:
-                                    print(f"     • {note}")
-                            if gap.suggested_action:
-                                print(f"     → {gap.suggested_action}")
-                            print()
+                    if args.json:
+                        print(json.dumps([{
+                            "description": g.description,
+                            "related_notes": g.related_notes,
+                            "suggested_action": g.suggested_action,
+                        } for g in gaps], indent=2, default=str))
                     else:
-                        print("No knowledge gaps found.")
+                        print(f"🔍 Analyzing knowledge gaps: {args.vault_id}\n")
+                        if gaps:
+                            print(f"Found {len(gaps)} knowledge gaps:\n")
+                            for i, gap in enumerate(gaps, 1):
+                                print(f"  {i}. {gap.description}")
+                                if gap.related_notes:
+                                    for note in gap.related_notes[:3]:
+                                        print(f"     • {note}")
+                                if gap.suggested_action:
+                                    print(f"     → {gap.suggested_action}")
+                                print()
+                        else:
+                            print("No knowledge gaps found.")
                 except (ValueError, RuntimeError) as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
 
             elif args.ai_command == 'summarize':
                 from ai.features import summarize_vault
 
-                scope = args.vault_id
-                if args.folder:
-                    scope += f" (folder: {args.folder})"
-                if args.tag:
-                    scope += f" (tag: {args.tag})"
-                print(f"📊 Summarizing vault: {scope}\n")
-
                 try:
-                    def progress(current, total):
-                        pct = current / total * 100 if total > 0 else 0
-                        print(f"\r  Processing: {current}/{total} ({pct:.0f}%)", end="", flush=True)
+                    # Skip progress callback in JSON mode (no Rich/terminal output)
+                    progress_cb = None
+                    if not args.json:
+                        scope = args.vault_id
+                        if args.folder:
+                            scope += f" (folder: {args.folder})"
+                        if args.tag:
+                            scope += f" (tag: {args.tag})"
+                        print(f"📊 Summarizing vault: {scope}\n")
+
+                        def progress_cb(current, total):
+                            pct = current / total * 100 if total > 0 else 0
+                            print(f"\r  Processing: {current}/{total} ({pct:.0f}%)", end="", flush=True)
 
                     summary = summarize_vault(
                         args.vault_id,
@@ -661,24 +783,37 @@ def main():
                         tag=args.tag,
                         provider=args.provider,
                         verbose=args.verbose,
-                        progress_callback=progress,
+                        progress_callback=progress_cb,
                     )
-                    print("\r" + " " * 40 + "\r", end="")  # Clear progress line
 
-                    print(f"  Notes: {summary.note_count}")
-                    if summary.themes:
-                        print(f"  Themes: {', '.join(summary.themes[:5])}")
-                    if summary.top_hubs:
-                        print(f"  Top hubs:")
-                        for hub in summary.top_hubs:
-                            print(f"    • {hub['title']} ({hub['connections']} connections)")
-                    print(f"  Orphans: {summary.orphan_count}")
-                    print()
-                    if summary.summary_text:
-                        print(f"  {summary.summary_text}")
+                    if args.json:
+                        print(json.dumps({
+                            "note_count": summary.note_count,
+                            "themes": summary.themes,
+                            "top_hubs": summary.top_hubs,
+                            "orphan_count": summary.orphan_count,
+                            "summary_text": summary.summary_text,
+                        }, indent=2, default=str))
+                    else:
+                        print("\r" + " " * 40 + "\r", end="")  # Clear progress line
+
+                        print(f"  Notes: {summary.note_count}")
+                        if summary.themes:
+                            print(f"  Themes: {', '.join(summary.themes[:5])}")
+                        if summary.top_hubs:
+                            print(f"  Top hubs:")
+                            for hub in summary.top_hubs:
+                                print(f"    • {hub['title']} ({hub['connections']} connections)")
+                        print(f"  Orphans: {summary.orphan_count}")
+                        print()
+                        if summary.summary_text:
+                            print(f"  {summary.summary_text}")
 
                 except (ValueError, RuntimeError) as e:
-                    print(f"❌ {e}")
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
                     sys.exit(1)
 
             else:
