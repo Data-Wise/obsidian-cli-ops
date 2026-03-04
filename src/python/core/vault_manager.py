@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from db_manager import DatabaseManager
 from vault_scanner import VaultScanner
-from core.models import Vault, Note, ScanResult, VaultStats
+from core.models import Vault, Note, ScanResult, VaultStats, HealthScore, VaultHealth
 from core.exceptions import VaultNotFoundError, ScanError
 
 
@@ -217,6 +217,153 @@ class VaultManager:
             avg_words_per_note=stats_row.get('avg_words_per_note', 0.0),
             graph_density=stats_row.get('graph_density', 0.0),
             largest_component_size=stats_row.get('largest_component_size', 0),
+        )
+
+    def get_vault_health(self, vault_identifier: str) -> VaultHealth:
+        """
+        Compute health scores for a vault.
+
+        Args:
+            vault_identifier: Vault name or ID
+
+        Returns:
+            VaultHealth with 4 sub-scores and overall
+
+        Raises:
+            VaultNotFoundError: If vault not found
+            ValueError: If ambiguous prefix
+        """
+        # Resolve vault — may raise ValueError for ambiguous prefix
+        vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        if not vault:
+            raise VaultNotFoundError(f"Vault not found: {vault_identifier}")
+
+        vault_id = vault['id']
+        vault_name = vault['name']
+
+        # --- Shared data ---
+        notes = self.db.list_notes(vault_id)
+        total_notes = len(notes)
+
+        # --- Connectivity (weight: 30%) ---
+        orphans = self.db.get_orphaned_notes(vault_id)
+        orphan_pct = len(orphans) / max(total_notes, 1) * 100
+        conn_score = max(0, int(100 - orphan_pct * 2))
+        conn_details = [
+            f"{total_notes} notes",
+            f"{len(orphans)} orphans ({orphan_pct:.1f}%)",
+        ]
+        conn_recs = []
+        if len(orphans) > 0:
+            conn_recs.append(f"Link or archive {len(orphans)} orphaned notes")
+        connectivity = HealthScore(
+            name="Connectivity",
+            score=conn_score,
+            details=conn_details,
+            recommendations=conn_recs,
+        )
+
+        # --- Link Integrity (weight: 25%) ---
+        broken_links = self.db.get_broken_links(vault_id)
+        broken_count = sum(b.get('broken_count', 0) for b in broken_links)
+
+        # Count total links from links table
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.execute(
+                    "SELECT COUNT(*) FROM links l JOIN notes n ON l.source_note_id = n.id WHERE n.vault_id = ?",
+                    (vault_id,),
+                )
+                total_links = cursor.fetchone()[0]
+        except Exception:
+            total_links = 0
+
+        broken_pct = broken_count / max(total_links, 1) * 100
+        integrity_score = max(0, int(100 - broken_pct * 5))
+        integrity_details = [
+            f"{broken_count} broken links across {len(broken_links)} notes",
+        ]
+        integrity_recs = []
+        if broken_count > 0:
+            integrity_recs.append(f"Fix {broken_count} broken links in {len(broken_links)} notes")
+        link_integrity = HealthScore(
+            name="Link Integrity",
+            score=integrity_score,
+            details=integrity_details,
+            recommendations=integrity_recs,
+        )
+
+        # --- Structure (weight: 25%) ---
+        # Tag coverage
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.execute("""
+                    SELECT COUNT(DISTINCT nt.note_id)
+                    FROM note_tags nt
+                    JOIN notes n ON nt.note_id = n.id
+                    WHERE n.vault_id = ?
+                """, (vault_id,))
+                tagged_count = cursor.fetchone()[0]
+        except Exception:
+            tagged_count = 0
+
+        tag_coverage = tagged_count / max(total_notes, 1) * 100
+
+        # Hub balance
+        hubs = self.db.get_hub_notes(vault_id, limit=3)
+        hub_link_sum = sum(h.get('in_degree', 0) + h.get('out_degree', 0) for h in hubs)
+        hub_concentration = hub_link_sum / max(total_links * 2, 1) * 100
+        balance_score = 100 - min(hub_concentration, 100)
+
+        structure_score = int(tag_coverage * 0.6 + balance_score * 0.4)
+        structure_details = [
+            f"Tag coverage: {tag_coverage:.0f}% of notes tagged",
+            f"Hub balance: top 3 hubs hold {hub_concentration:.0f}% of links",
+        ]
+        structure_recs = []
+        if tag_coverage < 50:
+            structure_recs.append(f"Add tags to untagged notes ({100 - tag_coverage:.0f}% untagged)")
+        structure = HealthScore(
+            name="Structure",
+            score=structure_score,
+            details=structure_details,
+            recommendations=structure_recs,
+        )
+
+        # --- Freshness (weight: 20%) ---
+        freshness_data = self.db.get_note_freshness(vault_id)
+        total_fresh = freshness_data['total']
+        recent = freshness_data['recent']
+        stale = freshness_data['stale']
+        freshness_score = int(recent / max(total_fresh, 1) * 100)
+        freshness_details = [
+            f"{stale} notes not modified in 90+ days",
+        ]
+        freshness_recs = []
+        if stale > 0:
+            freshness_recs.append(f"Review {stale} stale notes (>90 days old)")
+        freshness = HealthScore(
+            name="Freshness",
+            score=freshness_score,
+            details=freshness_details,
+            recommendations=freshness_recs,
+        )
+
+        # --- Overall ---
+        overall = int(
+            connectivity.score * 0.30
+            + link_integrity.score * 0.25
+            + structure.score * 0.25
+            + freshness.score * 0.20
+        )
+
+        return VaultHealth(
+            vault_name=vault_name,
+            overall=overall,
+            connectivity=connectivity,
+            link_integrity=link_integrity,
+            structure=structure,
+            freshness=freshness,
         )
 
     def get_notes(self, vault_id: str, limit: Optional[int] = None, offset: Optional[int] = None) -> List[Note]:

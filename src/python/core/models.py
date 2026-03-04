@@ -155,6 +155,56 @@ class ScanResult:
 
 
 @dataclass
+class HealthScore:
+    """A sub-score in the vault health assessment."""
+    name: str
+    score: int          # 0-100
+    details: List[str]
+    recommendations: List[str] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'name': self.name,
+            'score': self.score,
+            'details': self.details,
+            'recommendations': self.recommendations,
+        }
+
+
+@dataclass
+class VaultHealth:
+    """Complete vault health assessment."""
+    vault_name: str
+    overall: int        # weighted average
+    connectivity: HealthScore
+    link_integrity: HealthScore
+    structure: HealthScore
+    freshness: HealthScore
+
+    @property
+    def recommendations(self) -> List[str]:
+        """Top 3 recommendations across all sub-scores."""
+        all_recs = []
+        for score in [self.connectivity, self.link_integrity, self.structure, self.freshness]:
+            all_recs.extend(score.recommendations)
+        return all_recs[:3]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'vault': self.vault_name,
+            'overall': self.overall,
+            'connectivity': self.connectivity.to_dict(),
+            'link_integrity': self.link_integrity.to_dict(),
+            'structure': self.structure.to_dict(),
+            'freshness': self.freshness.to_dict(),
+            'recommendations': self.recommendations,
+        }
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), indent=2, default=str)
+
+
+@dataclass
 class GraphMetrics:
     """Graph analysis metrics for a note or vault."""
 
