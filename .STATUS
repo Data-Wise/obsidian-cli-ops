@@ -8,10 +8,10 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🎯 Current State
 
-**Phase**: 7.2 complete, 7.3 planned
+**Phase**: 7.3 in progress (Inc 1 & 2 complete, Inc 3 & 4 pending)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 125/125 passing (pytest)
-**Commands**: 13 focused commands under `obs`
+**Tests**: 158/158 passing (pytest)
+**Commands**: 14 focused commands under `obs`
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
@@ -20,18 +20,27 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🔄 In Progress
 
-Nothing currently in progress.
+Phase 7.3: Vault Health & Polish (Increments 1 & 2 merged, 3 & 4 pending)
 
 ---
 
 ## 🎯 Next Actions
 
-- **A)** Phase 7.3: Vault Health & Polish [2+ hrs] 🟡
-- **B)** Release v3.0.0-beta.2 (in progress) 🟢
+- **A)** Phase 7.3 Inc 3: Test robustness (version consistency, fixtures) 🟡
+- **B)** Phase 7.3 Inc 4: CLI polish (error recovery, verbose, progress) 🟡
 
 ---
 
 ## ✅ Completed (v3.0.0 Development)
+
+### Phase 7.3 Inc 1 & 2: JSON Export + Vault Health (2026-03-04) — PR #7, #8
+
+- `--json` flag on all 10 data-outputting commands (early-return pattern)
+- `obs health <vault>` command with 4 sub-scores (connectivity, integrity, structure, freshness)
+- Rich progress bar dashboard + JSON output
+- `HealthScore` and `VaultHealth` dataclasses in `core/models.py`
+- `get_note_freshness()` in db_manager, `get_vault_health()` in vault_manager
+- **Result**: 158/158 tests, 14 commands (+29 new tests)
 
 ### PR #5: Review Follow-ups (2026-03-04) — PR #5
 
@@ -90,6 +99,7 @@ Nothing currently in progress.
 - **2026-03-02**: PR #2 (async fix, vault lookup)
 - **2026-03-03**: PR #3 (v3.0.0-beta release), PR #4 (AI enhancement)
 - **2026-03-04**: PR #5 (verbose wiring, exception narrowing, 125 tests)
+- **2026-03-04**: PR #7, #8 (--json export, vault health command, 158 tests)
 
 ---
 

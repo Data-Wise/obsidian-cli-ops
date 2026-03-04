@@ -30,7 +30,7 @@
 ### Developer Experience
 *   **🎯 Zero-Friction**: Just type `obs` — lists your vaults immediately
 *   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
-*   **🎨 ADHD-Friendly**: 13 focused commands, smart defaults, progressive disclosure
+*   **🎨 ADHD-Friendly**: 14 focused commands, smart defaults, progressive disclosure
 *   **🏷️ Flexible Lookup**: Use vault names or ID prefixes (`obs analyze Knowledge_Base`)
 
 ## Quick Start
@@ -130,7 +130,7 @@ obs ai duplicates <vault>
 - ✅ **Phase 7.1 Complete**: v3.0.0 simplification (TUI removed, CLI consolidated)
 - ✅ **Async & Lookup Fix**: Vault name/prefix lookup, async operations (PR #2)
 - ✅ **Phase 7.2 Complete**: AI Enhancement (modern SDKs, 3 new commands, 125 tests)
-- 📋 **Phase 7.3 Planned**: Vault Health & Polish
+- 🚧 **Phase 7.3 In Progress**: Vault Health & Polish (--json export, health dashboard, 158 tests)
 
 **Current Status:** v3.0.0-beta.2 — Phase 7.2 Complete
 

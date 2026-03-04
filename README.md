@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-3.0.0--beta-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-120%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-158%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
@@ -53,7 +53,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 **What's New:**
 
-- **Simplified CLI**: 20+ commands → 13 focused commands
+- **Simplified CLI**: 20+ commands → 14 focused commands
 - **ZSH-First**: Fast shell integration with Python core
 - **Laser Focus**: Removed features unrelated to Obsidian vault management
 - **Code Reduction**: 11,500 → ~7,400 lines (36% reduction so far, target: 61%)
@@ -87,7 +87,7 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.0.0 - Simplified CLI** - 13 focused commands!
+**v3.0.0 - Simplified CLI** - 14 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -97,6 +97,7 @@ obs discover <path>             # Find vaults in directory
 
 # GRAPH ANALYSIS
 obs analyze <vault>             # Analyze vault graph metrics
+obs health <vault>              # Vault health dashboard
 
 # AI FEATURES (optional)
 obs ai status                   # Check provider status
@@ -188,7 +189,9 @@ MIT License - See LICENSE file for details.
     - Gemini SDK migration (google-genai), Anthropic API provider
     - New commands: suggest-links, gaps, summarize
     - Embedding cache, retry with backoff, 125 tests
-  - Phase 7.3: Vault Health & Polish (Planned)
+  - 🚧 Phase 7.3: Vault Health & Polish (In Progress)
+    - `--json` flag on all commands, `obs health` dashboard
+    - 158 tests passing
   - Phase 7.4: Testing & Release (Planned)
 
 ---

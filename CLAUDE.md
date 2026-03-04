@@ -7,7 +7,7 @@ Developer guide for Claude Code when working with this repository.
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
 **Current Version**: 3.0.0-beta.2
-**Status**: Beta release (Phase 7.1 complete)
+**Status**: Beta release (Phase 7.3 Inc 1 & 2 complete)
 **Priority**: P1
 
 ### Core Features (v3.0.0)
@@ -64,7 +64,7 @@ ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 
 ### Essential Commands
 
-**v3.0.0 Simplified CLI** - 13 focused commands!
+**v3.0.0 Simplified CLI** - 14 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -74,6 +74,7 @@ obs discover <path>             # Find vaults in directory
 
 # GRAPH ANALYSIS
 obs analyze <vault>             # Analyze vault graph metrics
+obs health <vault>              # Vault health dashboard (scores + recommendations)
 
 # AI FEATURES
 obs ai status                   # Show AI provider status
@@ -91,7 +92,7 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (125 tests)
+pytest src/python/tests/        # Run Python tests (158 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -99,7 +100,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # Python tests (125 tests passing)
+pytest src/python/tests/        # Python tests (158 tests passing)
 obs --verbose <command>         # Run any command with verbose output
 ```
 
@@ -123,7 +124,7 @@ obs --verbose <command>         # Run any command with verbose output
   - `obs_cli.py` - CLI interface (584 lines)
   - `ai/` - Multi-provider AI package (5 providers, 900+ lines)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
-- `tests/` - Test suite (125 tests passing)
+- `tests/` - Test suite (158 tests passing)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -173,7 +174,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ### Testing Requirements
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- Keep core tests passing (120+ tests)
+- Keep core tests passing (158+ tests)
 - Update test count in documentation
 
 ### Documentation

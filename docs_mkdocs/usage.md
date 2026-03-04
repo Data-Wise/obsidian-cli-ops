@@ -8,7 +8,7 @@
 
 - **Zero-Friction Start**: Just type `obs`
 - **iCloud-First**: Auto-detects your Obsidian vaults
-- **ADHD-Friendly**: 13 focused commands, smart defaults, progressive disclosure
+- **ADHD-Friendly**: 14 focused commands, smart defaults, progressive disclosure
 - **AI-Powered**: Optional AI features for deeper vault analysis
 
 ---
