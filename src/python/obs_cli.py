@@ -317,6 +317,47 @@ class ObsCLI:
             sys.exit(1)
 
 
+def _print_health_dashboard(health):
+    """Print Rich health dashboard."""
+    # Rating label
+    if health.overall >= 80:
+        rating = "[green]Excellent[/]"
+    elif health.overall >= 60:
+        rating = "[yellow]Good[/]"
+    elif health.overall >= 40:
+        rating = "[yellow]Fair[/]"
+    else:
+        rating = "[red]Poor[/]"
+
+    console.print()
+    console.print(f"  [bold]Vault Health: {health.vault_name}[/]")
+    console.print(f"  Overall: [bold]{health.overall}/100[/] ({rating})")
+    console.print()
+
+    for sub in [health.connectivity, health.link_integrity, health.structure, health.freshness]:
+        filled = sub.score // 10
+        empty = 10 - filled
+        bar = "\u2588" * filled + "\u2591" * empty
+
+        if sub.score >= 80:
+            color = "green"
+        elif sub.score >= 60:
+            color = "yellow"
+        else:
+            color = "red"
+
+        console.print(f"  {sub.name:<18} [{color}]{bar}[/]  {sub.score}/100")
+        for detail in sub.details:
+            console.print(f"    {detail}")
+        console.print()
+
+    if health.recommendations:
+        console.print("  [bold]Recommendations:[/]")
+        for i, rec in enumerate(health.recommendations, 1):
+            console.print(f"    {i}. {rec}")
+        console.print()
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -366,6 +407,12 @@ def main():
     db_subparsers = db_parser.add_subparsers(dest='db_command')
     db_subparsers.add_parser('init', help='Initialize database')
     db_subparsers.add_parser('stats', help='Show database stats')
+
+    # health command
+    health_parser = subparsers.add_parser('health', help='Vault health dashboard')
+    health_parser.add_argument('vault', help='Vault name or ID')
+    health_parser.add_argument('--json', action='store_true', dest='json_output',
+                               help='Output as JSON')
 
     # ai command
     ai_parser = subparsers.add_parser('ai',
@@ -492,6 +539,24 @@ def main():
                 print(json.dumps([v.to_dict() for v in vaults], indent=2, default=str))
             else:
                 cli.list_vaults()
+
+        elif args.command == 'health':
+            try:
+                vault = cli.db.get_vault_by_name_or_id(args.vault)
+            except ValueError as e:
+                console.print(f"[red]{e}[/]")
+                sys.exit(1)
+            if not vault:
+                console.print(f"[red]Vault not found: {args.vault}[/]")
+                sys.exit(1)
+
+            health = cli.vault_manager.get_vault_health(args.vault)
+
+            if getattr(args, 'json_output', False):
+                import json as json_mod
+                print(json_mod.dumps(health.to_dict(), indent=2, default=str))
+            else:
+                _print_health_dashboard(health)
 
         elif args.command == 'db':
             if args.db_command == 'init':
