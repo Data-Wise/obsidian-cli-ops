@@ -681,6 +681,11 @@ def summarize_vault(
 
     for i in range(0, len(all_notes), batch_size):
         batch = all_notes[i:i + batch_size]
+        if verbose:
+            import sys
+            batch_num = i // batch_size + 1
+            total_batches = (len(all_notes) + batch_size - 1) // batch_size
+            print(f"  [verbose] Processing batch {batch_num}/{total_batches}", file=sys.stderr)
 
         for note in batch:
             content = _get_note_content(note, vault['path'])
