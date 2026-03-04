@@ -1,7 +1,7 @@
 # Architecture Documentation
 
 **Project:** Obsidian CLI Ops (obs)
-**Version:** 3.0.0-beta
+**Version:** 3.0.0-beta.2
 **Last Updated:** 2026-03-04
 
 ---
@@ -1073,4 +1073,4 @@ src/python/
 ---
 
 **Last Updated:** 2026-03-04
-**Architecture Version:** 3-layer + AI (v3.0.0-beta)
+**Architecture Version:** 3-layer + AI (v3.0.0-beta.2)

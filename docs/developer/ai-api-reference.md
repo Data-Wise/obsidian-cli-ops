@@ -1,7 +1,7 @@
 # AI API Reference
 
 **Module:** `src/python/ai/`
-**Version:** 3.0.0-beta
+**Version:** 3.0.0-beta.2
 **Last Updated:** 2026-03-04
 
 Complete reference for the AI features layer: functions, dataclasses, routing, and caching.

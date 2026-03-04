@@ -10,7 +10,7 @@
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.0.0-beta
+**Current Version**: 3.0.0-beta.2
 
 ## 🚀 Quick Start
 
@@ -23,7 +23,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 ## ✨ Features
 
-### 📊 Core Features (v3.0.0-beta)
+### 📊 Core Features (v3.0.0-beta.2)
 
 - **Vault Discovery**: Automatically find and scan Obsidian vaults
 - **Graph Analysis**: PageRank, centrality, clustering coefficients
@@ -119,7 +119,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.0.0-beta — Phase 7.2 Complete
+**Current Status:** v3.0.0-beta.2 — Phase 7.2 Complete
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
