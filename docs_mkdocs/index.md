@@ -24,13 +24,14 @@
 *   **🔗 Suggest Links**: `obs ai suggest-links` — find unlinked related notes
 *   **🕳️ Knowledge Gaps**: `obs ai gaps` — detect stub notes and orphans
 *   **📊 Vault Summary**: `obs ai summarize` — theme analysis across vault
+*   **🔄 Vault Refactor**: `obs ai refactor` — AI-powered reorganization suggestions
 *   **🔧 Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 *   **⚡ Smart Routing**: Auto-selects best provider for each operation
 
 ### Developer Experience
 *   **🎯 Zero-Friction**: Just type `obs` — lists your vaults immediately
 *   **🌥️ iCloud-First**: Auto-detects standard Obsidian iCloud location
-*   **🎨 ADHD-Friendly**: 14 focused commands, smart defaults, progressive disclosure
+*   **🎨 ADHD-Friendly**: 15 focused commands, smart defaults, progressive disclosure
 *   **🏷️ Flexible Lookup**: Use vault names or ID prefixes (`obs analyze Knowledge_Base`)
 
 ## Quick Start

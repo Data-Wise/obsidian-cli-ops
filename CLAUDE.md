@@ -64,7 +64,7 @@ ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 
 ### Essential Commands
 
-**v3.0.0 Simplified CLI** - 14 focused commands!
+**v3.0.0 Simplified CLI** - 15 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -86,13 +86,14 @@ obs ai duplicates <vault>       # Find duplicate notes
 obs ai suggest-links <note_id>  # Suggest new links
 obs ai gaps <vault>             # Find knowledge gaps
 obs ai summarize <vault>        # Summarize vault themes
+obs ai refactor <vault>         # AI-powered reorganization
 
 # UTILITIES
 obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (186 tests)
+pytest src/python/tests/        # Run Python tests (206 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```

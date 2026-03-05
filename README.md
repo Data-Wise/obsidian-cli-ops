@@ -42,6 +42,7 @@ obs analyze <vault>    # Analyze knowledge graph
 - **Suggest Links**: `obs ai suggest-links` - find unlinked related notes
 - **Knowledge Gaps**: `obs ai gaps` - detect stub notes and orphans
 - **Vault Summary**: `obs ai summarize` - generate theme analysis across vault
+- **Vault Refactor**: `obs ai refactor` - AI-powered vault reorganization suggestions
 - **Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 - **Smart Routing**: Auto-selects best provider for each operation type
 - **Embedding Cache**: SQLite-backed cache with mtime invalidation
@@ -53,7 +54,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 **What's New:**
 
-- **Simplified CLI**: 20+ commands → 14 focused commands
+- **Simplified CLI**: 20+ commands → 15 focused commands
 - **ZSH-First**: Fast shell integration with Python core
 - **Laser Focus**: Removed features unrelated to Obsidian vault management
 - **Code Reduction**: 11,500 → ~7,400 lines (36% reduction so far, target: 61%)
@@ -66,7 +67,6 @@ obs analyze <vault>    # Analyze knowledge graph
 
 **Coming Soon:**
 
-- `obs refactor <vault>` - AI-powered vault reorganization
 - `obs tag-suggest` - Intelligent tag suggestions
 - `obs quality` - Note quality assessment
 - `obs merge-suggest` - Find merge candidates
@@ -87,7 +87,7 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.0.0 - Simplified CLI** - 14 focused commands!
+**v3.0.0 - Simplified CLI** - 15 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -109,6 +109,7 @@ obs ai duplicates <vault>       # Find duplicate notes
 obs ai suggest-links <note_id>  # Suggest new links
 obs ai gaps <vault>             # Find knowledge gaps
 obs ai summarize <vault>        # Summarize vault themes
+obs ai refactor <vault>         # AI-powered reorganization
 
 # UTILITIES
 obs help                        # Show simple help

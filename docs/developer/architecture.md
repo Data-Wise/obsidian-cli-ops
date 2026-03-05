@@ -130,9 +130,9 @@ This architecture enables clean separation of concerns with AI features as an in
    - Uses full Python path: `/opt/homebrew/bin/python3`
 
 2. **Python CLI** (`src/python/obs_cli.py`, 692 lines)
-   - Argparse-based command line (14 commands)
+   - Argparse-based command line (15 commands)
    - Core commands: discover, scan, analyze, stats, vaults
-   - AI commands: similar, analyze, duplicates, suggest-links, gaps, summarize
+   - AI commands: similar, analyze, duplicates, suggest-links, gaps, summarize, refactor
    - AI management: status, setup, test
    - Rich formatting for terminal output
    - Verbose mode (`--verbose` flag)

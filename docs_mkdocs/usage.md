@@ -8,7 +8,7 @@
 
 - **Zero-Friction Start**: Just type `obs`
 - **iCloud-First**: Auto-detects your Obsidian vaults
-- **ADHD-Friendly**: 14 focused commands, smart defaults, progressive disclosure
+- **ADHD-Friendly**: 15 focused commands, smart defaults, progressive disclosure
 - **AI-Powered**: Optional AI features for deeper vault analysis
 
 ---
@@ -49,6 +49,10 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | `obs ai similar <note_id>` | Find semantically similar notes |
 | `obs ai analyze <note_id>` | Deep AI analysis of a note |
 | `obs ai duplicates <vault>` | Detect potential duplicate content |
+| `obs ai suggest-links <note_id>` | Find unlinked related notes |
+| `obs ai gaps <vault>` | Detect stub notes and knowledge gaps |
+| `obs ai summarize <vault>` | Generate theme analysis across vault |
+| `obs ai refactor <vault>` | AI-powered vault reorganization suggestions |
 
 ### Utilities
 
