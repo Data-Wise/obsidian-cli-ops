@@ -3,7 +3,7 @@
 **Version:** 3.0.0-beta.2
 **Last Updated:** 2026-03-04
 
-Complete reference for all `obs` commands — 14 commands covering vault management, graph analysis, and AI features.
+Complete reference for all `obs` commands — 15 commands covering vault management, graph analysis, and AI features.
 
 ---
 
@@ -370,6 +370,67 @@ Shows a progress indicator during processing. Notes are analyzed in batches of 1
 
 ---
 
+### obs ai refactor
+
+AI-powered vault reorganization analysis. Suggests moves, archives, folder merges, and new folder creation.
+
+```bash
+obs ai refactor <vault> [--dry-run] [--provider NAME]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `vault` | string | required | Vault name or ID |
+| `--dry-run` | flag | false | Run Phase 1 (graph-only) without AI calls |
+| `--provider` | string | auto | Force specific AI provider |
+
+**3-Phase Pipeline:**
+
+1. **Phase 1 (Graph-only)** — Root orphans → move, stale folders → archive, small folders → merge
+2. **Phase 2 (AI-enhanced)** — Tag-folder mismatch → create-folder, semantic orphan placement → connect
+3. **Phase 3** — Sort by priority and confidence scoring
+
+**Example:**
+
+```bash
+obs ai refactor MyVault                  # Full analysis
+obs ai refactor MyVault --dry-run        # Graph-only preview (free, no AI)
+obs --json ai refactor MyVault           # JSON output for scripting
+obs --verbose ai refactor MyVault        # Show progress on stderr
+```
+
+**Output:**
+
+```
+🔄 Vault Refactor Analysis: MyVault
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Analyzed 150 notes across 23 folders
+
+🔴 HIGH PRIORITY (3 items)
+  1. Move "unsorted-note" to inbox/
+     Root-level note with no links, likely unsorted
+  2. Archive folder "old-project/" → archive/
+     4 notes, all >90 days stale, low connectivity
+
+🟡 MEDIUM PRIORITY (2 items)
+  1. Create "python/" folder for 8 notes with #python tag
+     8 notes share #python tag but may span multiple folders
+
+📋 Summary: 5 suggestions (3 high, 2 medium, 0 low)
+```
+
+**Suggestion Categories:**
+
+| Category | Priority | Trigger |
+|----------|----------|---------|
+| `move` | high | Root-level orphan notes |
+| `archive` | high | All notes >90 days stale + low connectivity |
+| `merge-folder` | medium | Shallow folders with <3 notes |
+| `create-folder` | medium | Tags with 5+ notes spanning folders |
+| `connect` | varies | AI-detected semantic similarity (Phase 2) |
+
+---
+
 ## Quick Reference
 
 | Command | Purpose |
@@ -388,6 +449,7 @@ Shows a progress indicator during processing. Notes are analyzed in batches of 1
 | `obs ai suggest-links <id>` | Suggest new links |
 | `obs ai gaps <id>` | Find knowledge gaps |
 | `obs ai summarize <id>` | Summarize vault |
+| `obs ai refactor <vault>` | Reorganization suggestions |
 
 ---
 

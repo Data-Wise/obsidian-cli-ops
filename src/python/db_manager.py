@@ -770,6 +770,12 @@ class DatabaseManager:
     ) -> Optional[Dict]:
         """Get cached embedding with metadata for staleness check."""
         with self.get_connection() as conn:
+            # Check table exists first to avoid noisy logging from get_connection
+            table_check = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='note_embeddings'"
+            ).fetchone()
+            if not table_check:
+                return None
             cursor = conn.execute("""
                 SELECT vector, file_mtime, updated_at
                 FROM note_embeddings

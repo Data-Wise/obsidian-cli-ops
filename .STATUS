@@ -10,8 +10,8 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 **Phase**: 7.4 complete (v3.0.0 stable released)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 186/186 passing (pytest)
-**Commands**: 14 focused commands under `obs`
+**Tests**: 206/206 passing (pytest)
+**Commands**: 15 focused commands under `obs` (+`ai refactor`)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
@@ -30,7 +30,7 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 ## 🎯 Next Actions
 
 - Community announcement (GitHub Discussions)
-- Explore Phase 8 features (IDEAS.md): obs refactor, tag-suggest, quality, merge-suggest
+- Explore Phase 8 features (IDEAS.md): tag-suggest, quality, merge-suggest
 
 ---
 
@@ -114,6 +114,7 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 - **2026-03-05**: PR #11 (version sync, stale cleanup, 186 tests)
 - **2026-03-05**: PR #13 (v3.0.0 stable release), PR #14 (configurable Python path)
 - **2026-03-05**: Homebrew formula published (data-wise/tap/obsidian-cli-ops)
+- **2026-03-05**: `obs ai refactor` command (3-phase pipeline, 202 tests)
 
 ---
 
