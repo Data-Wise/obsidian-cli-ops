@@ -1,7 +1,6 @@
 """Tests for AI-powered vault refactor feature."""
 
 import json
-import sys
 import pytest
 from unittest.mock import patch, MagicMock
 

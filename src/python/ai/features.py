@@ -909,8 +909,7 @@ def refactor_vault(
                         mod_dt = modified
                     now = datetime.now(timezone.utc)
                     if hasattr(mod_dt, 'tzinfo') and mod_dt.tzinfo is None:
-                        from datetime import timezone as tz
-                        mod_dt = mod_dt.replace(tzinfo=tz.utc)
+                        mod_dt = mod_dt.replace(tzinfo=timezone.utc)
                     days_old = (now - mod_dt).days
                     if days_old <= 90:
                         all_stale = False

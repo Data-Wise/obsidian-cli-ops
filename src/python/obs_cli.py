@@ -488,9 +488,9 @@ def main():
     similar_parser.add_argument('--threshold', type=float, default=0.3, help='Min similarity (0-1)')
     similar_parser.add_argument('--provider', help='Use specific AI provider')
 
-    analyze_parser = ai_subparsers.add_parser('analyze', help='Analyze a note')
-    analyze_parser.add_argument('note_id', help='Note ID to analyze')
-    analyze_parser.add_argument('--provider', help='Use specific AI provider')
+    ai_analyze_parser = ai_subparsers.add_parser('analyze', help='Analyze a note')
+    ai_analyze_parser.add_argument('note_id', help='Note ID to analyze')
+    ai_analyze_parser.add_argument('--provider', help='Use specific AI provider')
 
     duplicates_parser = ai_subparsers.add_parser('duplicates', help='Find duplicate notes')
     duplicates_parser.add_argument('vault_id', help='Vault ID to scan')
