@@ -2,113 +2,48 @@
 
 > **Active work items and immediate next steps**
 >
-> **Last Updated:** 2025-12-20
-> **Status:** 99% Complete | v2.2.0 Released
+> **Last Updated:** 2026-03-05
+> **Status:** v3.0.0-beta.2 | Phase 7.4 In Progress
 > **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager
 
 ---
 
 ## 🎯 High Priority (Do Next)
 
-### Strategic Decision: Proposal A Implementation (v3.0.0)
-**Decision Made:** Focus on Proposal A (Pure Obsidian Manager), defer Proposal D (Hub Integration) to future releases
-
-**Rationale:**
-- Eliminate overlap with dev-tools (zsh-configuration, aiterm)
-- Focus on unique value: AI-powered Obsidian vault management
-- Simplify codebase: 11,500 → 4,500 lines (61% reduction)
-- Add high-value AI features: refactor, tag-suggest, quality, merge-suggest
-
-**See:** PROPOSAL-REFOCUS-2025-12-20.md for complete analysis
-
-### Phase 7.1: Simplification (Week 1-2, 12-17 hours)
-- [ ] **Delete TUI** (1,701 lines) [1 hour]
-  - Remove `src/python/tui/` directory
-  - Remove Textual from requirements.txt
-  - Remove TUI tests
-  - Update documentation (README, CLAUDE.md, docs/)
-
-- [ ] **Delete R-Dev Integration** (500 lines) [40 min]
-  - Remove R-Dev functions from src/obs.zsh
-  - Remove src/python/r_dev_manager.py if exists
-  - Remove R-Dev tests (tests/test_r_dev.sh)
-  - Update CLI help text
-
-- [ ] **Consolidate CLI** (ZSH-first approach) [8-11 hours]
-  - Simplify command structure (15+ → 8-10 commands)
-  - Update src/obs.zsh with new command set
-  - Update shell completion
-  - Update all CLI tests
-  - Target: 28-30 core tests passing (95%+)
-
-- [ ] **Update Documentation** [2 hours]
-  - Update README.md with v3.0.0 vision
-  - Update CLAUDE.md with simplified architecture
-  - Create MIGRATION.md guide (v2.x → v3.0.0)
-  - Archive old docs (TUI guides, R-Dev guides)
-
-**Deliverables:** Simplified codebase (~8,300 lines, 28% reduction), 8-10 core commands
-
-### Phase 7.2: AI-Powered Note Operations (Week 3-4, 20-28 hours)
-- [ ] **`obs refactor <vault>`** - AI-powered vault reorganization [6-8 hours]
-  - Analyze vault structure with AI
-  - Suggest folder reorganization
-  - Propose note consolidations
-  - Interactive approval workflow
-  - Add 10+ tests
-
-- [ ] **`obs tag-suggest <note|vault>`** - Intelligent tag suggestions [4-6 hours]
-  - Analyze note content
-  - Suggest relevant tags
-  - Show tag co-occurrence patterns
-  - Batch apply tags
-  - Add 8+ tests
-
-- [ ] **`obs quality <note|vault>`** - Note quality assessment [4-6 hours]
-  - Check completeness
-  - Identify missing backlinks
-  - Suggest improvements
-  - Quality score
-  - Add 8+ tests
-
-- [ ] **`obs merge-suggest <vault>`** - Find merge candidates [6-8 hours]
-  - Identify duplicates
-  - Suggest merges
-  - Preview merged content
-  - Interactive workflow
-  - Add 10+ tests
-
-**Deliverables:** 4 new AI commands, ~1,200 lines, 40+ new tests
-
----
-
-## 🟡 Medium Priority (After Phase 7.1)
-
-### Test Quality (Deferred until after simplification)
-- [ ] **Fix test_note_explorer.py** - Convert mock data to Note domain objects (27 failures) [60-90 min]
-- [ ] **Fix test_graph_visualizer.py** - Update mock method calls (14 failures) [30-45 min]
-- [ ] **Fix remaining test failures** - vault_scanner (6), quick_wins (5), ai_client (1) [30 min]
-- [ ] **Target:** 440+/461 tests passing (95%+)
-
-**Note:** These tests are for TUI which will be removed in Phase 7.1. Focus on core tests instead.
-
-### Documentation
-- [x] Organize docs/ structure (user/developer/planning/releases)
-- [x] Update all documentation to v2.1-beta
-- [x] Create TUI navigation guides (tutorial, reference, cheat sheet)
-- [x] Optimize CLAUDE.md for developers
-- [x] Consolidate planning docs into IDEAS.md and TODOS.md
+### Phase 7.4: Testing & Release Prep (In Progress)
+- [x] **Inc 1: Version sync & stale cleanup** ✅
+  - Sync all version strings to 3.0.0-beta.2
+  - Remove stale TUI dep, fix Gemini SDK to google-genai>=1.0.0
+  - Add anthropic optional dep
+  - Consolidate pytest config (pytest.ini → pyproject.toml)
+  - Extend version consistency tests (186 tests)
+- [x] **Inc 2: CI hardening** ✅
+  - CI triggers on dev + main (was main-only)
+  - Upgraded actions to v4/v5
+  - Python coverage reporting in CI
+  - Separated Python/JS test steps
+- [ ] **Inc 3: Release Notes & v3.0.0 Stable**
+  - Comprehensive release notes (docs_mkdocs/releases/v3.0.0.md)
+  - Version bump 3.0.0-beta.2 → 3.0.0
+  - PR dev → main, tag, GitHub release
+  - mkdocs gh-deploy
 
 ---
 
 ## 🟡 Medium Priority (Soon)
 
+### Documentation
+- [x] Organize docs/ structure (user/developer/planning/releases)
+- [x] Update all documentation to v3.0.0
+- [x] Optimize CLAUDE.md for developers
+- [x] Consolidate planning docs into IDEAS.md and TODOS.md
+- [ ] Update MkDocs site with v3.0.0 content and tutorials
+
 ### Testing & Quality
 - [ ] **Increase test coverage** to 80%
-  - Current: 70% overall
+  - Current: ~70% overall
   - Core layer: 85% (good)
   - Database layer: 75% (needs work)
-  - TUI layer: Need more tests
 - [ ] **Performance testing**
   - Test with large vaults (10k+ notes)
   - Memory profiling
@@ -119,8 +54,6 @@
   - Recovery suggestions
 
 ### Features
-- [ ] **Keyboard shortcut generator** - Auto-generate from BINDINGS
-- [ ] **TUI help screen improvements** - Context-sensitive help
 - [ ] **Search improvements** - Fuzzy search, regex support
 - [ ] **Export functionality** - Export stats to JSON/CSV
 
@@ -128,10 +61,8 @@
 
 ## 🟢 Low Priority (Future)
 
-### v1.x Maintenance
+### CLI Enhancements
 - [ ] `obs config` command - Manage configuration interactively
-- [ ] `obs r-dev list` - Show all R project mappings in table
-- [ ] Plugin update checker - `obs install --update`
 - [ ] `obs init` - Interactive setup wizard
 
 ### AI Features (Phase 5 - Future Enhancements)
@@ -150,6 +81,36 @@
 ---
 
 ## ✅ Recently Completed
+
+### 2026-03 (Phase 7.4 Inc 1)
+- [x] **Version sync to 3.0.0-beta.2** — pyproject.toml, package.json, __init__.py
+- [x] **Removed stale TUI dep** — textual dependency, tui optional extra
+- [x] **Fixed Gemini SDK** — google-generativeai → google-genai>=1.0.0
+- [x] **Added anthropic optional dep** — anthropic>=0.40.0
+- [x] **Consolidated pytest config** — merged pytest.ini → pyproject.toml, deleted pytest.ini
+- [x] **Extended version consistency tests** — 186 tests total
+
+### 2026-01 (Phase 7.3 Complete)
+- [x] **Phase 7.3: Testing & Polish** ✅
+  - Scanner integration tests (7 tests)
+  - Vault fixture with .obsidian marker
+  - 183 tests total passing
+  - Version consistency tests (3 tests)
+
+### 2026-01 (Phase 7.2 Complete)
+- [x] **Phase 7.2: AI Architecture** ✅
+  - 5-provider AI system (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
+  - Shared models (AnalysisResult, ComparisonResult, SimilarNote)
+  - Embedding cache with mtime invalidation
+  - 13 AI CLI commands
+  - Retry decorator on all API methods
+
+### 2025-12 (Phase 7.1 Complete)
+- [x] **Phase 7.1: Simplification** ✅
+  - Removed TUI (1,701 lines)
+  - Removed R-Dev integration (307 lines)
+  - Simplified CLI: 14 focused commands
+  - v3.0.0-beta released
 
 ### 2025-12-20
 - [x] **v2.2.0 Release**

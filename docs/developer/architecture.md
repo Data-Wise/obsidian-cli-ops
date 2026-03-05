@@ -130,7 +130,7 @@ This architecture enables clean separation of concerns with AI features as an in
    - Uses full Python path: `/opt/homebrew/bin/python3`
 
 2. **Python CLI** (`src/python/obs_cli.py`, 692 lines)
-   - Argparse-based command line (13 commands)
+   - Argparse-based command line (14 commands)
    - Core commands: discover, scan, analyze, stats, vaults
    - AI commands: similar, analyze, duplicates, suggest-links, gaps, summarize
    - AI management: status, setup, test
@@ -1059,7 +1059,7 @@ src/python/
 
 ### Benefits Achieved
 
-1. Core layer is testable independently (125 tests passing)
+1. Core layer is testable independently (186 tests passing)
 2. AI layer is optional — core commands work without AI providers
 3. Clear separation: CLI → Core/AI → Data
 4. Type-safe domain models and AI dataclasses

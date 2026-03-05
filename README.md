@@ -1,16 +1,16 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-3.0.0--beta-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-120%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-186%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.0.0-beta.2
+**Current Version**: 3.0.0
 
 ## 🚀 Quick Start
 
@@ -23,7 +23,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 ## ✨ Features
 
-### 📊 Core Features (v3.0.0-beta.2)
+### 📊 Core Features (v3.0.0)
 
 - **Vault Discovery**: Automatically find and scan Obsidian vaults
 - **Graph Analysis**: PageRank, centrality, clustering coefficients
@@ -53,7 +53,7 @@ obs analyze <vault>    # Analyze knowledge graph
 
 **What's New:**
 
-- **Simplified CLI**: 20+ commands → 13 focused commands
+- **Simplified CLI**: 20+ commands → 14 focused commands
 - **ZSH-First**: Fast shell integration with Python core
 - **Laser Focus**: Removed features unrelated to Obsidian vault management
 - **Code Reduction**: 11,500 → ~7,400 lines (36% reduction so far, target: 61%)
@@ -64,7 +64,7 @@ obs analyze <vault>    # Analyze knowledge graph
 - R-Dev integration (307 lines) - Belongs in R package ecosystem
 - Legacy v1.x commands (126 lines) - Plugin install, sync, audit
 
-**Coming Soon (Phase 7.2):**
+**Coming Soon:**
 
 - `obs refactor <vault>` - AI-powered vault reorganization
 - `obs tag-suggest` - Intelligent tag suggestions
@@ -87,7 +87,7 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.0.0 - Simplified CLI** - 13 focused commands!
+**v3.0.0 - Simplified CLI** - 14 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -97,6 +97,7 @@ obs discover <path>             # Find vaults in directory
 
 # GRAPH ANALYSIS
 obs analyze <vault>             # Analyze vault graph metrics
+obs health <vault>              # Vault health dashboard
 
 # AI FEATURES (optional)
 obs ai status                   # Check provider status
@@ -119,7 +120,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.0.0-beta.2 — Phase 7.2 Complete
+**Current Status:** v3.0.0 Stable
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -152,7 +153,7 @@ obs version                     # Show version
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](docs/releases/v2.2.0.md)** - v2.2.0 release notes
+- **[Latest Release](docs/releases/v3.0.0.md)** - v3.0.0 release notes
 
 ## 🧪 Test Coverage
 
@@ -188,8 +189,11 @@ MIT License - See LICENSE file for details.
     - Gemini SDK migration (google-genai), Anthropic API provider
     - New commands: suggest-links, gaps, summarize
     - Embedding cache, retry with backoff, 125 tests
-  - Phase 7.3: Vault Health & Polish (Planned)
-  - Phase 7.4: Testing & Release (Planned)
+  - ✅ Phase 7.3: Vault Health & Polish (Complete)
+    - `--json` flag on all commands, `obs health` dashboard
+    - 183 tests passing
+  - ✅ Phase 7.4: Testing & Release Prep (Complete)
+    - Version sync, CI hardening, 186 tests, v3.0.0 stable release
 
 ---
 

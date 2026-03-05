@@ -602,6 +602,22 @@ class DatabaseManager:
                     """)
             return [dict(row) for row in cursor.fetchall()]
 
+    def get_note_freshness(self, vault_id: str, days_threshold: int = 90) -> Dict[str, int]:
+        """Get freshness stats for vault notes.
+
+        Returns dict with 'total', 'recent' (within threshold), 'stale' (beyond threshold).
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute("""
+                SELECT COUNT(*) as total,
+                       SUM(CASE WHEN julianday('now') - julianday(modified_at) <= ? THEN 1 ELSE 0 END) as recent
+                FROM notes WHERE vault_id = ?
+            """, (days_threshold, vault_id))
+            row = cursor.fetchone()
+            total = row[0] or 0
+            recent = row[1] or 0
+            return {'total': total, 'recent': recent, 'stale': total - recent}
+
     # ========================================================================
     # SCAN HISTORY
     # ========================================================================

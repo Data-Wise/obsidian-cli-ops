@@ -3,7 +3,7 @@
 **Version:** 3.0.0-beta.2
 **Last Updated:** 2026-03-04
 
-Complete reference for all `obs` commands — 13 commands covering vault management, graph analysis, and AI features.
+Complete reference for all `obs` commands — 14 commands covering vault management, graph analysis, and AI features.
 
 ---
 

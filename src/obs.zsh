@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 3.0.0-beta.2
+# Version: 3.0.0
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -40,7 +40,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="3.0.0-beta.2"
+VERSION="3.0.0"
 
 # --- Helper Functions ---
 
@@ -98,6 +98,7 @@ obs_help() {
 
         echo "📊 GRAPH ANALYSIS"
         echo "  obs analyze <vault>       Analyze vault graph metrics"
+        echo "  obs health <vault>        Vault health dashboard"
         echo ""
 
         echo "🤖 AI FEATURES"
@@ -230,6 +231,31 @@ obs_stats() {
     else
         /opt/homebrew/bin/python3 "$python_cli" stats
     fi
+}
+
+obs_health() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault=$1
+
+    if [[ -z "$vault" ]]; then
+        _log "ERROR" "Vault name or ID required"
+        echo "Usage: obs health <vault>"
+        return 1
+    fi
+
+    _log_verbose "Running health check: $vault"
+
+    # Build command
+    local cmd=("$python_cli" "health" "$vault")
+
+    # Pass --json flag if present
+    shift
+    while [[ "$1" == --* ]]; do
+        cmd+=("$1")
+        shift
+    done
+
+    /opt/homebrew/bin/python3 "${cmd[@]}"
 }
 
 # --- AI Commands (v2.0) ---
@@ -365,6 +391,9 @@ obs() {
             ;;
         "stats")
             obs_stats "$@"
+            ;;
+        "health")
+            obs_health "$@"
             ;;
         "ai")
             obs_ai "$@"

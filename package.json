@@ -1,6 +1,6 @@
 {
   "name": "obsidian-cli-ops",
-  "version": "2.0.0-beta",
+  "version": "3.0.0",
   "description": "An intelligent command-line tool for managing multi-vault Obsidian systems with knowledge graph analysis.",
   "main": "index.js",
   "directories": {
@@ -13,8 +13,6 @@
     "test:py:unit": "pytest src/python/tests -v -m unit",
     "test:py:integration": "pytest src/python/tests -v -m integration",
     "test:py:ai": "pytest src/python/tests -v -m ai",
-    "test:shell": "bash tests/test_r_dev.sh",
-    "test:all": "npm run test:js && npm run test:py && npm run test:shell",
     "test:coverage": "jest --coverage && pytest src/python/tests --cov=src/python --cov-report=term-missing",
     "lint": "eslint .",
     "format": "prettier --write ."
