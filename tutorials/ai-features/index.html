@@ -610,6 +610,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../refcard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1045,10 +1101,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-8-choose-the-right-provider" class="md-nav__link">
+  <a href="#step-8-suggest-links-and-find-gaps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 8: Choose the Right Provider
+        Step 8: Suggest Links and Find Gaps
       
     </span>
   </a>
@@ -1056,10 +1112,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-9-next-steps" class="md-nav__link">
+  <a href="#step-9-summarize-vault-themes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 9: Next Steps
+        Step 9: Summarize Vault Themes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-10-get-reorganization-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Get Reorganization Suggestions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-11-choose-the-right-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Choose the Right Provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-12-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Next Steps
       
     </span>
   </a>
@@ -1934,10 +2023,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-8-choose-the-right-provider" class="md-nav__link">
+  <a href="#step-8-suggest-links-and-find-gaps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 8: Choose the Right Provider
+        Step 8: Suggest Links and Find Gaps
       
     </span>
   </a>
@@ -1945,10 +2034,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-9-next-steps" class="md-nav__link">
+  <a href="#step-9-summarize-vault-themes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 9: Next Steps
+        Step 9: Summarize Vault Themes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-10-get-reorganization-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Get Reorganization Suggestions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-11-choose-the-right-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Choose the Right Provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-12-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Next Steps
       
     </span>
   </a>
@@ -1976,8 +2098,8 @@
 
 
 <h1 id="ai-features">AI Features<a class="headerlink" href="#ai-features" title="Permanent link">&para;</a></h1>
-<p>Set up AI providers and use them to find similar notes, analyze content, and detect duplicates.</p>
-<p><strong>Time:</strong> ~20 minutes | <strong>Level:</strong> Advanced | <strong>Steps:</strong> 9</p>
+<p>Set up AI providers and use them to find similar notes, analyze content, detect duplicates, and get vault reorganization suggestions.</p>
+<p><strong>Time:</strong> ~25 minutes | <strong>Level:</strong> Advanced | <strong>Steps:</strong> 12</p>
 <p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> (vault scanned)</p>
 <hr />
 <h2 id="step-1-what-can-ai-do">Step 1: What Can AI Do?<a class="headerlink" href="#step-1-what-can-ai-do" title="Permanent link">&para;</a></h2>
@@ -2131,7 +2253,63 @@
 <li>Differentiate near-duplicates by adding unique content</li>
 </ul>
 <hr />
-<h2 id="step-8-choose-the-right-provider">Step 8: Choose the Right Provider<a class="headerlink" href="#step-8-choose-the-right-provider" title="Permanent link">&para;</a></h2>
+<h2 id="step-8-suggest-links-and-find-gaps">Step 8: Suggest Links and Find Gaps<a class="headerlink" href="#step-8-suggest-links-and-find-gaps" title="Permanent link">&para;</a></h2>
+<p>Use AI to discover missing connections and knowledge gaps:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Suggest new links for a note</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>&lt;note_id&gt;
+</code></pre></div>
+<p><strong>Expected output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Found 3 link suggestions:
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  1. [[Graph Theory]] (78%)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>     notes/graph-theory.md
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  2. [[Algorithms]] (65%)
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>     notes/algorithms.md
+</code></pre></div>
+<p>Find areas where your vault needs expansion:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault
+</code></pre></div>
+<p>This detects stub notes (referenced often but underdeveloped), orphaned notes, and structural gaps.</p>
+<hr />
+<h2 id="step-9-summarize-vault-themes">Step 9: Summarize Vault Themes<a class="headerlink" href="#step-9-summarize-vault-themes" title="Permanent link">&para;</a></h2>
+<p>Get a bird's-eye view of your vault:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>MyVault
+</code></pre></div>
+<p>You can scope to a folder or tag:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>MyVault<span class="w"> </span>--folder<span class="w"> </span><span class="s2">&quot;projects/&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>MyVault<span class="w"> </span>--tag<span class="w"> </span><span class="s2">&quot;python&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="step-10-get-reorganization-suggestions">Step 10: Get Reorganization Suggestions<a class="headerlink" href="#step-10-get-reorganization-suggestions" title="Permanent link">&para;</a></h2>
+<p>The refactor command analyzes your vault structure and suggests improvements:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault
+</code></pre></div>
+<p><strong>Expected output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>🔄 Vault Refactor Analysis: MyVault
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>📊 Analyzed 247 notes across 12 folders
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>🔴 HIGH PRIORITY (3 items)
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  1. Move &quot;random-thoughts.md&quot; → inbox/
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>     Root-level note with no links, likely unsorted
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  2. Archive folder &quot;old-stuff/&quot; → archive/
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>     3 notes, all &gt;90 days stale, low connectivity
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>🟡 MEDIUM PRIORITY (5 items)
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  3. Create &quot;python/&quot; folder for 7 notes with #python tag
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>     ...
+</code></pre></div>
+<details class="tip">
+<summary>Dry run mode</summary>
+<p>Preview the scope without making AI calls:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run
+</code></pre></div>
+Get machine-readable output:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json
+</code></pre></div></p>
+</details>
+<hr />
+<h2 id="step-11-choose-the-right-provider">Step 11: Choose the Right Provider<a class="headerlink" href="#step-11-choose-the-right-provider" title="Permanent link">&para;</a></h2>
 <p>Different providers excel at different tasks:</p>
 <table>
 <thead>
@@ -2183,7 +2361,7 @@
 </ul>
 <p>obs auto-selects the best available provider, but you can override with configuration.</p>
 <hr />
-<h2 id="step-9-next-steps">Step 9: Next Steps<a class="headerlink" href="#step-9-next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="step-12-next-steps">Step 12: Next Steps<a class="headerlink" href="#step-12-next-steps" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2211,7 +2389,7 @@
 </tbody>
 </table>
 <hr />
-<p><strong>Summary:</strong> You set up AI providers, tested them, found similar notes, analyzed content, and detected duplicates. Your vault now has AI-powered intelligence built in.</p>
+<p><strong>Summary:</strong> You set up AI providers, tested them, found similar notes, analyzed content, detected duplicates, discovered knowledge gaps, and got vault reorganization suggestions. Your vault now has AI-powered intelligence built in.</p>
 
 
 
