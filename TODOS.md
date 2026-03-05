@@ -2,7 +2,7 @@
 
 > **Active work items and immediate next steps**
 >
-> **Last Updated:** 2026-03-04
+> **Last Updated:** 2026-03-05
 > **Status:** v3.0.0-beta.2 | Phase 7.4 In Progress
 > **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager
 
@@ -17,11 +17,16 @@
   - Add anthropic optional dep
   - Consolidate pytest config (pytest.ini → pyproject.toml)
   - Extend version consistency tests (186 tests)
-- [ ] **Inc 2: Release validation**
-  - Full test suite verification (186+ tests)
-  - CI pipeline green
-  - docs sync + mkdocs build
-  - PR to dev then main for v3.0.0-beta.2 release
+- [x] **Inc 2: CI hardening** ✅
+  - CI triggers on dev + main (was main-only)
+  - Upgraded actions to v4/v5
+  - Python coverage reporting in CI
+  - Separated Python/JS test steps
+- [ ] **Inc 3: Release Notes & v3.0.0 Stable**
+  - Comprehensive release notes (docs_mkdocs/releases/v3.0.0.md)
+  - Version bump 3.0.0-beta.2 → 3.0.0
+  - PR dev → main, tag, GitHub release
+  - mkdocs gh-deploy
 
 ---
 

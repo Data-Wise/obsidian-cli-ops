@@ -1,14 +1,14 @@
 priority: P1
 status: beta - v3.0.0-beta.2 released
 progress: 85
-updated: 2026-03-04
+updated: 2026-03-05
 version: 3.0.0-beta.2
-next: Phase 7.4 Inc 2 - CI Hardening
+next: Phase 7.4 Inc 3 - Release Notes & v3.0.0 Stable
 target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🎯 Current State
 
-**Phase**: 7.4 Inc 1 complete (version sync, stale cleanup)
+**Phase**: 7.4 Inc 2 complete (version sync, CI hardening)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
 **Tests**: 186/186 passing (pytest)
 **Commands**: 14 focused commands under `obs`
@@ -22,15 +22,14 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 Phase 7.4: Testing & Release Prep
 - ✅ Inc 1: Version sync & stale cleanup (PR #11)
-- 🟡 Inc 2: CI Hardening (triggers on dev, coverage reporting)
+- ✅ Inc 2: CI Hardening (PR #12)
 - 🟡 Inc 3: Release Notes & v3.0.0 Stable
 
 ---
 
 ## 🎯 Next Actions
 
-- **A)** Phase 7.4 Inc 2: CI Hardening 🟡
-- **B)** Phase 7.4 Inc 3: Release Notes & v3.0.0 Stable 🟡
+- **A)** Phase 7.4 Inc 3: Release Notes & v3.0.0 Stable 🟡
 
 ---
 
