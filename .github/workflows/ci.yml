@@ -2,25 +2,25 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main ]
+    branches: [main, dev]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18.x'
         cache: 'npm'
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
@@ -32,11 +32,15 @@ jobs:
     - name: Install ZSH
       run: sudo apt-get update && sudo apt-get install -y zsh
 
-    - name: Run Tests
-      run: npm test
+    - name: Python Tests (with coverage)
+      working-directory: src/python
+      run: python3 -m pytest tests/ -v --tb=short --cov=. --cov-report=term-missing
+
+    - name: JS Tests
+      run: npx jest
 
     - name: Lint
       run: npm run lint
 
     - name: Check Formatting
-      run: npx prettier --check "**/*.js" "__tests__/**/*.js"
+      run: npx prettier --check "**/*.js" "!node_modules/**"
