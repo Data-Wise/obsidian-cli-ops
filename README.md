@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-3.0.0--beta-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-176%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-183%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
@@ -191,7 +191,7 @@ MIT License - See LICENSE file for details.
     - Embedding cache, retry with backoff, 125 tests
   - ✅ Phase 7.3: Vault Health & Polish (Complete)
     - `--json` flag on all commands, `obs health` dashboard
-    - 176 tests passing
+    - 183 tests passing
   - Phase 7.4: Testing & Release (Planned)
 
 ---

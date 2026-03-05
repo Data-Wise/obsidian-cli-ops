@@ -1059,7 +1059,7 @@ src/python/
 
 ### Benefits Achieved
 
-1. Core layer is testable independently (176 tests passing)
+1. Core layer is testable independently (183 tests passing)
 2. AI layer is optional — core commands work without AI providers
 3. Clear separation: CLI → Core/AI → Data
 4. Type-safe domain models and AI dataclasses
