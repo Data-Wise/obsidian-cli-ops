@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-3.0.0--beta-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-183%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-186%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
@@ -64,7 +64,7 @@ obs analyze <vault>    # Analyze knowledge graph
 - R-Dev integration (307 lines) - Belongs in R package ecosystem
 - Legacy v1.x commands (126 lines) - Plugin install, sync, audit
 
-**Coming Soon (Phase 7.2):**
+**Coming Soon:**
 
 - `obs refactor <vault>` - AI-powered vault reorganization
 - `obs tag-suggest` - Intelligent tag suggestions
@@ -120,7 +120,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.0.0-beta.2 — Phase 7.2 Complete
+**Current Status:** v3.0.0-beta.2 — Phase 7.4 In Progress
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -192,7 +192,8 @@ MIT License - See LICENSE file for details.
   - ✅ Phase 7.3: Vault Health & Polish (Complete)
     - `--json` flag on all commands, `obs health` dashboard
     - 183 tests passing
-  - Phase 7.4: Testing & Release (Planned)
+  - 🚧 Phase 7.4: Testing & Release Prep (In Progress)
+    - Version sync to 3.0.0-beta.2, stale cleanup, 186 tests
 
 ---
 

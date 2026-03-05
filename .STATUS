@@ -3,14 +3,14 @@ status: beta - v3.0.0-beta.2 released
 progress: 85
 updated: 2026-03-04
 version: 3.0.0-beta.2
-next: Phase 7.3 - Vault Health & Polish
+next: Phase 7.4 Inc 2 - CI Hardening
 target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🎯 Current State
 
-**Phase**: 7.3 complete (all 4 increments merged)
+**Phase**: 7.4 Inc 1 complete (version sync, stale cleanup)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 183/183 passing (pytest)
+**Tests**: 186/186 passing (pytest)
 **Commands**: 14 focused commands under `obs`
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
@@ -20,18 +20,29 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🔄 In Progress
 
-Phase 7.3: Vault Health & Polish — COMPLETE (all 4 increments merged)
+Phase 7.4: Testing & Release Prep
+- ✅ Inc 1: Version sync & stale cleanup (PR #11)
+- 🟡 Inc 2: CI Hardening (triggers on dev, coverage reporting)
+- 🟡 Inc 3: Release Notes & v3.0.0 Stable
 
 ---
 
 ## 🎯 Next Actions
 
-- **A)** Phase 7.4: Testing & Release preparation 🟡
-- **B)** Update docs with final test count and phase completion 🟡
+- **A)** Phase 7.4 Inc 2: CI Hardening 🟡
+- **B)** Phase 7.4 Inc 3: Release Notes & v3.0.0 Stable 🟡
 
 ---
 
 ## ✅ Completed (v3.0.0 Development)
+
+### Phase 7.4 Inc 1: Version Sync & Stale Cleanup (2026-03-05) — PR #11
+
+- Synced all version strings to 3.0.0-beta.2 (pyproject.toml, package.json, __init__.py)
+- Removed stale TUI dep, fixed Gemini SDK (google-generativeai → google-genai)
+- Added anthropic optional dep, consolidated pytest config (deleted pytest.ini)
+- Extended version consistency tests (+3 new tests)
+- **Result**: 186/186 tests, all versions in sync
 
 ### Phase 7.3 Inc 1 & 2: JSON Export + Vault Health (2026-03-04) — PR #7, #8
 
@@ -100,6 +111,7 @@ Phase 7.3: Vault Health & Polish — COMPLETE (all 4 increments merged)
 - **2026-03-03**: PR #3 (v3.0.0-beta release), PR #4 (AI enhancement)
 - **2026-03-04**: PR #5 (verbose wiring, exception narrowing, 125 tests)
 - **2026-03-04**: PR #7, #8 (--json export, vault health command, 158 tests)
+- **2026-03-05**: PR #11 (version sync, stale cleanup, 186 tests)
 
 ---
 
