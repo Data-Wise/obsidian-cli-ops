@@ -2443,6 +2443,22 @@
 <td><code>obs ai duplicates &lt;vault&gt;</code></td>
 <td>Detect potential duplicate content</td>
 </tr>
+<tr>
+<td><code>obs ai suggest-links &lt;note_id&gt;</code></td>
+<td>Suggest new links based on similarity</td>
+</tr>
+<tr>
+<td><code>obs ai gaps &lt;vault&gt;</code></td>
+<td>Find knowledge gaps in the vault</td>
+</tr>
+<tr>
+<td><code>obs ai summarize &lt;vault&gt;</code></td>
+<td>Summarize vault themes and stats</td>
+</tr>
+<tr>
+<td><code>obs ai refactor &lt;vault&gt;</code></td>
+<td>AI-powered vault reorganization suggestions</td>
+</tr>
 </tbody>
 </table>
 <h3 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h3>
@@ -2510,6 +2526,19 @@
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Detect duplicates across a vault</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>MyVault
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Suggest new links for a note</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>&lt;note_id&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Find knowledge gaps</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Summarize vault themes</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>MyVault
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Get reorganization suggestions</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">   </span><span class="c1"># Scope only, no AI calls</span>
 </code></pre></div>
 <details class="tip">
 <summary>Choosing an AI provider</summary>
