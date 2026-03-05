@@ -9,7 +9,7 @@ description = "Intelligent CLI for multi-vault Obsidian knowledge management"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"
-keywords = ["obsidian", "cli", "knowledge-management", "graph-analysis", "tui"]
+keywords = ["obsidian", "cli", "knowledge-management", "graph-analysis"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -39,7 +39,10 @@ dependencies = [
 [project.optional-dependencies]
 # AI Providers
 gemini = [
-    "google-generativeai>=0.8.0",
+    "google-genai>=1.0.0",
+]
+anthropic = [
+    "anthropic>=0.40.0",
 ]
 ollama = [
     "numpy>=1.24.0",  # For embedding similarity
@@ -49,14 +52,9 @@ local = [
     "scikit-learn>=1.3.0",
 ]
 
-# TUI mode
-tui = [
-    "textual>=0.47.0",
-]
-
 # Full installation
 all = [
-    "obsidian-cli-ops[gemini,ollama,local,tui]",
+    "obsidian-cli-ops[gemini,anthropic,ollama,local]",
 ]
 
 # Development
