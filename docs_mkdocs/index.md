@@ -80,6 +80,9 @@ obs ai analyze <note_id>
 
 # Find duplicates in vault
 obs ai duplicates <vault>
+
+# Get reorganization suggestions
+obs ai refactor <vault>
 ```
 
 [Full Installation Guide](installation.md){ .md-button .md-button--primary }
@@ -98,11 +101,13 @@ obs ai duplicates <vault>
 - Find semantically similar notes across your vault
 - Detect potential duplicate content
 - Get AI analysis of note quality and connections
+- Get actionable vault reorganization suggestions
 
 ### Vault Maintenance
 - Discover and scan vaults automatically
 - Track vault statistics over time
 - Monitor graph health (orphans, broken links)
+- AI-powered refactor plans for vault cleanup
 
 ## Architecture
 

@@ -1,8 +1,8 @@
 # AI Features
 
-Set up AI providers and use them to find similar notes, analyze content, and detect duplicates.
+Set up AI providers and use them to find similar notes, analyze content, detect duplicates, and get vault reorganization suggestions.
 
-**Time:** ~20 minutes | **Level:** Advanced | **Steps:** 9
+**Time:** ~25 minutes | **Level:** Advanced | **Steps:** 12
 
 **Prerequisites:** Complete [Getting Started](getting-started.md) (vault scanned)
 
@@ -163,7 +163,92 @@ obs ai duplicates MyVault
 
 ---
 
-## Step 8: Choose the Right Provider
+## Step 8: Suggest Links and Find Gaps
+
+Use AI to discover missing connections and knowledge gaps:
+
+```bash
+# Suggest new links for a note
+obs ai suggest-links <note_id>
+```
+
+**Expected output:**
+
+```
+Found 3 link suggestions:
+
+  1. [[Graph Theory]] (78%)
+     notes/graph-theory.md
+  2. [[Algorithms]] (65%)
+     notes/algorithms.md
+```
+
+Find areas where your vault needs expansion:
+
+```bash
+obs ai gaps MyVault
+```
+
+This detects stub notes (referenced often but underdeveloped), orphaned notes, and structural gaps.
+
+---
+
+## Step 9: Summarize Vault Themes
+
+Get a bird's-eye view of your vault:
+
+```bash
+obs ai summarize MyVault
+```
+
+You can scope to a folder or tag:
+
+```bash
+obs ai summarize MyVault --folder "projects/"
+obs ai summarize MyVault --tag "python"
+```
+
+---
+
+## Step 10: Get Reorganization Suggestions
+
+The refactor command analyzes your vault structure and suggests improvements:
+
+```bash
+obs ai refactor MyVault
+```
+
+**Expected output:**
+
+```
+🔄 Vault Refactor Analysis: MyVault
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Analyzed 247 notes across 12 folders
+
+🔴 HIGH PRIORITY (3 items)
+  1. Move "random-thoughts.md" → inbox/
+     Root-level note with no links, likely unsorted
+  2. Archive folder "old-stuff/" → archive/
+     3 notes, all >90 days stale, low connectivity
+
+🟡 MEDIUM PRIORITY (5 items)
+  3. Create "python/" folder for 7 notes with #python tag
+     ...
+```
+
+??? tip "Dry run mode"
+    Preview the scope without making AI calls:
+    ```bash
+    obs ai refactor MyVault --dry-run
+    ```
+    Get machine-readable output:
+    ```bash
+    obs ai refactor MyVault --json
+    ```
+
+---
+
+## Step 11: Choose the Right Provider
 
 Different providers excel at different tasks:
 
@@ -185,7 +270,7 @@ obs auto-selects the best available provider, but you can override with configur
 
 ---
 
-## Step 9: Next Steps
+## Step 12: Next Steps
 
 | Want to... | Action |
 |------------|--------|
@@ -196,4 +281,4 @@ obs auto-selects the best available provider, but you can override with configur
 
 ---
 
-**Summary:** You set up AI providers, tested them, found similar notes, analyzed content, and detected duplicates. Your vault now has AI-powered intelligence built in.
+**Summary:** You set up AI providers, tested them, found similar notes, analyzed content, detected duplicates, discovered knowledge gaps, and got vault reorganization suggestions. Your vault now has AI-powered intelligence built in.

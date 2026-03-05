@@ -67,6 +67,8 @@ nav:
       - Installation: installation.md
       - Configuration: configuration.md
       - Usage: usage.md
+      - Quick Reference: refcard.md
+      - Cookbook: cookbook.md
   - Features:
       - v3.0 Features: v3.0.md
       - AI Setup Guide: ai-setup.md
