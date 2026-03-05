@@ -18,18 +18,19 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ---
 
-## 🔄 In Progress
+## ✅ Phase 7.4: Testing & Release Prep (Complete)
 
-Phase 7.4: Testing & Release Prep
 - ✅ Inc 1: Version sync & stale cleanup (PR #11)
 - ✅ Inc 2: CI Hardening (PR #12)
-- ✅ Inc 3: Release Notes & v3.0.0 Stable
+- ✅ Inc 3: Release Notes & v3.0.0 Stable (PR #13)
+- ✅ Post-release: Homebrew formula (data-wise/tap), docs deployed, configurable Python path (PR #14)
 
 ---
 
 ## 🎯 Next Actions
 
-- Post-release: docs deploy, Obsidian community announcement
+- Community announcement (GitHub Discussions)
+- Explore Phase 8 features (IDEAS.md): obs refactor, tag-suggest, quality, merge-suggest
 
 ---
 
@@ -111,6 +112,8 @@ Phase 7.4: Testing & Release Prep
 - **2026-03-04**: PR #5 (verbose wiring, exception narrowing, 125 tests)
 - **2026-03-04**: PR #7, #8 (--json export, vault health command, 158 tests)
 - **2026-03-05**: PR #11 (version sync, stale cleanup, 186 tests)
+- **2026-03-05**: PR #13 (v3.0.0 stable release), PR #14 (configurable Python path)
+- **2026-03-05**: Homebrew formula published (data-wise/tap/obsidian-cli-ops)
 
 ---
 
