@@ -20,6 +20,7 @@
 # --- Configuration ---
 LAST_VAULT_FILE="$HOME/.config/obs/last_vault"
 ICLOUD_OBSIDIAN="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+OBS_PYTHON="${OBS_PYTHON:-$(command -v python3)}"
 
 _ensure_config_dir() {
     mkdir -p "$HOME/.config/obs"
@@ -184,7 +185,7 @@ obs_discover() {
         cmd+=(--scan)
     fi
 
-    /opt/homebrew/bin/python3 "${cmd[@]}"
+    $OBS_PYTHON "${cmd[@]}"
 }
 
 obs_analyze() {
@@ -209,7 +210,7 @@ obs_analyze() {
         cmd+=(--verbose)
     fi
 
-    /opt/homebrew/bin/python3 "${cmd[@]}"
+    $OBS_PYTHON "${cmd[@]}"
 }
 
 obs_vaults() {
@@ -217,7 +218,7 @@ obs_vaults() {
 
     _log_verbose "Listing vaults in database"
 
-    /opt/homebrew/bin/python3 "$python_cli" vaults
+    $OBS_PYTHON "$python_cli" vaults
 }
 
 obs_stats() {
@@ -227,9 +228,9 @@ obs_stats() {
     _log_verbose "Showing statistics"
 
     if [[ -n "$vault_id" ]]; then
-        /opt/homebrew/bin/python3 "$python_cli" stats --vault "$vault_id"
+        $OBS_PYTHON "$python_cli" stats --vault "$vault_id"
     else
-        /opt/homebrew/bin/python3 "$python_cli" stats
+        $OBS_PYTHON "$python_cli" stats
     fi
 }
 
@@ -255,7 +256,7 @@ obs_health() {
         shift
     done
 
-    /opt/homebrew/bin/python3 "${cmd[@]}"
+    $OBS_PYTHON "${cmd[@]}"
 }
 
 # --- AI Commands (v2.0) ---
@@ -268,12 +269,12 @@ obs_ai() {
     case "$subcmd" in
         status)
             _log_verbose "Showing AI provider status"
-            /opt/homebrew/bin/python3 "$python_cli" "ai" "status"
+            $OBS_PYTHON "$python_cli" "ai" "status"
             ;;
 
         setup)
             _log_verbose "Running AI setup wizard"
-            /opt/homebrew/bin/python3 "$python_cli" "ai" "setup"
+            $OBS_PYTHON "$python_cli" "ai" "setup"
             ;;
 
         test)
@@ -285,7 +286,7 @@ obs_ai() {
                 cmd+=(--provider "$2")
             fi
 
-            /opt/homebrew/bin/python3 "${cmd[@]}"
+            $OBS_PYTHON "${cmd[@]}"
             ;;
 
         similar)
@@ -296,7 +297,7 @@ obs_ai() {
                 return 1
             fi
             _log_verbose "Finding similar notes"
-            /opt/homebrew/bin/python3 "$python_cli" "ai" "similar" "$note_id"
+            $OBS_PYTHON "$python_cli" "ai" "similar" "$note_id"
             ;;
 
         analyze)
@@ -307,7 +308,7 @@ obs_ai() {
                 return 1
             fi
             _log_verbose "Analyzing note with AI"
-            /opt/homebrew/bin/python3 "$python_cli" "ai" "analyze" "$note_id"
+            $OBS_PYTHON "$python_cli" "ai" "analyze" "$note_id"
             ;;
 
         duplicates)
@@ -318,7 +319,7 @@ obs_ai() {
                 return 1
             fi
             _log_verbose "Finding duplicate notes"
-            /opt/homebrew/bin/python3 "$python_cli" "ai" "duplicates" "$vault_id"
+            $OBS_PYTHON "$python_cli" "ai" "duplicates" "$vault_id"
             ;;
 
         *)
