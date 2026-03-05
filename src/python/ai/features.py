@@ -443,8 +443,8 @@ def _get_cached_embedding(
         cached = db_manager.get_embedding_with_mtime(note_id, provider_name, model_name)
         if cached and cached['file_mtime'] == file_mtime:
             return list(np.frombuffer(cached['vector'], dtype=np.float32))
-    except (OSError, KeyError):
-        pass  # Table might not exist yet or row format unexpected
+    except (OSError, KeyError, sqlite3.OperationalError):
+        pass  # Table might not exist yet, row format unexpected, or DB error
 
     # Compute fresh
     embedding = router.get_embedding(content)
@@ -858,18 +858,9 @@ def refactor_vault(
     if verbose:
         print(f"  [verbose] Found {note_count} notes across {folder_count} folders", file=sys.stderr)
 
-    # Dry run: return scope info only
-    if dry_run:
-        return RefactorPlan(
-            vault_name=vault_name,
-            note_count=note_count,
-            folder_count=folder_count,
-            summary=f"Dry run: {note_count} notes across {folder_count} folders (no AI calls made)",
-        )
-
     suggestions: List[RefactorSuggestion] = []
 
-    # ── Phase 1: Graph-only analysis ──────────────────────────────
+    # ── Phase 1: Graph-only analysis (runs even in dry-run) ──────
 
     # 1a. Root-level orphans → "move" suggestion
     orphans = db_manager.get_orphaned_notes(vault_id=actual_vault_id)
@@ -935,8 +926,10 @@ def refactor_vault(
             ))
 
     # 1c. Small scattered folders → "merge-folder" suggestion
+    # Only flag shallow folders (depth ≤ 2) to avoid noise in deep academic hierarchies
     small_folders = [(fp, fn) for fp, fn in folders.items()
-                     if fp != '.' and len(fn) < 3 and len(fn) > 0]
+                     if fp != '.' and len(fn) < 3 and len(fn) > 0
+                     and fp.count('/') <= 2]
     if len(small_folders) >= 2:
         for folder_path, folder_notes in small_folders:
             suggestions.append(RefactorSuggestion(
@@ -945,9 +938,23 @@ def refactor_vault(
                 description=f"Consider merging small folder \"{folder_path}/\" ({len(folder_notes)} notes)",
                 affected_notes=[n['title'] for n in folder_notes],
                 affected_paths=[n['path'] for n in folder_notes],
-                reason=f"Folder has only {len(folder_notes)} note(s), consider consolidating",
+                reason=f"Folder has only {len(folder_notes)} {'note' if len(folder_notes) == 1 else 'notes'}, consider consolidating",
                 confidence=0.5,
             ))
+
+    # Dry run: return Phase 1 results only (no AI calls)
+    if dry_run:
+        high = sum(1 for s in suggestions if s.priority == 'high')
+        medium = sum(1 for s in suggestions if s.priority == 'medium')
+        low = sum(1 for s in suggestions if s.priority == 'low')
+        summary = f"Dry run: {len(suggestions)} suggestions ({high} high, {medium} medium, {low} low) — graph-only, no AI calls"
+        return RefactorPlan(
+            vault_name=vault_name,
+            note_count=note_count,
+            folder_count=folder_count,
+            suggestions=suggestions,
+            summary=summary,
+        )
 
     # ── Phase 2: AI-enhanced analysis ─────────────────────────────
 
