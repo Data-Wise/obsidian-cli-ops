@@ -14,11 +14,11 @@ Redesign the MkDocs documentation site: simplify navigation from 7 tabs to 4, re
 
 | Phase | Task | Priority | Est. Time | Status |
 |-------|------|----------|-----------|--------|
-| 1 | Critical Fixes & Nav Cleanup | High | ~1 hour | Pending |
-| 2 | 4-Tab Nav Restructure | High | ~2 hours | Pending |
-| 3 | Hero Landing Page | Medium | ~1 hour | Pending |
-| 4 | Cookbook Expansion (absorb tutorials) | Medium | ~2 hours | Pending |
-| 5 | Visual Polish (Mermaid diagrams, page templates) | Low | ~1 hour | Pending |
+| 1 | Critical Fixes & Nav Cleanup | High | ~1 hour | Done |
+| 2 | 4-Tab Nav Restructure | High | ~2 hours | Done |
+| 3 | Hero Landing Page | Medium | ~1 hour | Done |
+| 4 | Cookbook Expansion (absorb tutorials) | Medium | ~2 hours | Done |
+| 5 | Visual Polish (Mermaid diagrams, page templates) | Low | ~1 hour | Done |
 
 ---
 

@@ -181,7 +181,7 @@ Add `-v` for detailed output including top hub notes:
 obs analyze MyVault -v
 ```
 
-See the [Graph Analysis Tutorial](tutorials/graph-analysis.md) for a deep dive.
+See the [Cookbook](cookbook.md) for graph analysis recipes.
 
 ---
 
@@ -261,7 +261,7 @@ which python3
 
 | Want to... | Go to |
 |------------|-------|
-| Follow a step-by-step guide | [Getting Started Tutorial](tutorials/getting-started.md) |
-| Learn graph analysis | [Graph Analysis Tutorial](tutorials/graph-analysis.md) |
-| Set up AI features | [AI Features Tutorial](tutorials/ai-features.md) |
-| See all commands | `obs help --all` |
+| See practical recipes | [Cookbook](cookbook.md) |
+| Quick command lookup | [Quick Reference](refcard.md) |
+| Set up AI features | [AI Setup Guide](ai-setup.md) |
+| See all commands | [CLI Reference](cli-reference.md) |
