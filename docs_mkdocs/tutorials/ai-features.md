@@ -18,8 +18,8 @@ obs supports multiple AI providers for advanced vault analysis:
 | Note Analysis | `obs ai analyze <note_id>` | Deep analysis: topics, themes, suggestions |
 | Duplicates | `obs ai duplicates <vault>` | Detect potential duplicate content |
 | Suggest Links | `obs ai suggest-links <note_id>` | Find unlinked related notes |
-| Knowledge Gaps | `obs ai gaps <vault>` | Detect stub notes and orphans |
-| Vault Summary | `obs ai summarize <vault>` | Generate theme analysis across vault |
+| Knowledge Gaps | `obs ai gaps <vault>` | Detect stub notes, orphans, and gaps |
+| Vault Summary | `obs ai summarize <vault>` | Theme analysis across entire vault |
 | Vault Refactor | `obs ai refactor <vault>` | AI-powered reorganization suggestions |
 
 All AI features are **optional** — obs works perfectly without them.

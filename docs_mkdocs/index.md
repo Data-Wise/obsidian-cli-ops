@@ -132,9 +132,9 @@ obs ai duplicates <vault>
 - ✅ **Async & Lookup Fix**: Vault name/prefix lookup, async operations (PR #2)
 - ✅ **Phase 7.2 Complete**: AI Enhancement (modern SDKs, 3 new commands, 125 tests)
 - ✅ **Phase 7.3 Complete**: Vault Health & Polish (--json export, health dashboard, CLI polish, 183 tests)
-- ✅ **Phase 7.4 Complete**: Testing & Release Prep (version sync, CI hardening, 186 tests, v3.0.0 stable)
+- ✅ **Phase 7.4 Complete**: Testing & Release Prep (version sync, CI hardening, 202 tests, v3.0.0 stable)
 
-**Current Status:** v3.0.0 Stable (186 tests)
+**Current Status:** v3.0.0 Stable (202 tests)
 
 See [TODOS.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/TODOS.md) for current work items.
 
