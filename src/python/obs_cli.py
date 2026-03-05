@@ -118,11 +118,14 @@ class ObsCLI:
                 sys.exit(1)
             if not vault:
                 print(f"❌ Vault not found: {vault_identifier}")
+                print(f"  Tip: Run 'obs' to list known vaults")
+                print(f"  Tip: Run 'obs discover <path>' to find new vaults")
                 sys.exit(1)
             vault_id = vault['id']
 
             # Run analysis using core layer
-            result = self.graph_analyzer.analyze_vault(vault_id)
+            with console.status("Analyzing vault graph..."):
+                result = self.graph_analyzer.analyze_vault(vault_id)
 
             # Print results
             print(f"📊 Graph Analysis: {result['vault_name']}")
@@ -163,12 +166,13 @@ class ObsCLI:
             print(f"❌ Error: {e}")
             sys.exit(1)
 
-    def stats(self, vault_identifier: Optional[str] = None):
+    def stats(self, vault_identifier: Optional[str] = None, verbose: bool = False):
         """
         Show database statistics with Rich panels.
 
         Args:
             vault_identifier: Optional vault name or ID (full or prefix)
+            verbose: Print additional detail (top notes by link count)
         """
         if vault_identifier:
             try:
@@ -178,6 +182,8 @@ class ObsCLI:
                 sys.exit(1)
             if not vault:
                 console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+                console.print(f"[dim]  Tip: Run 'obs' to list known vaults[/]")
+                console.print(f"[dim]  Tip: Run 'obs discover <path>' to find new vaults[/]")
                 sys.exit(1)
             vault_id = vault['id']
 
@@ -214,6 +220,20 @@ class ObsCLI:
             console.print()
             console.print(panel)
             console.print()
+
+            if verbose and notes:
+                # Show top 5 notes by outgoing link count
+                notes_with_links = []
+                for note in notes:
+                    out_links = self.db.get_outgoing_links(note['id'])
+                    notes_with_links.append((note['title'], len(out_links)))
+                notes_with_links.sort(key=lambda x: x[1], reverse=True)
+                top = notes_with_links[:5]
+                if top:
+                    console.print("[bold]Top notes by link count:[/]")
+                    for title, count in top:
+                        console.print(f"  {title}: {count} links")
+                    console.print()
 
         else:
             # Global stats
@@ -405,7 +425,9 @@ def main():
     db_parser = subparsers.add_parser('db',
                                      help='Database management')
     db_subparsers = db_parser.add_subparsers(dest='db_command')
-    db_subparsers.add_parser('init', help='Initialize database')
+    init_parser = db_subparsers.add_parser('init', help='Initialize database')
+    init_parser.add_argument('--force', action='store_true',
+                             help='Force reinitialize existing database')
     db_subparsers.add_parser('stats', help='Show database stats')
 
     # health command
@@ -531,7 +553,7 @@ def main():
                         "broken_links": db_stats['broken_links'],
                     }, indent=2, default=str))
             else:
-                cli.stats(vault_identifier=args.vault)
+                cli.stats(vault_identifier=args.vault, verbose=args.verbose)
 
         elif args.command == 'vaults':
             if args.json:
@@ -548,6 +570,8 @@ def main():
                 sys.exit(1)
             if not vault:
                 console.print(f"[red]Vault not found: {args.vault}[/]")
+                console.print(f"[dim]  Tip: Run 'obs' to list known vaults[/]")
+                console.print(f"[dim]  Tip: Run 'obs discover <path>' to find new vaults[/]")
                 sys.exit(1)
 
             health = cli.vault_manager.get_vault_health(args.vault)
@@ -560,6 +584,10 @@ def main():
 
         elif args.command == 'db':
             if args.db_command == 'init':
+                db_path = Path("~/.config/obs/vault_db.sqlite").expanduser()
+                if db_path.exists() and not getattr(args, 'force', False):
+                    console.print("[yellow]Database already exists. Use --force to reinitialize.[/]")
+                    return
                 cli.db_init()
             elif args.db_command == 'stats':
                 cli.stats()
