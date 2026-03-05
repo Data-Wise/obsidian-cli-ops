@@ -115,14 +115,29 @@ class TestRefactorVault:
         assert plan.note_count == 0
         assert plan.suggestions == []
 
-    def test_dry_run_no_ai_calls(self):
-        notes = [_make_note('A', 'a.md'), _make_note('B', 'folder/b.md')]
-        db = _make_db(notes=notes)
+    def test_dry_run_includes_phase1_suggestions(self):
+        """Dry run should include graph-only (Phase 1) suggestions but skip AI."""
+        notes = [
+            _make_note('Orphan', 'orphan.md'),
+            _make_note('B', 'folder/b.md'),
+        ]
+        orphans = [_make_note('Orphan', 'orphan.md')]
+        db = _make_db(notes=notes, orphans=orphans)
         plan = refactor_vault("TestVault", db, dry_run=True)
         assert plan.note_count == 2
         assert plan.folder_count == 2  # '.' and 'folder'
         assert 'Dry run' in plan.summary
+        assert 'no AI calls' in plan.summary
+        # Phase 1 suggestions should be present
+        assert len(plan.suggestions) >= 1
+        assert any(s.category == 'move' for s in plan.suggestions)
+
+    def test_dry_run_empty_vault_no_suggestions(self):
+        """Dry run on empty vault returns zero suggestions."""
+        db = _make_db(notes=[], orphans=[])
+        plan = refactor_vault("TestVault", db, dry_run=True)
         assert plan.suggestions == []
+        assert 'Dry run' in plan.summary
 
     def test_root_orphans_get_move_suggestion(self):
         """Root-level orphans should get 'move' suggestions to inbox/."""
@@ -242,3 +257,50 @@ class TestRefactorVault:
         assert 'suggestions' in parsed
         assert 'vault_name' in parsed
         assert parsed['vault_name'] == 'TestVault'
+
+    def test_deep_folders_not_flagged_for_merge(self):
+        """Deeply nested folders (depth > 2) should not get merge suggestions."""
+        notes = [
+            _make_note('Deep', 'a/b/c/d/deep.md'),      # folder depth 3 (a/b/c/d) — skip
+            _make_note('Deep2', 'x/y/z/w/deep2.md'),     # folder depth 3 (x/y/z/w) — skip
+            _make_note('Shallow', 'top/shallow.md'),      # folder depth 1 (top) — flag
+            _make_note('Shallow2', 'other/shallow2.md'),  # folder depth 1 (other) — flag
+        ]
+        db = _make_db(notes=notes)
+
+        plan = refactor_vault("TestVault", db)
+        merge_suggestions = [s for s in plan.suggestions if s.category == 'merge-folder']
+        merged_paths = [s.description for s in merge_suggestions]
+        # Shallow folders flagged, deep ones not
+        assert any('top/' in d for d in merged_paths)
+        assert not any('a/b/c/d/' in d for d in merged_paths)
+
+    def test_merge_suggestion_grammar_singular(self):
+        """Merge suggestion for 1-note folder uses singular 'note'."""
+        notes = [
+            _make_note('Solo', 'solo-folder/only.md'),
+            _make_note('Solo2', 'other-folder/only2.md'),
+        ]
+        db = _make_db(notes=notes)
+
+        plan = refactor_vault("TestVault", db)
+        merge_suggestions = [s for s in plan.suggestions if s.category == 'merge-folder']
+        single_note = [s for s in merge_suggestions if '1' in s.description]
+        assert len(single_note) >= 1
+        assert 'note,' in single_note[0].reason or 'note, ' in single_note[0].reason or single_note[0].reason.endswith('note')
+        assert 'note(s)' not in single_note[0].reason
+
+    def test_merge_suggestion_grammar_plural(self):
+        """Merge suggestion for 2-note folder uses plural 'notes'."""
+        notes = [
+            _make_note('A', 'pair/a.md'),
+            _make_note('B', 'pair/b.md'),
+            _make_note('C', 'other/c.md'),
+        ]
+        db = _make_db(notes=notes)
+
+        plan = refactor_vault("TestVault", db)
+        merge_suggestions = [s for s in plan.suggestions if s.category == 'merge-folder']
+        two_note = [s for s in merge_suggestions if '2' in s.description]
+        assert len(two_note) >= 1
+        assert '2 notes' in two_note[0].reason

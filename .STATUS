@@ -10,7 +10,7 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 **Phase**: 7.4 complete (v3.0.0 stable released)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 202/202 passing (pytest)
+**Tests**: 206/206 passing (pytest)
 **Commands**: 15 focused commands under `obs` (+`ai refactor`)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
