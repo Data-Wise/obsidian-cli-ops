@@ -51,3 +51,36 @@ class TestVersionConsistency:
         assert expected in content, (
             f"CLAUDE.md does not contain {expected!r}"
         )
+
+    def test_pyproject_toml_matches(self):
+        """pyproject.toml version should match obs.zsh VERSION."""
+        pyproject = PROJECT_ROOT / "pyproject.toml"
+        assert pyproject.exists()
+        content = pyproject.read_text()
+        match = re.search(r'^version\s*=\s*"([^"]+)"', content, re.MULTILINE)
+        assert match, "version not found in pyproject.toml"
+        assert match.group(1) == self.version, (
+            f"pyproject.toml version {match.group(1)!r} != obs.zsh {self.version!r}"
+        )
+
+    def test_package_json_matches(self):
+        """package.json version should match obs.zsh VERSION."""
+        pkg = PROJECT_ROOT / "package.json"
+        assert pkg.exists()
+        content = pkg.read_text()
+        match = re.search(r'"version":\s*"([^"]+)"', content)
+        assert match, "version not found in package.json"
+        assert match.group(1) == self.version, (
+            f"package.json version {match.group(1)!r} != obs.zsh {self.version!r}"
+        )
+
+    def test_init_py_matches(self):
+        """__init__.py __version__ should match obs.zsh VERSION."""
+        init = PROJECT_ROOT / "src" / "python" / "__init__.py"
+        assert init.exists()
+        content = init.read_text()
+        match = re.search(r'__version__\s*=\s*"([^"]+)"', content)
+        assert match, "__version__ not found in __init__.py"
+        assert match.group(1) == self.version, (
+            f"__init__.py version {match.group(1)!r} != obs.zsh {self.version!r}"
+        )
