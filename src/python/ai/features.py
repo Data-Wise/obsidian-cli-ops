@@ -968,29 +968,11 @@ def refactor_vault(
         tag_stats = []
 
     if tag_stats:
-        # Build tag → notes mapping using DB queries
-        tag_note_folders: Dict[str, Dict[str, int]] = {}
-        for tag_info in tag_stats:
-            tag_name = tag_info['tag']
-            if tag_info['note_count'] < 3:
-                continue
-            # Find notes with this tag across folders
-            tag_folders: Dict[str, int] = defaultdict(int)
-            for note in all_notes:
-                # Check note tags via path grouping
-                note_folder = str(Path(note['path']).parent)
-                # We can't directly check tags per note from list_notes,
-                # but we can use the count to identify scattered tags
-                tag_folders[note_folder] += 0  # Placeholder
-
-            tag_note_folders[tag_name] = dict(tag_folders)
-
-        # For tags with high note counts spread across many folders
+        # Tags with 5+ notes may warrant their own folder
         for tag_info in tag_stats:
             tag_name = tag_info['tag']
             count = tag_info['note_count']
             if count >= 5:
-                # A tag with 5+ notes might warrant its own folder
                 suggestions.append(RefactorSuggestion(
                     category='create-folder',
                     priority='medium',
@@ -1009,10 +991,11 @@ def refactor_vault(
             if verbose:
                 print(f"  [verbose] Computing embeddings for orphan placement", file=sys.stderr)
 
-            # Get embeddings for orphans and a sample of connected notes
+            # Get embeddings for orphans and a random sample of connected notes
+            import random
             connected_notes = [n for n in all_notes if n['id'] not in {o['id'] for o in orphans}]
             sample_size = min(20, len(connected_notes))
-            sample_notes = connected_notes[:sample_size]
+            sample_notes = random.sample(connected_notes, sample_size) if connected_notes else []
 
             orphan_embeddings = []
             for orphan in non_root_orphans[:10]:  # Limit to 10 orphans
