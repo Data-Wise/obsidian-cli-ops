@@ -408,3 +408,36 @@ class TestJSONNoRichMarkup:
         # No Rich markup should be present
         assert not RICH_MARKUP_RE.search(captured.out), \
             f"Found Rich markup in JSON output: {RICH_MARKUP_RE.findall(captured.out)}"
+
+
+class TestHealthJSON:
+    """Verify vault health --json produces valid JSON with expected keys."""
+
+    def test_health_json_valid(self, capsys):
+        """health --json produces valid JSON with expected top-level keys."""
+        from core.models import HealthScore, VaultHealth
+
+        sub = HealthScore(name="Connectivity", score=85, details=["10% orphans"])
+        health = VaultHealth(
+            vault_name="TestVault",
+            overall=82,
+            connectivity=sub,
+            link_integrity=HealthScore(name="Link Integrity", score=90, details=["ok"]),
+            structure=HealthScore(name="Structure", score=75, details=["low tags"]),
+            freshness=HealthScore(name="Freshness", score=80, details=["3 stale"]),
+        )
+
+        print(health.to_json())
+        captured = capsys.readouterr()
+        data = json.loads(captured.out)
+
+        expected_keys = {
+            "vault", "overall", "connectivity", "link_integrity",
+            "structure", "freshness", "recommendations",
+        }
+        assert set(data.keys()) == expected_keys
+        assert data["overall"] == 82
+        assert data["vault"] == "TestVault"
+        assert isinstance(data["connectivity"], dict)
+        assert data["connectivity"]["score"] == 85
+        assert isinstance(data["recommendations"], list)

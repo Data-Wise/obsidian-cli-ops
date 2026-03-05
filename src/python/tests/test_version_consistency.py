@@ -35,8 +35,7 @@ class TestVersionConsistency:
     def test_obs_test_js_matches(self):
         """tests/obs.test.js should reference the same version."""
         obs_test_js = PROJECT_ROOT / "tests" / "obs.test.js"
-        if not obs_test_js.exists():
-            pytest.skip("obs.test.js not found (JS tests optional)")
+        assert obs_test_js.exists(), f"obs.test.js not found at {obs_test_js}"
         content = obs_test_js.read_text()
         expected = f'VERSION="{self.version}"'
         assert expected in content, (
@@ -48,7 +47,7 @@ class TestVersionConsistency:
         claude_md = PROJECT_ROOT / "CLAUDE.md"
         assert claude_md.exists(), f"CLAUDE.md not found at {claude_md}"
         content = claude_md.read_text()
-        # Check for version in Current Version line
-        assert self.version in content, (
-            f"CLAUDE.md does not contain version '{self.version}'"
+        expected = f"**Current Version**: {self.version}"
+        assert expected in content, (
+            f"CLAUDE.md does not contain {expected!r}"
         )
