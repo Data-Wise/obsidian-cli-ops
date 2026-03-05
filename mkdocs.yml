@@ -93,6 +93,7 @@ nav:
           - Phase 4.5 Options: planning/phases/phase4.5-options.md
           - Phase 4.5 Complete: planning/phases/phase4.5-complete.md
   - Releases:
+      - v3.0.0: releases/v3.0.0.md
       - v2.2.0: releases/v2.2.0.md
       - v1.1.0: releases/v1.1.0.md
 

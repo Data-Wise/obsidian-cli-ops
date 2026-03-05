@@ -6,8 +6,8 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 3.0.0-beta.2
-**Status**: Beta release (Phase 7.4 Inc 2 complete)
+**Current Version**: 3.0.0
+**Status**: Stable release
 **Priority**: P1
 
 ### Core Features (v3.0.0)
