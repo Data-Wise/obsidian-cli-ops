@@ -1,16 +1,16 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-202%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-206%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.0.0
+**Current Version**: 3.1.0
 
 ## 🚀 Quick Start
 
@@ -87,7 +87,7 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.0.0 - Simplified CLI** - 15 focused commands!
+**v3.1.0** - 15 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -121,7 +121,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.0.0 Stable
+**Current Status:** v3.1.0 Stable
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -154,13 +154,13 @@ obs version                     # Show version
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](docs/releases/v3.0.0.md)** - v3.0.0 release notes
+- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.1.0)** - v3.1.0 release notes
 
 ## 🧪 Test Coverage
 
-- **394+ tests** across all components
-- **72% code coverage** (AI: 80%, Core: 85%)
-- All tests passing
+- **206 pytest + 30 Jest** tests passing
+- CI: GitHub Actions on push/PR to `main` and `dev`
+- Python coverage reporting via `pytest-cov`
 
 ## 📦 Requirements
 
@@ -184,17 +184,15 @@ MIT License - See LICENSE file for details.
   - Multi-provider AI (Gemini, Claude, Ollama)
   - Find similar notes, analyze, detect duplicates
   - 96 AI tests, smart routing
-- 🚧 v3.0.0: Simplification + AI Enhancement (In Progress)
-  - ✅ Phase 7.1: Simplification (TUI removed, CLI consolidated)
-  - ✅ Phase 7.2: AI Enhancement (modern SDKs, new commands)
-    - Gemini SDK migration (google-genai), Anthropic API provider
-    - New commands: suggest-links, gaps, summarize
-    - Embedding cache, retry with backoff, 125 tests
-  - ✅ Phase 7.3: Vault Health & Polish (Complete)
-    - `--json` flag on all commands, `obs health` dashboard
-    - 183 tests passing
-  - ✅ Phase 7.4: Testing & Release Prep (Complete)
-    - Version sync, CI hardening, 186 tests, v3.0.0 stable release
+- ✅ v3.0.0: Simplification + AI Enhancement
+  - TUI removed, CLI consolidated to 15 commands
+  - Modern AI SDKs, 5 providers, embedding cache
+  - Vault health dashboard, `--json` on all commands
+  - Homebrew formula published
+- ✅ v3.1.0: AI Refactor + Docs Redesign
+  - `obs ai refactor` — 3-phase vault reorganization
+  - Website redesigned (4-tab nav, hero page, expanded cookbook)
+  - 206 pytest + 30 Jest tests passing
 
 ---
 
