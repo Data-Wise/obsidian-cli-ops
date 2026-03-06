@@ -1,0 +1,65 @@
+/* ADHD-Friendly Enhancements for Obsidian CLI Ops docs */
+
+/* TL;DR box styling — subtle background to draw attention */
+blockquote.tldr {
+  background: var(--md-code-bg-color);
+  border-left: 4px solid var(--md-accent-fg-color);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0 1.5rem 0;
+}
+
+/* Mermaid diagram overflow — horizontal scroll on mobile */
+.mermaid {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Touch target minimum 44px for mobile nav links */
+@media (max-width: 768px) {
+  .md-nav__link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .md-tabs__link {
+    min-height: 44px;
+  }
+
+  /* Slightly larger font for readability */
+  .md-content {
+    font-size: 0.95rem;
+  }
+}
+
+/* Card-style layout for feature grids (used on index.md) */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.feature-card {
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.2rem;
+  transition: border-color 0.2s;
+}
+
+.feature-card:hover {
+  border-color: var(--md-accent-fg-color);
+}
+
+.feature-card h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+/* Time/level badge styling */
+.md-content p:has(strong:first-child) + hr {
+  margin-top: 0.5rem;
+}

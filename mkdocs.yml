@@ -60,15 +60,20 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - Home: index.md
   - Getting Started:
+      - ADHD Quick Start: adhd-quick-start.md
       - Installation: installation.md
       - Configuration: configuration.md
       - Usage: usage.md
   - Reference:
       - Quick Reference: refcard.md
+      - Visual Workflows: workflows.md
       - Cookbook: cookbook.md
       - CLI Reference: cli-reference.md
       - AI Setup Guide: ai-setup.md
@@ -80,5 +85,8 @@ nav:
           - Core Tests: developer/testing/core-tests.md
           - Sandbox: developer/testing/sandbox.md
       - Migration Guide: migration.md
+
+extra_css:
+  - stylesheets/adhd.css
 
 copyright: Copyright &copy; 2025 Data-Wise

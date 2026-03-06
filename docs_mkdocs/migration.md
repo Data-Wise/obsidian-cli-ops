@@ -1,10 +1,17 @@
 # Migration Guide: v2.x → v3.0.0
 
-**Obsidian CLI Ops v3.0.0** represents a major simplification focused on core Obsidian vault management. This guide helps you transition from v2.x to v3.0.0.
+> **TL;DR** (30 seconds)
+> - **What:** v3.0 removed TUI, R-Dev, and legacy commands — down to 15 focused commands
+> - **Why:** Simpler codebase, faster CLI, better maintained
+> - **How:** `pip3 install -r requirements.txt` then `obs` — database is compatible
+> - **Next:** [Usage](usage.md) for the new CLI workflow
+{ .tldr }
+
+**Time:** ~5 minutes | **Level:** Intermediate (v2.x users) | **Steps:** 5 checks
 
 ---
 
-## Overview of Changes
+## :clipboard: Overview of Changes
 
 ### Philosophy Shift: Proposal A
 
@@ -20,7 +27,7 @@
 
 ---
 
-## Command Migration Table
+## :arrows_counterclockwise: Command Migration Table
 
 ### Removed Commands
 
@@ -63,7 +70,7 @@
 
 ---
 
-## Workflow Changes
+## :repeat: Workflow Changes
 
 ### Before (v2.x): TUI-Centric
 
@@ -99,7 +106,7 @@ obs analyze my-vault
 
 ---
 
-## Feature Removal Details
+## :wastebasket: Feature Removal Details
 
 ### 1. TUI (Terminal User Interface)
 
@@ -189,7 +196,7 @@ write_to_obsidian("# Analysis Results\n\n...", "~/Vaults/Research")
 
 ---
 
-## Breaking Changes
+## :warning: Breaking Changes
 
 ### 1. Default Behavior (`obs` with no args)
 
@@ -240,7 +247,7 @@ obs r log results.png       # Copy to vault
 
 ---
 
-## Installation & Upgrade
+## :package: Installation & Upgrade
 
 ### Clean Install (Recommended)
 
