@@ -277,6 +277,23 @@ which python3
 
 ---
 
+## Using with the Native Obsidian CLI
+
+Obsidian v1.12.4+ includes a [native CLI](https://help.obsidian.md/cli) for note-level operations. It complements `obs`:
+
+| Task | Use |
+|------|-----|
+| Graph analysis, health scores, AI insights | `obs` |
+| Read/create/move/delete notes | `obsidian` |
+| Search by content or tags | `obsidian search` |
+| Find similar notes by AI embeddings | `obs ai similar` |
+| Rename tags vault-wide | `obsidian tags:rename` |
+| Quick capture to daily note | `obsidian daily:append` |
+
+See the [Cookbook](cookbook.md#using-obs-with-the-native-obsidian-cli) for combined workflow recipes.
+
+---
+
 ## Next Steps
 
 | Want to... | Go to |

@@ -114,4 +114,36 @@ obs ai refactor MyVault --json | python3 -m json.tool
 ??? info "Vault lookup shortcut"
     Any command accepting `<vault>` also accepts an ID prefix — type just the first 4 characters instead of the full name.
 
+---
+
+## Native Obsidian CLI (v1.12.4+)
+
+Obsidian ships its own CLI for note-level operations. Use it alongside `obs` for a complete workflow.
+
+!!! tip "Two tools, zero overlap"
+    `obs` = graph analysis + AI insights. `obsidian` = note CRUD + search + tags. They complement each other.
+
+| Command | Description |
+|---------|-------------|
+| `obsidian` | Interactive TUI file browser |
+| `obsidian files` | List all files in vault |
+| `obsidian read file="NAME"` | Read a note by wikilink |
+| `obsidian create name="TITLE"` | Create a new note |
+| `obsidian search query="TEXT"` | Full-text search |
+| `obsidian daily` | Open today's daily note |
+| `obsidian daily:append content="TEXT"` | Quick capture to daily note |
+| `obsidian tags` | List all tags |
+| `obsidian tags:rename old=X new=Y` | Rename tags vault-wide |
+| `obsidian backlinks file="NAME"` | Find incoming links |
+| `obsidian orphans` | Notes with zero links |
+| `obsidian properties file="NAME"` | Read YAML frontmatter |
+| `obsidian properties:set file="NAME" key=val` | Set a property |
+
+??? info "Requires Obsidian running"
+    The native CLI communicates with a running Obsidian instance. Enable it in Settings → General → Command line interface.
+
+See the [official docs](https://help.obsidian.md/cli) for the full command list.
+
+---
+
 **Version:** 3.1.0 | **Commands:** 15 | **AI Providers:** 5

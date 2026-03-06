@@ -339,6 +339,97 @@ for s in plan['suggestions']:
 
 ---
 
+## Using obs with the Native Obsidian CLI
+
+Obsidian v1.12.4+ ships a [native CLI](https://help.obsidian.md/cli) for note-level operations (read, create, search, tags). Use it alongside `obs` for a complete terminal workflow.
+
+!!! tip "Two tools, zero overlap"
+    `obs` = graph analysis + AI insights (works offline, reads SQLite).
+    `obsidian` = note CRUD + search + tags (requires Obsidian running).
+
+### Quick capture + AI analysis
+
+```bash
+# Capture a thought via native CLI
+obsidian daily:append content="Idea: refactor auth module to use JWT"
+
+# Later, analyze the vault for related notes
+obs ai similar auth-module
+obs ai suggest-links auth-module
+```
+
+### Find orphans, then fix them
+
+```bash
+# obs finds orphans via graph analysis
+obs health MyVault              # Shows orphan count
+obs ai refactor MyVault         # Suggests where orphans belong
+
+# Native CLI reads/moves the actual files
+obsidian read file="stale-idea"
+obsidian move file="stale-idea" to="archive/"
+```
+
+### Rename tags vault-wide
+
+```bash
+# obs shows tag distribution
+obs stats MyVault --json | python3 -c "
+import json, sys
+stats = json.load(sys.stdin)
+for tag in stats.get('top_tags', [])[:10]:
+    print(f\"  {tag['name']}: {tag['count']} notes\")
+"
+
+# Native CLI renames across all files
+obsidian tags:rename old=javascript new=js
+```
+
+### Daily vault health ritual
+
+```bash
+# Morning check (30 seconds)
+obs health MyVault                          # Overall scores
+obsidian daily                              # Open today's note
+obsidian tasks                              # Review open tasks
+
+# Weekly deep dive (5 minutes)
+obs ai refactor MyVault --dry-run           # Scope check
+obs ai gaps MyVault                         # Knowledge gaps
+obs analyze MyVault -v                      # Graph metrics
+```
+
+### Search + analyze pipeline
+
+```bash
+# Native search finds notes by content
+obsidian search query="[tag:python]"
+
+# obs finds notes by graph position and AI similarity
+obs ai similar python-basics
+obs ai suggest-links python-basics
+```
+
+### Create notes from AI suggestions
+
+```bash
+# obs identifies knowledge gaps
+obs ai gaps MyVault --json | python3 -c "
+import json, sys
+gaps = json.load(sys.stdin)
+for g in gaps.get('gaps', [])[:3]:
+    print(g['topic'])
+"
+
+# Native CLI creates the missing notes
+obsidian create name="Missing Topic" template="note-template"
+```
+
+??? info "Setup: Enable native CLI"
+    Settings → General → Command line interface. Requires Obsidian v1.12.4+ running.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
