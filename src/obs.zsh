@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 3.0.0
+# Version: 3.1.0
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -41,7 +41,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="3.0.0"
+VERSION="3.1.0"
 
 # --- Helper Functions ---
 
@@ -109,6 +109,10 @@ obs_help() {
         echo "  obs ai similar <note>     Find similar notes"
         echo "  obs ai analyze <note>     Analyze note with AI"
         echo "  obs ai duplicates <vault> Find duplicate notes"
+        echo "  obs ai suggest-links <note> Suggest new links"
+        echo "  obs ai gaps <vault>       Find knowledge gaps"
+        echo "  obs ai summarize <vault>  Summarize vault themes"
+        echo "  obs ai refactor <vault>   AI-powered reorganization"
         echo ""
 
         echo "🔧 UTILITIES"
@@ -322,6 +326,83 @@ obs_ai() {
             $OBS_PYTHON "$python_cli" "ai" "duplicates" "$vault_id"
             ;;
 
+        suggest-links)
+            local note_id=$1
+            if [[ -z "$note_id" ]]; then
+                _log "ERROR" "Note ID required"
+                echo "Usage: obs ai suggest-links <note_id>"
+                return 1
+            fi
+            shift
+            _log_verbose "Suggesting links for note"
+            local cmd=("$python_cli" "ai" "suggest-links" "$note_id")
+            while [[ "$1" == --* ]]; do
+                cmd+=("$1" "$2")
+                shift 2
+            done
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
+        gaps)
+            local vault_id=$1
+            if [[ -z "$vault_id" ]]; then
+                _log "ERROR" "Vault ID required"
+                echo "Usage: obs ai gaps <vault_id>"
+                return 1
+            fi
+            shift
+            _log_verbose "Finding knowledge gaps"
+            local cmd=("$python_cli" "ai" "gaps" "$vault_id")
+            while [[ "$1" == --* ]]; do
+                cmd+=("$1" "$2")
+                shift 2
+            done
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
+        summarize)
+            local vault_id=$1
+            if [[ -z "$vault_id" ]]; then
+                _log "ERROR" "Vault ID required"
+                echo "Usage: obs ai summarize <vault_id>"
+                return 1
+            fi
+            shift
+            _log_verbose "Summarizing vault"
+            local cmd=("$python_cli" "ai" "summarize" "$vault_id")
+            while [[ "$1" == --* ]]; do
+                cmd+=("$1" "$2")
+                shift 2
+            done
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
+        refactor)
+            local vault_id=$1
+            if [[ -z "$vault_id" ]]; then
+                _log "ERROR" "Vault name or ID required"
+                echo "Usage: obs ai refactor <vault>"
+                return 1
+            fi
+            shift
+            _log_verbose "Analyzing vault for refactoring"
+            local cmd=("$python_cli" "ai" "refactor" "$vault_id")
+            while [[ "$1" == --* ]]; do
+                if [[ "$1" == "--dry-run" ]]; then
+                    cmd+=("$1")
+                    shift
+                else
+                    cmd+=("$1" "$2")
+                    shift 2
+                fi
+            done
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
         *)
             _log "ERROR" "Unknown ai subcommand: $subcmd"
             echo "Usage: obs ai <subcommand>"
@@ -334,6 +415,10 @@ obs_ai() {
             echo "  similar <note_id>   - Find similar notes"
             echo "  analyze <note_id>   - Analyze note with AI"
             echo "  duplicates <vault>  - Find duplicate notes"
+            echo "  suggest-links <note>- Suggest new links"
+            echo "  gaps <vault>        - Find knowledge gaps"
+            echo "  summarize <vault>   - Summarize vault themes"
+            echo "  refactor <vault>    - AI-powered reorganization"
             return 1
             ;;
     esac

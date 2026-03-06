@@ -2,11 +2,12 @@
 
 > **Brainstorming space for enhancements, improvements, and new features**
 >
-> **Last Updated:** 2025-12-20
+> **Last Updated:** 2026-03-05
 >
-> **Current Release:** v2.2.0 (Released 2025-12-20)
+> **Current Release:** v3.0.0 (Released 2026-03-05)
 >
-> **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager (see PROPOSAL-REFOCUS-2025-12-20.md)
+> **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager
+> **Install:** `brew install data-wise/tap/obsidian-cli-ops`
 
 ---
 
@@ -168,124 +169,36 @@ src/python/ai/
 
 ---
 
-## 🎯 Phase 7: Proposal A Implementation (v3.0.0 - Planned)
+## ✅ Phase 7: Proposal A Implementation (v3.0.0 — Complete)
 
-### Overview
-**Goal:** Transform obs into a laser-focused Obsidian vault manager with AI-powered note operations
+**All 4 phases complete.** v3.0.0 stable released 2026-03-05.
 
-**Timeline:** 6-8 weeks (53-75 hours total)
-**Code Impact:** 11,500 → 4,500 lines (61% reduction)
+- **Phase 7.1**: Simplification — TUI removed, R-Dev removed, CLI consolidated (14 commands)
+- **Phase 7.2**: AI Enhancement — 5 providers, 3 new commands, embedding cache, 125 tests
+- **Phase 7.3**: Vault Health & Polish — `obs health`, `--json` on all commands, 183 tests
+- **Phase 7.4**: Testing & Release — version sync, CI hardening, 186 tests, Homebrew formula
 
-### Phase 7.1: Simplification (Week 1-2, 12-17 hours)
+**Results**: 2,331 lines removed, 186 tests, Homebrew distribution, docs site live.
 
-**Remove Low-Value Features:**
-- [ ] **Delete TUI** (1,701 lines)
-  - Remove `src/python/tui/` directory
-  - Remove Textual dependency
-  - Update tests (remove TUI tests)
-  - Update documentation
+## 🎯 Phase 8: Future AI Features (Not Started)
 
-- [ ] **Delete R-Dev Integration** (500 lines)
-  - Remove R-Dev functions from `src/obs.zsh`
-  - Remove `src/python/r_dev_manager.py`
-  - Remove R-Dev tests
-  - Update CLI help
-
-- [ ] **Consolidate CLI** (ZSH-first approach)
-  - Simplify command structure (15+ → 8-10 commands)
-  - Remove redundant options
-  - Unify Python/ZSH CLI layers
-  - Update shell completion
-
-**Deliverables:**
-- Simplified codebase (~8,300 lines, 28% reduction)
-- 8-10 core commands only
-- All core tests still passing (95%+ pass rate)
-
-### Phase 7.2: AI-Powered Note Operations (Week 3-4, 20-28 hours)
-
-**New AI Features:**
+### High-Value New Commands
 
 1. **`obs refactor <vault>`** - AI-powered vault reorganization
-   - Analyze entire vault structure
-   - Suggest folder reorganization based on topics
-   - Propose note consolidations
-   - Interactive approval workflow
-   - Estimated: 6-8 hours
+   - Analyze entire vault structure, suggest folder reorganization
+   - Propose note consolidations, interactive approval workflow
 
 2. **`obs tag-suggest <note|vault>`** - Intelligent tag suggestions
-   - Analyze note content with AI
-   - Suggest relevant tags based on themes
-   - Show tag co-occurrence patterns
-   - Batch apply suggested tags
-   - Estimated: 4-6 hours
+   - Analyze note content with AI, suggest relevant tags
+   - Show tag co-occurrence patterns, batch apply
 
 3. **`obs quality <note|vault>`** - Note quality assessment
-   - Check completeness (word count, structure)
-   - Identify missing backlinks
-   - Suggest improvements (headings, examples)
+   - Check completeness, identify missing backlinks
    - Quality score with explanations
-   - Estimated: 4-6 hours
 
 4. **`obs merge-suggest <vault>`** - Find merge candidates
    - Identify duplicate or highly similar notes
-   - Suggest intelligent merges
-   - Preview merged content
-   - Interactive merge workflow
-   - Estimated: 6-8 hours
-
-**Deliverables:**
-- 4 new AI-powered commands
-- ~1,200 lines of new code
-- 40+ new tests
-- Comprehensive documentation
-
-### Phase 7.3: Vault Health & Polish (Week 5-6, 15-20 hours)
-
-**Health Monitoring:**
-- [ ] **`obs health <vault>`** - Vault health dashboard
-  - Orphan percentage
-  - Broken link ratio
-  - Tag consistency score
-  - Average note connectivity
-  - Folder structure assessment
-
-**CLI Enhancements:**
-- [ ] Rich output formatting (tables, colors, progress bars)
-- [ ] JSON export for all commands (`--json` flag)
-- [ ] Interactive prompts for destructive operations
-- [ ] Better error messages with recovery suggestions
-
-**Documentation:**
-- [ ] Comprehensive CLI guide with examples
-- [ ] AI features tutorial
-- [ ] Migration guide from v2.x
-- [ ] Updated architecture docs
-
-**Deliverables:**
-- Production-ready v3.0.0
-- Complete documentation
-- Migration guide for users
-
-### Phase 7.4: Testing & Release (Week 7-8, 6-10 hours)
-
-**Testing:**
-- [ ] Full test suite passing (95%+ pass rate)
-- [ ] Manual testing of all AI features
-- [ ] Performance testing with large vaults
-- [ ] Cross-platform testing (macOS, Linux)
-
-**Release:**
-- [ ] Create v3.0.0 release notes
-- [ ] Update GitHub Pages documentation
-- [ ] Create git tag and GitHub release
-- [ ] Announce on GitHub Discussions
-
-**Success Metrics:**
-- 61% code reduction achieved
-- All AI features working
-- <5 bugs in first week
-- Positive user feedback
+   - Preview merged content, interactive merge workflow
 
 ---
 
@@ -365,37 +278,10 @@ src/python/ai/
 
 ---
 
-## 🎨 TUI Enhancements
+## 🎨 TUI (Removed in v3.0.0)
 
-### Current State
-- ✅ Interactive vault browser
-- ✅ Note explorer with search
-- ✅ ASCII graph visualization
-- ✅ Statistics dashboard
-- ✅ Vim-style navigation
-
-### Future Ideas
-
-**Visual Improvements:**
-- [ ] Color themes (dark/light/custom)
-- [ ] Graph layout options (force-directed, hierarchical, radial)
-- [ ] Minimap for large graphs
-- [ ] Split-pane view (graph + notes)
-- [ ] Preview pane for note content
-
-**Interaction Improvements:**
-- [ ] Mouse support (click nodes, drag to pan)
-- [ ] Zoom in/out on graphs
-- [ ] Filter by tag/folder
-- [ ] Multi-select for batch operations
-- [ ] Command palette (Ctrl+P)
-
-**New Screens:**
-- [ ] Tag explorer (browse by tags)
-- [ ] Timeline view (notes by date)
-- [ ] Cluster navigator (explore communities)
-- [ ] Link browser (see all connections)
-- [ ] Search results view
+> TUI was removed in Phase 7.1 to focus on CLI-first design.
+> If demand warrants it, a future TUI could be re-added as a thin presentation layer over the existing Core.
 
 ---
 

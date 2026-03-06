@@ -1,10 +1,29 @@
 # AI Setup Guide
 
-Complete guide to setting up AI-powered features in Obsidian CLI Ops v2.0.
+Complete guide to setting up AI-powered features in Obsidian CLI Ops.
+
+## Provider Routing
+
+```mermaid
+graph TD
+    A[obs ai command] --> B{gemini-api?}
+    B -->|available| C[Gemini API]
+    B -->|no| D{anthropic-api?}
+    D -->|available| E[Anthropic API]
+    D -->|no| F{ollama?}
+    F -->|running| G[Ollama - Local]
+    F -->|no| H{gemini-cli?}
+    H -->|installed| I[Gemini CLI]
+    H -->|no| J{claude-cli?}
+    J -->|installed| K[Claude CLI]
+    J -->|no| L[No provider available]
+```
+
+obs auto-selects the best available provider using the priority chain above.
 
 ## Overview
 
-Obsidian CLI Ops v2.0 includes AI-powered features for:
+Obsidian CLI Ops includes AI-powered features for:
 
 - **Note Similarity Detection** - Find similar notes using semantic embeddings
 - **Duplicate Detection** - Identify potential duplicate notes automatically
@@ -568,3 +587,10 @@ Found a bug or have a suggestion? Please open an issue on GitHub!
 - [bge-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5)
 - [qwen2.5](https://ollama.com/library/qwen2.5)
 - [nomic-embed-text](https://ollama.com/library/nomic-embed-text)
+
+---
+
+## Next Steps
+
+- [Cookbook](cookbook.md) -- AI-powered discovery recipes
+- [CLI Reference](cli-reference.md) -- Full command documentation

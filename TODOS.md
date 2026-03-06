@@ -3,30 +3,21 @@
 > **Active work items and immediate next steps**
 >
 > **Last Updated:** 2026-03-05
-> **Status:** v3.0.0-beta.2 | Phase 7.4 In Progress
+> **Status:** v3.0.0 Stable | All phases complete
 > **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager
 
 ---
 
 ## 🎯 High Priority (Do Next)
 
-### Phase 7.4: Testing & Release Prep (In Progress)
+### Phase 7.4: Testing & Release Prep (Complete)
 - [x] **Inc 1: Version sync & stale cleanup** ✅
-  - Sync all version strings to 3.0.0-beta.2
-  - Remove stale TUI dep, fix Gemini SDK to google-genai>=1.0.0
-  - Add anthropic optional dep
-  - Consolidate pytest config (pytest.ini → pyproject.toml)
-  - Extend version consistency tests (186 tests)
 - [x] **Inc 2: CI hardening** ✅
-  - CI triggers on dev + main (was main-only)
-  - Upgraded actions to v4/v5
-  - Python coverage reporting in CI
-  - Separated Python/JS test steps
-- [ ] **Inc 3: Release Notes & v3.0.0 Stable**
-  - Comprehensive release notes (docs_mkdocs/releases/v3.0.0.md)
-  - Version bump 3.0.0-beta.2 → 3.0.0
-  - PR dev → main, tag, GitHub release
-  - mkdocs gh-deploy
+- [x] **Inc 3: Release Notes & v3.0.0 Stable** ✅
+  - PR #13 merged, tag v3.0.0, GitHub release published
+  - mkdocs gh-deploy, docs site live
+  - Homebrew formula: `brew install data-wise/tap/obsidian-cli-ops`
+  - Configurable Python path for Homebrew compatibility (PR #14)
 
 ---
 
@@ -37,7 +28,7 @@
 - [x] Update all documentation to v3.0.0
 - [x] Optimize CLAUDE.md for developers
 - [x] Consolidate planning docs into IDEAS.md and TODOS.md
-- [ ] Update MkDocs site with v3.0.0 content and tutorials
+- [x] Update MkDocs site with v3.0.0 content and tutorials ✅
 
 ### Testing & Quality
 - [ ] **Increase test coverage** to 80%
@@ -55,7 +46,7 @@
 
 ### Features
 - [ ] **Search improvements** - Fuzzy search, regex support
-- [ ] **Export functionality** - Export stats to JSON/CSV
+- [x] **Export functionality** - `--json` flag on all commands ✅ (Phase 7.3)
 
 ---
 
@@ -82,13 +73,13 @@
 
 ## ✅ Recently Completed
 
-### 2026-03 (Phase 7.4 Inc 1)
-- [x] **Version sync to 3.0.0-beta.2** — pyproject.toml, package.json, __init__.py
-- [x] **Removed stale TUI dep** — textual dependency, tui optional extra
-- [x] **Fixed Gemini SDK** — google-generativeai → google-genai>=1.0.0
-- [x] **Added anthropic optional dep** — anthropic>=0.40.0
-- [x] **Consolidated pytest config** — merged pytest.ini → pyproject.toml, deleted pytest.ini
-- [x] **Extended version consistency tests** — 186 tests total
+### 2026-03 (Phase 7.4 Complete — v3.0.0 Stable)
+- [x] **Version sync** — all files to 3.0.0
+- [x] **CI hardening** — dev+main triggers, actions v4/v5, coverage reporting
+- [x] **v3.0.0 stable release** — PR #13, GitHub release, tag, docs deployed
+- [x] **Homebrew formula** — `brew install data-wise/tap/obsidian-cli-ops`
+- [x] **Configurable Python path** — `OBS_PYTHON` env var for Homebrew compatibility (PR #14)
+- [x] **186 tests passing** — pytest suite
 
 ### 2026-01 (Phase 7.3 Complete)
 - [x] **Phase 7.3: Testing & Polish** ✅

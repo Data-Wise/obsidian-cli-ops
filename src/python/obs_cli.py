@@ -378,6 +378,41 @@ def _print_health_dashboard(health):
         console.print()
 
 
+def _print_refactor_plan(plan):
+    """Print refactor plan with Rich formatting."""
+    console.print()
+    console.print(f"  [bold]🔄 Vault Refactor Analysis: {plan.vault_name}[/]")
+    console.print(f"  [dim]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/]")
+    console.print(f"  📊 Analyzed {plan.note_count} notes across {plan.folder_count} folders")
+    console.print()
+
+    if not plan.suggestions:
+        console.print("  [green]✓ No reorganization suggestions — vault looks well-organized![/]")
+        console.print()
+        return
+
+    priority_icons = {'high': '🔴 HIGH', 'medium': '🟡 MEDIUM', 'low': '🟢 LOW'}
+    priority_colors = {'high': 'red', 'medium': 'yellow', 'low': 'green'}
+
+    idx = 1
+    for priority_level in ['high', 'medium', 'low']:
+        items = [s for s in plan.suggestions if s.priority == priority_level]
+        if not items:
+            continue
+        icon = priority_icons[priority_level]
+        color = priority_colors[priority_level]
+        console.print(f"  [{color}]{icon} PRIORITY ({len(items)} items)[/]")
+        for s in items:
+            console.print(f"    {idx}. {s.description}")
+            if s.reason:
+                console.print(f"       [dim]{s.reason}[/]")
+            idx += 1
+        console.print()
+
+    console.print(f"  📋 [bold]Summary:[/] {plan.summary}")
+    console.print()
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -453,9 +488,9 @@ def main():
     similar_parser.add_argument('--threshold', type=float, default=0.3, help='Min similarity (0-1)')
     similar_parser.add_argument('--provider', help='Use specific AI provider')
 
-    analyze_parser = ai_subparsers.add_parser('analyze', help='Analyze a note')
-    analyze_parser.add_argument('note_id', help='Note ID to analyze')
-    analyze_parser.add_argument('--provider', help='Use specific AI provider')
+    ai_analyze_parser = ai_subparsers.add_parser('analyze', help='Analyze a note')
+    ai_analyze_parser.add_argument('note_id', help='Note ID to analyze')
+    ai_analyze_parser.add_argument('--provider', help='Use specific AI provider')
 
     duplicates_parser = ai_subparsers.add_parser('duplicates', help='Find duplicate notes')
     duplicates_parser.add_argument('vault_id', help='Vault ID to scan')
@@ -478,6 +513,11 @@ def main():
     summarize_parser.add_argument('--folder', help='Scope to folder path')
     summarize_parser.add_argument('--tag', help='Scope to tag')
     summarize_parser.add_argument('--provider', help='Use specific AI provider')
+
+    refactor_parser = ai_subparsers.add_parser('refactor', help='AI-powered vault reorganization suggestions')
+    refactor_parser.add_argument('vault_id', help='Vault name or ID')
+    refactor_parser.add_argument('--dry-run', action='store_true', help='Show scope without AI calls')
+    refactor_parser.add_argument('--provider', help='Use specific AI provider')
 
 
     args = parser.parse_args()
@@ -902,6 +942,29 @@ def main():
                         if summary.summary_text:
                             print(f"  {summary.summary_text}")
 
+                except (ValueError, RuntimeError) as e:
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'refactor':
+                from ai.features import refactor_vault
+
+                try:
+                    plan = refactor_vault(
+                        args.vault_id,
+                        cli.db,
+                        provider=args.provider,
+                        dry_run=getattr(args, 'dry_run', False),
+                        verbose=args.verbose,
+                    )
+
+                    if args.json:
+                        print(json.dumps(plan.to_dict(), indent=2, default=str))
+                    else:
+                        _print_refactor_plan(plan)
                 except (ValueError, RuntimeError) as e:
                     if args.json:
                         print(json.dumps({"error": str(e)}), file=sys.stderr)

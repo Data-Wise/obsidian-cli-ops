@@ -55,7 +55,7 @@ describe('obs CLI v3.0 — Help and Basic Commands', () => {
 
   test('should show version', () => {
     const output = runObs('version', { allowFailure: true });
-    expect(output).toContain('3.0.0');
+    expect(output).toContain('3.1.0');
   });
 });
 
@@ -180,8 +180,8 @@ describe('obs CLI v3.0 — Script Structure', () => {
     expect(content).toContain('_get_python_cli()');
   });
 
-  test('obs.zsh should have v3.0.0 version', () => {
+  test('obs.zsh should have v3.1.0 version', () => {
     const content = fs.readFileSync(OBS_SCRIPT, 'utf8');
-    expect(content).toContain('VERSION="3.0.0"');
+    expect(content).toContain('VERSION="3.1.0"');
   });
 });

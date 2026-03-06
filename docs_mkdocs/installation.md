@@ -1,60 +1,106 @@
 # Installation
 
-## Prerequisites
+## Homebrew (Recommended)
 
-*   **ZSH**: The shell environment.
-*   **Homebrew**: For installing dependencies.
-*   **Dependencies**: `curl`, `jq`, `unzip` (installed automatically).
+```bash
+brew install data-wise/tap/obsidian-cli-ops
+```
 
-## Quick Install
+This installs `obs` with all Python dependencies and sets up the shell integration automatically.
 
-1.  **Clone the Repository**:
+## Manual Install
+
+### Prerequisites
+
+- **macOS** or **Linux**
+- **Python 3.9+**: `python3 --version`
+- **ZSH**: Default on macOS; available on Linux via `apt install zsh`
+- **Git**: For cloning the repository
+
+### Steps
+
+1. **Clone the repository**:
+
     ```bash
-    git clone https://github.com/Data-Wise/obsidian-cli-ops.git ~/projects/dev-tools/obsidian-cli-ops
+    git clone https://github.com/Data-Wise/obsidian-cli-ops.git ~/projects/obsidian-cli-ops
+    cd ~/projects/obsidian-cli-ops
     ```
 
-2.  **Run the Installer**:
+2. **Install Python dependencies**:
+
     ```bash
-    ~/projects/dev-tools/obsidian-cli-ops/install.sh
+    pip3 install -r src/python/requirements.txt
     ```
 
-3.  **Load the Function**:
-    Add this to your `~/.zshrc`:
+3. **Symlink the CLI function**:
+
+    ```bash
+    ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
+    ```
+
+    Then add to your `~/.zshrc`:
+
     ```zsh
+    fpath=(~/.config/zsh/functions $fpath)
     autoload -Uz obs
     ```
 
-4.  **Restart Shell**:
-    ```bash
-    source ~/.zshrc
-    ```
+4. **Initialize the database**:
 
-5.  **Initialize Database**:
     ```bash
     python3 src/python/obs_cli.py db init
     ```
 
-6.  **Start Using (Zero Configuration!)**:
+5. **Restart your shell**:
+
     ```bash
-    obs
+    source ~/.zshrc
     ```
 
-    **That's it!** The tool auto-detects your iCloud Obsidian vaults at:
-    ```
-    ~/Library/Mobile Documents/iCloud~md~obsidian/Documents
-    ```
+## Verify Installation
 
-    If no vaults are found, you can discover them:
-    ```bash
-    obs manage open ~/Documents
-    ```
+```bash
+# Check version
+obs version
 
-## First Run
+# List discovered vaults
+obs
+```
 
-When you type `obs` for the first time:
+You should see the version number and any Obsidian vaults found in your iCloud directory.
 
-1. **Auto-detects iCloud location** - No configuration needed!
-2. **Shows vault picker** - Select from discovered vaults
-3. **Opens last vault** on subsequent runs (like Obsidian app)
+## Troubleshooting
 
-**Pro Tip:** Press `d` in the TUI to discover vaults from iCloud automatically.
+### Python not found
+
+If `obs` reports a Python error, ensure `/opt/homebrew/bin/python3` (macOS) or `/usr/bin/python3` (Linux) exists. You can set a custom path:
+
+```bash
+export OBS_PYTHON=/path/to/python3
+```
+
+### ZSH autoload not working
+
+Verify the function file is in your `fpath`:
+
+```bash
+echo $fpath | tr ' ' '\n' | grep obs
+```
+
+If nothing appears, double-check the symlink path and your `~/.zshrc` configuration.
+
+### Database initialization fails
+
+Ensure the config directory exists:
+
+```bash
+mkdir -p ~/.config/obs
+python3 src/python/obs_cli.py db init
+```
+
+---
+
+## Next Steps
+
+- [Configuration](configuration.md) -- AI providers, shell integration, advanced settings
+- [Usage](usage.md) -- Core commands and workflows
