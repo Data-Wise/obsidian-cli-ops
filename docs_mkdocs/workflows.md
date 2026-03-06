@@ -4,6 +4,7 @@
 > - **What:** Visual diagrams showing how `obs` commands fit together
 > - **Why:** See the big picture before diving into individual commands
 > - **How:** Follow the flowcharts — each box is a command you can run
+{ .tldr }
 
 ---
 

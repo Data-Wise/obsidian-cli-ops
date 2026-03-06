@@ -5,6 +5,7 @@
 > - **Why:** Zero-friction Obsidian vault management from the terminal
 > - **How:** `obs` — just type it, it lists your vaults
 > - **Next:** [Cookbook](cookbook.md) for task-based recipes
+{ .tldr }
 
 **Time:** ~10 minutes | **Level:** Beginner | **Steps:** 4 workflows
 

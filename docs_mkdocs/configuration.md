@@ -5,6 +5,7 @@
 > - **Why:** `obs` works out of the box — configure only what you need
 > - **How:** iCloud auto-detected; set `OBS_ROOT` to override vault location
 > - **Next:** [AI Setup Guide](ai-setup.md) for AI provider configuration
+{ .tldr }
 
 **Time:** ~3 minutes | **Level:** Beginner | **Steps:** 3 sections
 

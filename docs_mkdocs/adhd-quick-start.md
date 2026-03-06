@@ -5,6 +5,7 @@
 > - **Why:** No docs required — just 3 commands
 > - **How:** Copy-paste the commands below
 > - **Next:** [Usage Guide](usage.md) when you're ready for more
+{ .tldr }
 
 **Time:** ~1 minute | **Level:** Absolute Beginner | **Steps:** 3
 

@@ -5,6 +5,7 @@
 > - **Why:** Pin it, bookmark it, keep it open while you work
 > - **How:** `obs` to start, `obs help --all` for full details
 > - **Next:** [Cookbook](cookbook.md) for task-based recipes
+{ .tldr }
 
 ---
 

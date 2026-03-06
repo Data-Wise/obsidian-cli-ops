@@ -5,6 +5,7 @@
 > - **Why:** Simpler codebase, faster CLI, better maintained
 > - **How:** `pip3 install -r requirements.txt` then `obs` — database is compatible
 > - **Next:** [Usage](usage.md) for the new CLI workflow
+{ .tldr }
 
 **Time:** ~5 minutes | **Level:** Intermediate (v2.x users) | **Steps:** 5 checks
 

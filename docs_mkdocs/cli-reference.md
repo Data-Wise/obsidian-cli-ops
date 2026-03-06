@@ -5,6 +5,7 @@
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
+{ .tldr }
 
 **Version:** 3.1.0
 

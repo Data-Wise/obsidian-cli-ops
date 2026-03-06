@@ -1,7 +1,7 @@
 /* ADHD-Friendly Enhancements for Obsidian CLI Ops docs */
 
 /* TL;DR box styling — subtle background to draw attention */
-blockquote:has(strong:first-child) {
+blockquote.tldr {
   background: var(--md-code-bg-color);
   border-left: 4px solid var(--md-accent-fg-color);
   border-radius: 0 8px 8px 0;

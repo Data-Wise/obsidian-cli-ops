@@ -5,6 +5,7 @@
 > - **Why:** Unlock semantic search, duplicate detection, and vault reorganization
 > - **How:** `obs ai setup` — interactive wizard picks the best option for you
 > - **Next:** [Cookbook](cookbook.md) for AI-powered recipes
+{ .tldr }
 
 **Time:** ~5 minutes | **Level:** Beginner | **Steps:** 3 (setup, test, use)
 

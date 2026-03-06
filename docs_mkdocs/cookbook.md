@@ -5,6 +5,7 @@
 > - **Why:** Copy-paste solutions instead of reading docs
 > - **How:** `obs discover ~/Documents --scan` — find and scan vaults in one step
 > - **Next:** [AI Setup Guide](ai-setup.md) for AI-powered analysis
+{ .tldr }
 
 **Time:** ~15 minutes (all recipes) | **Level:** Beginner–Intermediate | **Steps:** 25+ recipes
 

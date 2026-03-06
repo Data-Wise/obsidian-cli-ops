@@ -5,6 +5,7 @@
 > - **Why:** Manage Obsidian vaults from the terminal in seconds
 > - **How:** `brew install data-wise/tap/obsidian-cli-ops`
 > - **Next:** [Configuration](configuration.md) for optional settings
+{ .tldr }
 
 ---
 
