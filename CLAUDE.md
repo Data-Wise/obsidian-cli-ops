@@ -10,23 +10,25 @@ Developer guide for Claude Code when working with this repository.
 **Status**: Stable release
 **Priority**: P1
 
-### Core Features (v3.0.0)
+### Core Features
 
 - **Vault Management**: Discovery, scanning across multiple vaults
 - **Graph Analysis**: PageRank, centrality, clustering, orphan/hub detection
 - **AI Features**: Multi-provider AI (Gemini API, Anthropic API, Gemini CLI, Claude CLI, Ollama)
+- **Vault Health**: 4-dimension scoring (connectivity, link integrity, structure, freshness)
+- **AI Refactor**: 3-phase vault reorganization pipeline (graph-only → AI-enhanced → prioritization)
 - **Rich CLI Output**: Beautiful terminal output with tables, colors, progress bars
 - **ZSH-First Architecture**: Fast shell integration with Python core
 
 ### Technology Stack
 
-- **ZSH**: CLI interface (`src/obs.zsh`) - 386 lines
-- **Python 3.9+**: Core logic (`src/python/`) - ~3,500 lines
+- **ZSH**: CLI interface (`src/obs.zsh`) - 501 lines
+- **Python 3.9+**: Core logic (`src/python/`) - ~5,300 lines
 - **SQLite**: Knowledge graph database
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
 - **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
-- **Pytest**: Testing harness
+- **Pytest**: Testing harness (206 tests)
 
 ## Architecture
 
@@ -40,10 +42,9 @@ Presentation → Application → Data
 - **Presentation**: `obs.zsh` (ZSH CLI wrapper)
 - **Application**: `core/vault_manager.py`, `core/graph_analyzer.py`
 - **Data**: `db_manager.py`, `vault_scanner.py`, `graph_builder.py`
+- **AI Layer**: `ai/features.py`, `ai/providers/`, `ai/models.py`
 
 **Key Principle**: Business logic lives in Core layer only. CLI is a thin presentation layer.
-
-**v3.0.0 Changes**: Removed TUI (1,701 lines) and R-Dev integration (307 lines) to focus on core Obsidian management.
 
 **See `.claude/rules/architecture.md` for detailed documentation.**
 
@@ -52,19 +53,18 @@ Presentation → Application → Data
 ### Installation & Setup
 
 ```bash
-# Install dependencies
+# Option 1: Homebrew (recommended)
+brew install data-wise/tap/obsidian-cli-ops
+
+# Option 2: Manual
 pip3 install -r src/python/requirements.txt
-
-# Initialize database
 python3 src/python/obs_cli.py db init
-
-# Symlink for CLI usage
 ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 ```
 
 ### Essential Commands
 
-**v3.0.0 Simplified CLI** - 15 focused commands!
+**v3.1.0** - 15 focused commands:
 
 ```bash
 # PRIMARY COMMANDS
@@ -93,7 +93,7 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (202 tests)
+pytest src/python/tests/        # Run Python tests (206 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -101,17 +101,19 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # Python tests (202 tests passing)
+pytest src/python/tests/        # 206 tests passing
+npx jest                        # 30 Jest tests passing
 obs --verbose <command>         # Run any command with verbose output
 ```
 
 ### Python Path Note
 
-⚠️ **Important**: Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. Update all Python calls to use full path.
+Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. `obs.zsh` uses `${OBS_PYTHON:-$(command -v python3)}` for Homebrew portability.
 
 ## Key Locations
 
 ### Root Files
+
 - `.STATUS` - Project status and metrics
 - `README.md` - User-facing documentation
 - `IDEAS.md` - Feature ideas and enhancements
@@ -119,20 +121,19 @@ obs --verbose <command>         # Run any command with verbose output
 
 ### Code Structure
 
-- `src/obs.zsh` - ZSH CLI interface (386 lines, v3.0.0)
-- `src/python/` - Python backend (~3,500 lines)
-  - `core/` - Business logic (931 lines)
-  - `obs_cli.py` - CLI interface (584 lines)
-  - `ai/` - Multi-provider AI package (5 providers, 900+ lines)
+- `src/obs.zsh` - ZSH CLI interface (501 lines)
+- `src/python/` - Python backend
+  - `core/` - Business logic (1,128 lines)
+  - `obs_cli.py` - CLI interface (985 lines)
+  - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
+  - `tests/` - Test suite (206 pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
-- `tests/` - Test suite (202 tests passing)
 
 ### Documentation
-- `docs/` - All documentation (organized by user/developer/planning)
-- `docs/developer/architecture.md` - Detailed architecture
-- `docs/developer/testing/` - Testing guides
+
+- `docs_mkdocs/` - MkDocs Material site content (deployed to GitHub Pages)
+- `docs/` - Legacy docs (organized by user/developer/planning)
 - `.claude/rules/` - Auto-loaded rules (architecture, workflows, troubleshooting)
-- `.claude/skills/` - Custom Claude Code skills
 
 ## Database Schema
 
@@ -141,7 +142,7 @@ obs --verbose <command>         # Run any command with verbose output
 **Core Tables**: vaults, notes, links, tags, graph_metrics, scan_history, note_embeddings
 **Views**: orphaned_notes, hub_notes, broken_links
 
-Details in schema file and `docs/developer/architecture.md`.
+Details in schema file and `docs_mkdocs/developer/architecture.md`.
 
 ## Common Workflows
 
@@ -166,6 +167,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ## Development Guidelines
 
 ### Code Quality
+
 - Follow three-layer architecture strictly
 - No business logic in presentation layers
 - Use domain models for data transfer
@@ -173,28 +175,30 @@ Details in schema file and `docs/developer/architecture.md`.
 - Keep test coverage above 70%
 
 ### Testing Requirements
+
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- Keep core tests passing (202+ tests)
-- Update test count in documentation
+- Keep core tests passing (206+ tests)
+- Update test count in documentation after adding tests
 
 ### Documentation
+
 - Update `.STATUS` for progress tracking
 - Add entries to `IDEAS.md` for future features
 - Document new commands in appropriate docs
 - Update version history for releases
 
 ### Git Workflow
-- Work on feature branches
-- Keep commits focused and atomic
+
+- Work on feature branches in worktrees (`~/.git-worktrees/obsidian-cli-ops/`)
+- Keep commits focused and atomic (conventional commits)
 - Update relevant docs before committing
 - Run tests before pushing
 
 ## Additional Resources
 
-- **Architecture**: `.claude/rules/architecture.md` (297 lines)
+- **Architecture**: `.claude/rules/architecture.md`
 - **Workflows**: `.claude/rules/workflows.md`
 - **Troubleshooting**: `.claude/rules/troubleshooting.md`
-- **v3.0 Details**: `PROPOSAL-REFOCUS-2025-12-20.md`, `REFOCUS-SUMMARY.md`
-- **Project Hub**: `docs/planning/project-hub.md`
 - **Published Docs**: https://data-wise.github.io/obsidian-cli-ops/
+- **Homebrew**: `data-wise/tap/obsidian-cli-ops`
