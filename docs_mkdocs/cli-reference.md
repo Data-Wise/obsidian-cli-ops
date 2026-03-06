@@ -1,6 +1,6 @@
 # CLI Command Reference
 
-**Version:** 3.0.0
+**Version:** 3.1.0
 
 Complete reference for all `obs` commands -- 15 commands covering vault management, graph analysis, and AI features.
 

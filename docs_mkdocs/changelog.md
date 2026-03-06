@@ -4,6 +4,32 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.1.0 (2026-03-06)
+
+### Added
+
+- **`obs ai refactor <vault>`** -- AI-powered vault reorganization with 3-phase pipeline (graph-only → AI-enhanced → prioritization)
+- **`--dry-run` flag** for refactor -- preview scope without AI calls
+- **Quick Reference Card** (`refcard.md`) -- printable command cheat sheet
+
+### Changed
+
+- **Website redesigned** -- simplified from 7 tabs to 4 (Home | Getting Started | Reference | Developer)
+- **Hero landing page** with Mermaid architecture diagram and feature highlights
+- **Installation guide rewritten** -- Homebrew + manual install methods, removed stale TUI references
+- **Configuration guide rewritten** -- AI providers, shell integration, advanced settings
+- **Cookbook expanded** -- absorbed tutorial content into task-based recipe format
+- **Consolidated changelog** -- replaced 3 individual release pages with single page
+- **CLI Reference promoted** to main site navigation
+
+### Fixed
+
+- Missing ZSH wiring for `suggest-links`, `gaps`, `summarize` subcommands
+- Dead code in tag-folder analysis loop removed
+- Insertion-order bias in orphan placement sampling (now uses `random.sample`)
+
+---
+
 ## v3.0.0 (2026-03-05)
 
 Major release: laser-focused vault management with AI-powered graph analysis. Codebase simplified from 11,500 to ~7,400 lines (36% reduction).

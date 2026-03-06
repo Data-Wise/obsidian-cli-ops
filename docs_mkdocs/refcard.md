@@ -103,4 +103,4 @@ obs ai refactor MyVault --json | python3 -m json.tool
 
 ---
 
-**Version:** 3.0.0 | **Commands:** 15 | **AI Providers:** 5
+**Version:** 3.1.0 | **Commands:** 15 | **AI Providers:** 5
