@@ -1,6 +1,14 @@
 # AI Setup Guide
 
-Complete guide to setting up AI-powered features in Obsidian CLI Ops.
+> **TL;DR** (30 seconds)
+> - **What:** 5 AI providers with automatic fallback — all privacy-first
+> - **Why:** Unlock semantic search, duplicate detection, and vault reorganization
+> - **How:** `obs ai setup` — interactive wizard picks the best option for you
+> - **Next:** [Cookbook](cookbook.md) for AI-powered recipes
+
+**Time:** ~5 minutes | **Level:** Beginner | **Steps:** 3 (setup, test, use)
+
+---
 
 ## Provider Routing
 

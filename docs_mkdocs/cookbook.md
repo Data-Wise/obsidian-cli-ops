@@ -1,8 +1,28 @@
 # Cookbook
 
-Practical recipes for common vault management tasks.
+> **TL;DR** (30 seconds)
+> - **What:** Task-based recipes for common vault management scenarios
+> - **Why:** Copy-paste solutions instead of reading docs
+> - **How:** `obs discover ~/Documents --scan` — find and scan vaults in one step
+> - **Next:** [AI Setup Guide](ai-setup.md) for AI-powered analysis
+
+**Time:** ~15 minutes (all recipes) | **Level:** Beginner–Intermediate | **Steps:** 25+ recipes
 
 ---
+
+## First-Time Setup Flow
+
+```mermaid
+graph TD
+    A[brew install] --> B[obs discover ~/Documents --scan]
+    B --> C[obs]
+    C --> D{Vaults found?}
+    D -->|Yes| E[obs stats MyVault]
+    D -->|No| F[obs discover other/path --scan]
+    F --> C
+    style A fill:#6366f1,color:#fff
+    style E fill:#22c55e,color:#fff
+```
 
 ## Getting Started
 
@@ -41,6 +61,9 @@ obs scan /path/to/your/vault
 ```
 
 Scanning reads all markdown files, extracts wikilinks, tags, and metadata into the knowledge graph.
+
+!!! tip "One-liner setup"
+    `obs discover ~/Documents --scan` finds and scans all vaults in one step.
 
 ---
 
@@ -158,6 +181,9 @@ obs scan /path/to/vault && obs analyze MyVault -v
 
 Watch for: orphan count increasing, broken links growing, density increasing (good), new clusters forming.
 
+??? tip "Automate health checks"
+    Add `obs health MyVault` to a cron job or shell alias for daily vault monitoring.
+
 ---
 
 ## AI-Powered Discovery
@@ -246,6 +272,9 @@ obs ai refactor MyVault --json
 ```
 
 Suggestion categories: `move` (unsorted notes), `archive` (stale folders), `merge-folder` (small folders), `create-folder` (scattered tags), `connect` (orphans near clusters).
+
+!!! warning "AI refactor is read-only"
+    The refactor command only **suggests** changes — it never moves or deletes your files. Safe to run anytime.
 
 ---
 

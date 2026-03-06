@@ -1,6 +1,10 @@
 # Quick Reference Card
 
-All `obs` commands at a glance. Print this page or keep it open as a cheat sheet.
+> **TL;DR** (30 seconds)
+> - **What:** Printable cheat sheet — every command on one page
+> - **Why:** Pin it, bookmark it, keep it open while you work
+> - **How:** `obs` to start, `obs help --all` for full details
+> - **Next:** [Cookbook](cookbook.md) for task-based recipes
 
 ---
 
@@ -79,6 +83,9 @@ obs ai similar <note_id> --provider ollama
 obs ai refactor MyVault --provider anthropic-api
 ```
 
+!!! tip "Start here"
+    New to `obs`? Run these 3 commands: `obs` → `obs stats MyVault` → `obs analyze MyVault`. That's it.
+
 ## Common Workflows
 
 ```bash
@@ -102,5 +109,8 @@ obs ai refactor MyVault --json | python3 -m json.tool
 ```
 
 ---
+
+??? info "Vault lookup shortcut"
+    Any command accepting `<vault>` also accepts an ID prefix — type just the first 4 characters instead of the full name.
 
 **Version:** 3.1.0 | **Commands:** 15 | **AI Providers:** 5

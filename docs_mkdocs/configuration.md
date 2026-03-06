@@ -1,8 +1,16 @@
 # Configuration
 
-`obs` works out of the box with sensible defaults. This page covers optional configuration for advanced setups.
+> **TL;DR** (30 seconds)
+> - **What:** Optional settings for database, AI providers, and shell integration
+> - **Why:** `obs` works out of the box — configure only what you need
+> - **How:** iCloud auto-detected; set `OBS_ROOT` to override vault location
+> - **Next:** [AI Setup Guide](ai-setup.md) for AI provider configuration
 
-## Database Location
+**Time:** ~3 minutes | **Level:** Beginner | **Steps:** 3 sections
+
+---
+
+## :floppy_disk: Database Location
 
 The SQLite database is stored at:
 
@@ -16,7 +24,7 @@ To reinitialize:
 python3 src/python/obs_cli.py db init
 ```
 
-## AI Provider Configuration
+## :robot: AI Provider Configuration
 
 `obs` supports multiple AI providers with automatic fallback routing:
 
@@ -62,7 +70,7 @@ obs ai setup
 obs ai test
 ```
 
-## Shell Integration
+## :shell: Shell Integration
 
 ### Verbose Mode
 
@@ -92,6 +100,20 @@ To discover vaults elsewhere:
 
 ```bash
 obs discover ~/Documents --scan
+```
+
+## :mag: Config Lookup Order
+
+```mermaid
+graph TD
+    A[obs starts] --> B{OBS_ROOT set?}
+    B -->|Yes| C[Use OBS_ROOT path]
+    B -->|No| D{iCloud path exists?}
+    D -->|Yes| E[Use iCloud auto-detect]
+    D -->|No| F[Use ~/.config/obs/ default]
+    style C fill:#6366f1,color:#fff
+    style E fill:#22c55e,color:#fff
+    style F fill:#f59e0b,color:#000
 ```
 
 ---

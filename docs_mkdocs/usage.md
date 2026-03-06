@@ -1,6 +1,14 @@
 # Usage Guide
 
-> **Just type `obs` - it does the right thing!**
+> **TL;DR** (30 seconds)
+> - **What:** 15 focused commands for vault management, graph analysis, and AI
+> - **Why:** Zero-friction Obsidian vault management from the terminal
+> - **How:** `obs` — just type it, it lists your vaults
+> - **Next:** [Cookbook](cookbook.md) for task-based recipes
+
+**Time:** ~10 minutes | **Level:** Beginner | **Steps:** 4 workflows
+
+---
 
 ## Philosophy
 
@@ -63,6 +71,17 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | `obs version` | Show version |
 
 ---
+
+## Daily Workflow
+
+```mermaid
+graph LR
+    A[obs] -->|list vaults| B[obs stats]
+    B -->|check health| C[obs analyze]
+    C -->|deep dive| D[obs ai refactor]
+    style A fill:#6366f1,color:#fff
+    style D fill:#8b5cf6,color:#fff
+```
 
 ## Common Workflows
 
