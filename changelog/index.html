@@ -12,13 +12,13 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/installation/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/changelog/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../ai-setup/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../developer/architecture/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Installation - Obsidian CLI Ops</title>
+        <title>Changelog - Obsidian CLI Ops</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#changelog" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Changelog
             
           </span>
         </div>
@@ -244,13 +244,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../installation/" class="md-tabs__link">
           
   
   
@@ -266,10 +264,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../refcard/" class="md-tabs__link">
           
   
@@ -378,31 +378,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -420,7 +415,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -435,37 +430,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -481,148 +449,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#homebrew-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Homebrew (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manual-install" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual Install
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Manual Install">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Steps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#python-not-found" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python not found
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#zsh-autoload-not-working" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ZSH autoload not working
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#database-initialization-fails" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database initialization fails
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -695,26 +521,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -732,7 +563,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -859,10 +690,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -878,6 +736,204 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v310-2026-03-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v3.1.0 (2026-03-06)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v3.1.0 (2026-03-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v300-2026-03-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v3.0.0 (2026-03-05)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v3.0.0 (2026-03-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v220-2025-12-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2.2.0 (2025-12-20)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v2.2.0 (2025-12-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v1.1.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1176,33 +1232,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#homebrew-recommended" class="md-nav__link">
+  <a href="#v310-2026-03-06" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Homebrew (Recommended)
+        v3.1.0 (2026-03-06)
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manual-install" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual Install
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Manual Install">
+    <nav class="md-nav" aria-label="v3.1.0 (2026-03-06)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#added" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Added
       
     </span>
   </a>
@@ -1210,10 +1255,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#changed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
       
     </span>
   </a>
@@ -1226,33 +1282,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
+  <a href="#v300-2026-03-05" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify Installation
+        v3.0.0 (2026-03-05)
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
+    <nav class="md-nav" aria-label="v3.0.0 (2026-03-05)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#python-not-found" class="md-nav__link">
+  <a href="#added_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Python not found
+        Added
       
     </span>
   </a>
@@ -1260,10 +1305,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zsh-autoload-not-working" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ZSH autoload not working
+        Changed
       
     </span>
   </a>
@@ -1271,10 +1316,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#database-initialization-fails" class="md-nav__link">
+  <a href="#removed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Database initialization fails
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking Changes
       
     </span>
   </a>
@@ -1287,13 +1343,69 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#v220-2025-12-20" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        v2.2.0 (2025-12-20)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="v2.2.0 (2025-12-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v1.1.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1317,80 +1429,89 @@
   
 
 
-<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<h2 id="homebrew-recommended">Homebrew (Recommended)<a class="headerlink" href="#homebrew-recommended" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>install<span class="w"> </span>data-wise/tap/obsidian-cli-ops
-</code></pre></div>
-<p>This installs <code>obs</code> with all Python dependencies and sets up the shell integration automatically.</p>
-<h2 id="manual-install">Manual Install<a class="headerlink" href="#manual-install" title="Permanent link">&para;</a></h2>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>macOS</strong> or <strong>Linux</strong></li>
-<li><strong>Python 3.9+</strong>: <code>python3 --version</code></li>
-<li><strong>ZSH</strong>: Default on macOS; available on Linux via <code>apt install zsh</code></li>
-<li><strong>Git</strong>: For cloning the repository</li>
-</ul>
-<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
-<ol>
-<li>
-<p><strong>Clone the repository</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Data-Wise/obsidian-cli-ops.git<span class="w"> </span>~/projects/obsidian-cli-ops
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>~/projects/obsidian-cli-ops
-</code></pre></div>
-</li>
-<li>
-<p><strong>Install Python dependencies</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
-</code></pre></div>
-</li>
-<li>
-<p><strong>Symlink the CLI function</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/src/obs.zsh&quot;</span><span class="w"> </span>~/.config/zsh/functions/obs.zsh
-</code></pre></div>
-<p>Then add to your <code>~/.zshrc</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">fpath</span><span class="o">=(</span>~/.config/zsh/functions<span class="w"> </span><span class="nv">$fpath</span><span class="o">)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>autoload<span class="w"> </span>-Uz<span class="w"> </span>obs
-</code></pre></div>
-</li>
-<li>
-<p><strong>Initialize the database</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
-</code></pre></div>
-</li>
-<li>
-<p><strong>Restart your shell</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">source</span><span class="w"> </span>~/.zshrc
-</code></pre></div>
-</li>
-</ol>
-<h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check version</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>obs<span class="w"> </span>version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List discovered vaults</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>obs
-</code></pre></div>
-<p>You should see the version number and any Obsidian vaults found in your iCloud directory.</p>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="python-not-found">Python not found<a class="headerlink" href="#python-not-found" title="Permanent link">&para;</a></h3>
-<p>If <code>obs</code> reports a Python error, ensure <code>/opt/homebrew/bin/python3</code> (macOS) or <code>/usr/bin/python3</code> (Linux) exists. You can set a custom path:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/path/to/python3
-</code></pre></div>
-<h3 id="zsh-autoload-not-working">ZSH autoload not working<a class="headerlink" href="#zsh-autoload-not-working" title="Permanent link">&para;</a></h3>
-<p>Verify the function file is in your <code>fpath</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$fpath</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>obs
-</code></pre></div>
-<p>If nothing appears, double-check the symlink path and your <code>~/.zshrc</code> configuration.</p>
-<h3 id="database-initialization-fails">Database initialization fails<a class="headerlink" href="#database-initialization-fails" title="Permanent link">&para;</a></h3>
-<p>Ensure the config directory exists:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.config/obs
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
-</code></pre></div>
+<h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
+<p>All notable changes to Obsidian CLI Ops.</p>
 <hr />
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="v310-2026-03-06">v3.1.0 (2026-03-06)<a class="headerlink" href="#v310-2026-03-06" title="Permanent link">&para;</a></h2>
+<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="../configuration/">Configuration</a> -- AI providers, shell integration, advanced settings</li>
-<li><a href="../usage/">Usage</a> -- Core commands and workflows</li>
+<li><strong><code>obs ai refactor &lt;vault&gt;</code></strong> -- AI-powered vault reorganization with 3-phase pipeline (graph-only → AI-enhanced → prioritization)</li>
+<li><strong><code>--dry-run</code> flag</strong> for refactor -- preview scope without AI calls</li>
+<li><strong>Quick Reference Card</strong> (<code>refcard.md</code>) -- printable command cheat sheet</li>
+</ul>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Website redesigned</strong> -- simplified from 7 tabs to 4 (Home | Getting Started | Reference | Developer)</li>
+<li><strong>Hero landing page</strong> with Mermaid architecture diagram and feature highlights</li>
+<li><strong>Installation guide rewritten</strong> -- Homebrew + manual install methods, removed stale TUI references</li>
+<li><strong>Configuration guide rewritten</strong> -- AI providers, shell integration, advanced settings</li>
+<li><strong>Cookbook expanded</strong> -- absorbed tutorial content into task-based recipe format</li>
+<li><strong>Consolidated changelog</strong> -- replaced 3 individual release pages with single page</li>
+<li><strong>CLI Reference promoted</strong> to main site navigation</li>
+</ul>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Missing ZSH wiring for <code>suggest-links</code>, <code>gaps</code>, <code>summarize</code> subcommands</li>
+<li>Dead code in tag-folder analysis loop removed</li>
+<li>Insertion-order bias in orphan placement sampling (now uses <code>random.sample</code>)</li>
+</ul>
+<hr />
+<h2 id="v300-2026-03-05">v3.0.0 (2026-03-05)<a class="headerlink" href="#v300-2026-03-05" title="Permanent link">&para;</a></h2>
+<p>Major release: laser-focused vault management with AI-powered graph analysis. Codebase simplified from 11,500 to ~7,400 lines (36% reduction).</p>
+<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Vault Health Dashboard</strong> (<code>obs health</code>) -- 4-dimension scoring (connectivity, link integrity, structure, freshness)</li>
+<li><strong>4 new AI commands</strong>: <code>suggest-links</code>, <code>gaps</code>, <code>summarize</code>, <code>refactor</code></li>
+<li><strong>Anthropic API provider</strong> -- Claude models alongside Gemini</li>
+<li><strong><code>--json</code> flag</strong> on all data-outputting commands</li>
+<li><strong>Vault name/prefix lookup</strong> -- <code>obs analyze Knowledge_Base</code> instead of hex IDs</li>
+<li><strong>Embedding cache</strong> with mtime invalidation in SQLite</li>
+<li><strong>Obsidian CLI bridge</strong> -- integrates with Obsidian's native CLI for backlinks/orphans</li>
+</ul>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>CLI simplified</strong> from 20+ to 15 focused commands</li>
+<li><strong>Gemini SDK</strong> migrated from deprecated <code>google-generativeai</code> to <code>google-genai</code></li>
+<li><strong>AI provider routing</strong>: gemini-api &gt; anthropic-api &gt; ollama &gt; gemini-cli &gt; claude-cli</li>
+</ul>
+<h3 id="removed">Removed<a class="headerlink" href="#removed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>TUI</strong> (1,701 lines) -- CLI-only for simplicity</li>
+<li><strong>R-Dev integration</strong> (307 lines) -- belongs in R package ecosystem</li>
+<li><strong>Legacy v1.x commands</strong> (126 lines) -- plugin install, sync, audit</li>
+</ul>
+<h3 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>obs switch</code>, <code>obs open</code>, <code>obs sync</code>, <code>obs tui</code>, <code>obs r-dev *</code> removed</li>
+<li><code>textual</code> dependency no longer required</li>
+<li><code>google-generativeai</code> replaced by <code>google-genai</code></li>
+</ul>
+<hr />
+<h2 id="v220-2025-12-20">v2.2.0 (2025-12-20)<a class="headerlink" href="#v220-2025-12-20" title="Permanent link">&para;</a></h2>
+<p>Added complete multi-provider AI system.</p>
+<h3 id="added_2">Added<a class="headerlink" href="#added_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>6 AI commands</strong>: <code>similar</code>, <code>analyze</code>, <code>duplicates</code>, <code>status</code>, <code>setup</code>, <code>test</code></li>
+<li><strong>4 AI providers</strong>: Gemini API, Gemini CLI, Claude CLI, Ollama</li>
+<li><strong>Smart routing</strong> -- automatic provider selection based on operation type</li>
+<li><strong>96 new AI tests</strong></li>
+</ul>
+<hr />
+<h2 id="v110">v1.1.0<a class="headerlink" href="#v110" title="Permanent link">&para;</a></h2>
+<p>Added 10 new features including shell completion and verbose mode.</p>
+<h3 id="added_3">Added<a class="headerlink" href="#added_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>obs list</code> -- show all configured vaults</li>
+<li><code>obs version</code> -- display version info</li>
+<li><code>--verbose</code> / <code>-v</code> flag for debug output</li>
+<li><code>NO_COLOR</code> support</li>
+<li>ZSH and Bash tab completion</li>
+<li>22 Jest unit tests</li>
+</ul>
+<h3 id="changed_2">Changed<a class="headerlink" href="#changed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>help</code> and <code>check</code> no longer require config file</li>
+<li>Better error messages with command name context</li>
 </ul>
 
 
