@@ -1093,6 +1093,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-obs-with-the-native-obsidian-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using obs with the Native Obsidian CLI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using obs with the Native Obsidian CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-capture-ai-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick capture + AI analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-orphans-then-fix-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find orphans, then fix them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-tags-vault-wide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename tags vault-wide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#daily-vault-health-ritual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily vault health ritual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-analyze-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search + analyze pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-notes-from-ai-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create notes from AI suggestions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1855,6 +1938,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-obs-with-the-native-obsidian-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using obs with the Native Obsidian CLI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using obs with the Native Obsidian CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-capture-ai-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick capture + AI analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-orphans-then-fix-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find orphans, then fix them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-tags-vault-wide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename tags vault-wide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#daily-vault-health-ritual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily vault health ritual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-analyze-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search + analyze pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-notes-from-ai-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create notes from AI suggestions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2149,6 +2315,78 @@
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s2">    print(f&#39;- [ ] {priority} {s[\&quot;description\&quot;]}&#39;)</span>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>vault_cleanup_tasks.md
 </code></pre></div>
+<hr />
+<h2 id="using-obs-with-the-native-obsidian-cli">Using obs with the Native Obsidian CLI<a class="headerlink" href="#using-obs-with-the-native-obsidian-cli" title="Permanent link">&para;</a></h2>
+<p>Obsidian v1.12.4+ ships a <a href="https://help.obsidian.md/cli">native CLI</a> for note-level operations (read, create, search, tags). Use it alongside <code>obs</code> for a complete terminal workflow.</p>
+<div class="admonition tip">
+<p class="admonition-title">Two tools, zero overlap</p>
+<p><code>obs</code> = graph analysis + AI insights (works offline, reads SQLite).
+<code>obsidian</code> = note CRUD + search + tags (requires Obsidian running).</p>
+</div>
+<h3 id="quick-capture-ai-analysis">Quick capture + AI analysis<a class="headerlink" href="#quick-capture-ai-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Capture a thought via native CLI</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>obsidian<span class="w"> </span>daily:append<span class="w"> </span><span class="nv">content</span><span class="o">=</span><span class="s2">&quot;Idea: refactor auth module to use JWT&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Later, analyze the vault for related notes</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>auth-module
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>auth-module
+</code></pre></div>
+<h3 id="find-orphans-then-fix-them">Find orphans, then fix them<a class="headerlink" href="#find-orphans-then-fix-them" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># obs finds orphans via graph analysis</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">              </span><span class="c1"># Shows orphan count</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">         </span><span class="c1"># Suggests where orphans belong</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Native CLI reads/moves the actual files</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>obsidian<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;stale-idea&quot;</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>obsidian<span class="w"> </span>move<span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;stale-idea&quot;</span><span class="w"> </span><span class="nv">to</span><span class="o">=</span><span class="s2">&quot;archive/&quot;</span>
+</code></pre></div>
+<h3 id="rename-tags-vault-wide">Rename tags vault-wide<a class="headerlink" href="#rename-tags-vault-wide" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># obs shows tag distribution</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="s2">stats = json.load(sys.stdin)</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="s2">for tag in stats.get(&#39;top_tags&#39;, [])[:10]:</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="s2">    print(f\&quot;  {tag[&#39;name&#39;]}: {tag[&#39;count&#39;]} notes\&quot;)</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="s2">&quot;</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1"># Native CLI renames across all files</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>obsidian<span class="w"> </span>tags:rename<span class="w"> </span><span class="nv">old</span><span class="o">=</span>javascript<span class="w"> </span><span class="nv">new</span><span class="o">=</span>js
+</code></pre></div>
+<h3 id="daily-vault-health-ritual">Daily vault health ritual<a class="headerlink" href="#daily-vault-health-ritual" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Morning check (30 seconds)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">                          </span><span class="c1"># Overall scores</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>obsidian<span class="w"> </span>daily<span class="w">                              </span><span class="c1"># Open today&#39;s note</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>obsidian<span class="w"> </span>tasks<span class="w">                              </span><span class="c1"># Review open tasks</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Weekly deep dive (5 minutes)</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">           </span><span class="c1"># Scope check</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w">                         </span><span class="c1"># Knowledge gaps</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v<span class="w">                      </span><span class="c1"># Graph metrics</span>
+</code></pre></div>
+<h3 id="search-analyze-pipeline">Search + analyze pipeline<a class="headerlink" href="#search-analyze-pipeline" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Native search finds notes by content</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>obsidian<span class="w"> </span>search<span class="w"> </span><span class="nv">query</span><span class="o">=</span><span class="s2">&quot;[tag:python]&quot;</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># obs finds notes by graph position and AI similarity</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>python-basics
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>python-basics
+</code></pre></div>
+<h3 id="create-notes-from-ai-suggestions">Create notes from AI suggestions<a class="headerlink" href="#create-notes-from-ai-suggestions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># obs identifies knowledge gaps</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="s2">gaps = json.load(sys.stdin)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="s2">for g in gaps.get(&#39;gaps&#39;, [])[:3]:</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="s2">    print(g[&#39;topic&#39;])</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="s2">&quot;</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="c1"># Native CLI creates the missing notes</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>obsidian<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Missing Topic&quot;</span><span class="w"> </span><span class="nv">template</span><span class="o">=</span><span class="s2">&quot;note-template&quot;</span>
+</code></pre></div>
+<details class="info">
+<summary>Setup: Enable native CLI</summary>
+<p>Settings → General → Command line interface. Requires Obsidian v1.12.4+ running.</p>
+</details>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>

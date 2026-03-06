@@ -758,6 +758,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#native-obsidian-cli-v1124" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Obsidian CLI (v1.12.4+)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1287,6 +1298,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#native-obsidian-cli-v1124" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Obsidian CLI (v1.12.4+)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1510,6 +1532,81 @@
 <summary>Vault lookup shortcut</summary>
 <p>Any command accepting <code>&lt;vault&gt;</code> also accepts an ID prefix — type just the first 4 characters instead of the full name.</p>
 </details>
+<hr />
+<h2 id="native-obsidian-cli-v1124">Native Obsidian CLI (v1.12.4+)<a class="headerlink" href="#native-obsidian-cli-v1124" title="Permanent link">&para;</a></h2>
+<p>Obsidian ships its own CLI for note-level operations. Use it alongside <code>obs</code> for a complete workflow.</p>
+<div class="admonition tip">
+<p class="admonition-title">Two tools, zero overlap</p>
+<p><code>obs</code> = graph analysis + AI insights. <code>obsidian</code> = note CRUD + search + tags. They complement each other.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obsidian</code></td>
+<td>Interactive TUI file browser</td>
+</tr>
+<tr>
+<td><code>obsidian files</code></td>
+<td>List all files in vault</td>
+</tr>
+<tr>
+<td><code>obsidian read file="NAME"</code></td>
+<td>Read a note by wikilink</td>
+</tr>
+<tr>
+<td><code>obsidian create name="TITLE"</code></td>
+<td>Create a new note</td>
+</tr>
+<tr>
+<td><code>obsidian search query="TEXT"</code></td>
+<td>Full-text search</td>
+</tr>
+<tr>
+<td><code>obsidian daily</code></td>
+<td>Open today's daily note</td>
+</tr>
+<tr>
+<td><code>obsidian daily:append content="TEXT"</code></td>
+<td>Quick capture to daily note</td>
+</tr>
+<tr>
+<td><code>obsidian tags</code></td>
+<td>List all tags</td>
+</tr>
+<tr>
+<td><code>obsidian tags:rename old=X new=Y</code></td>
+<td>Rename tags vault-wide</td>
+</tr>
+<tr>
+<td><code>obsidian backlinks file="NAME"</code></td>
+<td>Find incoming links</td>
+</tr>
+<tr>
+<td><code>obsidian orphans</code></td>
+<td>Notes with zero links</td>
+</tr>
+<tr>
+<td><code>obsidian properties file="NAME"</code></td>
+<td>Read YAML frontmatter</td>
+</tr>
+<tr>
+<td><code>obsidian properties:set file="NAME" key=val</code></td>
+<td>Set a property</td>
+</tr>
+</tbody>
+</table>
+<details class="info">
+<summary>Requires Obsidian running</summary>
+<p>The native CLI communicates with a running Obsidian instance. Enable it in Settings → General → Command line interface.</p>
+</details>
+<p>See the <a href="https://help.obsidian.md/cli">official docs</a> for the full command list.</p>
+<hr />
 <p><strong>Version:</strong> 3.1.0 | <strong>Commands:</strong> 15 | <strong>AI Providers:</strong> 5</p>
 
 
