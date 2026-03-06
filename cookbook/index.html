@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/cookbook/">
       
       
-        <link rel="prev" href="../refcard/">
+        <link rel="prev" href="../workflows/">
       
       
         <link rel="next" href="../cli-reference/">
@@ -54,6 +54,8 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../stylesheets/adhd.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -248,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../installation/" class="md-tabs__link">
+        <a href="../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -433,6 +435,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../adhd-quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADHD Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
   
@@ -606,6 +636,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visual Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -667,6 +725,17 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#first-time-setup-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup Flow
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#getting-started" class="md-nav__link">
@@ -1420,6 +1489,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#first-time-setup-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1806,8 +1886,25 @@
 
 
 <h1 id="cookbook">Cookbook<a class="headerlink" href="#cookbook" title="Permanent link">&para;</a></h1>
-<p>Practical recipes for common vault management tasks.</p>
+<blockquote>
+<p class="tldr"><strong>TL;DR</strong> (30 seconds)
+- <strong>What:</strong> Task-based recipes for common vault management scenarios
+- <strong>Why:</strong> Copy-paste solutions instead of reading docs
+- <strong>How:</strong> <code>obs discover ~/Documents --scan</code> — find and scan vaults in one step
+- <strong>Next:</strong> <a href="../ai-setup/">AI Setup Guide</a> for AI-powered analysis</p>
+</blockquote>
+<p><strong>Time:</strong> ~15 minutes (all recipes) | <strong>Level:</strong> Beginner–Intermediate | <strong>Steps:</strong> 25+ recipes</p>
 <hr />
+<h2 id="first-time-setup-flow">First-Time Setup Flow<a class="headerlink" href="#first-time-setup-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    A[brew install] --&gt; B[obs discover ~/Documents --scan]
+    B --&gt; C[obs]
+    C --&gt; D{Vaults found?}
+    D --&gt;|Yes| E[obs stats MyVault]
+    D --&gt;|No| F[obs discover other/path --scan]
+    F --&gt; C
+    style A fill:#6366f1,color:#fff
+    style E fill:#22c55e,color:#fff</code></pre>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="first-time-setup">First-time setup<a class="headerlink" href="#first-time-setup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install</span>
@@ -1834,6 +1931,10 @@
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>obs<span class="w"> </span>scan<span class="w"> </span>/path/to/your/vault
 </code></pre></div>
 <p>Scanning reads all markdown files, extracts wikilinks, tags, and metadata into the knowledge graph.</p>
+<div class="admonition tip">
+<p class="admonition-title">One-liner setup</p>
+<p><code>obs discover ~/Documents --scan</code> finds and scans all vaults in one step.</p>
+</div>
 <hr />
 <h2 id="vault-health-cleanup">Vault Health &amp; Cleanup<a class="headerlink" href="#vault-health-cleanup" title="Permanent link">&para;</a></h2>
 <h3 id="run-a-full-health-check">Run a full health check<a class="headerlink" href="#run-a-full-health-check" title="Permanent link">&para;</a></h3>
@@ -1935,6 +2036,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>obs<span class="w"> </span>scan<span class="w"> </span>/path/to/vault<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v
 </code></pre></div>
 <p>Watch for: orphan count increasing, broken links growing, density increasing (good), new clusters forming.</p>
+<details class="tip">
+<summary>Automate health checks</summary>
+<p>Add <code>obs health MyVault</code> to a cron job or shell alias for daily vault monitoring.</p>
+</details>
 <hr />
 <h2 id="ai-powered-discovery">AI-Powered Discovery<a class="headerlink" href="#ai-powered-discovery" title="Permanent link">&para;</a></h2>
 <h3 id="set-up-ai-providers">Set up AI providers<a class="headerlink" href="#set-up-ai-providers" title="Permanent link">&para;</a></h3>
@@ -1997,6 +2102,10 @@
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json
 </code></pre></div>
 <p>Suggestion categories: <code>move</code> (unsorted notes), <code>archive</code> (stale folders), <code>merge-folder</code> (small folders), <code>create-folder</code> (scattered tags), <code>connect</code> (orphans near clusters).</p>
+<div class="admonition warning">
+<p class="admonition-title">AI refactor is read-only</p>
+<p>The refactor command only <strong>suggests</strong> changes — it never moves or deletes your files. Safe to run anytime.</p>
+</div>
 <hr />
 <h2 id="multi-vault-management">Multi-Vault Management<a class="headerlink" href="#multi-vault-management" title="Permanent link">&para;</a></h2>
 <h3 id="discover-all-vaults-on-your-system">Discover all vaults on your system<a class="headerlink" href="#discover-all-vaults-on-your-system" title="Permanent link">&para;</a></h3>

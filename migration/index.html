@@ -53,6 +53,8 @@
       
     
     
+      <link rel="stylesheet" href="../stylesheets/adhd.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -246,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../installation/" class="md-tabs__link">
+        <a href="../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -431,6 +433,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../adhd-quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADHD Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
   
@@ -582,6 +612,34 @@
     
   
     Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visual Workflows
   
 
     
@@ -1965,9 +2023,16 @@
 
 
 <h1 id="migration-guide-v2x-v300">Migration Guide: v2.x → v3.0.0<a class="headerlink" href="#migration-guide-v2x-v300" title="Permanent link">&para;</a></h1>
-<p><strong>Obsidian CLI Ops v3.0.0</strong> represents a major simplification focused on core Obsidian vault management. This guide helps you transition from v2.x to v3.0.0.</p>
+<blockquote>
+<p class="tldr"><strong>TL;DR</strong> (30 seconds)
+- <strong>What:</strong> v3.0 removed TUI, R-Dev, and legacy commands — down to 15 focused commands
+- <strong>Why:</strong> Simpler codebase, faster CLI, better maintained
+- <strong>How:</strong> <code>pip3 install -r requirements.txt</code> then <code>obs</code> — database is compatible
+- <strong>Next:</strong> <a href="../usage/">Usage</a> for the new CLI workflow</p>
+</blockquote>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate (v2.x users) | <strong>Steps:</strong> 5 checks</p>
 <hr />
-<h2 id="overview-of-changes">Overview of Changes<a class="headerlink" href="#overview-of-changes" title="Permanent link">&para;</a></h2>
+<h2 id="overview-of-changes"><img alt="📋" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4cb.svg" title=":clipboard:" /> Overview of Changes<a class="headerlink" href="#overview-of-changes" title="Permanent link">&para;</a></h2>
 <h3 id="philosophy-shift-proposal-a">Philosophy Shift: Proposal A<a class="headerlink" href="#philosophy-shift-proposal-a" title="Permanent link">&para;</a></h3>
 <p><strong>v2.x</strong>: Multi-purpose tool (Obsidian + TUI + R-Dev integration)
 <strong>v3.0.0</strong>: Laser-focused Obsidian vault manager</p>
@@ -1978,7 +2043,7 @@
 - ❌ <strong>Removed Legacy</strong>: v1.x commands removed
 - 📉 <strong>Code Reduction</strong>: 11,500 → ~7,400 lines (36% so far, target 61%)</p>
 <hr />
-<h2 id="command-migration-table">Command Migration Table<a class="headerlink" href="#command-migration-table" title="Permanent link">&para;</a></h2>
+<h2 id="command-migration-table"><img alt="🔄" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f504.svg" title=":arrows_counterclockwise:" /> Command Migration Table<a class="headerlink" href="#command-migration-table" title="Permanent link">&para;</a></h2>
 <h3 id="removed-commands">Removed Commands<a class="headerlink" href="#removed-commands" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2149,7 +2214,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="workflow-changes">Workflow Changes<a class="headerlink" href="#workflow-changes" title="Permanent link">&para;</a></h2>
+<h2 id="workflow-changes"><img alt="🔁" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f501.svg" title=":repeat:" /> Workflow Changes<a class="headerlink" href="#workflow-changes" title="Permanent link">&para;</a></h2>
 <h3 id="before-v2x-tui-centric">Before (v2.x): TUI-Centric<a class="headerlink" href="#before-v2x-tui-centric" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Launch TUI</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs
@@ -2177,7 +2242,7 @@
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>obs<span class="w"> </span>analyze<span class="w"> </span>my-vault
 </code></pre></div>
 <hr />
-<h2 id="feature-removal-details">Feature Removal Details<a class="headerlink" href="#feature-removal-details" title="Permanent link">&para;</a></h2>
+<h2 id="feature-removal-details"><img alt="🗑" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5d1.svg" title=":wastebasket:" /> Feature Removal Details<a class="headerlink" href="#feature-removal-details" title="Permanent link">&para;</a></h2>
 <h3 id="1-tui-terminal-user-interface">1. TUI (Terminal User Interface)<a class="headerlink" href="#1-tui-terminal-user-interface" title="Permanent link">&para;</a></h3>
 <p><strong>Why Removed:</strong>
 - Added 1,701 lines of code
@@ -2269,7 +2334,7 @@
 - Vault auditing: Use <code>obs stats &lt;vault&gt;</code>
 - Configuration sync: Use git or cloud storage directly</p>
 <hr />
-<h2 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
+<h2 id="breaking-changes"><img alt="⚠" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a0.svg" title=":warning:" /> Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
 <h3 id="1-default-behavior-obs-with-no-args">1. Default Behavior (<code>obs</code> with no args)<a class="headerlink" href="#1-default-behavior-obs-with-no-args" title="Permanent link">&para;</a></h3>
 <p><strong>v2.x:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w">          </span><span class="c1"># Launched TUI with last vault</span>
@@ -2301,7 +2366,7 @@
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># See &quot;R-Dev Integration&quot; section above</span>
 </code></pre></div></p>
 <hr />
-<h2 id="installation-upgrade">Installation &amp; Upgrade<a class="headerlink" href="#installation-upgrade" title="Permanent link">&para;</a></h2>
+<h2 id="installation-upgrade"><img alt="📦" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4e6.svg" title=":package:" /> Installation &amp; Upgrade<a class="headerlink" href="#installation-upgrade" title="Permanent link">&para;</a></h2>
 <h3 id="clean-install-recommended">Clean Install (Recommended)<a class="headerlink" href="#clean-install-recommended" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Backup your database</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cp<span class="w"> </span>~/.config/obs/obsidian_vaults.db<span class="w"> </span>~/.config/obs/obsidian_vaults.db.backup

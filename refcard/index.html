@@ -18,7 +18,7 @@
         <link rel="prev" href="../usage/">
       
       
-        <link rel="next" href="../cookbook/">
+        <link rel="next" href="../workflows/">
       
       
         
@@ -54,6 +54,8 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../stylesheets/adhd.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -248,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../installation/" class="md-tabs__link">
+        <a href="../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -425,6 +427,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adhd-quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADHD Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -732,6 +762,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visual Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1250,7 +1308,13 @@
 
 
 <h1 id="quick-reference-card">Quick Reference Card<a class="headerlink" href="#quick-reference-card" title="Permanent link">&para;</a></h1>
-<p>All <code>obs</code> commands at a glance. Print this page or keep it open as a cheat sheet.</p>
+<blockquote>
+<p class="tldr"><strong>TL;DR</strong> (30 seconds)
+- <strong>What:</strong> Printable cheat sheet — every command on one page
+- <strong>Why:</strong> Pin it, bookmark it, keep it open while you work
+- <strong>How:</strong> <code>obs</code> to start, <code>obs help --all</code> for full details
+- <strong>Next:</strong> <a href="../cookbook/">Cookbook</a> for task-based recipes</p>
+</blockquote>
 <hr />
 <h2 id="core-commands">Core Commands<a class="headerlink" href="#core-commands" title="Permanent link">&para;</a></h2>
 <table>
@@ -1418,6 +1482,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--provider<span class="w"> </span>ollama
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--provider<span class="w"> </span>anthropic-api
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Start here</p>
+<p>New to <code>obs</code>? Run these 3 commands: <code>obs</code> → <code>obs stats MyVault</code> → <code>obs analyze MyVault</code>. That's it.</p>
+</div>
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># First-time setup</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
@@ -1438,6 +1506,10 @@
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
+<details class="info">
+<summary>Vault lookup shortcut</summary>
+<p>Any command accepting <code>&lt;vault&gt;</code> also accepts an ID prefix — type just the first 4 characters instead of the full name.</p>
+</details>
 <p><strong>Version:</strong> 3.1.0 | <strong>Commands:</strong> 15 | <strong>AI Providers:</strong> 5</p>
 
 

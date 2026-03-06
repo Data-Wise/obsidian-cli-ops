@@ -55,6 +55,8 @@
       
     
     
+      <link rel="stylesheet" href="../stylesheets/adhd.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -250,7 +252,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../installation/" class="md-tabs__link">
+        <a href="../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -430,6 +432,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adhd-quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADHD Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -633,6 +663,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daily-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Workflow
+      
+    </span>
+  </a>
   
 </li>
       
@@ -924,6 +965,34 @@
     
   
     Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visual Workflows
   
 
     
@@ -1425,6 +1494,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#daily-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-workflows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1651,8 +1731,14 @@
 
 <h1 id="usage-guide">Usage Guide<a class="headerlink" href="#usage-guide" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p><strong>Just type <code>obs</code> - it does the right thing!</strong></p>
+<p class="tldr"><strong>TL;DR</strong> (30 seconds)
+- <strong>What:</strong> 15 focused commands for vault management, graph analysis, and AI
+- <strong>Why:</strong> Zero-friction Obsidian vault management from the terminal
+- <strong>How:</strong> <code>obs</code> — just type it, it lists your vaults
+- <strong>Next:</strong> <a href="../cookbook/">Cookbook</a> for task-based recipes</p>
 </blockquote>
+<p><strong>Time:</strong> ~10 minutes | <strong>Level:</strong> Beginner | <strong>Steps:</strong> 4 workflows</p>
+<hr />
 <h2 id="philosophy">Philosophy<a class="headerlink" href="#philosophy" title="Permanent link">&para;</a></h2>
 <p><strong>Version 3.0</strong> focuses on doing one thing exceptionally well: managing Obsidian vaults from the command line.</p>
 <ul>
@@ -1781,6 +1867,13 @@
 </tbody>
 </table>
 <hr />
+<h2 id="daily-workflow">Daily Workflow<a class="headerlink" href="#daily-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    A[obs] --&gt;|list vaults| B[obs stats]
+    B --&gt;|check health| C[obs analyze]
+    C --&gt;|deep dive| D[obs ai refactor]
+    style A fill:#6366f1,color:#fff
+    style D fill:#8b5cf6,color:#fff</code></pre>
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
 <h3 id="first-time-setup">First-Time Setup<a class="headerlink" href="#first-time-setup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install dependencies</span>

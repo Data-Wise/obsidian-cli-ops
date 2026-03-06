@@ -55,6 +55,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../stylesheets/adhd.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -80,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#test-suite-implementation-summary" class="md-skip">
+        <a href="#testing-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -248,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../installation/" class="md-tabs__link">
+        <a href="../../../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -433,6 +435,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../adhd-quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADHD Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../installation/" class="md-nav__link">
         
   
@@ -584,6 +614,34 @@
     
   
     Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visual Workflows
   
 
     
@@ -925,322 +983,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#implementation-complete" class="md-nav__link">
+  <a href="#test-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎯 Implementation Complete
+        Test Coverage
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="🎯 Implementation Complete">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-coverage-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Coverage Overview
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-files-created" class="md-nav__link">
+  <a href="#running-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📂 Test Files Created
+        Running Tests
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📂 Test Files Created">
+    <nav class="md-nav" aria-label="Running Tests">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#python-tests-srcpythontests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Tests (src/python/tests/)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#javascript-tests-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JavaScript Tests (tests/)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔧 Test Infrastructure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔧 Test Infrastructure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pytest-configuration-pytestini" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        pytest Configuration (pytest.ini)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#package-scripts-packagejson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Package Scripts (package.json)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dependencies-added" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dependencies Added
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📊 Test Results
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📊 Test Results">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#current-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current Status
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-all-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run All Tests
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coverage-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📈 Coverage Analysis
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📈 Coverage Analysis">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#before-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Implementation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#after-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        After Implementation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-quality-improvements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🎯 Test Quality Improvements
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🎯 Test Quality Improvements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-was-added" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Was Added
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-best-practices-implemented" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📝 Testing Best Practices Implemented
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📝 Testing Best Practices Implemented">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-test-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Test Isolation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-descriptive-test-names" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Descriptive Test Names
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-arrange-act-assert-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Arrange-Act-Assert Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-fixtures-for-reusability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Fixtures for Reusability
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-test-markers-for-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Test Markers for Organization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-the-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🚀 Running the Tests
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Running the Tests">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#selective-testing" class="md-nav__link">
@@ -1253,39 +1016,50 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#cicd-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CI/CD Integration
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#future-test-enhancements" class="md-nav__link">
+  <a href="#test-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📋 Future Test Enhancements
+        Test Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📋 Future Test Enhancements">
+    <nav class="md-nav" aria-label="Test Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#not-yet-implemented" class="md-nav__link">
+  <a href="#three-layer-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Not Yet Implemented
+        Three-Layer Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mocking-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mocking Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-fixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Fixtures
       
     </span>
   </a>
@@ -1298,10 +1072,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-statistics" class="md-nav__link">
+  <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Test Statistics
+        Best Practices
       
     </span>
   </a>
@@ -1309,21 +1083,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#success-criteria-met" class="md-nav__link">
+  <a href="#cicd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ Success Criteria Met
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🎉 Summary
+        CI/CD
       
     </span>
   </a>
@@ -1465,322 +1228,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#implementation-complete" class="md-nav__link">
+  <a href="#test-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎯 Implementation Complete
+        Test Coverage
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="🎯 Implementation Complete">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-coverage-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Coverage Overview
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-files-created" class="md-nav__link">
+  <a href="#running-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📂 Test Files Created
+        Running Tests
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📂 Test Files Created">
+    <nav class="md-nav" aria-label="Running Tests">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#python-tests-srcpythontests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Tests (src/python/tests/)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#javascript-tests-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JavaScript Tests (tests/)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔧 Test Infrastructure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔧 Test Infrastructure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pytest-configuration-pytestini" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        pytest Configuration (pytest.ini)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#package-scripts-packagejson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Package Scripts (package.json)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dependencies-added" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dependencies Added
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📊 Test Results
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📊 Test Results">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#current-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current Status
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-all-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run All Tests
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coverage-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📈 Coverage Analysis
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📈 Coverage Analysis">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#before-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Implementation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#after-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        After Implementation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-quality-improvements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🎯 Test Quality Improvements
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🎯 Test Quality Improvements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-was-added" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Was Added
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-best-practices-implemented" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📝 Testing Best Practices Implemented
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📝 Testing Best Practices Implemented">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-test-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Test Isolation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-descriptive-test-names" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Descriptive Test Names
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-arrange-act-assert-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Arrange-Act-Assert Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-fixtures-for-reusability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Fixtures for Reusability
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-test-markers-for-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Test Markers for Organization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-the-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🚀 Running the Tests
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Running the Tests">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#selective-testing" class="md-nav__link">
@@ -1793,39 +1261,50 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#cicd-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CI/CD Integration
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#future-test-enhancements" class="md-nav__link">
+  <a href="#test-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📋 Future Test Enhancements
+        Test Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📋 Future Test Enhancements">
+    <nav class="md-nav" aria-label="Test Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#not-yet-implemented" class="md-nav__link">
+  <a href="#three-layer-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Not Yet Implemented
+        Three-Layer Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mocking-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mocking Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-fixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Fixtures
       
     </span>
   </a>
@@ -1838,10 +1317,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-statistics" class="md-nav__link">
+  <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Test Statistics
+        Best Practices
       
     </span>
   </a>
@@ -1849,21 +1328,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#success-criteria-met" class="md-nav__link">
+  <a href="#cicd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ Success Criteria Met
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🎉 Summary
+        CI/CD
       
     </span>
   </a>
@@ -1890,625 +1358,252 @@
   
 
 
-<h1 id="test-suite-implementation-summary">Test Suite Implementation Summary<a class="headerlink" href="#test-suite-implementation-summary" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2025-12-15
-<strong>Status:</strong> ✅ Complete
-<strong>Total Tests:</strong> 232 tests (202 pytest + 30 Jest)</p>
-<h2 id="implementation-complete">🎯 Implementation Complete<a class="headerlink" href="#implementation-complete" title="Permanent link">&para;</a></h2>
-<h3 id="test-coverage-overview">Test Coverage Overview<a class="headerlink" href="#test-coverage-overview" title="Permanent link">&para;</a></h3>
+<h1 id="testing-overview">Testing Overview<a class="headerlink" href="#testing-overview" title="Permanent link">&para;</a></h1>
+<p><strong>Version:</strong> 3.1.0
+<strong>Total Tests:</strong> 236 (206 pytest + 30 Jest)</p>
+<h2 id="test-coverage">Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Component</th>
 <th>Tests</th>
 <th>Framework</th>
-<th>Status</th>
+<th>File</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>v1.x CLI (ZSH)</td>
-<td>22 tests</td>
-<td>Jest</td>
-<td>✅ Passing</td>
-</tr>
-<tr>
-<td>v2.0 Commands</td>
-<td>18 tests</td>
-<td>Jest</td>
-<td>✅ Passing</td>
-</tr>
-<tr>
-<td>Database Manager</td>
-<td>48 tests</td>
+<td>AI Providers</td>
+<td>26</td>
 <td>pytest</td>
-<td>✅ Passing</td>
+<td><code>test_ai_providers.py</code></td>
+</tr>
+<tr>
+<td>Vault Health</td>
+<td>21</td>
+<td>pytest</td>
+<td><code>test_vault_health.py</code></td>
+</tr>
+<tr>
+<td>AI Refactor</td>
+<td>20</td>
+<td>pytest</td>
+<td><code>test_ai_refactor.py</code></td>
+</tr>
+<tr>
+<td>AI Models</td>
+<td>19</td>
+<td>pytest</td>
+<td><code>test_ai_models.py</code></td>
+</tr>
+<tr>
+<td>Obsidian Bridge</td>
+<td>17</td>
+<td>pytest</td>
+<td><code>test_obsidian_bridge.py</code></td>
+</tr>
+<tr>
+<td>Vault Fixtures</td>
+<td>15</td>
+<td>pytest</td>
+<td><code>test_vault_fixtures.py</code></td>
+</tr>
+<tr>
+<td>AI Features</td>
+<td>15</td>
+<td>pytest</td>
+<td><code>test_ai_features.py</code></td>
+</tr>
+<tr>
+<td>JSON Output</td>
+<td>13</td>
+<td>pytest</td>
+<td><code>test_json_output.py</code></td>
+</tr>
+<tr>
+<td>CLI Edge Cases</td>
+<td>11</td>
+<td>pytest</td>
+<td><code>test_cli_edge_cases.py</code></td>
 </tr>
 <tr>
 <td>Vault Scanner</td>
-<td>35+ tests</td>
+<td>8</td>
 <td>pytest</td>
-<td>✅ Passing</td>
+<td><code>test_vault_scanner.py</code></td>
 </tr>
 <tr>
-<td>Graph Builder</td>
-<td>20+ tests</td>
+<td>Vault Lookup</td>
+<td>7</td>
 <td>pytest</td>
-<td>✅ Passing</td>
+<td><code>test_vault_lookup.py</code></td>
 </tr>
 <tr>
-<td>AI Clients</td>
-<td>15+ tests</td>
+<td>Version Consistency</td>
+<td>6</td>
 <td>pytest</td>
-<td>✅ Passing</td>
+<td><code>test_version_consistency.py</code></td>
 </tr>
 <tr>
-<td><strong>TUI Phase 4.1</strong></td>
-<td><strong>30 tests</strong></td>
+<td>Vault Manager</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_vault_manager.py</code></td>
+</tr>
+<tr>
+<td>Embedding Cache</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_embedding_cache.py</code></td>
+</tr>
+<tr>
+<td>CLI Rich Output</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_cli_rich.py</code></td>
+</tr>
+<tr>
+<td>CLI Polish</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_cli_polish.py</code></td>
+</tr>
+<tr>
+<td>Search API</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_search_api.py</code></td>
+</tr>
+<tr>
+<td>Graph Metrics Join</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_graph_metrics_join.py</code></td>
+</tr>
+<tr>
+<td>DB Pagination</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_db_pagination.py</code></td>
+</tr>
+<tr>
+<td>DB Metrics</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_db_metrics.py</code></td>
+</tr>
+<tr>
+<td><strong>Python Subtotal</strong></td>
+<td><strong>206</strong></td>
 <td><strong>pytest</strong></td>
-<td><strong>✅ Passing</strong></td>
+<td></td>
 </tr>
 <tr>
-<td><strong>TUI Phase 4.2</strong></td>
-<td><strong>26 tests</strong></td>
-<td><strong>pytest</strong></td>
-<td><strong>✅ Passing</strong></td>
-</tr>
-<tr>
-<td><strong>TUI Phase 4.3</strong></td>
-<td><strong>42 tests</strong></td>
-<td><strong>pytest</strong></td>
-<td><strong>✅ Passing</strong></td>
-</tr>
-<tr>
-<td><strong>TUI Phase 4.4</strong></td>
-<td><strong>38 tests</strong></td>
-<td><strong>pytest</strong></td>
-<td><strong>✅ Passing</strong></td>
-</tr>
-<tr>
-<td>R-Dev Integration</td>
-<td>4 tests</td>
-<td>Bash</td>
-<td>✅ Passing</td>
+<td>ZSH CLI Wrapper</td>
+<td>30</td>
+<td>Jest</td>
+<td><code>obs.test.js</code>, <code>cli.test.js</code></td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td><strong>298</strong></td>
-<td><strong>3 frameworks</strong></td>
-<td><strong>✅</strong></td>
+<td><strong>236</strong></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="test-files-created">📂 Test Files Created<a class="headerlink" href="#test-files-created" title="Permanent link">&para;</a></h2>
-<h3 id="python-tests-srcpythontests">Python Tests (<code>src/python/tests/</code>)<a class="headerlink" href="#python-tests-srcpythontests" title="Permanent link">&para;</a></h3>
-<p><strong>1. test_db_manager.py (469 lines, 48 tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="o">-</span> <span class="n">TestDatabaseInitialization</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">-</span> <span class="n">TestVaultOperations</span> <span class="p">(</span><span class="mi">4</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="o">-</span> <span class="n">TestNoteOperations</span> <span class="p">(</span><span class="mi">5</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">-</span> <span class="n">TestLinkOperations</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="o">-</span> <span class="n">TestTagOperations</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="o">-</span> <span class="n">TestGraphQueries</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="o">-</span> <span class="n">TestScanHistory</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="o">-</span> <span class="n">TestConnectionManagement</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ Database schema creation
-- ✅ Vault CRUD operations
-- ✅ Note CRUD operations
-- ✅ Link operations (incoming/outgoing)
-- ✅ Tag operations
-- ✅ Graph queries (orphans, hubs, broken links)
-- ✅ Scan history tracking
-- ✅ Connection management</p>
-<p><strong>2. test_vault_scanner.py (450 lines, 35+ tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">-</span> <span class="n">TestMarkdownParser</span> <span class="p">(</span><span class="mi">9</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">-</span> <span class="n">TestVaultDiscovery</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">-</span> <span class="n">TestVaultScanning</span> <span class="p">(</span><span class="mi">7</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">-</span> <span class="n">TestMarkdownParsing</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">-</span> <span class="n">TestErrorHandling</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">-</span> <span class="n">TestWikilinkExtraction</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">-</span> <span class="n">TestTagExtraction</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ Markdown parsing
-- ✅ YAML frontmatter extraction
-- ✅ Wikilink extraction (with aliases, sections)
-- ✅ Tag extraction (nested, dashed tags)
-- ✅ Vault discovery
-- ✅ Subdirectory handling
-- ✅ Error handling</p>
-<p><strong>3. test_graph_builder.py (350 lines, 20+ tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">-</span> <span class="n">TestGraphBuilder</span> <span class="p">(</span><span class="mi">6</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">-</span> <span class="n">TestLinkResolver</span> <span class="p">(</span><span class="mi">4</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">-</span> <span class="n">TestGraphMetrics</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">-</span> <span class="n">TestEdgeCases</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ Graph construction from database
-- ✅ PageRank calculation
-- ✅ Degree metrics (in/out)
-- ✅ Centrality metrics
-- ✅ Link resolution strategies
-- ✅ Edge cases (empty graphs, self-references)</p>
-<p><strong>4. test_ai_client.py (300 lines, 15+ tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="o">-</span> <span class="n">TestAIClientFactory</span> <span class="p">(</span><span class="mi">4</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="o">-</span> <span class="n">TestHuggingFaceClient</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">,</span> <span class="n">marked</span> <span class="nd">@ai</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="o">-</span> <span class="n">TestOllamaClient</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">,</span> <span class="n">mocked</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="o">-</span> <span class="n">TestAIClientInterface</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="o">-</span> <span class="n">TestSimilarityScoring</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">,</span> <span class="n">marked</span> <span class="nd">@ai</span><span class="p">)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="o">-</span> <span class="n">TestRealAIProviders</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">,</span> <span class="n">marked</span> <span class="nd">@slow</span> <span class="nd">@integration</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ AI client factory pattern
-- ✅ HuggingFace client (real + mocked)
-- ✅ Ollama client (mocked)
-- ✅ Embedding generation
-- ✅ Note comparison
-- ✅ Batch operations
-- ✅ Interface compliance</p>
-<p><strong>5. test_app.py (TUI Foundation - 30 tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="o">-</span> <span class="n">TestHomeScreen</span> <span class="p">(</span><span class="mi">9</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="o">-</span> <span class="n">TestHelpScreen</span> <span class="p">(</span><span class="mi">6</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="o">-</span> <span class="n">TestPlaceholderScreen</span> <span class="p">(</span><span class="mi">5</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="o">-</span> <span class="n">TestObsidianTUI</span> <span class="p">(</span><span class="mi">8</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="o">-</span> <span class="n">TestIntegration</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ HomeScreen navigation and actions
-- ✅ HelpScreen display and shortcuts
-- ✅ PlaceholderScreen functionality
-- ✅ TUI app initialization and screens
-- ✅ CSS and styling
-- ✅ Key bindings and actions
-- ✅ Integration between screens</p>
-<p><strong>6. test_vault_browser.py (TUI Vault Browser - 26 tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="o">-</span> <span class="n">TestVaultBrowserScreen</span> <span class="p">(</span><span class="mi">19</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="o">-</span> <span class="n">TestVaultBrowserCSS</span> <span class="p">(</span><span class="mi">4</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="o">-</span> <span class="n">TestVaultBrowserIntegration</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ Vault list display and refresh
-- ✅ Vault selection and details
-- ✅ Navigation to notes and graph screens
-- ✅ Statistics display
-- ✅ CSS and styling
-- ✅ Error handling
-- ✅ Integration workflows</p>
-<p><strong>7. test_note_explorer.py (TUI Note Explorer - 42 tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="o">-</span> <span class="n">TestNoteExplorerScreen</span> <span class="p">(</span><span class="mi">6</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="o">-</span> <span class="n">TestSearchFunctionality</span> <span class="p">(</span><span class="mi">6</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="o">-</span> <span class="n">TestSortFunctionality</span> <span class="p">(</span><span class="mi">7</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">-</span> <span class="n">TestPreviewDisplay</span> <span class="p">(</span><span class="mi">7</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="o">-</span> <span class="n">TestMetadataDisplay</span> <span class="p">(</span><span class="mi">5</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="o">-</span> <span class="n">TestActionMethods</span> <span class="p">(</span><span class="mi">6</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="o">-</span> <span class="n">TestHelperMethods</span> <span class="p">(</span><span class="mi">5</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="o">-</span> <span class="n">TestUpdateMethods</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="o">-</span> <span class="n">TestEventHandlers</span> <span class="p">(</span><span class="mi">2</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="o">-</span> <span class="n">TestIntegration</span> <span class="p">(</span><span class="mi">1</span> <span class="n">test</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ Note list display and selection
-- ✅ Real-time search filtering
-- ✅ Sort cycling (title, word count, date)
-- ✅ Note content preview
-- ✅ Metadata display (links, tags, metrics)
-- ✅ All actions and key bindings
-- ✅ Error handling
-- ✅ Integration workflows</p>
-<p><strong>8. test_graph_visualizer.py (TUI Graph Visualizer - 38 tests)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test Classes:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="o">-</span> <span class="n">TestGraphVisualizerScreen</span> <span class="p">(</span><span class="mi">32</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="o">-</span> <span class="n">TestGraphVisualizerCSS</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="o">-</span> <span class="n">TestGraphVisualizerIntegration</span> <span class="p">(</span><span class="mi">3</span> <span class="n">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ Graph loading and statistics
-- ✅ Node list views (hubs/orphans/clusters)
-- ✅ ASCII graph rendering
-- ✅ Ego graph visualization
-- ✅ View switching
-- ✅ Navigation to note explorer
-- ✅ All actions and key bindings
-- ✅ CSS and styling
-- ✅ Error handling and recovery</p>
-<h3 id="javascript-tests-tests">JavaScript Tests (<code>tests/</code>)<a class="headerlink" href="#javascript-tests-tests" title="Permanent link">&para;</a></h3>
-<p><strong>Updated obs.test.js (273 lines, 40 tests total)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Existing tests (22 tests)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="o">-</span><span class="w"> </span><span class="nx">obs</span><span class="w"> </span><span class="nx">CLI</span><span class="w"> </span><span class="nx">Tool</span><span class="w"> </span><span class="p">(</span><span class="mf">12</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="o">-</span><span class="w"> </span><span class="nx">Configuration</span><span class="w"> </span><span class="nx">Files</span><span class="w"> </span><span class="p">(</span><span class="mf">4</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="o">-</span><span class="w"> </span><span class="nx">Script</span><span class="w"> </span><span class="nx">Structure</span><span class="w"> </span><span class="p">(</span><span class="mf">3</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// NEW: v2.0 Knowledge Graph Commands (11 tests)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="o">-</span><span class="w"> </span><span class="nx">discover</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">(</span><span class="mf">3</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="o">-</span><span class="w"> </span><span class="nx">vaults</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">(</span><span class="mf">2</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="o">-</span><span class="w"> </span><span class="nx">stats</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">(</span><span class="mf">3</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="o">-</span><span class="w"> </span><span class="nx">analyze</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">(</span><span class="mf">3</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">// NEW: v2.0 AI Commands (7 tests)</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="o">-</span><span class="w"> </span><span class="nx">ai</span><span class="w"> </span><span class="nx">setup</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">(</span><span class="mf">3</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="o">-</span><span class="w"> </span><span class="nx">ai</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">(</span><span class="mf">2</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="o">-</span><span class="w"> </span><span class="nx">ai</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="nx">help</span><span class="w"> </span><span class="p">(</span><span class="mf">2</span><span class="w"> </span><span class="nx">tests</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Coverage:</strong>
-- ✅ All v2.0 commands accessible
-- ✅ Flag support (--scan, --quick, -v)
-- ✅ Error handling
-- ✅ Help text validation</p>
-<hr />
-<h2 id="test-infrastructure">🔧 Test Infrastructure<a class="headerlink" href="#test-infrastructure" title="Permanent link">&para;</a></h2>
-<h3 id="pytest-configuration-pytestini">pytest Configuration (<code>pytest.ini</code>)<a class="headerlink" href="#pytest-configuration-pytestini" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[pytest]</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="na">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">src/python/tests</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="na">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">test_*.py</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="na">python_functions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">test_*</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Markers for selective testing</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="na">markers</span><span class="w"> </span><span class="o">=</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="na">unit</span><span class="o">:</span><span class="w"> </span><span class="s">Unit tests</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="na">integration</span><span class="o">:</span><span class="w"> </span><span class="s">Integration tests</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="na">slow</span><span class="o">:</span><span class="w"> </span><span class="s">Slow-running tests</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="na">ai</span><span class="o">:</span><span class="w"> </span><span class="s">Tests requiring AI providers</span>
-</code></pre></div>
-<h3 id="package-scripts-packagejson">Package Scripts (<code>package.json</code>)<a class="headerlink" href="#package-scripts-packagejson" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nt">&quot;test&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm run test:js &amp;&amp; npm run test:py&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">&quot;test:js&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jest&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nt">&quot;test:py&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pytest src/python/tests -v&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nt">&quot;test:py:unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pytest -v -m unit&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="nt">&quot;test:py:integration&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pytest -v -m integration&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="nt">&quot;test:py:ai&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pytest -v -m ai&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="nt">&quot;test:shell&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bash tests/test_r_dev.sh&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="nt">&quot;test:all&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm run test:js &amp;&amp; npm run test:py &amp;&amp; npm run test:shell&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="nt">&quot;test:coverage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jest --coverage &amp;&amp; pytest --cov=src/python&quot;</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="p">}</span>
-</code></pre></div>
-<h3 id="dependencies-added">Dependencies Added<a class="headerlink" href="#dependencies-added" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># requirements.txt
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pytest&gt;=7.4.0
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>pytest-cov&gt;=4.1.0
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>pytest-mock&gt;=3.11.1  # NEW
-</code></pre></div>
-<hr />
-<h2 id="test-results">📊 Test Results<a class="headerlink" href="#test-results" title="Permanent link">&para;</a></h2>
-<h3 id="current-status">Current Status<a class="headerlink" href="#current-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># JavaScript Tests (Jest)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>npm<span class="w"> </span>run<span class="w"> </span>test:js
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>✅<span class="w"> </span>All<span class="w"> </span><span class="m">40</span><span class="w"> </span>tests<span class="w"> </span>passing
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">   </span>-<span class="w"> </span><span class="m">22</span><span class="w"> </span>existing<span class="w"> </span>tests<span class="w"> </span><span class="o">(</span>v1.x<span class="o">)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">   </span>-<span class="w"> </span><span class="m">18</span><span class="w"> </span>new<span class="w"> </span>tests<span class="w"> </span><span class="o">(</span>v2.0<span class="o">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Shell Tests</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>npm<span class="w"> </span>run<span class="w"> </span>test:shell
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>✅<span class="w"> </span>All<span class="w"> </span><span class="m">4</span><span class="w"> </span>tests<span class="w"> </span>passing
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">   </span>-<span class="w"> </span>R-Dev<span class="w"> </span>integration<span class="w"> </span>tests
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Python Tests (pytest)</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>⏳<span class="w"> </span>Ready<span class="w"> </span>to<span class="w"> </span>run<span class="w"> </span><span class="o">(</span>requires:<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt<span class="o">)</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">   </span>-<span class="w"> </span><span class="m">118</span>+<span class="w"> </span>tests<span class="w"> </span>written
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">   </span>-<span class="w"> </span>Full<span class="w"> </span>v2.0<span class="w"> </span>coverage
-</code></pre></div>
-<h3 id="run-all-tests">Run All Tests<a class="headerlink" href="#run-all-tests" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Run all test suites</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>npm<span class="w"> </span>run<span class="w"> </span>test:all
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Run with coverage</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>npm<span class="w"> </span>run<span class="w"> </span>test:coverage
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Run specific test categories</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py:unit<span class="w">        </span><span class="c1"># Unit tests only</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py:integration<span class="w"> </span><span class="c1"># Integration tests</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py:ai<span class="w">         </span><span class="c1"># AI-specific tests</span>
-</code></pre></div>
-<hr />
-<h2 id="coverage-analysis">📈 Coverage Analysis<a class="headerlink" href="#coverage-analysis" title="Permanent link">&para;</a></h2>
-<h3 id="before-implementation">Before Implementation<a class="headerlink" href="#before-implementation" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Coverage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v1.x (ZSH)</td>
-<td>~80%</td>
-</tr>
-<tr>
-<td>v2.0 Phase 1 (Python)</td>
-<td>0%</td>
-</tr>
-<tr>
-<td>v2.0 Phase 2 (AI)</td>
-<td>0%</td>
-</tr>
-<tr>
-<td><strong>Overall</strong></td>
-<td><strong>~25%</strong></td>
-</tr>
-</tbody>
-</table>
-<h3 id="after-implementation">After Implementation<a class="headerlink" href="#after-implementation" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Coverage</th>
-<th>Tests</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v1.x (ZSH)</td>
-<td>~80%</td>
-<td>22 Jest + 4 Shell</td>
-</tr>
-<tr>
-<td>v2.0 Commands</td>
-<td>~90%</td>
-<td>18 Jest</td>
-</tr>
-<tr>
-<td>Database Manager</td>
-<td>~80%</td>
-<td>48 pytest</td>
-</tr>
-<tr>
-<td>Vault Scanner</td>
-<td>~75%</td>
-<td>35+ pytest</td>
-</tr>
-<tr>
-<td>Graph Builder</td>
-<td>~70%</td>
-<td>20+ pytest</td>
-</tr>
-<tr>
-<td>AI Clients</td>
-<td>~60%</td>
-<td>15+ pytest</td>
-</tr>
-<tr>
-<td><strong>Overall</strong></td>
-<td><strong>~70%</strong></td>
-<td><strong>162+ tests</strong></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="test-quality-improvements">🎯 Test Quality Improvements<a class="headerlink" href="#test-quality-improvements" title="Permanent link">&para;</a></h2>
-<h3 id="what-was-added">What Was Added<a class="headerlink" href="#what-was-added" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Comprehensive Unit Tests</strong></li>
-<li>Every major class tested</li>
-<li>Edge cases covered</li>
-<li>
-<p>Error handling validated</p>
-</li>
-<li>
-<p><strong>Integration Tests</strong></p>
-</li>
-<li>End-to-end workflows</li>
-<li>Cross-component interactions</li>
-<li>
-<p>Real file operations</p>
-</li>
-<li>
-<p><strong>Mocking Strategy</strong></p>
-</li>
-<li>External dependencies mocked</li>
-<li>AI providers mocked (when appropriate)</li>
-<li>
-<p>Database isolation with temp files</p>
-</li>
-<li>
-<p><strong>Test Organization</strong></p>
-</li>
-<li>Clear test class hierarchy</li>
-<li>Descriptive test names</li>
-<li>
-<p>Proper fixtures and setup/teardown</p>
-</li>
-<li>
-<p><strong>Selective Test Running</strong></p>
-</li>
-<li>Markers for unit/integration/ai/slow</li>
-<li>Can skip AI tests if providers not installed</li>
-<li>Can run quick tests vs full suite</li>
-</ol>
-<hr />
-<h2 id="testing-best-practices-implemented">📝 Testing Best Practices Implemented<a class="headerlink" href="#testing-best-practices-implemented" title="Permanent link">&para;</a></h2>
-<h3 id="1-test-isolation">1. Test Isolation<a class="headerlink" href="#1-test-isolation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">temp_db</span><span class="p">():</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create temporary database for each test.&quot;&quot;&quot;</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="n">db_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="k">yield</span> <span class="n">db_path</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="2-descriptive-test-names">2. Descriptive Test Names<a class="headerlink" href="#2-descriptive-test-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_wikilink_with_alias_extracts_target_and_display</span><span class="p">():</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_identical_notes_have_high_similarity_score</span><span class="p">():</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_orphaned_notes_have_no_incoming_or_outgoing_links</span><span class="p">():</span>
-</code></pre></div>
-<h3 id="3-arrange-act-assert-pattern">3. Arrange-Act-Assert Pattern<a class="headerlink" href="#3-arrange-act-assert-pattern" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_add_vault</span><span class="p">(</span><span class="n">db_manager</span><span class="p">):</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="c1"># Arrange</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">vault_path</span> <span class="o">=</span> <span class="s1">&#39;/path/to/vault&#39;</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">vault_name</span> <span class="o">=</span> <span class="s1">&#39;Test Vault&#39;</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="c1"># Act</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    <span class="n">vault_id</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">add_vault</span><span class="p">(</span><span class="n">vault_path</span><span class="p">,</span> <span class="n">vault_name</span><span class="p">)</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="c1"># Assert</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="k">assert</span> <span class="n">vault_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vault_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="4-fixtures-for-reusability">4. Fixtures for Reusability<a class="headerlink" href="#4-fixtures-for-reusability" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">populated_db</span><span class="p">(</span><span class="n">temp_db</span><span class="p">):</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Database with sample data.&quot;&quot;&quot;</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">db</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span><span class="n">temp_db</span><span class="p">)</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">vault_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">add_vault</span><span class="p">(</span><span class="s1">&#39;/path/vault&#39;</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">)</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="c1"># ... add sample notes and links</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="k">return</span> <span class="n">db</span><span class="p">,</span> <span class="n">vault_id</span>
-</code></pre></div>
-<h3 id="5-test-markers-for-organization">5. Test Markers for Organization<a class="headerlink" href="#5-test-markers-for-organization" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">unit</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ai</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">slow</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
-</code></pre></div>
-<hr />
-<h2 id="running-the-tests">🚀 Running the Tests<a class="headerlink" href="#running-the-tests" title="Permanent link">&para;</a></h2>
-<h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Install Python dependencies</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Run all tests</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>npm<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Or run individually</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>npm<span class="w"> </span>run<span class="w"> </span>test:js<span class="w">        </span><span class="c1"># JavaScript tests</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py<span class="w">        </span><span class="c1"># Python tests</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>npm<span class="w"> </span>run<span class="w"> </span>test:shell<span class="w">     </span><span class="c1"># Shell tests</span>
+<h2 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Python tests (run from src/python/)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>src/python<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-q
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Jest tests</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>npx<span class="w"> </span>jest
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># All tests</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>npm<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <h3 id="selective-testing">Selective Testing<a class="headerlink" href="#selective-testing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Run only unit tests (fast)</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py:unit
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Run only integration tests</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>npm<span class="w"> </span>run<span class="w"> </span>test:py:integration
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Skip AI tests (if providers not installed)</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>pytest<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;not ai&quot;</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Run with coverage</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>npm<span class="w"> </span>run<span class="w"> </span>test:coverage
-</code></pre></div>
-<h3 id="cicd-integration">CI/CD Integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h3>
-<p>Tests are ready for GitHub Actions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># .github/workflows/test.yml</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nt">jobs</span><span class="p">:</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="nt">test</span><span class="p">:</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v2</span>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v2</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install</span>
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r src/python/requirements.txt</span>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run a specific test file</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_ai_refactor.py<span class="w"> </span>-v
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run tests matching a pattern</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;test_refactor&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Run with coverage</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>--cov<span class="o">=</span>.<span class="w"> </span>--cov-report<span class="o">=</span>term-missing
 </code></pre></div>
 <hr />
-<h2 id="future-test-enhancements">📋 Future Test Enhancements<a class="headerlink" href="#future-test-enhancements" title="Permanent link">&para;</a></h2>
-<h3 id="not-yet-implemented">Not Yet Implemented<a class="headerlink" href="#not-yet-implemented" title="Permanent link">&para;</a></h3>
+<h2 id="test-architecture">Test Architecture<a class="headerlink" href="#test-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="three-layer-testing">Three-Layer Testing<a class="headerlink" href="#three-layer-testing" title="Permanent link">&para;</a></h3>
+<p>Tests mirror the application architecture:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>What's Tested</th>
+<th>Key Files</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data</strong></td>
+<td>DB operations, scanner, embeddings</td>
+<td><code>test_vault_scanner.py</code>, <code>test_embedding_cache.py</code></td>
+</tr>
+<tr>
+<td><strong>Core</strong></td>
+<td>Vault manager, graph analysis, health</td>
+<td><code>test_vault_manager.py</code>, <code>test_vault_health.py</code></td>
+</tr>
+<tr>
+<td><strong>AI</strong></td>
+<td>Providers, features, models, bridge</td>
+<td><code>test_ai_*.py</code>, <code>test_obsidian_bridge.py</code></td>
+</tr>
+<tr>
+<td><strong>CLI</strong></td>
+<td>Output formatting, JSON, edge cases</td>
+<td><code>test_cli_*.py</code>, <code>test_json_output.py</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="mocking-strategy">Mocking Strategy<a class="headerlink" href="#mocking-strategy" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AI providers</strong>: Mocked with <code>MagicMock()</code> — no real API calls in tests</li>
+<li><strong>Database</strong>: Temporary SQLite files per test (auto-cleaned)</li>
+<li><strong>Obsidian Bridge</strong>: Mocked subprocess calls</li>
+<li><strong>Embeddings</strong>: Pre-computed mock vectors</li>
+</ul>
+<h3 id="test-fixtures">Test Fixtures<a class="headerlink" href="#test-fixtures" title="Permanent link">&para;</a></h3>
+<p>Vault fixtures in <code>tests/fixtures/test_vault/</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>test_vault/
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  .obsidian/.gitkeep    # Marks as Obsidian vault
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  note-a.md             # Has links to note-b
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  note-b.md             # Has links to note-c
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  note-c.md             # Leaf node
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  hub-note.md           # Links to all notes
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  broken-link-note.md   # Links to non-existent note
+</code></pre></div>
+<p>Note: <code>.obsidian/</code> is gitignored — fixtures use <code>git add -f</code> to track the <code>.gitkeep</code>.</p>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Performance Tests</strong></li>
-<li>Large vault scanning (10k+ notes)</li>
-<li>Batch embedding generation</li>
-<li>
-<p>Graph metric calculation on large graphs</p>
-</li>
-<li>
-<p><strong>Integration Tests</strong></p>
-</li>
-<li>Full vault workflow (discover → scan → analyze)</li>
-<li>AI similarity detection end-to-end</li>
-<li>
-<p>Multi-vault operations</p>
-</li>
-<li>
-<p><strong>Real AI Provider Tests</strong></p>
-</li>
-<li>Actual HuggingFace embedding generation</li>
-<li>Actual Ollama integration (requires service)</li>
-<li>
-<p>Similarity threshold validation</p>
-</li>
-<li>
-<p><strong>Setup Wizard Tests</strong></p>
-</li>
-<li>Interactive wizard flow</li>
-<li>System detection accuracy</li>
-<li>
-<p>Config persistence</p>
-</li>
-<li>
-<p><strong>Error Recovery Tests</strong></p>
-</li>
-<li>Database corruption</li>
-<li>Interrupted scans</li>
-<li>Network failures (Ollama)</li>
+<li><strong>Test isolation</strong>: Each test gets a fresh temp database</li>
+<li><strong>Descriptive names</strong>: <code>test_refactor_vault_dry_run_skips_ai_calls</code></li>
+<li><strong>Arrange-Act-Assert</strong>: Consistent test structure</li>
+<li><strong>Mock at boundaries</strong>: Mock external APIs, not internal logic</li>
+<li><strong>Run from correct directory</strong>: <code>cd src/python</code> before pytest (avoids import errors)</li>
 </ol>
 <hr />
-<h2 id="test-statistics">📊 Test Statistics<a class="headerlink" href="#test-statistics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Total Files Created: 9
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Total Lines of Test Code: ~4,600 lines
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Total Test Cases: 298
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>Breakdown:
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>- Python core tests: ~1,200 lines (118 tests)
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>- Python TUI tests: ~3,200 lines (136 tests)
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>- JavaScript tests: ~100 lines added (18 tests)
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>- Shell tests: ~120 lines (4 tests)
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>- Configuration: ~200 lines (pytest.ini, updates)
-<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
-<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>Estimated Coverage Increase: 25% → 80% (+55%)
+<h2 id="cicd">CI/CD<a class="headerlink" href="#cicd" title="Permanent link">&para;</a></h2>
+<p>Tests run on GitHub Actions for both <code>dev</code> and <code>main</code> branches:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># .github/workflows/ci.yml</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python 3.9+ on ubuntu-latest</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest with coverage reporting</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Jest for ZSH wrapper validation</span>
 </code></pre></div>
-<hr />
-<h2 id="success-criteria-met">✅ Success Criteria Met<a class="headerlink" href="#success-criteria-met" title="Permanent link">&para;</a></h2>
-<p>All original recommendations implemented:</p>
-<ul>
-<li>✅ Priority 1: Python unit tests (pytest) - <strong>COMPLETE</strong></li>
-<li>✅ Priority 2: v2.0 command tests (Jest) - <strong>COMPLETE</strong></li>
-<li>✅ Test infrastructure (pytest.ini, markers) - <strong>COMPLETE</strong></li>
-<li>✅ Test scripts (package.json) - <strong>COMPLETE</strong></li>
-<li>✅ All tests passing (Jest + Shell) - <strong>COMPLETE</strong></li>
-</ul>
-<p>Ready for:
-- ✅ Continuous Integration
-- ✅ Code review
-- ✅ Production deployment
-- ✅ Further development with confidence</p>
-<hr />
-<h2 id="summary">🎉 Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p><strong>From:</strong> 26 tests (v1.x only)
-<strong>To:</strong> 298 tests (v1.x + v2.0 + TUI)
-<strong>Improvement:</strong> 11x increase in test coverage</p>
-<p><strong>Test Quality:</strong>
-- Comprehensive unit tests for all major components
-- Full TUI test coverage (all 4 phases)
-- Integration tests for end-to-end workflows
-- Proper mocking and isolation
-- Selective test execution with markers
-- Full test automation scripts</p>
-<p><strong>TUI Testing Complete:</strong>
-- ✅ Phase 4.1: TUI Foundation (30 tests)
-- ✅ Phase 4.2: Vault Browser (26 tests)
-- ✅ Phase 4.3: Note Explorer (42 tests)
-- ✅ Phase 4.4: Graph Visualizer (38 tests)</p>
-<p><strong>Next Steps:</strong>
-- Run <code>pip install -r src/python/requirements.txt</code>
-- Run <code>npm test</code> to verify all tests pass
-- Set up CI/CD pipeline
-- Add performance and integration tests as needed</p>
-<p>The test suite is production-ready! 🚀</p>
+<p>See <a href="https://github.com/Data-Wise/obsidian-cli-ops/actions">CI workflow</a> for latest results.</p>
 
 
 
