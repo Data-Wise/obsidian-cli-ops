@@ -1,20 +1,34 @@
 priority: P1
-status: stable - v3.0.0 released
+status: active development - Phase 8
 progress: 100
 updated: 2026-03-05
 version: 3.0.0
-next: Post-release maintenance
+next: Phase 8 - AI-powered vault refactor (in worktree)
 target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🎯 Current State
 
-**Phase**: 7.4 complete (v3.0.0 stable released)
+**Phase**: 8 started (AI-powered commands)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 206/206 passing (pytest)
-**Commands**: 15 focused commands under `obs` (+`ai refactor`)
+**Tests**: 202/202 passing (pytest)
+**Commands**: 15 focused commands under `obs` (+1 `ai refactor`)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
+
+---
+
+## 🚧 Phase 8: AI-Powered Commands (In Progress)
+
+### `obs ai refactor <vault>` — feature/ai-refactor (worktree)
+
+- ✅ Implementation complete (3-phase pipeline: graph-only → AI-enhanced → prioritization)
+- ✅ 16 new tests (202 total passing)
+- ✅ ZSH wiring for refactor + fixed missing suggest-links/gaps/summarize cases
+- ⬜ Manual testing with real vault
+- ⬜ PR to dev
+
+**Worktree**: `~/.git-worktrees/obsidian-cli-ops/feature-ai-refactor`
 
 ---
 
@@ -29,8 +43,9 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 
 ## 🎯 Next Actions
 
+- Manual test `obs ai refactor` in worktree, then PR to dev
 - Community announcement (GitHub Discussions)
-- Explore Phase 8 features (IDEAS.md): tag-suggest, quality, merge-suggest
+- Explore more Phase 8 features (IDEAS.md): tag-suggest, quality, merge-suggest
 
 ---
 
@@ -114,7 +129,6 @@ target: v3.0.0 - Pure Obsidian Knowledge Manager
 - **2026-03-05**: PR #11 (version sync, stale cleanup, 186 tests)
 - **2026-03-05**: PR #13 (v3.0.0 stable release), PR #14 (configurable Python path)
 - **2026-03-05**: Homebrew formula published (data-wise/tap/obsidian-cli-ops)
-- **2026-03-05**: `obs ai refactor` command (3-phase pipeline, 202 tests)
 
 ---
 

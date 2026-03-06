@@ -1,8 +1,8 @@
 # Architecture Documentation
 
 **Project:** Obsidian CLI Ops (obs)
-**Version:** 3.0.0-beta.2
-**Last Updated:** 2026-03-04
+**Version:** 3.0.0
+**Last Updated:** 2026-03-05
 
 ---
 
@@ -41,8 +41,8 @@ This architecture enables clean separation of concerns with AI features as an in
 ### v3.0.0 Changes
 
 - **Removed:** TUI (1,701 lines) and R-Dev integration (307 lines)
-- **Added:** Multi-provider AI layer with 5 providers, embedding cache, and 7 AI commands
-- **Focused:** 13 CLI commands for core Obsidian vault management + AI analysis
+- **Added:** Multi-provider AI layer with 5 providers, embedding cache, and 8 AI commands
+- **Focused:** 15 CLI commands for core Obsidian vault management + AI analysis
 
 ---
 
@@ -69,14 +69,14 @@ This architecture enables clean separation of concerns with AI features as an in
 │  - discover_vaults()     │  │  - get_ai_client()           │
 │  - scan_vault()          │  │  - auto-select provider      │
 │  - list_vaults()         │  │                              │
-│                          │  │  features.py (725 lines)     │
+│                          │  │  features.py (~960 lines)    │
 │  GraphAnalyzer (311 ln)  │  │  - find_similar_notes()      │
 │  - analyze_vault()       │  │  - analyze_note()            │
 │  - get_hub_notes()       │  │  - find_duplicates()         │
 │  - get_orphan_notes()    │  │  - suggest_links()           │
 │                          │  │  - find_gaps()               │
 │  Domain Models (237 ln)  │  │  - summarize_vault()         │
-│  - Vault, Note           │  │                              │
+│  - Vault, Note           │  │  - refactor_vault()          │
 │  - ScanResult            │  │  ObsidianBridge (123 lines)  │
 │  - GraphMetrics          │  │  - Null Object pattern       │
 │                          │  │  - backlinks, orphans, tags  │
@@ -300,7 +300,7 @@ class AnalysisError(Exception):
 **Components:**
 
 1. **AIRouter** (`ai/router.py`, 312 lines) — Smart provider selection with fallback
-2. **Features** (`ai/features.py`, 725 lines) — 7 AI feature functions
+2. **Features** (`ai/features.py`, ~960 lines) — 8 AI feature functions
 3. **Models** (`ai/models.py`, 112 lines) — Shared dataclasses (AnalysisResult, ComparisonResult, SimilarNote)
 4. **Providers** (`ai/providers/`, 5 providers) — Gemini API, Anthropic API, Ollama, Gemini CLI, Claude CLI
 5. **ObsidianBridge** (`ai/obsidian_bridge.py`, 123 lines) — Bridge to Obsidian's native CLI
@@ -1036,7 +1036,7 @@ src/python/
 │   └── exceptions.py          # Custom exceptions
 │
 ├── ai/                        # AI FEATURES LAYER
-│   ├── features.py            # 7 AI feature functions (725 lines)
+│   ├── features.py            # 8 AI feature functions (~960 lines)
 │   ├── router.py              # Smart provider selection (312 lines)
 │   ├── models.py              # AI dataclasses (112 lines)
 │   ├── obsidian_bridge.py     # Obsidian CLI bridge (123 lines)
@@ -1059,7 +1059,7 @@ src/python/
 
 ### Benefits Achieved
 
-1. Core layer is testable independently (186 tests passing)
+1. Core layer is testable independently (202 tests passing)
 2. AI layer is optional — core commands work without AI providers
 3. Clear separation: CLI → Core/AI → Data
 4. Type-safe domain models and AI dataclasses

@@ -86,14 +86,14 @@ obs ai duplicates <vault>       # Find duplicate notes
 obs ai suggest-links <note_id>  # Suggest new links
 obs ai gaps <vault>             # Find knowledge gaps
 obs ai summarize <vault>        # Summarize vault themes
-obs ai refactor <vault>         # AI-powered reorganization
+obs ai refactor <vault>         # AI-powered vault reorganization
 
 # UTILITIES
 obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (206 tests)
+pytest src/python/tests/        # Run Python tests (202 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -101,7 +101,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # Python tests (186 tests passing)
+pytest src/python/tests/        # Python tests (202 tests passing)
 obs --verbose <command>         # Run any command with verbose output
 ```
 
@@ -125,7 +125,7 @@ obs --verbose <command>         # Run any command with verbose output
   - `obs_cli.py` - CLI interface (584 lines)
   - `ai/` - Multi-provider AI package (5 providers, 900+ lines)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
-- `tests/` - Test suite (186 tests passing)
+- `tests/` - Test suite (202 tests passing)
 
 ### Documentation
 - `docs/` - All documentation (organized by user/developer/planning)
@@ -175,7 +175,7 @@ Details in schema file and `docs/developer/architecture.md`.
 ### Testing Requirements
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- Keep core tests passing (186+ tests)
+- Keep core tests passing (202+ tests)
 - Update test count in documentation
 
 ### Documentation

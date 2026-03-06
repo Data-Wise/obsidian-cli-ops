@@ -5,8 +5,8 @@
 Comprehensive unit test suite for the new core layer (business logic) in Obsidian CLI Ops v2.0.
 
 **Created:** 2025-12-15
-**Total Tests:** 97
-**Status:** ✅ All passing
+**Total Tests:** 202 pytest tests
+**Status:** All passing
 **Coverage:** ~90% (estimated)
 
 ## Test Structure
