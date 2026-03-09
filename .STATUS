@@ -1,9 +1,9 @@
 priority: P1
-status: releasing v3.2.0
-progress: 97
+status: v3.2.0 released
+progress: 100
 updated: 2026-03-09
 version: 3.2.0
-next: PR to main, tag, GitHub release, Homebrew, docs deploy
+next: Plan v3.3.0 features
 target: v3.2.0 - Quality Features
 
 ## 🎯 Current State
@@ -21,7 +21,7 @@ target: v3.2.0 - Quality Features
 
 ## 🚧 Active Work
 
-v3.2.0 Quality Features — All phases complete, merged to dev. Bug fix applied (--json flag in quality handler). Release in progress.
+v3.2.0 released. GitHub release, docs deployed, Homebrew formula updated.
 
 ---
 
@@ -101,8 +101,8 @@ v3.2.0 Quality Features — All phases complete, merged to dev. Bug fix applied 
 
 ## 🎯 Next Actions
 
-- Complete v3.2.0 release pipeline
-- Post-release: update Homebrew formula, deploy docs, verify CI on main
+- CI fix: split deploy step from test step (deploy fails on gh-pages push permissions)
+- Plan v3.3.0 features (see IDEAS.md)
 
 ---
 
