@@ -1164,10 +1164,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-11-choose-the-right-provider" class="md-nav__link">
+  <a href="#step-11-quality-features-v320" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 11: Choose the Right Provider
+        Step 11: Quality Features (v3.2.0)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 11: Quality Features (v3.2.0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#find-merge-candidates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find merge candidates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggest-tags-for-untagged-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggest tags for untagged notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score-note-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Score note quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Choose the Right Provider
       
     </span>
   </a>
@@ -1175,10 +1225,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-12-next-steps" class="md-nav__link">
+  <a href="#step-13-next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 12: Next Steps
+        Step 13: Next Steps
       
     </span>
   </a>
@@ -1207,7 +1257,7 @@
 
 <h1 id="ai-features">AI Features<a class="headerlink" href="#ai-features" title="Permanent link">&para;</a></h1>
 <p>Set up AI providers and use them to find similar notes, analyze content, detect duplicates, and get vault reorganization suggestions.</p>
-<p><strong>Time:</strong> ~25 minutes | <strong>Level:</strong> Advanced | <strong>Steps:</strong> 12</p>
+<p><strong>Time:</strong> ~30 minutes | <strong>Level:</strong> Advanced | <strong>Steps:</strong> 13</p>
 <p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> (vault scanned)</p>
 <hr />
 <h2 id="step-1-what-can-ai-do">Step 1: What Can AI Do?<a class="headerlink" href="#step-1-what-can-ai-do" title="Permanent link">&para;</a></h2>
@@ -1255,6 +1305,21 @@
 <td>Vault Refactor</td>
 <td><code>obs ai refactor &lt;vault&gt;</code></td>
 <td>AI-powered reorganization suggestions</td>
+</tr>
+<tr>
+<td>Merge Suggest</td>
+<td><code>obs ai merge-suggest &lt;vault&gt;</code></td>
+<td>Find note pairs with high content similarity</td>
+</tr>
+<tr>
+<td>Tag Suggest</td>
+<td><code>obs ai tag-suggest &lt;target&gt;</code></td>
+<td>Suggest tags for untagged notes</td>
+</tr>
+<tr>
+<td>Quality Score</td>
+<td><code>obs ai quality &lt;target&gt;</code></td>
+<td>Score notes on 4 quality dimensions</td>
 </tr>
 </tbody>
 </table>
@@ -1417,7 +1482,71 @@ Get machine-readable output:
 </code></pre></div></p>
 </details>
 <hr />
-<h2 id="step-11-choose-the-right-provider">Step 11: Choose the Right Provider<a class="headerlink" href="#step-11-choose-the-right-provider" title="Permanent link">&para;</a></h2>
+<h2 id="step-11-quality-features-v320">Step 11: Quality Features (v3.2.0)<a class="headerlink" href="#step-11-quality-features-v320" title="Permanent link">&para;</a></h2>
+<h3 id="find-merge-candidates">Find merge candidates<a class="headerlink" href="#find-merge-candidates" title="Permanent link">&para;</a></h3>
+<p>Identify note pairs with similar content that may be worth merging:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault
+</code></pre></div>
+<p>Adjust the similarity threshold (default: 80%):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.9
+</code></pre></div>
+<details class="info">
+<summary>Requires embeddings</summary>
+<p><code>merge-suggest</code> uses cached embeddings. Run <code>obs ai similar</code> or <code>obs ai duplicates</code> first to populate the embedding cache.</p>
+</details>
+<h3 id="suggest-tags-for-untagged-notes">Suggest tags for untagged notes<a class="headerlink" href="#suggest-tags-for-untagged-notes" title="Permanent link">&para;</a></h3>
+<p>AI-powered tag suggestions based on note content, neighbor tags, and vault context:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Vault-wide</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Single note</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>&lt;note_id&gt;
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Auto-apply high-confidence tags to YAML frontmatter</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply
+</code></pre></div>
+<h3 id="score-note-quality">Score note quality<a class="headerlink" href="#score-note-quality" title="Permanent link">&para;</a></h3>
+<p>Rate every note across 4 dimensions (no AI required — pure graph analysis):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># All notes, sorted worst-first</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Single note</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>&lt;note_id&gt;
+</code></pre></div>
+<p><strong>Dimensions</strong> (weighted):</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Weight</th>
+<th>What It Measures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Completeness</td>
+<td>30%</td>
+<td>Word count vs vault average, has headings</td>
+</tr>
+<tr>
+<td>Connectivity</td>
+<td>30%</td>
+<td>Outgoing/incoming links, orphan status</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>20%</td>
+<td>Has tags, has YAML frontmatter</td>
+</tr>
+<tr>
+<td>Freshness</td>
+<td>20%</td>
+<td>Last modified date (30d=100%, 90d=70%, 180d=40%)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="providers">Step 12: Choose the Right Provider<a class="headerlink" href="#providers" title="Permanent link">&para;</a></h2>
 <p>Different providers excel at different tasks:</p>
 <table>
 <thead>
@@ -1469,7 +1598,7 @@ Get machine-readable output:
 </ul>
 <p>obs auto-selects the best available provider, but you can override with configuration.</p>
 <hr />
-<h2 id="step-12-next-steps">Step 12: Next Steps<a class="headerlink" href="#step-12-next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="step-13-next-steps">Step 13: Next Steps<a class="headerlink" href="#step-13-next-steps" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>

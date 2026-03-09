@@ -1003,6 +1003,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#quality-scoring-graph-only-no-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Scoring (graph-only, no AI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-suggest-embedding-similarity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Suggest (embedding similarity)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1364,6 +1386,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#quality-scoring-graph-only-no-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Scoring (graph-only, no AI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-suggest-embedding-similarity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Suggest (embedding similarity)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1423,7 +1467,7 @@
 
 
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 3.1.0</p>
+<p><strong>Version:</strong> 3.2.0</p>
 <p>Obsidian CLI Ops follows a clean <strong>three-layer architecture</strong> with an optional AI feature layer.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Presentation (CLI)  --&gt;  Application (Core Logic)  --&gt;  Data (DB/Files)
@@ -1440,12 +1484,13 @@
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Domain Models (237 lines)   Custom Exceptions
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>AI Features Layer (Optional)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  AIRouter (312 lines)        Features (~960 lines)
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  5 Providers                 ObsidianBridge (123 lines)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Data Layer
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  DatabaseManager (469 lines) VaultScanner (373 lines)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  GraphBuilder (307 lines)    SQLite Database
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  AIRouter (312 lines)        Features (~744 lines)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  FeaturesVault (~500 lines)  FeaturesRefactor (~345 lines)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  5 Providers                 ObsidianBridge (123 lines)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Data Layer
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  DatabaseManager (469 lines) VaultScanner (373 lines)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  GraphBuilder (307 lines)    SQLite Database
 </code></pre></div>
 <h2 id="key-principles">Key Principles<a class="headerlink" href="#key-principles" title="Permanent link">&para;</a></h2>
 <h3 id="zero-duplication">Zero Duplication<a class="headerlink" href="#zero-duplication" title="Permanent link">&para;</a></h3>
@@ -1466,8 +1511,9 @@
 <ul>
 <li><code>Vault</code>, <code>Note</code>, <code>ScanResult</code>, <code>GraphMetrics</code>, <code>VaultStats</code></li>
 <li>AI models: <code>AnalysisResult</code>, <code>ComparisonResult</code>, <code>SimilarNote</code></li>
+<li>Quality models (v3.2.0): <code>MergeCandidate</code>, <code>TagSuggestion</code>, <code>NoteQuality</code></li>
 </ul>
-<p>All models have <code>from_db_row()</code>, <code>to_dict()</code>, and <code>to_json()</code> methods.</p>
+<p>All models have <code>from_dict()</code>, <code>to_dict()</code>, and <code>from_json()</code> methods.</p>
 <h3 id="ai-provider-architecture">AI Provider Architecture<a class="headerlink" href="#ai-provider-architecture" title="Permanent link">&para;</a></h3>
 <p>5 providers with automatic fallback routing:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gemini-api &gt; anthropic-api &gt; ollama &gt; gemini-cli &gt; claude-cli
@@ -1497,25 +1543,50 @@
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      --&gt; Exclude existing links
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      --&gt; Return top-N suggestions
 </code></pre></div>
+<h3 id="quality-scoring-graph-only-no-ai">Quality Scoring (graph-only, no AI)<a class="headerlink" href="#quality-scoring-graph-only-no-ai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>User --&gt; obs ai quality MyVault
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  --&gt; Python CLI
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    --&gt; note_quality_vault(vault_id, db)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>      --&gt; list_notes() + get_orphaned_notes()
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>      --&gt; For each note:
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        --&gt; Read file content (completeness: word count, headings)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        --&gt; get_outgoing_links() + get_incoming_links() (connectivity)
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        --&gt; get_note_tags() (metadata)
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        --&gt; Check modified_at (freshness)
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>      --&gt; Weighted score: completeness 30% + connectivity 30% + metadata 20% + freshness 20%
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>      --&gt; Return List[NoteQuality] sorted worst-first
+</code></pre></div>
+<h3 id="merge-suggest-embedding-similarity">Merge Suggest (embedding similarity)<a class="headerlink" href="#merge-suggest-embedding-similarity" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>User --&gt; obs ai merge-suggest MyVault
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  --&gt; Python CLI
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    --&gt; merge_suggest_vault(vault_id, db)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>      --&gt; Batch-load all note_embeddings (single SQL JOIN)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      --&gt; L2-normalize, compute np.dot(matrix, matrix.T) for all pairs
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      --&gt; Filter pairs above threshold (default 0.8)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      --&gt; Enrich with shared links/tags from DB
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      --&gt; Return List[MergeCandidate] sorted by similarity
+</code></pre></div>
 <h2 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>src/python/
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  core/                      # APPLICATION LAYER
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    vault_manager.py         # Vault operations
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    graph_analyzer.py        # Graph operations
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    models.py                # Domain models
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    exceptions.py            # Custom exceptions
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  ai/                        # AI FEATURES LAYER
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    features.py              # 8 AI feature functions
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    router.py                # Smart provider selection
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    models.py                # AI dataclasses
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    obsidian_bridge.py       # Obsidian CLI bridge
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    providers/               # 5 AI providers
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  obs_cli.py                 # PRESENTATION LAYER
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  db_manager.py              # DATA LAYER
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  vault_scanner.py           # DATA LAYER
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>  graph_builder.py           # DATA LAYER
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>src/python/
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  core/                      # APPLICATION LAYER
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    vault_manager.py         # Vault operations
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    graph_analyzer.py        # Graph operations
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    models.py                # Domain models
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    exceptions.py            # Custom exceptions
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  ai/                        # AI FEATURES LAYER
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    features.py              # Core AI features (similar, analyze, duplicates, suggest-links, gaps, summarize)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    features_vault.py        # Vault-level features (merge-suggest, tag-suggest, quality) [v3.2.0]
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    features_refactor.py     # Refactor vault feature (extracted from features.py) [v3.2.0]
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    router.py                # Smart provider selection
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    models.py                # AI dataclasses (6 types)
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    obsidian_bridge.py       # Obsidian CLI bridge
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    providers/               # 5 AI providers
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  obs_cli.py                 # PRESENTATION LAYER
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  db_manager.py              # DATA LAYER
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  vault_scanner.py           # DATA LAYER
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  graph_builder.py           # DATA LAYER
 </code></pre></div>
 <h2 id="design-patterns">Design Patterns<a class="headerlink" href="#design-patterns" title="Permanent link">&para;</a></h2>
 <table>
@@ -1550,7 +1621,7 @@
 </table>
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>202 pytest tests</strong> covering core, AI, and data layers</li>
+<li><strong>235 pytest tests</strong> covering core, AI, vault features, and data layers</li>
 <li><strong>30 Jest tests</strong> for ZSH wrapper validation</li>
 <li>Core layer tested independently with mocked dependencies</li>
 <li>AI providers mocked for deterministic tests</li>

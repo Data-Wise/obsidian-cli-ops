@@ -1021,6 +1021,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#obs-ai-merge-suggest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs ai merge-suggest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obs-ai-tag-suggest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs ai tag-suggest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obs-ai-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs ai quality
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1711,6 +1744,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#obs-ai-merge-suggest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs ai merge-suggest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obs-ai-tag-suggest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs ai tag-suggest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obs-ai-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs ai quality
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1805,7 +1871,7 @@
 - <strong>How:</strong> <code>obs help --all</code> — see this in your terminal
 - <strong>Next:</strong> <a href="../refcard/">Quick Reference</a> for a printable cheat sheet</p>
 </blockquote>
-<p><strong>Version:</strong> 3.1.0</p>
+<p><strong>Version:</strong> 3.2.0</p>
 <hr />
 <h2 id="global-options"><img alt="⚙" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2699.svg" title=":gear:" /> Global Options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h2>
 <table>
@@ -2001,15 +2067,87 @@
 <summary>Refactor is read-only</summary>
 <p><code>obs ai refactor</code> only <strong>suggests</strong> changes — it never moves or deletes files. Use <code>--dry-run</code> to preview scope without AI calls.</p>
 </details>
+<h3 id="obs-ai-merge-suggest">obs ai merge-suggest<a class="headerlink" href="#obs-ai-merge-suggest" title="Permanent link">&para;</a></h3>
+<p>Find note pairs with high embedding similarity that may be merge candidates.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--threshold<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>X<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--threshold</code></td>
+<td><code>0.8</code></td>
+<td>Minimum cosine similarity (0-1)</td>
+</tr>
+<tr>
+<td><code>--provider</code></td>
+<td>auto</td>
+<td>AI provider for embeddings</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td></td>
+<td>Machine-readable output</td>
+</tr>
+</tbody>
+</table>
+<h3 id="obs-ai-tag-suggest">obs ai tag-suggest<a class="headerlink" href="#obs-ai-tag-suggest" title="Permanent link">&para;</a></h3>
+<p>Suggest tags for untagged notes using AI and vault context.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>&lt;target&gt;<span class="w"> </span><span class="o">[</span>--apply<span class="o">]</span><span class="w"> </span><span class="o">[</span>--min-confidence<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>X<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--apply</code></td>
+<td></td>
+<td>Auto-apply tags with &gt;80% confidence to frontmatter</td>
+</tr>
+<tr>
+<td><code>--min-confidence</code></td>
+<td><code>0.0</code></td>
+<td>Only show suggestions above this threshold</td>
+</tr>
+<tr>
+<td><code>--provider</code></td>
+<td>auto</td>
+<td>AI provider</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td></td>
+<td>Machine-readable output</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;target&gt;</code> accepts a vault name/ID (vault-wide) or a note ID (single note).</p>
+<h3 id="obs-ai-quality">obs ai quality<a class="headerlink" href="#obs-ai-quality" title="Permanent link">&para;</a></h3>
+<p>Score notes across 4 quality dimensions (graph-only, no AI required).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>&lt;target&gt;<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+<p><strong>Dimensions</strong> (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).</p>
+<p><code>&lt;target&gt;</code> accepts a vault name/ID (vault-wide) or a note ID (single note). Vault-wide output is sorted worst-first.</p>
 <hr />
 <h2 id="utility"><img alt="🔧" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f527.svg" title=":wrench:" /> Utility<a class="headerlink" href="#utility" title="Permanent link">&para;</a></h2>
 <h3 id="obs-help">obs help<a class="headerlink" href="#obs-help" title="Permanent link">&para;</a></h3>
 <p>Show help for commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-version">obs version<a class="headerlink" href="#obs-version" title="Permanent link">&para;</a></h3>
 <p>Show version information.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>obs<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>obs<span class="w"> </span>version
 </code></pre></div>
 <hr />
 <h2 id="quick-reference"><img alt="⚡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a1.svg" title=":zap:" /> Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
@@ -2084,6 +2222,18 @@
 <tr>
 <td><code>obs ai refactor &lt;vault&gt;</code></td>
 <td>Reorganization suggestions</td>
+</tr>
+<tr>
+<td><code>obs ai merge-suggest &lt;vault&gt;</code></td>
+<td>Find merge candidates</td>
+</tr>
+<tr>
+<td><code>obs ai tag-suggest &lt;target&gt;</code></td>
+<td>Suggest tags</td>
+</tr>
+<tr>
+<td><code>obs ai quality &lt;target&gt;</code></td>
+<td>Score note quality</td>
 </tr>
 </tbody>
 </table>

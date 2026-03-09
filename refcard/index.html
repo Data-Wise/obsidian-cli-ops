@@ -1418,6 +1418,18 @@
 <td><code>obs ai refactor &lt;vault&gt;</code></td>
 <td>AI-powered vault reorganization suggestions</td>
 </tr>
+<tr>
+<td><code>obs ai merge-suggest &lt;vault&gt;</code></td>
+<td>Find note pairs that may be merge candidates</td>
+</tr>
+<tr>
+<td><code>obs ai tag-suggest &lt;target&gt;</code></td>
+<td>Suggest tags for untagged notes (vault or single note)</td>
+</tr>
+<tr>
+<td><code>obs ai quality &lt;target&gt;</code></td>
+<td>Score notes on quality (completeness, connectivity, metadata, freshness)</td>
+</tr>
 </tbody>
 </table>
 <h2 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h2>
@@ -1523,9 +1535,14 @@
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Export for scripting</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Quality features (v3.2.0)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w">              </span><span class="c1"># Find merge candidates</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">        </span><span class="c1"># Suggest + auto-apply tags</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w">                    </span><span class="c1"># Score all notes</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Export for scripting</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <details class="info">
@@ -1607,7 +1624,7 @@
 </details>
 <p>See the <a href="https://help.obsidian.md/cli">official docs</a> for the full command list.</p>
 <hr />
-<p><strong>Version:</strong> 3.1.0 | <strong>Commands:</strong> 15 | <strong>AI Providers:</strong> 5</p>
+<p><strong>Version:</strong> 3.2.0 | <strong>Commands:</strong> 18 | <strong>AI Providers:</strong> 5</p>
 
 
 
