@@ -62,6 +62,9 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | `obs ai gaps <vault>` | Find knowledge gaps in the vault |
 | `obs ai summarize <vault>` | Summarize vault themes and stats |
 | `obs ai refactor <vault>` | AI-powered vault reorganization suggestions |
+| `obs ai merge-suggest <vault>` | Find note pairs that may be merge candidates |
+| `obs ai tag-suggest <target>` | Suggest tags for untagged notes |
+| `obs ai quality <target>` | Score notes on 4 quality dimensions |
 
 ### Utilities
 

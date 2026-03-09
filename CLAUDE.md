@@ -28,7 +28,7 @@ Developer guide for Claude Code when working with this repository.
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
 - **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
-- **Pytest**: Testing harness (206 tests)
+- **Pytest**: Testing harness (235 tests)
 
 ## Architecture
 
@@ -42,7 +42,7 @@ Presentation → Application → Data
 - **Presentation**: `obs.zsh` (ZSH CLI wrapper)
 - **Application**: `core/vault_manager.py`, `core/graph_analyzer.py`
 - **Data**: `db_manager.py`, `vault_scanner.py`, `graph_builder.py`
-- **AI Layer**: `ai/features.py`, `ai/providers/`, `ai/models.py`
+- **AI Layer**: `ai/features.py`, `ai/features_vault.py`, `ai/features_refactor.py`, `ai/providers/`, `ai/models.py`
 
 **Key Principle**: Business logic lives in Core layer only. CLI is a thin presentation layer.
 
@@ -64,7 +64,7 @@ ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 
 ### Essential Commands
 
-**v3.1.0** - 15 focused commands:
+**v3.2.0** - 18 focused commands:
 
 ```bash
 # PRIMARY COMMANDS
@@ -87,6 +87,9 @@ obs ai suggest-links <note_id>  # Suggest new links
 obs ai gaps <vault>             # Find knowledge gaps
 obs ai summarize <vault>        # Summarize vault themes
 obs ai refactor <vault>         # AI-powered vault reorganization
+obs ai merge-suggest <vault>    # Find merge candidates (v3.2.0)
+obs ai tag-suggest <target>     # Suggest tags for untagged notes (v3.2.0)
+obs ai quality <target>         # Score notes on quality dimensions (v3.2.0)
 
 # UTILITIES
 obs help [--all]                # Show help
@@ -101,7 +104,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # 206 tests passing
+pytest src/python/tests/        # 235 tests passing
 npx jest                        # 30 Jest tests passing
 obs --verbose <command>         # Run any command with verbose output
 ```

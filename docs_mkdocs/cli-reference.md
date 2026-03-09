@@ -231,6 +231,49 @@ obs ai refactor <vault> [--dry-run] [--json]
 ??? info "Refactor is read-only"
     `obs ai refactor` only **suggests** changes — it never moves or deletes files. Use `--dry-run` to preview scope without AI calls.
 
+### obs ai merge-suggest
+
+Find note pairs with high embedding similarity that may be merge candidates.
+
+```bash
+obs ai merge-suggest <vault> [--threshold N] [--provider X] [--json]
+```
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--threshold` | `0.8` | Minimum cosine similarity (0-1) |
+| `--provider` | auto | AI provider for embeddings |
+| `--json` | | Machine-readable output |
+
+### obs ai tag-suggest
+
+Suggest tags for untagged notes using AI and vault context.
+
+```bash
+obs ai tag-suggest <target> [--apply] [--min-confidence N] [--provider X] [--json]
+```
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--apply` | | Auto-apply tags with >80% confidence to frontmatter |
+| `--min-confidence` | `0.0` | Only show suggestions above this threshold |
+| `--provider` | auto | AI provider |
+| `--json` | | Machine-readable output |
+
+`<target>` accepts a vault name/ID (vault-wide) or a note ID (single note).
+
+### obs ai quality
+
+Score notes across 4 quality dimensions (graph-only, no AI required).
+
+```bash
+obs ai quality <target> [--json]
+```
+
+**Dimensions** (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).
+
+`<target>` accepts a vault name/ID (vault-wide) or a note ID (single note). Vault-wide output is sorted worst-first.
+
 ---
 
 ## :wrench: Utility
@@ -273,6 +316,9 @@ obs version
 | `obs ai gaps <vault>` | Find knowledge gaps |
 | `obs ai summarize <vault>` | Summarize vault |
 | `obs ai refactor <vault>` | Reorganization suggestions |
+| `obs ai merge-suggest <vault>` | Find merge candidates |
+| `obs ai tag-suggest <target>` | Suggest tags |
+| `obs ai quality <target>` | Score note quality |
 
 ---
 
