@@ -43,6 +43,9 @@ obs analyze <vault>    # Analyze knowledge graph
 - **Knowledge Gaps**: `obs ai gaps` - detect stub notes and orphans
 - **Vault Summary**: `obs ai summarize` - generate theme analysis across vault
 - **Vault Refactor**: `obs ai refactor` - AI-powered vault reorganization suggestions
+- **Merge Suggest**: `obs ai merge-suggest` - find note pairs with high content similarity
+- **Tag Suggest**: `obs ai tag-suggest` - AI-powered tag suggestions for untagged notes
+- **Quality Scoring**: `obs ai quality` - score notes on completeness, connectivity, metadata, freshness
 - **Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 - **Smart Routing**: Auto-selects best provider for each operation type
 - **Embedding Cache**: SQLite-backed cache with mtime invalidation
@@ -110,6 +113,9 @@ obs ai suggest-links <note_id>  # Suggest new links
 obs ai gaps <vault>             # Find knowledge gaps
 obs ai summarize <vault>        # Summarize vault themes
 obs ai refactor <vault>         # AI-powered reorganization
+obs ai merge-suggest <vault>    # Find merge candidates
+obs ai tag-suggest <target>     # Suggest tags for notes
+obs ai quality <target>         # Score note quality
 
 # UTILITIES
 obs help                        # Show simple help

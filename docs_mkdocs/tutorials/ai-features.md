@@ -2,7 +2,7 @@
 
 Set up AI providers and use them to find similar notes, analyze content, detect duplicates, and get vault reorganization suggestions.
 
-**Time:** ~25 minutes | **Level:** Advanced | **Steps:** 12
+**Time:** ~30 minutes | **Level:** Advanced | **Steps:** 13
 
 **Prerequisites:** Complete [Getting Started](getting-started.md) (vault scanned)
 
@@ -21,6 +21,9 @@ obs supports multiple AI providers for advanced vault analysis:
 | Knowledge Gaps | `obs ai gaps <vault>` | Detect stub notes, orphans, and gaps |
 | Vault Summary | `obs ai summarize <vault>` | Theme analysis across entire vault |
 | Vault Refactor | `obs ai refactor <vault>` | AI-powered reorganization suggestions |
+| Merge Suggest | `obs ai merge-suggest <vault>` | Find note pairs with high content similarity |
+| Tag Suggest | `obs ai tag-suggest <target>` | Suggest tags for untagged notes |
+| Quality Score | `obs ai quality <target>` | Score notes on 4 quality dimensions |
 
 All AI features are **optional** — obs works perfectly without them.
 
@@ -248,7 +251,64 @@ obs ai refactor MyVault
 
 ---
 
-## Step 11: Choose the Right Provider
+## Step 11: Quality Features (v3.2.0)
+
+### Find merge candidates
+
+Identify note pairs with similar content that may be worth merging:
+
+```bash
+obs ai merge-suggest MyVault
+```
+
+Adjust the similarity threshold (default: 80%):
+
+```bash
+obs ai merge-suggest MyVault --threshold 0.9
+```
+
+??? info "Requires embeddings"
+    `merge-suggest` uses cached embeddings. Run `obs ai similar` or `obs ai duplicates` first to populate the embedding cache.
+
+### Suggest tags for untagged notes
+
+AI-powered tag suggestions based on note content, neighbor tags, and vault context:
+
+```bash
+# Vault-wide
+obs ai tag-suggest MyVault
+
+# Single note
+obs ai tag-suggest <note_id>
+
+# Auto-apply high-confidence tags to YAML frontmatter
+obs ai tag-suggest MyVault --apply
+```
+
+### Score note quality
+
+Rate every note across 4 dimensions (no AI required — pure graph analysis):
+
+```bash
+# All notes, sorted worst-first
+obs ai quality MyVault
+
+# Single note
+obs ai quality <note_id>
+```
+
+**Dimensions** (weighted):
+
+| Dimension | Weight | What It Measures |
+|-----------|--------|-----------------|
+| Completeness | 30% | Word count vs vault average, has headings |
+| Connectivity | 30% | Outgoing/incoming links, orphan status |
+| Metadata | 20% | Has tags, has YAML frontmatter |
+| Freshness | 20% | Last modified date (30d=100%, 90d=70%, 180d=40%) |
+
+---
+
+## Step 12: Choose the Right Provider {: #providers}
 
 Different providers excel at different tasks:
 
@@ -270,7 +330,7 @@ obs auto-selects the best available provider, but you can override with configur
 
 ---
 
-## Step 12: Next Steps
+## Step 13: Next Steps
 
 | Want to... | Action |
 |------------|--------|
