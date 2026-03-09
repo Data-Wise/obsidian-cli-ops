@@ -68,12 +68,6 @@ obs analyze <vault>    # Analyze knowledge graph
 - R-Dev integration (307 lines) - Belongs in R package ecosystem
 - Legacy v1.x commands (126 lines) - Plugin install, sync, audit
 
-**Coming Soon:**
-
-- `obs tag-suggest` - Intelligent tag suggestions
-- `obs quality` - Note quality assessment
-- `obs merge-suggest` - Find merge candidates
-
 ## 🚀 Quick Start
 
 ### Installation
