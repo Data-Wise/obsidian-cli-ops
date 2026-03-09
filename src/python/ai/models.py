@@ -13,7 +13,7 @@ Design decisions:
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 import json
 
 
@@ -104,6 +104,142 @@ class SimilarNote:
         if not isinstance(data, dict):
             raise ValueError(f"Expected JSON object, got {type(data).__name__}")
         filtered = {k: v for k, v in data.items() if k in cls.__dataclass_fields__}
+        return cls(**filtered)
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+# --- v3.2.0 Quality Feature Models ---
+
+
+@dataclass
+class MergeCandidate:
+    """A pair of notes identified as potential merge candidates.
+
+    Used by: merge_suggest_vault(), merge_suggest_note().
+    Constructed from embedding similarity + DB enrichment (not LLM output).
+    """
+    note_a_id: str = ""
+    note_b_id: str = ""
+    note_a_title: str = ""
+    note_b_title: str = ""
+    similarity: float = 0.0           # 0.0-1.0 cosine similarity
+    shared_links: List[str] = field(default_factory=list)
+    shared_tags: List[str] = field(default_factory=list)
+    overlapping_sections: List[str] = field(default_factory=list)
+    suggested_target: str = ""        # which note to keep
+    confidence: float = 0.0           # 0.0-1.0
+
+    @classmethod
+    def from_json(cls, text: str) -> 'MergeCandidate':
+        """Parse JSON string into MergeCandidate."""
+        data = json.loads(text)
+        if not isinstance(data, dict):
+            raise ValueError(f"Expected JSON object, got {type(data).__name__}")
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'MergeCandidate':
+        """Create from dictionary, ignoring unknown keys."""
+        filtered = {k: v for k, v in data.items() if k in cls.__dataclass_fields__}
+        for key in ('similarity', 'confidence'):
+            if key in filtered:
+                try:
+                    score = float(filtered[key])
+                    filtered[key] = max(0.0, min(1.0, score))
+                except (TypeError, ValueError):
+                    filtered[key] = 0.0
+        return cls(**filtered)
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+@dataclass
+class TagSuggestion:
+    """Tag suggestions for a note based on content and vault context.
+
+    Used by: tag_suggest_vault(), tag_suggest_note().
+    suggested_tags entries: {"tag": str, "confidence": float, "vault_usage_count": int}
+    """
+    note_id: str = ""
+    note_title: str = ""
+    suggested_tags: List[Dict[str, Any]] = field(default_factory=list)
+    existing_tags: List[str] = field(default_factory=list)
+    neighbor_tags: List[str] = field(default_factory=list)
+
+    @classmethod
+    def from_json(cls, text: str) -> 'TagSuggestion':
+        """Parse JSON string into TagSuggestion."""
+        data = json.loads(text)
+        if not isinstance(data, dict):
+            raise ValueError(f"Expected JSON object, got {type(data).__name__}")
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'TagSuggestion':
+        """Create from dictionary, ignoring unknown keys."""
+        filtered = {k: v for k, v in data.items() if k in cls.__dataclass_fields__}
+        # Clamp confidence in each suggested tag
+        if 'suggested_tags' in filtered:
+            for tag_entry in filtered['suggested_tags']:
+                if isinstance(tag_entry, dict) and 'confidence' in tag_entry:
+                    try:
+                        tag_entry['confidence'] = max(0.0, min(1.0, float(tag_entry['confidence'])))
+                    except (TypeError, ValueError):
+                        tag_entry['confidence'] = 0.0
+        return cls(**filtered)
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+@dataclass
+class NoteQuality:
+    """Quality score for a single note across multiple dimensions.
+
+    Used by: note_quality_vault(), note_quality_note().
+    dimensions: {"completeness": float, "connectivity": float,
+                 "metadata": float, "freshness": float} (each 0-100)
+    issues entries: {"severity": str, "description": str}
+    """
+    note_id: str = ""
+    note_title: str = ""
+    overall_score: float = 0.0        # 0-100
+    dimensions: Dict[str, float] = field(default_factory=dict)
+    issues: List[Dict[str, str]] = field(default_factory=list)
+    suggestions: List[str] = field(default_factory=list)
+
+    @classmethod
+    def from_json(cls, text: str) -> 'NoteQuality':
+        """Parse JSON string into NoteQuality."""
+        data = json.loads(text)
+        if not isinstance(data, dict):
+            raise ValueError(f"Expected JSON object, got {type(data).__name__}")
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'NoteQuality':
+        """Create from dictionary, ignoring unknown keys."""
+        filtered = {k: v for k, v in data.items() if k in cls.__dataclass_fields__}
+        # Clamp overall_score to 0-100
+        if 'overall_score' in filtered:
+            try:
+                score = float(filtered['overall_score'])
+                filtered['overall_score'] = max(0.0, min(100.0, score))
+            except (TypeError, ValueError):
+                filtered['overall_score'] = 0.0
+        # Clamp dimension scores to 0-100
+        if 'dimensions' in filtered and isinstance(filtered['dimensions'], dict):
+            for dim_key, dim_val in filtered['dimensions'].items():
+                try:
+                    filtered['dimensions'][dim_key] = max(0.0, min(100.0, float(dim_val)))
+                except (TypeError, ValueError):
+                    filtered['dimensions'][dim_key] = 0.0
         return cls(**filtered)
 
     def to_dict(self) -> dict:

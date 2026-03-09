@@ -1,8 +1,29 @@
 # Cookbook
 
-Practical recipes for common vault management tasks.
+> **TL;DR** (30 seconds)
+> - **What:** Task-based recipes for common vault management scenarios
+> - **Why:** Copy-paste solutions instead of reading docs
+> - **How:** `obs discover ~/Documents --scan` — find and scan vaults in one step
+> - **Next:** [AI Setup Guide](ai-setup.md) for AI-powered analysis
+{ .tldr }
+
+**Time:** ~15 minutes (all recipes) | **Level:** Beginner–Intermediate | **Steps:** 25+ recipes
 
 ---
+
+## First-Time Setup Flow
+
+```mermaid
+graph TD
+    A[brew install] --> B[obs discover ~/Documents --scan]
+    B --> C[obs]
+    C --> D{Vaults found?}
+    D -->|Yes| E[obs stats MyVault]
+    D -->|No| F[obs discover other/path --scan]
+    F --> C
+    style A fill:#6366f1,color:#fff
+    style E fill:#22c55e,color:#fff
+```
 
 ## Getting Started
 
@@ -41,6 +62,9 @@ obs scan /path/to/your/vault
 ```
 
 Scanning reads all markdown files, extracts wikilinks, tags, and metadata into the knowledge graph.
+
+!!! tip "One-liner setup"
+    `obs discover ~/Documents --scan` finds and scans all vaults in one step.
 
 ---
 
@@ -158,6 +182,9 @@ obs scan /path/to/vault && obs analyze MyVault -v
 
 Watch for: orphan count increasing, broken links growing, density increasing (good), new clusters forming.
 
+??? tip "Automate health checks"
+    Add `obs health MyVault` to a cron job or shell alias for daily vault monitoring.
+
 ---
 
 ## AI-Powered Discovery
@@ -247,6 +274,69 @@ obs ai refactor MyVault --json
 
 Suggestion categories: `move` (unsorted notes), `archive` (stale folders), `merge-folder` (small folders), `create-folder` (scattered tags), `connect` (orphans near clusters).
 
+!!! warning "AI refactor is read-only"
+    The refactor command only **suggests** changes — it never moves or deletes your files. Safe to run anytime.
+
+### Find merge candidates
+
+Identify notes with high content similarity that might be consolidated:
+
+```bash
+# Default threshold: 80% similarity
+obs ai merge-suggest MyVault
+
+# Stricter threshold
+obs ai merge-suggest MyVault --threshold 0.9
+
+# JSON for scripting
+obs ai merge-suggest MyVault --json | python3 -c "
+import json, sys
+for c in json.load(sys.stdin):
+    print(f\"{c['similarity']:.0%}  {c['note_a_title']} ↔ {c['note_b_title']}\")
+"
+```
+
+!!! tip "Embeddings required"
+    `merge-suggest` uses cached embeddings from the `note_embeddings` table. Run `obs ai similar` or `obs ai duplicates` first to populate the cache.
+
+### Suggest tags for untagged notes
+
+```bash
+# Vault-wide: suggest tags for all untagged notes
+obs ai tag-suggest MyVault
+
+# Single note
+obs ai tag-suggest <note_id>
+
+# Auto-apply tags with >80% confidence
+obs ai tag-suggest MyVault --apply
+
+# Only show high-confidence suggestions
+obs ai tag-suggest MyVault --min-confidence 0.7
+```
+
+### Score note quality
+
+Rate every note across 4 dimensions (no AI required — graph-only):
+
+```bash
+# Vault-wide: sorted worst-first
+obs ai quality MyVault
+
+# Single note
+obs ai quality <note_id>
+
+# JSON for dashboards
+obs ai quality MyVault --json | python3 -c "
+import json, sys
+scores = json.load(sys.stdin)
+low = [s for s in scores if s['overall_score'] < 30]
+print(f'{len(low)} notes need attention (score < 30)')
+"
+```
+
+Quality dimensions (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).
+
 ---
 
 ## Multi-Vault Management
@@ -293,6 +383,9 @@ obs ai duplicates MyVault --json          # Duplicate groups
 obs ai suggest-links <note_id> --json     # Link suggestions
 obs ai gaps MyVault --json                # Knowledge gaps
 obs ai summarize MyVault --json           # Vault summary
+obs ai merge-suggest MyVault --json       # Merge candidates
+obs ai tag-suggest MyVault --json         # Tag suggestions
+obs ai quality MyVault --json             # Quality scores
 ```
 
 ### Pipe refactor suggestions to a checklist
@@ -306,6 +399,98 @@ for s in plan['suggestions']:
     print(f'- [ ] {priority} {s[\"description\"]}')
 " > vault_cleanup_tasks.md
 ```
+
+---
+
+## Using obs with the Native Obsidian CLI
+
+Obsidian v1.12.4+ ships a [native CLI](https://help.obsidian.md/cli) for note-level operations (read, create, search, tags). Use it alongside `obs` for a complete terminal workflow.
+
+!!! tip "Two tools, zero overlap"
+    `obs` = graph analysis + AI insights (works offline, reads SQLite).
+    `obsidian` = note CRUD + search + tags (requires Obsidian running).
+
+### Quick capture + AI analysis
+
+```bash
+# Capture a thought via native CLI
+obsidian daily:append content="Idea: refactor auth module to use JWT"
+
+# Later, analyze the vault for related notes
+obs ai similar auth-module
+obs ai suggest-links auth-module
+```
+
+### Find orphans, then fix them
+
+```bash
+# obs finds orphans via graph analysis
+obs health MyVault              # Shows orphan count
+obs ai refactor MyVault         # Suggests where orphans belong
+
+# Native CLI reads/moves the actual files
+obsidian read file="stale-idea"
+obsidian move file="stale-idea" to="archive/"
+```
+
+### Rename tags vault-wide
+
+```bash
+# obs shows tag distribution
+obs stats MyVault --json | python3 -c "
+import json, sys
+stats = json.load(sys.stdin)
+for tag in stats.get('top_tags', [])[:10]:
+    print(f\"  {tag['name']}: {tag['count']} notes\")
+"
+
+# Native CLI renames across all files
+obsidian tags:rename old=javascript new=js
+```
+
+### Daily vault health ritual
+
+```bash
+# Morning check (30 seconds)
+obs health MyVault                          # Overall scores
+obsidian daily                              # Open today's note
+obsidian tasks                              # Review open tasks
+
+# Weekly deep dive (5 minutes)
+obs ai quality MyVault                      # Worst-scoring notes
+obs ai refactor MyVault --dry-run           # Scope check
+obs ai gaps MyVault                         # Knowledge gaps
+obs analyze MyVault -v                      # Graph metrics
+```
+
+### Search + analyze pipeline
+
+```bash
+# Native search finds notes by content
+obsidian search query="[tag:python]"
+
+# obs finds notes by graph position and AI similarity
+obs ai similar python-basics
+obs ai suggest-links python-basics
+```
+
+### Create notes from AI suggestions
+
+```bash
+# obs identifies knowledge gaps
+obs ai gaps MyVault --json | python3 -c "
+import json, sys
+gaps = json.load(sys.stdin)
+for g in gaps.get('gaps', [])[:3]:
+    print(g['topic'])
+"
+
+# Native CLI creates the missing notes
+obsidian create name="Missing Topic" template="note-template"
+```
+
+??? info "Setup: Enable native CLI"
+    Settings → General → Command line interface. Requires Obsidian v1.12.4+ running.
 
 ---
 

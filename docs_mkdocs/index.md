@@ -1,5 +1,11 @@
 # obs -- Your Vault's Command Line
 
+[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
+[![Tests](https://img.shields.io/badge/tests-265%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/LICENSE)
+
 A laser-focused CLI for Obsidian vault management with AI-powered graph analysis.
 
 [Install Now](installation.md){ .md-button .md-button--primary }

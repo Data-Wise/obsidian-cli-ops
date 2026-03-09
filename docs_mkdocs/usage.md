@@ -1,6 +1,15 @@
 # Usage Guide
 
-> **Just type `obs` - it does the right thing!**
+> **TL;DR** (30 seconds)
+> - **What:** 18 focused commands for vault management, graph analysis, and AI
+> - **Why:** Zero-friction Obsidian vault management from the terminal
+> - **How:** `obs` — just type it, it lists your vaults
+> - **Next:** [Cookbook](cookbook.md) for task-based recipes
+{ .tldr }
+
+**Time:** ~10 minutes | **Level:** Beginner | **Steps:** 4 workflows
+
+---
 
 ## Philosophy
 
@@ -8,7 +17,7 @@
 
 - **Zero-Friction Start**: Just type `obs`
 - **iCloud-First**: Auto-detects your Obsidian vaults
-- **ADHD-Friendly**: 14 focused commands, smart defaults, progressive disclosure
+- **ADHD-Friendly**: 18 focused commands, smart defaults, progressive disclosure
 - **AI-Powered**: Optional AI features for deeper vault analysis
 
 ---
@@ -53,6 +62,9 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | `obs ai gaps <vault>` | Find knowledge gaps in the vault |
 | `obs ai summarize <vault>` | Summarize vault themes and stats |
 | `obs ai refactor <vault>` | AI-powered vault reorganization suggestions |
+| `obs ai merge-suggest <vault>` | Find note pairs that may be merge candidates |
+| `obs ai tag-suggest <target>` | Suggest tags for untagged notes |
+| `obs ai quality <target>` | Score notes on 4 quality dimensions |
 
 ### Utilities
 
@@ -63,6 +75,17 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | `obs version` | Show version |
 
 ---
+
+## Daily Workflow
+
+```mermaid
+graph LR
+    A[obs] -->|list vaults| B[obs stats]
+    B -->|check health| C[obs analyze]
+    C -->|deep dive| D[obs ai refactor]
+    style A fill:#6366f1,color:#fff
+    style D fill:#8b5cf6,color:#fff
+```
 
 ## Common Workflows
 
@@ -254,6 +277,23 @@ ls -la ~/.config/zsh/functions/obs.zsh
 # Check Python path (should be /opt/homebrew/bin/python3)
 which python3
 ```
+
+---
+
+## Using with the Native Obsidian CLI
+
+Obsidian v1.12.4+ includes a [native CLI](https://help.obsidian.md/cli) for note-level operations. It complements `obs`:
+
+| Task | Use |
+|------|-----|
+| Graph analysis, health scores, AI insights | `obs` |
+| Read/create/move/delete notes | `obsidian` |
+| Search by content or tags | `obsidian search` |
+| Find similar notes by AI embeddings | `obs ai similar` |
+| Rename tags vault-wide | `obsidian tags:rename` |
+| Quick capture to daily note | `obsidian daily:append` |
+
+See the [Cookbook](cookbook.md#using-obs-with-the-native-obsidian-cli) for combined workflow recipes.
 
 ---
 

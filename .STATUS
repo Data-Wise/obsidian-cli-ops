@@ -1,20 +1,72 @@
 priority: P1
-status: releasing v3.1.0
-progress: 100
-updated: 2026-03-06
-version: 3.1.0
-next: Release v3.1.0 (ai refactor + docs redesign)
-target: v3.1.0 - AI Refactor + Docs Redesign
+status: releasing v3.2.0
+progress: 97
+updated: 2026-03-09
+version: 3.2.0
+next: PR to main, tag, GitHub release, Homebrew, docs deploy
+target: v3.2.0 - Quality Features
 
 ## 🎯 Current State
 
-**Phase**: 8 complete (AI-powered commands)
+**Phase**: v3.2.0 Phases 1-7 complete (version bumped)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 206/206 passing (pytest)
-**Commands**: 15 focused commands under `obs`
+**Tests**: 235/235 passing (pytest) + 30 Jest = 265 total
+**Commands**: 18 focused commands under `obs` (+3 new: merge-suggest, tag-suggest, quality)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
-**Code**: ~7,400 lines (ZSH 386 + Python ~3,500 + AI 900+)
+**Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
+**Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
+
+---
+
+## 🚧 Active Work
+
+v3.2.0 Quality Features — All phases complete, merged to dev. Bug fix applied (--json flag in quality handler). Release in progress.
+
+---
+
+## ✅ Post-Release Docs Polish (2026-03-06)
+
+### ADHD Website Enhancement — PR #18
+
+- ✅ TL;DR boxes on 10 pages, time estimates, callout boxes
+- ✅ Custom CSS (adhd.css), Mermaid workflow diagrams, emoji headings
+- ✅ ADHD Quick Start page, Visual Workflows page
+- ✅ ADHD score: 45/100 → 90/100 (Grade A)
+- ✅ Merged to dev, deployed
+
+### Docs Maintenance
+
+- ✅ Rewrote `developer/testing/overview.md` (584 → 83 lines, removed stale TUI/R-Dev refs)
+- ✅ Added native Obsidian CLI sections to cookbook, refcard, usage
+- ✅ Docs deployed
+
+---
+
+## ✅ v3.1.0 Released (2026-03-06)
+
+### `obs ai refactor <vault>` — PR #15
+
+- ✅ 3-phase pipeline: graph-only → AI-enhanced → prioritization
+- ✅ 16 new tests (206 total passing)
+- ✅ ZSH wiring for refactor + fixed missing suggest-links/gaps/summarize cases
+- ✅ Merged to dev, released
+
+### Website Redesign — PR #16
+
+- ✅ 4-tab nav (Home | Getting Started | Reference | Developer)
+- ✅ Hero landing page with Mermaid architecture diagram
+- ✅ Rewritten installation.md and configuration.md
+- ✅ Expanded cookbook (absorbed tutorials)
+- ✅ Consolidated changelog, promoted CLI reference + architecture docs
+- ✅ Merged to dev, released
+
+### Release — PR #17
+
+- ✅ Version bumped across 11 files
+- ✅ GitHub release + tag v3.1.0
+- ✅ Docs deployed, Homebrew formula updated
+- ✅ Badges added to docs homepage
 
 ---
 
@@ -49,10 +101,8 @@ target: v3.1.0 - AI Refactor + Docs Redesign
 
 ## 🎯 Next Actions
 
-- Release v3.1.0 to main
-- Deploy updated docs site
-- Update Homebrew formula
-- Explore more Phase 8 features (IDEAS.md): tag-suggest, quality, merge-suggest
+- Complete v3.2.0 release pipeline
+- Post-release: update Homebrew formula, deploy docs, verify CI on main
 
 ---
 
@@ -137,7 +187,9 @@ target: v3.1.0 - AI Refactor + Docs Redesign
 - **2026-03-05**: PR #13 (v3.0.0 stable release), PR #14 (configurable Python path)
 - **2026-03-05**: Homebrew formula published (data-wise/tap/obsidian-cli-ops)
 - **2026-03-06**: PR #15 (ai refactor, 206 tests), PR #16 (website redesign)
-- **2026-03-06**: v3.1.0 release
+- **2026-03-06**: v3.1.0 release (PR #17), Homebrew formula updated, docs deployed
+- **2026-03-06**: PR #18 (ADHD website enhancement), docs polish, native CLI docs
+- **2026-03-09**: PR #19 (v3.2.0 quality features, 235 tests), --json fix, release pipeline
 
 ---
 

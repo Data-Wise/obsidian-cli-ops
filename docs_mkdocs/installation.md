@@ -1,6 +1,15 @@
 # Installation
 
-## Homebrew (Recommended)
+> **TL;DR** (30 seconds)
+> - **What:** Install `obs` via Homebrew or manual setup
+> - **Why:** Manage Obsidian vaults from the terminal in seconds
+> - **How:** `brew install data-wise/tap/obsidian-cli-ops`
+> - **Next:** [Configuration](configuration.md) for optional settings
+{ .tldr }
+
+---
+
+## :beer: Homebrew (Recommended)
 
 ```bash
 brew install data-wise/tap/obsidian-cli-ops
@@ -8,7 +17,7 @@ brew install data-wise/tap/obsidian-cli-ops
 
 This installs `obs` with all Python dependencies and sets up the shell integration automatically.
 
-## Manual Install
+## :hammer_and_wrench: Manual Install
 
 ### Prerequisites
 
@@ -57,7 +66,7 @@ This installs `obs` with all Python dependencies and sets up the shell integrati
     source ~/.zshrc
     ```
 
-## Verify Installation
+## :white_check_mark: Verify Installation
 
 ```bash
 # Check version
@@ -69,7 +78,7 @@ obs
 
 You should see the version number and any Obsidian vaults found in your iCloud directory.
 
-## Troubleshooting
+## :sos: Troubleshooting
 
 ### Python not found
 

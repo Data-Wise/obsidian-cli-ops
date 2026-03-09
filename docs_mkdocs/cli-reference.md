@@ -1,12 +1,17 @@
 # CLI Command Reference
 
-**Version:** 3.1.0
+> **TL;DR** (30 seconds)
+> - **What:** Full reference for all 15 `obs` commands with flags and examples
+> - **Why:** One-stop lookup for exact syntax and options
+> - **How:** `obs help --all` — see this in your terminal
+> - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
+{ .tldr }
 
-Complete reference for all `obs` commands -- 15 commands covering vault management, graph analysis, and AI features.
+**Version:** 3.2.0
 
 ---
 
-## Global Options
+## :gear: Global Options
 
 | Flag | Description |
 |------|-------------|
@@ -16,7 +21,7 @@ Complete reference for all `obs` commands -- 15 commands covering vault manageme
 
 ---
 
-## Vault Management
+## :file_folder: Vault Management
 
 ### obs
 
@@ -27,6 +32,9 @@ obs
 ```
 
 **Output:** Rich-formatted table with status, name, note count, link count, last scanned, and ID.
+
+!!! tip "Pro tip"
+    This is the only command you need on day one. Everything starts from the vault list.
 
 ---
 
@@ -86,7 +94,7 @@ obs health <vault>
 
 ---
 
-## Graph Analysis
+## :chart_with_upwards_trend: Graph Analysis
 
 ### obs analyze
 
@@ -100,7 +108,7 @@ With `--verbose`, also shows top hub notes, orphaned notes, and broken links.
 
 ---
 
-## Database
+## :floppy_disk: Database
 
 ### obs db init
 
@@ -114,7 +122,7 @@ Creates the database at `~/.config/obs/vault_db.sqlite` with all tables and view
 
 ---
 
-## AI Provider Management
+## :robot: AI Provider Management
 
 ### obs ai status
 
@@ -144,9 +152,12 @@ obs ai test [--provider <name>]
 
 ---
 
-## AI Features
+## :sparkles: AI Features
 
 All AI commands require at least one configured provider. Use `obs ai setup` to configure.
+
+!!! warning "Provider required"
+    AI commands will fail gracefully if no provider is available. Run `obs ai status` first to check.
 
 ### obs ai similar
 
@@ -217,9 +228,55 @@ obs ai refactor <vault> [--dry-run] [--json]
 
 **Suggestion categories:** `move`, `archive`, `merge-folder`, `create-folder`, `connect`
 
+??? info "Refactor is read-only"
+    `obs ai refactor` only **suggests** changes — it never moves or deletes files. Use `--dry-run` to preview scope without AI calls.
+
+### obs ai merge-suggest
+
+Find note pairs with high embedding similarity that may be merge candidates.
+
+```bash
+obs ai merge-suggest <vault> [--threshold N] [--provider X] [--json]
+```
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--threshold` | `0.8` | Minimum cosine similarity (0-1) |
+| `--provider` | auto | AI provider for embeddings |
+| `--json` | | Machine-readable output |
+
+### obs ai tag-suggest
+
+Suggest tags for untagged notes using AI and vault context.
+
+```bash
+obs ai tag-suggest <target> [--apply] [--min-confidence N] [--provider X] [--json]
+```
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--apply` | | Auto-apply tags with >80% confidence to frontmatter |
+| `--min-confidence` | `0.0` | Only show suggestions above this threshold |
+| `--provider` | auto | AI provider |
+| `--json` | | Machine-readable output |
+
+`<target>` accepts a vault name/ID (vault-wide) or a note ID (single note).
+
+### obs ai quality
+
+Score notes across 4 quality dimensions (graph-only, no AI required).
+
+```bash
+obs ai quality <target> [--json]
+```
+
+**Dimensions** (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).
+
+`<target>` accepts a vault name/ID (vault-wide) or a note ID (single note). Vault-wide output is sorted worst-first.
+
 ---
 
-## Utility
+## :wrench: Utility
 
 ### obs help
 
@@ -239,7 +296,7 @@ obs version
 
 ---
 
-## Quick Reference
+## :zap: Quick Reference
 
 | Command | Purpose |
 |---------|---------|
@@ -259,6 +316,9 @@ obs version
 | `obs ai gaps <vault>` | Find knowledge gaps |
 | `obs ai summarize <vault>` | Summarize vault |
 | `obs ai refactor <vault>` | Reorganization suggestions |
+| `obs ai merge-suggest <vault>` | Find merge candidates |
+| `obs ai tag-suggest <target>` | Suggest tags |
+| `obs ai quality <target>` | Score note quality |
 
 ---
 
