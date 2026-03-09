@@ -414,8 +414,14 @@ obs_ai() {
             _log_verbose "Finding merge candidates"
             local cmd=("$python_cli" "ai" "merge-suggest" "$vault_id")
             while [[ "$1" == --* ]]; do
-                cmd+=("$1" "$2")
-                shift 2
+                if [[ "$1" == "--threshold" || "$1" == "--provider" ]]; then
+                    cmd+=("$1" "$2")
+                    shift 2
+                else
+                    # Boolean flags (--json, --verbose, unknown)
+                    cmd+=("$1")
+                    shift
+                fi
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
             [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
