@@ -101,7 +101,7 @@ v3.2.0 released. GitHub release, docs deployed, Homebrew formula updated.
 
 ## 🎯 Next Actions
 
-- CI fix: split deploy step from test step (deploy fails on gh-pages push permissions)
+- Merge deploy-docs CI fix to main (on dev, commit 0ec54df)
 - Plan v3.3.0 features (see IDEAS.md)
 
 ---
