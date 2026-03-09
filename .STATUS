@@ -1,10 +1,10 @@
 priority: P1
 status: stable v3.1.0
 progress: 100
-updated: 2026-03-06
+updated: 2026-03-09
 version: 3.1.0
-next: Docs polish complete; explore Phase 9 features (IDEAS.md)
-target: v3.2.0 - Quality Features
+next: Start v3.2.0 implementation in worktree (cd ~/.git-worktrees/obsidian-cli-ops/feature-v3.2.0-quality && claude)
+target: v3.2.0 - Quality Features (merge-suggest, tag-suggest, quality)
 
 ## 🎯 Current State
 
@@ -21,7 +21,14 @@ target: v3.2.0 - Quality Features
 
 ## 🚧 Active Work
 
-No active work. Exploring Phase 9 features (IDEAS.md).
+### v3.2.0 Quality Features — Planning Complete (2026-03-09)
+
+- ✅ Deep brainstorm (max depth, 2 expert agents)
+- ✅ Formal spec: `docs/specs/SPEC-v3.2.0-quality-features-2026-03-06.md`
+- ✅ UX spec: `docs/specs/UX-SPEC-ai-review-dashboard.md` (v3.3.0 scope)
+- ✅ Worktree: `feature/v3.2.0-quality` with ORCHESTRATE committed
+- 🔲 Implementation: 7 phases (data models → module split → features → CLI → tests → docs → release)
+- 🔲 New commands: `merge-suggest`, `tag-suggest`, `quality`
 
 ---
 
@@ -101,8 +108,8 @@ No active work. Exploring Phase 9 features (IDEAS.md).
 
 ## 🎯 Next Actions
 
-- Explore Phase 9 features (IDEAS.md): tag-suggest, quality, merge-suggest
-- Consider v3.2.0 planning (quality features)
+- Start v3.2.0 implementation in worktree: Phase 1 (data models) → Phase 2 (module split)
+- Worktree path: `~/.git-worktrees/obsidian-cli-ops/feature-v3.2.0-quality`
 
 ---
 
