@@ -33,6 +33,9 @@
 | `obs ai gaps <vault>` | Find knowledge gaps in the vault |
 | `obs ai summarize <vault>` | Summarize vault themes and stats |
 | `obs ai refactor <vault>` | AI-powered vault reorganization suggestions |
+| `obs ai merge-suggest <vault>` | Find note pairs that may be merge candidates |
+| `obs ai tag-suggest <target>` | Suggest tags for untagged notes (vault or single note) |
+| `obs ai quality <target>` | Score notes on quality (completeness, connectivity, metadata, freshness) |
 
 ## Utilities
 
@@ -104,9 +107,14 @@ obs ai status
 obs ai refactor MyVault --dry-run
 obs ai refactor MyVault
 
+# Quality features (v3.2.0)
+obs ai merge-suggest MyVault              # Find merge candidates
+obs ai tag-suggest MyVault --apply        # Suggest + auto-apply tags
+obs ai quality MyVault                    # Score all notes
+
 # Export for scripting
 obs stats --vault MyVault --json
-obs ai refactor MyVault --json | python3 -m json.tool
+obs ai quality MyVault --json | python3 -m json.tool
 ```
 
 ---
@@ -146,4 +154,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.1.0 | **Commands:** 15 | **AI Providers:** 5
+**Version:** 3.2.0 | **Commands:** 18 | **AI Providers:** 5

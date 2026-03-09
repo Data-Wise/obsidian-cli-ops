@@ -1,16 +1,16 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-206%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-265%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.1.0
+**Current Version**: 3.2.0
 
 ## 🚀 Quick Start
 
@@ -43,6 +43,9 @@ obs analyze <vault>    # Analyze knowledge graph
 - **Knowledge Gaps**: `obs ai gaps` - detect stub notes and orphans
 - **Vault Summary**: `obs ai summarize` - generate theme analysis across vault
 - **Vault Refactor**: `obs ai refactor` - AI-powered vault reorganization suggestions
+- **Merge Suggest**: `obs ai merge-suggest` - find note pairs with high content similarity
+- **Tag Suggest**: `obs ai tag-suggest` - AI-powered tag suggestions for untagged notes
+- **Quality Scoring**: `obs ai quality` - score notes on completeness, connectivity, metadata, freshness
 - **Provider Management**: `obs ai status`, `obs ai setup`, `obs ai test`
 - **Smart Routing**: Auto-selects best provider for each operation type
 - **Embedding Cache**: SQLite-backed cache with mtime invalidation
@@ -65,12 +68,6 @@ obs analyze <vault>    # Analyze knowledge graph
 - R-Dev integration (307 lines) - Belongs in R package ecosystem
 - Legacy v1.x commands (126 lines) - Plugin install, sync, audit
 
-**Coming Soon:**
-
-- `obs tag-suggest` - Intelligent tag suggestions
-- `obs quality` - Note quality assessment
-- `obs merge-suggest` - Find merge candidates
-
 ## 🚀 Quick Start
 
 ### Installation
@@ -87,7 +84,7 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.1.0** - 15 focused commands!
+**v3.2.0** - 18 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -110,6 +107,9 @@ obs ai suggest-links <note_id>  # Suggest new links
 obs ai gaps <vault>             # Find knowledge gaps
 obs ai summarize <vault>        # Summarize vault themes
 obs ai refactor <vault>         # AI-powered reorganization
+obs ai merge-suggest <vault>    # Find merge candidates
+obs ai tag-suggest <target>     # Suggest tags for notes
+obs ai quality <target>         # Score note quality
 
 # UTILITIES
 obs help                        # Show simple help
@@ -121,7 +121,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.1.0 Stable
+**Current Status:** v3.2.0 Stable
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -154,7 +154,7 @@ obs version                     # Show version
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.1.0)** - v3.1.0 release notes
+- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.2.0)** - v3.2.0 release notes
 
 ## 🧪 Test Coverage
 
@@ -193,6 +193,11 @@ MIT License - See LICENSE file for details.
   - `obs ai refactor` — 3-phase vault reorganization
   - Website redesigned (4-tab nav, hero page, expanded cookbook)
   - 206 pytest + 30 Jest tests passing
+- ✅ v3.2.0: Quality Features
+  - `obs ai merge-suggest` — find merge candidates via embedding similarity
+  - `obs ai tag-suggest` — AI-powered tag suggestions for untagged notes
+  - `obs ai quality` — score notes on 4 dimensions (no AI required)
+  - 235 pytest + 30 Jest tests passing
 
 ---
 

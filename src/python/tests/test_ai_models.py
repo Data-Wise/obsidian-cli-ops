@@ -2,7 +2,10 @@
 
 import json
 import pytest
-from ai.models import AnalysisResult, ComparisonResult, SimilarNote
+from ai.models import (
+    AnalysisResult, ComparisonResult, SimilarNote,
+    MergeCandidate, TagSuggestion, NoteQuality,
+)
 
 
 class TestAnalysisResult:
@@ -152,3 +155,135 @@ class TestSimilarNote:
         d = result.to_dict()
         assert d["note_id"] == 5
         assert d["reason"] == "similar"
+
+
+# ── v3.2.0 Model Tests ───────────────────────────────────────────
+
+
+class TestMergeCandidate:
+    """Tests for MergeCandidate dataclass."""
+
+    def test_from_dict_complete(self):
+        data = {
+            "note_a_id": "abc",
+            "note_b_id": "def",
+            "note_a_title": "Note A",
+            "note_b_title": "Note B",
+            "similarity": 0.92,
+            "shared_links": ["Link1"],
+            "shared_tags": ["tag1"],
+            "overlapping_sections": [],
+            "suggested_target": "Note A",
+            "confidence": 0.85,
+        }
+        mc = MergeCandidate.from_dict(data)
+        assert mc.note_a_id == "abc"
+        assert mc.similarity == 0.92
+        assert mc.confidence == 0.85
+        assert mc.shared_tags == ["tag1"]
+
+    def test_from_dict_clamps_similarity(self):
+        mc = MergeCandidate.from_dict({"similarity": 1.5, "confidence": -0.3})
+        assert mc.similarity == 1.0
+        assert mc.confidence == 0.0
+
+    def test_from_json_ignores_extra_keys(self):
+        data = {"note_a_id": "x", "unknown_field": True}
+        mc = MergeCandidate.from_json(json.dumps(data))
+        assert mc.note_a_id == "x"
+        assert not hasattr(mc, "unknown_field")
+
+    def test_to_dict_round_trip(self):
+        mc = MergeCandidate(note_a_id="a", note_b_id="b",
+                            note_a_title="A", note_b_title="B",
+                            similarity=0.9, confidence=0.8)
+        d = mc.to_dict()
+        mc2 = MergeCandidate.from_dict(d)
+        assert mc2.similarity == mc.similarity
+        assert mc2.note_a_title == mc.note_a_title
+
+
+class TestTagSuggestion:
+    """Tests for TagSuggestion dataclass."""
+
+    def test_from_dict_with_tags(self):
+        data = {
+            "note_id": "n1",
+            "note_title": "My Note",
+            "suggested_tags": [
+                {"tag": "python", "confidence": 0.9, "vault_usage_count": 5},
+                {"tag": "testing", "confidence": 0.7, "vault_usage_count": 3},
+            ],
+            "existing_tags": [],
+            "neighbor_tags": ["dev"],
+        }
+        ts = TagSuggestion.from_dict(data)
+        assert len(ts.suggested_tags) == 2
+        assert ts.suggested_tags[0]["tag"] == "python"
+        assert ts.suggested_tags[0]["confidence"] == 0.9
+
+    def test_from_dict_clamps_tag_confidence(self):
+        data = {
+            "suggested_tags": [{"tag": "x", "confidence": 1.5}],
+        }
+        ts = TagSuggestion.from_dict(data)
+        assert ts.suggested_tags[0]["confidence"] == 1.0
+
+    def test_from_json_minimal(self):
+        ts = TagSuggestion.from_json('{"note_id": "n1"}')
+        assert ts.note_id == "n1"
+        assert ts.suggested_tags == []
+
+    def test_to_dict(self):
+        ts = TagSuggestion(note_id="n1", note_title="T",
+                          suggested_tags=[{"tag": "a", "confidence": 0.8}])
+        d = ts.to_dict()
+        assert d["note_id"] == "n1"
+        assert len(d["suggested_tags"]) == 1
+
+
+class TestNoteQuality:
+    """Tests for NoteQuality dataclass."""
+
+    def test_from_dict_complete(self):
+        data = {
+            "note_id": "n1",
+            "note_title": "Note 1",
+            "overall_score": 72.5,
+            "dimensions": {
+                "completeness": 80.0,
+                "connectivity": 60.0,
+                "metadata": 100.0,
+                "freshness": 50.0,
+            },
+            "issues": [{"severity": "high", "description": "orphan"}],
+            "suggestions": ["Add links"],
+        }
+        nq = NoteQuality.from_dict(data)
+        assert nq.overall_score == 72.5
+        assert nq.dimensions["completeness"] == 80.0
+        assert len(nq.issues) == 1
+
+    def test_from_dict_clamps_overall_score(self):
+        nq = NoteQuality.from_dict({"overall_score": 150.0})
+        assert nq.overall_score == 100.0
+        nq2 = NoteQuality.from_dict({"overall_score": -10.0})
+        assert nq2.overall_score == 0.0
+
+    def test_from_dict_clamps_dimension_scores(self):
+        nq = NoteQuality.from_dict({"dimensions": {"completeness": 200.0, "connectivity": -5.0}})
+        assert nq.dimensions["completeness"] == 100.0
+        assert nq.dimensions["connectivity"] == 0.0
+
+    def test_from_json_empty(self):
+        nq = NoteQuality.from_json('{}')
+        assert nq.overall_score == 0.0
+        assert nq.dimensions == {}
+
+    def test_to_dict_round_trip(self):
+        nq = NoteQuality(note_id="n1", note_title="T", overall_score=55.0,
+                         dimensions={"completeness": 60.0, "connectivity": 50.0})
+        d = nq.to_dict()
+        nq2 = NoteQuality.from_dict(d)
+        assert nq2.overall_score == nq.overall_score
+        assert nq2.dimensions == nq.dimensions

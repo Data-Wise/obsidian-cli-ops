@@ -1,7 +1,7 @@
 # Usage Guide
 
 > **TL;DR** (30 seconds)
-> - **What:** 15 focused commands for vault management, graph analysis, and AI
+> - **What:** 18 focused commands for vault management, graph analysis, and AI
 > - **Why:** Zero-friction Obsidian vault management from the terminal
 > - **How:** `obs` — just type it, it lists your vaults
 > - **Next:** [Cookbook](cookbook.md) for task-based recipes
@@ -17,7 +17,7 @@
 
 - **Zero-Friction Start**: Just type `obs`
 - **iCloud-First**: Auto-detects your Obsidian vaults
-- **ADHD-Friendly**: 15 focused commands, smart defaults, progressive disclosure
+- **ADHD-Friendly**: 18 focused commands, smart defaults, progressive disclosure
 - **AI-Powered**: Optional AI features for deeper vault analysis
 
 ---
@@ -62,6 +62,9 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | `obs ai gaps <vault>` | Find knowledge gaps in the vault |
 | `obs ai summarize <vault>` | Summarize vault themes and stats |
 | `obs ai refactor <vault>` | AI-powered vault reorganization suggestions |
+| `obs ai merge-suggest <vault>` | Find note pairs that may be merge candidates |
+| `obs ai tag-suggest <target>` | Suggest tags for untagged notes |
+| `obs ai quality <target>` | Score notes on 4 quality dimensions |
 
 ### Utilities
 

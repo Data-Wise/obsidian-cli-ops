@@ -1,7 +1,7 @@
 # Testing Overview
 
-**Version:** 3.1.0
-**Total Tests:** 236 (206 pytest + 30 Jest)
+**Version:** 3.2.0
+**Total Tests:** 265 (235 pytest + 30 Jest)
 
 ## Test Coverage
 
@@ -10,7 +10,7 @@
 | AI Providers | 26 | pytest | `test_ai_providers.py` |
 | Vault Health | 21 | pytest | `test_vault_health.py` |
 | AI Refactor | 20 | pytest | `test_ai_refactor.py` |
-| AI Models | 19 | pytest | `test_ai_models.py` |
+| AI Models | 33 | pytest | `test_ai_models.py` |
 | Obsidian Bridge | 17 | pytest | `test_obsidian_bridge.py` |
 | Vault Fixtures | 15 | pytest | `test_vault_fixtures.py` |
 | AI Features | 15 | pytest | `test_ai_features.py` |
@@ -27,9 +27,10 @@
 | Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
 | DB Metrics | 1 | pytest | `test_db_metrics.py` |
-| **Python Subtotal** | **206** | **pytest** | |
+| Vault Features | 16 | pytest | `test_features_vault.py` |
+| **Python Subtotal** | **235** | **pytest** | |
 | ZSH CLI Wrapper | 30 | Jest | `obs.test.js`, `cli.test.js` |
-| **Total** | **236** | | |
+| **Total** | **265** | | |
 
 ---
 

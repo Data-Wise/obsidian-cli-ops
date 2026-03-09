@@ -277,6 +277,66 @@ Suggestion categories: `move` (unsorted notes), `archive` (stale folders), `merg
 !!! warning "AI refactor is read-only"
     The refactor command only **suggests** changes — it never moves or deletes your files. Safe to run anytime.
 
+### Find merge candidates
+
+Identify notes with high content similarity that might be consolidated:
+
+```bash
+# Default threshold: 80% similarity
+obs ai merge-suggest MyVault
+
+# Stricter threshold
+obs ai merge-suggest MyVault --threshold 0.9
+
+# JSON for scripting
+obs ai merge-suggest MyVault --json | python3 -c "
+import json, sys
+for c in json.load(sys.stdin):
+    print(f\"{c['similarity']:.0%}  {c['note_a_title']} ↔ {c['note_b_title']}\")
+"
+```
+
+!!! tip "Embeddings required"
+    `merge-suggest` uses cached embeddings from the `note_embeddings` table. Run `obs ai similar` or `obs ai duplicates` first to populate the cache.
+
+### Suggest tags for untagged notes
+
+```bash
+# Vault-wide: suggest tags for all untagged notes
+obs ai tag-suggest MyVault
+
+# Single note
+obs ai tag-suggest <note_id>
+
+# Auto-apply tags with >80% confidence
+obs ai tag-suggest MyVault --apply
+
+# Only show high-confidence suggestions
+obs ai tag-suggest MyVault --min-confidence 0.7
+```
+
+### Score note quality
+
+Rate every note across 4 dimensions (no AI required — graph-only):
+
+```bash
+# Vault-wide: sorted worst-first
+obs ai quality MyVault
+
+# Single note
+obs ai quality <note_id>
+
+# JSON for dashboards
+obs ai quality MyVault --json | python3 -c "
+import json, sys
+scores = json.load(sys.stdin)
+low = [s for s in scores if s['overall_score'] < 30]
+print(f'{len(low)} notes need attention (score < 30)')
+"
+```
+
+Quality dimensions (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).
+
 ---
 
 ## Multi-Vault Management
@@ -323,6 +383,9 @@ obs ai duplicates MyVault --json          # Duplicate groups
 obs ai suggest-links <note_id> --json     # Link suggestions
 obs ai gaps MyVault --json                # Knowledge gaps
 obs ai summarize MyVault --json           # Vault summary
+obs ai merge-suggest MyVault --json       # Merge candidates
+obs ai tag-suggest MyVault --json         # Tag suggestions
+obs ai quality MyVault --json             # Quality scores
 ```
 
 ### Pipe refactor suggestions to a checklist
@@ -394,6 +457,7 @@ obsidian daily                              # Open today's note
 obsidian tasks                              # Review open tasks
 
 # Weekly deep dive (5 minutes)
+obs ai quality MyVault                      # Worst-scoring notes
 obs ai refactor MyVault --dry-run           # Scope check
 obs ai gaps MyVault                         # Knowledge gaps
 obs analyze MyVault -v                      # Graph metrics
