@@ -403,6 +403,64 @@ obs_ai() {
             $OBS_PYTHON "${cmd[@]}"
             ;;
 
+        merge-suggest)
+            local vault_id=$1
+            if [[ -z "$vault_id" ]]; then
+                _log "ERROR" "Vault name or ID required"
+                echo "Usage: obs ai merge-suggest <vault> [--threshold N] [--json]"
+                return 1
+            fi
+            shift
+            _log_verbose "Finding merge candidates"
+            local cmd=("$python_cli" "ai" "merge-suggest" "$vault_id")
+            while [[ "$1" == --* ]]; do
+                cmd+=("$1" "$2")
+                shift 2
+            done
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
+        tag-suggest)
+            local target=$1
+            if [[ -z "$target" ]]; then
+                _log "ERROR" "Vault name/ID or note ID required"
+                echo "Usage: obs ai tag-suggest <vault|note_id> [--apply] [--min-confidence N]"
+                return 1
+            fi
+            shift
+            _log_verbose "Suggesting tags"
+            local cmd=("$python_cli" "ai" "tag-suggest" "$target")
+            while [[ "$1" == --* ]]; do
+                if [[ "$1" == "--apply" ]]; then
+                    cmd+=("$1")
+                    shift
+                else
+                    cmd+=("$1" "$2")
+                    shift 2
+                fi
+            done
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
+        quality)
+            local target=$1
+            if [[ -z "$target" ]]; then
+                _log "ERROR" "Vault name/ID or note ID required"
+                echo "Usage: obs ai quality <vault|note_id> [--json]"
+                return 1
+            fi
+            shift
+            _log_verbose "Scoring note quality"
+            local cmd=("$python_cli" "ai" "quality" "$target")
+            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+            [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
+            $OBS_PYTHON "${cmd[@]}"
+            ;;
+
         *)
             _log "ERROR" "Unknown ai subcommand: $subcmd"
             echo "Usage: obs ai <subcommand>"
@@ -419,6 +477,9 @@ obs_ai() {
             echo "  gaps <vault>        - Find knowledge gaps"
             echo "  summarize <vault>   - Summarize vault themes"
             echo "  refactor <vault>    - AI-powered reorganization"
+            echo "  merge-suggest <vault> - Find merge candidates"
+            echo "  tag-suggest <target>  - Suggest tags for notes"
+            echo "  quality <target>      - Score note quality"
             return 1
             ;;
     esac

@@ -413,6 +413,97 @@ def _print_refactor_plan(plan):
     console.print()
 
 
+def _print_merge_candidates(candidates):
+    """Print merge candidates with Rich formatting."""
+    console.print()
+    if not candidates:
+        console.print("  [green]✓ No merge candidates found above threshold.[/]")
+        console.print()
+        return
+
+    console.print(f"  [bold]🔗 Merge Candidates ({len(candidates)} found)[/]")
+    console.print(f"  [dim]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/]")
+    console.print()
+
+    for i, c in enumerate(candidates, 1):
+        sim_pct = f"{c.similarity:.0%}"
+        conf_pct = f"{c.confidence:.0%}"
+        console.print(f"  {i}. [bold]{c.note_a_title}[/] ↔ [bold]{c.note_b_title}[/]")
+        console.print(f"     Similarity: {sim_pct}  |  Confidence: {conf_pct}")
+        if c.shared_tags:
+            console.print(f"     Shared tags: {', '.join(c.shared_tags)}")
+        if c.shared_links:
+            console.print(f"     Shared links: {', '.join(c.shared_links[:5])}")
+        if c.suggested_target:
+            console.print(f"     [dim]Suggested keep: {c.suggested_target}[/]")
+        console.print()
+
+
+def _print_tag_suggestions(suggestions):
+    """Print tag suggestions with Rich formatting."""
+    console.print()
+    if not suggestions:
+        console.print("  [green]✓ No tag suggestions — all notes have tags or AI unavailable.[/]")
+        console.print()
+        return
+
+    total_tags = sum(len(s.suggested_tags) for s in suggestions)
+    console.print(f"  [bold]🏷️  Tag Suggestions ({total_tags} tags for {len(suggestions)} notes)[/]")
+    console.print(f"  [dim]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/]")
+    console.print()
+
+    for s in suggestions:
+        console.print(f"  [bold]{s.note_title}[/]")
+        if s.neighbor_tags:
+            console.print(f"    [dim]Neighbor tags: {', '.join(s.neighbor_tags[:5])}[/]")
+        for tag in s.suggested_tags:
+            conf = tag.get('confidence', 0)
+            usage = tag.get('vault_usage_count', 0)
+            color = 'green' if conf >= 0.8 else 'yellow' if conf >= 0.5 else 'dim'
+            console.print(f"    [{color}]#{tag['tag']}[/] ({conf:.0%} confidence, {usage} vault uses)")
+        console.print()
+
+
+def _print_quality_scores(scores):
+    """Print quality scores with Rich formatting."""
+    console.print()
+    if not scores:
+        console.print("  [green]✓ No notes to score.[/]")
+        console.print()
+        return
+
+    avg_score = sum(s.overall_score for s in scores) / len(scores) if scores else 0
+    console.print(f"  [bold]📊 Note Quality Scores ({len(scores)} notes, avg {avg_score:.0f}/100)[/]")
+    console.print(f"  [dim]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/]")
+    console.print()
+
+    table = Table(box=box.SIMPLE, show_header=True, padding=(0, 1))
+    table.add_column("Score", justify="right", style="bold", width=6)
+    table.add_column("Note", width=35)
+    table.add_column("Comp", justify="right", width=5)
+    table.add_column("Conn", justify="right", width=5)
+    table.add_column("Meta", justify="right", width=5)
+    table.add_column("Fresh", justify="right", width=5)
+    table.add_column("Issues", width=30)
+
+    for s in scores[:50]:  # Show worst 50
+        score_color = 'red' if s.overall_score < 30 else 'yellow' if s.overall_score < 60 else 'green'
+        dims = s.dimensions
+        issue_text = '; '.join(i['description'] for i in s.issues[:2]) if s.issues else ''
+        table.add_row(
+            f"[{score_color}]{s.overall_score:.0f}[/]",
+            s.note_title[:35],
+            f"{dims.get('completeness', 0):.0f}",
+            f"{dims.get('connectivity', 0):.0f}",
+            f"{dims.get('metadata', 0):.0f}",
+            f"{dims.get('freshness', 0):.0f}",
+            issue_text[:30],
+        )
+
+    console.print(table)
+    console.print()
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -518,6 +609,21 @@ def main():
     refactor_parser.add_argument('vault_id', help='Vault name or ID')
     refactor_parser.add_argument('--dry-run', action='store_true', help='Show scope without AI calls')
     refactor_parser.add_argument('--provider', help='Use specific AI provider')
+
+    # v3.2.0: Quality feature commands
+    merge_parser = ai_subparsers.add_parser('merge-suggest', help='Find potential note merge candidates')
+    merge_parser.add_argument('vault_id', help='Vault name or ID')
+    merge_parser.add_argument('--threshold', type=float, default=0.8, help='Min similarity (0-1, default 0.8)')
+    merge_parser.add_argument('--provider', help='Use specific AI provider')
+
+    tag_suggest_parser = ai_subparsers.add_parser('tag-suggest', help='Suggest tags for untagged notes')
+    tag_suggest_parser.add_argument('target', help='Vault name/ID (vault-wide) or note ID (single note)')
+    tag_suggest_parser.add_argument('--apply', action='store_true', help='Auto-apply tags with >80%% confidence')
+    tag_suggest_parser.add_argument('--min-confidence', type=float, default=0.0, help='Min confidence threshold (0-1)')
+    tag_suggest_parser.add_argument('--provider', help='Use specific AI provider')
+
+    quality_parser = ai_subparsers.add_parser('quality', help='Score notes on quality dimensions')
+    quality_parser.add_argument('target', help='Vault name/ID (vault-wide) or note ID (single note)')
 
 
     args = parser.parse_args()
@@ -965,6 +1071,95 @@ def main():
                         print(json.dumps(plan.to_dict(), indent=2, default=str))
                     else:
                         _print_refactor_plan(plan)
+                except (ValueError, RuntimeError) as e:
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'merge-suggest':
+                from ai.features_vault import merge_suggest_vault
+
+                try:
+                    candidates = merge_suggest_vault(
+                        args.vault_id,
+                        cli.db,
+                        threshold=args.threshold,
+                        provider=getattr(args, 'provider', None),
+                        verbose=args.verbose,
+                    )
+
+                    if args.json:
+                        print(json.dumps([c.to_dict() for c in candidates], indent=2, default=str))
+                    else:
+                        _print_merge_candidates(candidates)
+                except (ValueError, RuntimeError) as e:
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'tag-suggest':
+                from ai.features_vault import tag_suggest_vault, tag_suggest_note
+
+                try:
+                    # Detect if target is a note ID or vault name
+                    note = cli.db.get_note(args.target)
+                    if note:
+                        result = tag_suggest_note(
+                            args.target,
+                            cli.db,
+                            provider=getattr(args, 'provider', None),
+                            verbose=args.verbose,
+                        )
+                        suggestions = [result] if result else []
+                    else:
+                        suggestions = tag_suggest_vault(
+                            args.target,
+                            cli.db,
+                            provider=getattr(args, 'provider', None),
+                            min_confidence=getattr(args, 'min_confidence', 0.0),
+                            apply=getattr(args, 'apply', False),
+                            verbose=args.verbose,
+                        )
+
+                    if args.json:
+                        print(json.dumps([s.to_dict() for s in suggestions], indent=2, default=str))
+                    else:
+                        _print_tag_suggestions(suggestions)
+                except (ValueError, RuntimeError) as e:
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
+                    sys.exit(1)
+
+            elif args.ai_command == 'quality':
+                from ai.features_vault import note_quality_vault, note_quality_note
+
+                try:
+                    # Detect if target is a note ID or vault name
+                    note = cli.db.get_note(args.target)
+                    if note:
+                        result = note_quality_note(
+                            args.target,
+                            cli.db,
+                            verbose=args.verbose,
+                        )
+                        scores = [result] if result else []
+                    else:
+                        scores = note_quality_vault(
+                            args.target,
+                            cli.db,
+                            verbose=args.verbose,
+                        )
+
+                    if args.json:
+                        print(json.dumps([s.to_dict() for s in scores], indent=2, default=str))
+                    else:
+                        _print_quality_scores(scores)
                 except (ValueError, RuntimeError) as e:
                     if args.json:
                         print(json.dumps({"error": str(e)}), file=sys.stderr)
