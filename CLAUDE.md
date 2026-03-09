@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 3.1.0
+**Current Version**: 3.2.0
 **Status**: Stable release
 **Priority**: P1
 
@@ -96,7 +96,7 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python tests (206 tests)
+pytest src/python/tests/        # Run Python tests (235 tests)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```

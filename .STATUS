@@ -1,14 +1,14 @@
 priority: P1
-status: v3.2.0 in progress
-progress: 85
+status: v3.2.0 version bump complete
+progress: 95
 updated: 2026-03-09
-version: 3.1.0
-next: v3.2.0 version bump + release prep (Phase 7)
+version: 3.2.0
+next: PR to dev + release
 target: v3.2.0 - Quality Features
 
 ## 🎯 Current State
 
-**Phase**: v3.2.0 Phases 1-6 complete
+**Phase**: v3.2.0 Phases 1-7 complete (version bumped)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
 **Tests**: 235/235 passing (pytest) + 30 Jest = 265 total
 **Commands**: 18 focused commands under `obs` (+3 new: merge-suggest, tag-suggest, quality)
@@ -21,7 +21,7 @@ target: v3.2.0 - Quality Features
 
 ## 🚧 Active Work
 
-v3.2.0 Quality Features — Phases 1-6 complete, Phase 7 (version bump + release) remaining.
+v3.2.0 Quality Features — All phases complete. Version bumped to 3.2.0. Ready for PR to dev.
 
 ---
 

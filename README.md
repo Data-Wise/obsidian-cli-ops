@@ -1,7 +1,7 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/tests-206%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
@@ -10,7 +10,7 @@
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.1.0
+**Current Version**: 3.2.0
 
 ## 🚀 Quick Start
 
@@ -90,7 +90,7 @@ pip3 install -r src/python/requirements.txt
 
 ### Basic Usage
 
-**v3.1.0** - 15 focused commands!
+**v3.2.0** - 18 focused commands!
 
 ```bash
 # PRIMARY COMMANDS
@@ -127,7 +127,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.1.0 Stable
+**Current Status:** v3.2.0 Stable
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
@@ -160,7 +160,7 @@ obs version                     # Show version
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.1.0)** - v3.1.0 release notes
+- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.2.0)** - v3.2.0 release notes
 
 ## 🧪 Test Coverage
 
@@ -199,6 +199,11 @@ MIT License - See LICENSE file for details.
   - `obs ai refactor` — 3-phase vault reorganization
   - Website redesigned (4-tab nav, hero page, expanded cookbook)
   - 206 pytest + 30 Jest tests passing
+- ✅ v3.2.0: Quality Features
+  - `obs ai merge-suggest` — find merge candidates via embedding similarity
+  - `obs ai tag-suggest` — AI-powered tag suggestions for untagged notes
+  - `obs ai quality` — score notes on 4 dimensions (no AI required)
+  - 235 pytest + 30 Jest tests passing
 
 ---
 

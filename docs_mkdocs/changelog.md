@@ -4,6 +4,28 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.2.0 (2026-03-09)
+
+### Added
+
+- **`obs ai merge-suggest <vault>`** -- find note pairs with high embedding similarity for potential merging
+- **`obs ai tag-suggest <target>`** -- AI-powered tag suggestions for untagged notes (vault-wide or single note)
+- **`obs ai quality <target>`** -- score notes on 4 dimensions: completeness, connectivity, metadata, freshness (graph-only, no AI required)
+- **`--apply` flag** for tag-suggest -- auto-apply high-confidence tags to YAML frontmatter
+- **`--threshold` flag** for merge-suggest -- configurable similarity threshold (default: 0.8)
+- **3 new domain models** -- `MergeCandidate`, `TagSuggestion`, `NoteQuality` dataclasses in `ai/models.py`
+- **`features_vault.py`** -- new module for vault-level quality features (~500 lines)
+- **`features_refactor.py`** -- extracted refactor logic from features.py (~345 lines)
+- **29 new tests** -- 14 model tests + 15 vault feature tests (235 pytest total)
+
+### Changed
+
+- **Module extraction** -- `refactor_vault()` moved to `features_refactor.py` (backward-compatible re-exports)
+- **Command count** -- 15 → 18 focused commands
+- **Documentation updated** -- architecture, tutorials, cookbook, CLI reference, refcard all reflect v3.2.0
+
+---
+
 ## v3.1.0 (2026-03-06)
 
 ### Added
