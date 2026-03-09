@@ -462,6 +462,15 @@ obs_ai() {
             shift
             _log_verbose "Scoring note quality"
             local cmd=("$python_cli" "ai" "quality" "$target")
+            while [[ "$1" == --* ]]; do
+                if [[ "$1" == "--json" ]]; then
+                    cmd+=("$1")
+                    shift
+                else
+                    cmd+=("$1" "$2")
+                    shift 2
+                fi
+            done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
             [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
             $OBS_PYTHON "${cmd[@]}"
