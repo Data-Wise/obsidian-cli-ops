@@ -129,7 +129,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `core/` - Business logic (1,128 lines)
   - `obs_cli.py` - CLI interface (985 lines)
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
-  - `tests/` - Test suite (206 pytest tests)
+  - `tests/` - Test suite (235 pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
 
 ### Documentation
@@ -181,7 +181,7 @@ Details in schema file and `docs_mkdocs/developer/architecture.md`.
 
 - Unit tests for all core logic
 - Integration tests for CLI commands
-- Keep core tests passing (206+ tests)
+- Keep core tests passing (235+ tests)
 - Update test count in documentation after adding tests
 
 ### Documentation

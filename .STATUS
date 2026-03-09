@@ -1,9 +1,9 @@
 priority: P1
-status: v3.2.0 merged to dev
-progress: 95
+status: releasing v3.2.0
+progress: 97
 updated: 2026-03-09
 version: 3.2.0
-next: Release pipeline (PR to main, tag, Homebrew, docs deploy)
+next: PR to main, tag, GitHub release, Homebrew, docs deploy
 target: v3.2.0 - Quality Features
 
 ## 🎯 Current State
@@ -21,7 +21,7 @@ target: v3.2.0 - Quality Features
 
 ## 🚧 Active Work
 
-v3.2.0 Quality Features — All phases complete, merged to dev. Ready for release pipeline.
+v3.2.0 Quality Features — All phases complete, merged to dev. Bug fix applied (--json flag in quality handler). Release in progress.
 
 ---
 
@@ -101,8 +101,8 @@ v3.2.0 Quality Features — All phases complete, merged to dev. Ready for releas
 
 ## 🎯 Next Actions
 
-- Start v3.2.0 implementation in worktree: Phase 1 (data models) → Phase 2 (module split)
-- Worktree path: `~/.git-worktrees/obsidian-cli-ops/feature-v3.2.0-quality`
+- Complete v3.2.0 release pipeline
+- Post-release: update Homebrew formula, deploy docs, verify CI on main
 
 ---
 
@@ -189,6 +189,7 @@ v3.2.0 Quality Features — All phases complete, merged to dev. Ready for releas
 - **2026-03-06**: PR #15 (ai refactor, 206 tests), PR #16 (website redesign)
 - **2026-03-06**: v3.1.0 release (PR #17), Homebrew formula updated, docs deployed
 - **2026-03-06**: PR #18 (ADHD website enhancement), docs polish, native CLI docs
+- **2026-03-09**: PR #19 (v3.2.0 quality features, 235 tests), --json fix, release pipeline
 
 ---
 

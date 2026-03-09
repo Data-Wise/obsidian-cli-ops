@@ -158,7 +158,7 @@ obs version                     # Show version
 
 ## 🧪 Test Coverage
 
-- **206 pytest + 30 Jest** tests passing
+- **235 pytest + 30 Jest** tests passing
 - CI: GitHub Actions on push/PR to `main` and `dev`
 - Python coverage reporting via `pytest-cov`
 

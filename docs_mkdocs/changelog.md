@@ -18,6 +18,10 @@ All notable changes to Obsidian CLI Ops.
 - **`features_refactor.py`** -- extracted refactor logic from features.py (~345 lines)
 - **29 new tests** -- 14 model tests + 15 vault feature tests (235 pytest total)
 
+### Fixed
+
+- **`obs ai quality --json`** -- flag was silently ignored when passed after target argument (ZSH handler missing flag-consuming loop)
+
 ### Changed
 
 - **Module extraction** -- `refactor_vault()` moved to `features_refactor.py` (backward-compatible re-exports)
