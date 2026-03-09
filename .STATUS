@@ -1,9 +1,9 @@
 priority: P1
-status: v3.2.0 version bump complete
+status: v3.2.0 merged to dev
 progress: 95
 updated: 2026-03-09
 version: 3.2.0
-next: PR to dev + release
+next: Release pipeline (PR to main, tag, Homebrew, docs deploy)
 target: v3.2.0 - Quality Features
 
 ## 🎯 Current State
@@ -21,7 +21,7 @@ target: v3.2.0 - Quality Features
 
 ## 🚧 Active Work
 
-v3.2.0 Quality Features — All phases complete. Version bumped to 3.2.0. Ready for PR to dev.
+v3.2.0 Quality Features — All phases complete, merged to dev. Ready for release pipeline.
 
 ---
 
@@ -101,8 +101,8 @@ v3.2.0 Quality Features — All phases complete. Version bumped to 3.2.0. Ready 
 
 ## 🎯 Next Actions
 
-- Explore Phase 9 features (IDEAS.md): tag-suggest, quality, merge-suggest
-- Consider v3.2.0 planning (quality features)
+- Start v3.2.0 implementation in worktree: Phase 1 (data models) → Phase 2 (module split)
+- Worktree path: `~/.git-worktrees/obsidian-cli-ops/feature-v3.2.0-quality`
 
 ---
 
