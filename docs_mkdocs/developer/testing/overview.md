@@ -1,7 +1,7 @@
 # Testing Overview
 
 **Version:** 3.2.0
-**Total Tests:** 265 (235 pytest + 30 Jest)
+**Total Tests:** 294 (235 pytest + 59 Jest)
 
 ## Test Coverage
 
@@ -30,7 +30,9 @@
 | Vault Features | 16 | pytest | `test_features_vault.py` |
 | **Python Subtotal** | **235** | **pytest** | |
 | ZSH CLI Wrapper | 30 | Jest | `obs.test.js`, `cli.test.js` |
-| **Total** | **265** | | |
+| Dependency Bootstrapping | 29 | Jest | `dep_bootstrap.test.js` (2 network-gated, run in CI) |
+| **Jest Subtotal** | **59** | **Jest** | |
+| **Total** | **294** | | |
 
 ---
 
