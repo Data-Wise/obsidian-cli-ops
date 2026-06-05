@@ -4,6 +4,28 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.2.1 (2026-06-04)
+
+Install-reliability release. No command or behavior changes for existing working installs.
+
+### Fixed
+
+- **Clean-install crash** -- `obs` no longer crashes on a fresh install with `ModuleNotFoundError: No module named 'rich'`. Core dependencies are now provisioned into an **isolated virtual environment** (Homebrew `libexec/venv`; `install.sh` -> `~/.local/share/obs/venv`) instead of an ambient interpreter, and survive system-Python upgrades.
+
+### Added
+
+- **`requirements.lock`** -- pinned single source of truth for the 6 core runtime dependencies.
+- **4-tier interpreter resolution** (`_obs_resolve_python` in `obs.zsh`) -- `$OBS_PYTHON` -> install.sh user venv -> Homebrew formula venv -> ambient `python3` (with a warning). Never silently trusts a bare `python3` (that was the crash).
+- **Clean-install CI smoke test** -- proves a fresh machine runs `obs --help` with zero manual `pip`; guards this regression for all future releases.
+- **29 dependency-bootstrapping tests** (`tests/dep_bootstrap.test.js`, 2 network-gated, run in CI).
+
+### Changed
+
+- **`install.sh`** now provisions the isolated venv (idempotent via a lockfile-hash sentinel) in addition to symlinking the launcher.
+- Docs updated to the isolated-venv install model; test counts now **235 pytest + 59 Jest (294 total)**.
+
+---
+
 ## v3.2.0 (2026-03-09)
 
 ### Added

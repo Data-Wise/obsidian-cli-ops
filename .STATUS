@@ -1,9 +1,9 @@
 priority: P1
-status: ✅ v3.2.1 dep-bootstrap MERGED to dev (PR #22) — release wiring pending
-progress: 60
+status: 🚀 v3.2.1 release wiring — version bumped + changelog done, dev→main PR next
+progress: 80
 updated: 2026-06-04
-version: 3.2.0
-next: v3.2.1 release wiring — version bump 3.2.0→3.2.1, changelog, test-count docs (57 Jest), Homebrew formula (tap branch feature/obs-v3.2.1-venv), then dev→main release
+version: 3.2.1
+next: dev→main release PR (v3.2.1) → tag → GitHub release → Homebrew formula (tap branch feature/obs-v3.2.1-venv) → CI verify on main
 target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ## 🎯 Current State

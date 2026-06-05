@@ -154,4 +154,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.2.0 | **Commands:** 18 | **AI Providers:** 5
+**Version:** 3.2.1 | **Commands:** 18 | **AI Providers:** 5
