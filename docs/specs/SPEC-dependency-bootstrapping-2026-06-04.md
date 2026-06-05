@@ -7,6 +7,17 @@
 
 ---
 
+## Sequencing & Relationship
+
+> **This spec ships FIRST — before v3.3.0** (`SPEC-v3.3.0-bridge-temporal-2026-06-04.md`).
+
+- **No functional overlap.** This is a packaging/install fix for *existing core deps*; v3.3.0 adds new commands and **introduces no new dependencies**, staying entirely within the "core deps only" boundary scoped below.
+- **Foundation dependency (one-way).** Every v3.3.0 command inherits this startup crash on a clean install — features are unreachable until provisioning works. Fix the install floor before adding feature rooms.
+- **Reusable safety net.** The CI smoke test proposed here ("clean install → `obs --help` exits 0") protects v3.3.0 and all future releases.
+- **Different files in shared `obs.zsh`.** This spec changes the top-of-file `OBS_PYTHON` resolution; v3.3.0 adds dispatcher cases at the bottom — no collision, but ship separately: this = patch (**v3.2.1**), v3.3.0 = minor. Use distinct feature worktrees (branch guard blocks new code on `dev`).
+
+---
+
 ## Overview
 
 `obs` (v3.2.0) declares core deps in `pyproject.toml` (`python-frontmatter`, `PyYAML`, `networkx`, `rich`, `requests`, `click`). The Homebrew install, however, executes the bundled `obs_cli.py` against the **ambient** `python@3.12` site-packages — there is no virtualenv and no install-time dependency step. Consequences:

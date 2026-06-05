@@ -2,12 +2,34 @@
 
 > **Brainstorming space for enhancements, improvements, and new features**
 >
-> **Last Updated:** 2026-03-05
+> **Last Updated:** 2026-06-04
 >
-> **Current Release:** v3.0.0 (Released 2026-03-05)
+> **Current Release:** v3.2.0 (Released 2026-03-09)
 >
 > **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager
 > **Install:** `brew install data-wise/tap/obsidian-cli-ops`
+
+---
+
+## 🎯 v3.3.0 — In Progress (Bridge + Temporal)
+
+> **Decided 2026-06-04.** Spec: `docs/specs/SPEC-v3.3.0-bridge-temporal-2026-06-04.md`
+> **Context:** Obsidian shipped an official CLI (1.12.4, 2026-02-27, now ~115 commands) that owns vault *primitives* (search, tags, backlinks, orphans, deadends, note CRUD, daily notes, tasks, properties) — but does **no** graph/AI/temporal work and **requires the app running**. v3.3.0 stops competing on primitives and instead (A) consumes the official CLI as obs's "hands" and (B) mines history obs already stores.
+
+### Theme A — Integration Bridge ("brain + hands")
+
+- [ ] **`obs bridge status`** — detect official `obsidian` CLI + running app, report capabilities/version
+- [ ] **`obs apply <plan-file> [--execute]`** — execute approved refactor/tag/link plans via the official CLI; dry-run default, interactive confirm
+- [ ] **`obs ai tag-suggest --apply`** — make the inert `--apply` real via the bridge write path
+- [ ] **Read-side enrichment** — alias resolution + accurate backlinks from official CLI when app running; silent fallback to file scan (fixes `graph_builder.py:57` alias TODO)
+
+### Theme B — Temporal Analytics (offline, no new deps)
+
+- [ ] **`obs trends <vault>`** — knowledge-growth curve, note/link velocity, activity heatmap (`scan_history` + timestamps)
+- [ ] **`obs stale <vault>`** — staleness ranked by **importance** (PageRank × age), not plain date
+- [ ] **`obs ai daily-digest <vault>`** — daily health digest (new orphans, decayed hubs, stale-but-important, new duplicates)
+
+**Build order:** bridge `status` → `trends`+`stale` → `apply`+real `--apply` → `daily-digest` → read-side enrichment.
 
 ---
 
@@ -231,13 +253,15 @@ src/python/ai/
 
 **Estimated Effort:** 6-8 hours (future release)
 
-### Advanced AI Features (Future v3.3.0)
-- [ ] **`obs watch <vault>`** - Real-time improvement suggestions
-- [ ] **`obs daily-digest <vault>`** - Daily vault health digest
-- [ ] **`obs batch-tag <vault>`** - Batch tag all untagged notes
-- [ ] **`obs batch-link <vault>`** - Add missing backlinks automatically
+### Advanced AI Features (Future v3.4.0)
 
-**Estimated Effort:** 12-16 hours (future release)
+> `daily-digest` promoted into v3.3.0 (see top). Batch ops below become trivial once v3.3.0's `obs apply` write-path lands — they're just `apply` over an auto-generated plan.
+
+- [ ] **`obs ai batch-tag <vault>`** - Batch tag all untagged notes (needs v3.3.0 bridge write-path)
+- [ ] **`obs ai batch-link <vault>`** - Add missing backlinks automatically (needs v3.3.0 bridge write-path)
+- [ ] **`obs watch <vault>`** - Real-time improvement suggestions (daemon; heavy — defer)
+
+**Estimated Effort:** 8-12 hours (after v3.3.0 bridge ships)
 
 **See:** IMPLEMENTATION-ROADMAP.md and PROPOSAL-REFOCUS-2025-12-20.md for complete details
 
@@ -379,11 +403,11 @@ src/python/ai/
 - [ ] Export note clusters as separate vaults
 
 ### Search & Discovery
-- [ ] Full-text search across all vaults
-- [ ] Fuzzy search (typo-tolerant)
-- [ ] Regex search support
-- [ ] Saved search queries
-- [ ] Search within graph (find paths between notes)
+
+> ⚠️ **Dropped 2026-06-04:** plain/fuzzy/regex/full-text search now belongs to the **official Obsidian CLI** (`search`, `search:context`). Reimplementing them would duplicate native functionality (🔴 avoid zone). Delegate instead. Only graph-native discovery — which the official CLI cannot do — stays on the backlog:
+
+- [ ] Search **within the graph** (find shortest paths between two notes) — graph-native, no overlap
+- [ ] ~~Full-text / fuzzy / regex search~~ → use official `obsidian search`
 
 ### Collaboration Features
 - [ ] Compare vaults (diff tool)
