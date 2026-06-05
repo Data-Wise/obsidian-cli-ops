@@ -1,9 +1,9 @@
 priority: P1
-status: 🚀 v3.2.2 RELEASING — man page + ai --json/--verbose fix (version bumped, PR dev→main next)
+status: ✅ v3.2.2 FULLY RELEASED — GitHub + Homebrew live, `man obs` ships
 progress: 100
 updated: 2026-06-05
 version: 3.2.2
-next: Finish v3.2.2 release (PR dev→main → tag → GitHub release → bump tap formula url+sha256 to v3.2.2 → brew reinstall --build-from-source to verify `man obs`). Then resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
+next: Resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI (the v3.2.2 homebrew-release.yml run failed on missing token — formula bumped manually via tap PR #111), add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
 target: v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
@@ -19,7 +19,15 @@ target: v3.3.0 - bridge + temporal
 
 ---
 
-## 📄 obs man page (2026-06-05) — ✅ MERGED (PR #25 → dev, tap PR #110 → main)
+## ✅ v3.2.2 Released (2026-06-05) — man page + ai --json/--verbose fix
+
+- **Release**: PR #26 (dev→main) merged, tag `v3.2.2`, GitHub release live, main CI green.
+- **Homebrew**: tap PR #111 bumped url+sha256 to v3.2.2 (resources unchanged). Verified with `brew reinstall --build-from-source` (built in 46s, post-install db-init clean) → `man obs` renders, `obs version` = 3.2.2, `obs ai quality <v> --json` emits JSON, `brew audit --strict` clean.
+- **Auto Homebrew CI** (`homebrew-release.yml`) failed on missing `APP_ID`/`APP_PRIVATE_KEY` (empty token at create-github-app-token) — formula bumped manually. Add those secrets to automate the next release.
+
+---
+
+## 📄 obs man page (2026-06-05) — ✅ MERGED + SHIPPED in v3.2.2 (PR #25 → dev, tap #110/#111)
 
 Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own the binary). Implements `SPEC-obs-man-page-2026-06-04.md`.
 
