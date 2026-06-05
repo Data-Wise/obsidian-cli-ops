@@ -1,8 +1,9 @@
 # SPEC: Robust Python Dependency Provisioning for `obs` (no manual pip)
 
-**Status:** approved
+**Status:** done
 **Created:** 2026-06-04
 **Approved:** 2026-06-04
+**Shipped:** 2026-06-04 as **v3.2.1** — PR #22 (dep-bootstrap), GitHub release, Homebrew tap PR #109 (isolated venv, 13 resources)
 **Target:** v3.2.1 (ships before v3.3.0)
 **Type:** packaging / install reliability
 **Trigger:** On 2026-06-04, `obs` crashed at startup with `ModuleNotFoundError: No module named 'rich'`. The Homebrew launcher runs `libexec/python/obs_cli.py` under `OBS_PYTHON=/opt/homebrew/opt/python@3.12/bin/python3.12`, but **nothing installs the declared `pyproject` dependencies into that interpreter**. The CLI was unusable until deps were installed by hand (`pip install rich networkx click pyyaml python-frontmatter requests`).
