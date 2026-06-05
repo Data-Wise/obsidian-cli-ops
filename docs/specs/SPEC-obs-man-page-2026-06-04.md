@@ -1,6 +1,6 @@
 # SPEC: Ship an `obs` man page (own the binary's docs)
 
-**Status:** draft (capture)
+**Status:** WIP — running
 **Created:** 2026-06-04
 **Type:** docs / packaging
 **Origin:** flow-cli is removing its `man/man1/obs.1` because it doesn't own `obs` (see `flow-cli/docs/specs/SPEC-obs-dispatcher-shadowing-2026-06-04.md` → "Man-Page Ownership"). obsidian-cli-ops owns `/opt/homebrew/bin/obs` and currently ships **zero** man pages — the page should live here.
