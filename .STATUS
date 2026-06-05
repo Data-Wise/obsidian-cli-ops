@@ -1,9 +1,9 @@
 priority: P1
-status: 🚧 WIP — v3.2.1 dep-bootstrap (feature/dep-bootstrap)
-progress: 15
+status: 🟢 ACTIVE — v3.2.1 dep-bootstrap in progress (feature/dep-bootstrap)
+progress: 35
 updated: 2026-06-04
 version: 3.2.0
-next: Run /craft:orchestrate (Option A) in the feature/dep-bootstrap worktree session — start with requirements.lock
+next: Continue /craft:orchestrate build (lockfile → launcher/install.sh/CI) → verify → PR to dev
 target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
@@ -26,9 +26,9 @@ target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 - `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` → bridge (consume official Obsidian CLI) + temporal analytics
 
 **Worktrees:**
-- 🚧 **WIP** `feature/dep-bootstrap` → `~/.git-worktrees/obsidian-cli-ops/feature-dep-bootstrap` (v3.2.1 dep-bootstrapping)
+- 🟢 **ACTIVE** `feature/dep-bootstrap` → `~/.git-worktrees/obsidian-cli-ops/feature-dep-bootstrap` (v3.2.1 dep-bootstrapping)
   - Specs approved + handoff ready (`ORCHESTRATE-dep-bootstrap.md`, `HANDOFF.md`); build path = Option A (`/craft:orchestrate`)
-  - Implementation not yet started — awaiting a session opened inside the worktree
+  - Implementation **in progress** — orchestrator session running in the worktree
 
 ---
 
