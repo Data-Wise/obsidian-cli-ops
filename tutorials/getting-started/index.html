@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -1164,12 +1164,14 @@
 </ul>
 <hr />
 <h2 id="step-2-install-dependencies">Step 2: Install Dependencies<a class="headerlink" href="#step-2-install-dependencies" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install Python dependencies</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Provision deps in an isolated venv (no manual pip)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./install.sh
 </code></pre></div>
 <details class="tip">
 <summary>Already have dependencies?</summary>
-<p>If you've installed before, you can skip this step. Run <code>python3 -c "import networkx; import rich"</code> to verify.</p>
+<p>If you've run <code>install.sh</code> before, it's a no-op unless <code>requirements.lock</code>
+changed. Verify with <code>python3 -c "import networkx; import rich"</code> against the
+venv at <code>~/.local/share/obs/venv/bin/python</code>.</p>
 </details>
 <hr />
 <h2 id="step-3-initialize-the-database">Step 3: Initialize the Database<a class="headerlink" href="#step-3-initialize-the-database" title="Permanent link">&para;</a></h2>

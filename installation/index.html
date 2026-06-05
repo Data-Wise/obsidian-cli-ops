@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -578,6 +578,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-dependencies-are-provisioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How dependencies are provisioned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#verify-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -599,6 +610,17 @@
   
     <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfounderror-eg-no-module-named-rich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ModuleNotFoundError (e.g. No module named 'rich')
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#python-not-found" class="md-nav__link">
@@ -1284,6 +1306,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-dependencies-are-provisioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How dependencies are provisioned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#verify-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1305,6 +1338,17 @@
   
     <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfounderror-eg-no-module-named-rich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ModuleNotFoundError (e.g. No module named 'rich')
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#python-not-found" class="md-nav__link">
@@ -1387,7 +1431,7 @@
 <h2 id="homebrew-recommended"><img alt="🍺" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f37a.svg" title=":beer:" /> Homebrew (Recommended)<a class="headerlink" href="#homebrew-recommended" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>install<span class="w"> </span>data-wise/tap/obsidian-cli-ops
 </code></pre></div>
-<p>This installs <code>obs</code> with all Python dependencies and sets up the shell integration automatically.</p>
+<p>This installs <code>obs</code> with all Python dependencies in an <strong>isolated virtual environment</strong> (<code>libexec/venv</code>) and sets up the shell integration automatically. No manual <code>pip</code> step is ever needed, and a system Python upgrade won't break <code>obs</code>.</p>
 <h2 id="manual-install"><img alt="🛠" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f6e0.svg" title=":hammer_and_wrench:" /> Manual Install<a class="headerlink" href="#manual-install" title="Permanent link">&para;</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1405,39 +1449,100 @@
 </code></pre></div>
 </li>
 <li>
-<p><strong>Install Python dependencies</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
+<p><strong>Run the installer</strong> (symlinks the CLI <strong>and</strong> provisions deps):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./install.sh
 </code></pre></div>
+<p>This creates an isolated virtual environment at <code>~/.local/share/obs/venv</code>,
+installs the pinned dependencies from <code>requirements.lock</code>, and symlinks the
+<code>obs.zsh</code> launcher into <code>~/.config/zsh/functions</code>. It is <strong>idempotent</strong> — it
+only re-provisions when <code>requirements.lock</code> changes. No manual <code>pip</code> needed.</p>
+<div class="admonition note">
+<p class="admonition-title">Why not <code>pip install</code>?</p>
+<p>Installing into your system/ambient Python is fragile: a <code>python@3.x</code>
+minor upgrade silently drops the packages and <code>obs</code> breaks with
+<code>ModuleNotFoundError</code>. The isolated venv avoids this entirely.</p>
+</div>
 </li>
 <li>
-<p><strong>Symlink the CLI function</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/src/obs.zsh&quot;</span><span class="w"> </span>~/.config/zsh/functions/obs.zsh
-</code></pre></div>
-<p>Then add to your <code>~/.zshrc</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">fpath</span><span class="o">=(</span>~/.config/zsh/functions<span class="w"> </span><span class="nv">$fpath</span><span class="o">)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>autoload<span class="w"> </span>-Uz<span class="w"> </span>obs
+<p><strong>Enable shell autoload</strong> — add to your <code>~/.zshrc</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">fpath</span><span class="o">=(</span>~/.config/zsh/functions<span class="w"> </span><span class="nv">$fpath</span><span class="o">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>autoload<span class="w"> </span>-Uz<span class="w"> </span>obs
 </code></pre></div>
 </li>
 <li>
 <p><strong>Initialize the database</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
 </code></pre></div>
 </li>
 <li>
 <p><strong>Restart your shell</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">source</span><span class="w"> </span>~/.zshrc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">source</span><span class="w"> </span>~/.zshrc
 </code></pre></div>
 </li>
 </ol>
+<h2 id="how-dependencies-are-provisioned"><img alt="📦" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4e6.svg" title=":package:" /> How dependencies are provisioned<a class="headerlink" href="#how-dependencies-are-provisioned" title="Permanent link">&para;</a></h2>
+<p><code>obs</code> runs its bundled Python code against an interpreter that <strong>must</strong> have the
+core dependencies (<code>rich</code>, <code>networkx</code>, <code>click</code>, <code>python-frontmatter</code>, <code>PyYAML</code>,
+<code>requests</code>). Both install paths put those deps in a <strong>dedicated, isolated
+environment</strong> — never your system Python:</p>
+<table>
+<thead>
+<tr>
+<th>Install path</th>
+<th>Environment</th>
+<th>Source of pins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Homebrew</td>
+<td><code>libexec/venv</code> (formula-owned)</td>
+<td>formula <code>resource</code> blocks</td>
+</tr>
+<tr>
+<td><code>install.sh</code></td>
+<td><code>~/.local/share/obs/venv</code></td>
+<td><code>requirements.lock</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each run, the launcher resolves <code>OBS_PYTHON</code> in priority order. It <strong>never</strong>
+silently trusts a bare <code>python3</code> (that was the source of the historical
+<code>ModuleNotFoundError: 'rich'</code> crash):</p>
+<pre class="mermaid"><code>flowchart TD
+    Start([obs invoked]) --&gt; Q1{"$OBS_PYTHON set&lt;br/&gt;and executable?"}
+    Q1 --&gt;|yes| U1[Use $OBS_PYTHON]
+    Q1 --&gt;|no| Q2{"no user venv&lt;br/&gt;and brew available?"}
+    Q2 --&gt;|yes| Q2b{"libexec/venv&lt;br/&gt;exists?"}
+    Q2b --&gt;|yes| U2[Use Homebrew libexec/venv]
+    Q2b --&gt;|no| Q3
+    Q2 --&gt;|no| Q3{"~/.local/share/obs/venv&lt;br/&gt;exists?"}
+    Q3 --&gt;|yes| U3[Use install.sh user venv]
+    Q3 --&gt;|no| Q4{"ambient python3&lt;br/&gt;on PATH?"}
+    Q4 --&gt;|yes| U4["Use ambient python3&lt;br/&gt;⚠️ warn: deps may be missing"]
+    Q4 --&gt;|no| Err["ERROR: no python3 found"]</code></pre>
+<p>You can always force a specific interpreter by exporting <code>OBS_PYTHON</code> (tier 1),
+which takes precedence over everything else.</p>
 <h2 id="verify-installation"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2705.svg" title=":white_check_mark:" /> Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check version</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>obs<span class="w"> </span>version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List discovered vaults</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>obs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check version</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>obs<span class="w"> </span>version
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List discovered vaults</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>obs
 </code></pre></div>
 <p>You should see the version number and any Obsidian vaults found in your iCloud directory.</p>
 <h2 id="troubleshooting"><img alt="🆘" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f198.svg" title=":sos:" /> Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="modulenotfounderror-eg-no-module-named-rich"><code>ModuleNotFoundError</code> (e.g. <code>No module named 'rich'</code>)<a class="headerlink" href="#modulenotfounderror-eg-no-module-named-rich" title="Permanent link">&para;</a></h3>
+<p>This means <code>obs</code> resolved to a Python <strong>without</strong> its deps — usually because no
+isolated environment exists yet. If you also see a <code>[obs] WARN: ... ambient
+python3 ... dependencies may be missing</code> line, that's the launcher telling you
+it fell through to tier 4. Provision an isolated env:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>brew<span class="w"> </span>reinstall<span class="w"> </span>obsidian-cli-ops<span class="w">   </span><span class="c1"># Homebrew</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># or, for a manual checkout:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>./install.sh
+</code></pre></div>
+<p>After a <code>python@3.x</code> upgrade via Homebrew, <code>obs</code> keeps working because its deps
+live in <code>libexec/venv</code>, not in the upgraded interpreter.</p>
 <h3 id="python-not-found">Python not found<a class="headerlink" href="#python-not-found" title="Permanent link">&para;</a></h3>
 <p>If <code>obs</code> reports a Python error, ensure <code>/opt/homebrew/bin/python3</code> (macOS) or <code>/usr/bin/python3</code> (Linux) exists. You can set a custom path:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/path/to/python3

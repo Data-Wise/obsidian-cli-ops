@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -640,10 +640,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-python-path" class="md-nav__link">
+  <a href="#python-interpreter-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Python Path
+        Python Interpreter Resolution
       
     </span>
   </a>
@@ -1329,10 +1329,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-python-path" class="md-nav__link">
+  <a href="#python-interpreter-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Python Path
+        Python Interpreter Resolution
       
     </span>
   </a>
@@ -1488,10 +1488,18 @@
 <p>Add <code>--verbose</code> to any command for detailed output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Knowledge_Base<span class="w"> </span>--verbose
 </code></pre></div>
-<h3 id="custom-python-path">Custom Python Path<a class="headerlink" href="#custom-python-path" title="Permanent link">&para;</a></h3>
-<p>If your Python installation is in a non-standard location:</p>
+<h3 id="python-interpreter-resolution">Python Interpreter Resolution<a class="headerlink" href="#python-interpreter-resolution" title="Permanent link">&para;</a></h3>
+<p>As of <strong>v3.2.1</strong>, <code>obs</code> runs against an interpreter that has its core deps provisioned in an <strong>isolated venv</strong> — it never silently trusts a bare <code>python3</code>. The launcher (<code>_obs_resolve_python</code>) resolves in priority order:</p>
+<ol>
+<li><strong><code>$OBS_PYTHON</code></strong> — explicit override (below), or set by the Homebrew formula</li>
+<li><strong>install.sh user venv</strong> — <code>~/.local/share/obs/venv</code></li>
+<li><strong>Homebrew formula venv</strong> — <code>libexec/venv</code></li>
+<li><strong>ambient <code>python3</code></strong> — last resort, with a warning that deps may be missing</li>
+</ol>
+<p>To force a specific interpreter (non-standard location, or a venv you manage):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/path/to/python3
 </code></pre></div>
+<p>If you ever see <code>[obs] WARN: ... ambient python3 ... deps may be missing</code>, provision an isolated env with <code>./install.sh</code> (or <code>brew reinstall obsidian-cli-ops</code>). See <a href="../installation/#how-dependencies-are-provisioned">Installation</a> for the full model.</p>
 <h3 id="icloud-vault-auto-detection">iCloud Vault Auto-Detection<a class="headerlink" href="#icloud-vault-auto-detection" title="Permanent link">&para;</a></h3>
 <p><code>obs</code> automatically checks the standard Obsidian iCloud path:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>~/Library/Mobile Documents/iCloud~md~obsidian/Documents
