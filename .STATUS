@@ -1,9 +1,9 @@
 priority: P1
-status: 🟢 ACTIVE — v3.2.1 dep-bootstrap in progress (feature/dep-bootstrap)
-progress: 35
+status: ✅ v3.2.1 dep-bootstrap MERGED to dev (PR #22) — release wiring pending
+progress: 60
 updated: 2026-06-04
 version: 3.2.0
-next: Continue /craft:orchestrate build (lockfile → launcher/install.sh/CI) → verify → PR to dev
+next: v3.2.1 release wiring — version bump 3.2.0→3.2.1, changelog, test-count docs (57 Jest), Homebrew formula (tap branch feature/obs-v3.2.1-venv), then dev→main release
 target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
@@ -26,9 +26,10 @@ target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 - `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` → bridge (consume official Obsidian CLI) + temporal analytics
 
 **Worktrees:**
-- 🟢 **ACTIVE** `feature/dep-bootstrap` → `~/.git-worktrees/obsidian-cli-ops/feature-dep-bootstrap` (v3.2.1 dep-bootstrapping)
-  - Specs approved + handoff ready (`ORCHESTRATE-dep-bootstrap.md`, `HANDOFF.md`); build path = Option A (`/craft:orchestrate`)
-  - Implementation **in progress** — orchestrator session running in the worktree
+- ✅ **MERGED** `feature/dep-bootstrap` (PR #22, squash `5010f9a`) — safe to remove worktree + branch
+  - Delivered: `requirements.lock`, 4-tier `_obs_resolve_python` resolver, `install.sh` venv bootstrap, CI clean-install smoke test, 29 dep-bootstrap Jest tests (2 network-gated)
+  - Review fixes applied pre-merge (resolver ordering clarity, lock scoping, +2 tests); CI green
+- 🔜 Pending: `homebrew-tap` branch `feature/obs-v3.2.1-venv` (Approach-A formula) — finalize at release
 
 ---
 

@@ -110,7 +110,7 @@ obs --verbose <command>         # Run any command with verbose output
 
 ### Python Path Note
 
-Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. `obs.zsh` uses `${OBS_PYTHON:-$(command -v python3)}` for Homebrew portability.
+Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. As of v3.2.1, `obs.zsh` resolves the interpreter via `_obs_resolve_python` — priority: explicit `$OBS_PYTHON` → install.sh user venv (`~/.local/share/obs/venv`) → Homebrew formula venv (`libexec/venv`) → ambient `python3` (with a warning). It no longer silently trusts a bare `command -v python3` (that was the v3.2.0 clean-install crash). Core deps are pinned in `requirements.lock`.
 
 ## Key Locations
 
