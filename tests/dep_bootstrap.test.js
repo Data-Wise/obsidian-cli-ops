@@ -149,6 +149,39 @@ describe('requirements.lock — pinned dependency contract', () => {
     const names = depLines.map((l) => l.split('==')[0]);
     expect(new Set(names).size).toBe(names.length);
   });
+
+  test('every pin satisfies its pyproject floor (pin >= >=floor)', () => {
+    const toml = fs.readFileSync(PYPROJECT, 'utf8');
+    const block = toml.match(/^dependencies = \[([\s\S]*?)\]/m)[1];
+    const floors = {};
+    for (const m of block.matchAll(
+      /"([A-Za-z0-9_.-]+)\s*>=\s*([0-9][0-9A-Za-z.+-]*)"/g
+    )) {
+      floors[m[1].toLowerCase()] = m[2];
+    }
+    const pins = {};
+    for (const line of depLines) {
+      const [n, v] = line.split('==');
+      pins[n.toLowerCase()] = v;
+    }
+    // Simple numeric-tuple compare (sufficient for the plain X.Y.Z pins here).
+    const toTuple = (v) => v.split(/[.+-]/).map((p) => parseInt(p, 10) || 0);
+    const gte = (a, b) => {
+      const ta = toTuple(a);
+      const tb = toTuple(b);
+      for (let i = 0; i < Math.max(ta.length, tb.length); i++) {
+        const x = ta[i] || 0;
+        const y = tb[i] || 0;
+        if (x !== y) return x > y;
+      }
+      return true; // equal satisfies >=
+    };
+    expect(Object.keys(floors).length).toBe(CORE_DEPS.length);
+    for (const [name, floor] of Object.entries(floors)) {
+      expect(pins[name]).toBeDefined();
+      expect(gte(pins[name], floor)).toBe(true);
+    }
+  });
 });
 
 // ---- obs.zsh resolver: static structure -----------------------------------
@@ -213,7 +246,15 @@ describe('obs.zsh — _obs_resolve_python tier selection', () => {
     expect(resolved).toBe(userVenv);
   });
 
-  test('tier 2: resolves a Homebrew formula venv via brew --prefix', () => {
+  test('tier 2: resolves the install.sh user venv', () => {
+    const home = mkdtemp();
+    const userVenv = path.join(home, '.local/share/obs/venv/bin/python');
+    writeStubExecutable(userVenv);
+    const { resolved } = resolvePython({ home });
+    expect(resolved).toBe(userVenv);
+  });
+
+  test('tier 3: resolves a Homebrew formula venv via brew --prefix (no user venv)', () => {
     const brewBin = mkdtemp();
     const prefix = mkdtemp();
     const formulaPython = path.join(prefix, 'libexec/venv/bin/python');
@@ -232,15 +273,25 @@ describe('obs.zsh — _obs_resolve_python tier selection', () => {
     expect(resolved).toBe(formulaPython);
   });
 
-  test('tier 3: resolves the install.sh user venv', () => {
+  test('user venv (tier 2) wins over a Homebrew venv (tier 3) when both exist', () => {
     const home = mkdtemp();
     const userVenv = path.join(home, '.local/share/obs/venv/bin/python');
     writeStubExecutable(userVenv);
-    const { resolved } = resolvePython({ home });
+    // Stage a fake brew + formula venv too; the user venv must win WITHOUT the
+    // resolver ever invoking `brew --prefix` (the documented tier ordering).
+    const brewBin = mkdtemp();
+    const prefix = mkdtemp();
+    writeStubExecutable(path.join(prefix, 'libexec/venv/bin/python'));
+    const brew = path.join(brewBin, 'brew');
+    writeStubExecutable(
+      brew,
+      `#!/bin/sh\nif [ "$1" = "--prefix" ]; then echo "${prefix}"; fi\n`
+    );
+    const { resolved } = resolvePython({ home, pathPrepend: brewBin });
     expect(resolved).toBe(userVenv);
   });
 
-  test('tier 3: honors XDG_DATA_HOME for the user venv location', () => {
+  test('tier 2: honors XDG_DATA_HOME for the user venv location', () => {
     const xdg = mkdtemp();
     const userVenv = path.join(xdg, 'obs/venv/bin/python');
     writeStubExecutable(userVenv);

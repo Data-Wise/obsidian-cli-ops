@@ -28,8 +28,10 @@ ICLOUD_OBSIDIAN="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents"
 # obs runs the bundled obs_cli.py against an interpreter that MUST have the core
 # deps from requirements.lock provisioned. Resolve, in priority order:
 #   1. Explicit $OBS_PYTHON (user override, or the Homebrew formula launcher)
-#   2. Homebrew formula venv (libexec/venv) when installed via brew
-#   3. install.sh-provisioned user venv (~/.local/share/obs/venv)
+#   2. install.sh-provisioned user venv (~/.local/share/obs/venv) — checked
+#      before brew so we can SKIP the `brew --prefix` subprocess (resolution
+#      runs once when this file is sourced; keeps shell startup fast).
+#   3. Homebrew formula venv (libexec/venv) — probed only when no user venv.
 #   4. Last resort: ambient python3 — deps may be MISSING, so warn loudly.
 # Resolving to a bare `command -v python3` was the v3.2.0 crash: in the field it
 # landed on a dep-less python@3.x and obs died with ModuleNotFoundError: 'rich'.
@@ -40,10 +42,17 @@ _obs_resolve_python() {
         return 0
     fi
 
-    # 2. Homebrew formula venv (only probed when neither an override nor a
-    #    user venv is present; brew --prefix is a subprocess, so keep it last-ish).
+    # 2. install.sh-provisioned user venv. Checked before brew so the common
+    #    dev-from-source case never pays for the `brew --prefix` subprocess.
     local user_venv="${XDG_DATA_HOME:-$HOME/.local/share}/obs/venv/bin/python"
-    if [[ ! -x "$user_venv" ]] && command -v brew >/dev/null 2>&1; then
+    if [[ -x "$user_venv" ]]; then
+        echo "$user_venv"
+        return 0
+    fi
+
+    # 3. Homebrew formula venv (libexec/venv) — only reached when no user venv
+    #    exists; brew --prefix is a subprocess, so it is intentionally last-ish.
+    if command -v brew >/dev/null 2>&1; then
         local brew_prefix brew_venv
         brew_prefix="$(brew --prefix obsidian-cli-ops 2>/dev/null)"
         brew_venv="$brew_prefix/libexec/venv/bin/python"
@@ -51,12 +60,6 @@ _obs_resolve_python() {
             echo "$brew_venv"
             return 0
         fi
-    fi
-
-    # 3. install.sh-provisioned user venv.
-    if [[ -x "$user_venv" ]]; then
-        echo "$user_venv"
-        return 0
     fi
 
     # 4. Last resort: ambient interpreter, which may lack obs's dependencies.

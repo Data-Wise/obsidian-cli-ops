@@ -55,6 +55,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # Intentionally a newer Python than the main test job (3.11): the smoke test
+    # also proves obs runs on a recent interpreter. The isolated venv carries the
+    # deps regardless of the host Python version.
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
