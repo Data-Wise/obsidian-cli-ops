@@ -22,14 +22,19 @@ Phase 3 (CROSS-REPO — own worktree/session)
    └─ homebrew-tap/Formula/obsidian-cli-ops.rb   Approach-A formula venv
 ```
 
-## Option A — orchestrator (lowest effort)
+## ✅ Option A — orchestrator (SELECTED 2026-06-04)
+
+**This is the chosen path.** In the worktree session, run:
 
 ```
 /craft:orchestrate
 ```
-Picks up the existing ORCHESTRATE file, fans out subagents per phase, monitors them.
 
-## Option B — manual parallel dispatch
+It picks up the existing `ORCHESTRATE-dep-bootstrap.md`, fans out subagents per phase, and monitors them — it enforces the Phase-1-then-Phase-2 sequencing (lockfile first, then the 3 parallel file-edits) automatically. Just confirm it does the lockfile before the parallel phase, then review the synthesized diffs and run the verification block below.
+
+## Option B — manual parallel dispatch (fallback only)
+
+Use this only if the orchestrator stalls or you want hands-on control.
 
 1. **Lockfile inline (don't delegate):** generate `requirements.lock` pinning the 6 core deps from `pyproject.toml:30-37` (python-frontmatter, PyYAML, networkx, rich, requests, click) to exact versions.
 2. **Then dispatch all 3 Phase-2 agents in ONE message** (concurrent). Each `general-purpose`, each told to read `CLAUDE.md` + spec and **edit only its one file**:
