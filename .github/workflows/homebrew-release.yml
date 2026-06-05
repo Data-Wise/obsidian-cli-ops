@@ -1,0 +1,71 @@
+name: Homebrew Release
+
+# Auto-updates Data-Wise/homebrew-tap when an obsidian-cli-ops release is
+# published. Models the ecosystem (nexus-cli/aiterm) via the tap's reusable
+# update-formula.yml, with flow-cli's GitHub-tarball sha256 step (obs is not on
+# PyPI). Requires repo secrets APP_ID + APP_PRIVATE_KEY (GitHub App auth).
+#
+# Scope: bumps the formula `url` + main-package `sha256` only. Python `resource`
+# blocks are static; regenerate by hand when requirements.lock changes:
+#   brew update-python-resources data-wise/tap/obsidian-cli-ops
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 3.2.1)'
+        required: true
+        type: string
+      auto_merge:
+        description: 'Auto-merge formula update (true = push to tap main)'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  prepare:
+    name: Prepare Release Info
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      sha256: ${{ steps.release.outputs.sha256 }}
+    steps:
+      - name: Resolve version + source-tarball SHA256
+        id: release
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="$INPUT_VERSION"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          TARBALL="https://github.com/Data-Wise/obsidian-cli-ops/archive/refs/tags/v${VERSION}.tar.gz"
+          SHA256="$(curl -sL --retry 3 --retry-delay 2 "$TARBALL" | sha256sum | cut -d' ' -f1)"
+          if [ -z "$SHA256" ] || [ "${#SHA256}" -ne 64 ]; then
+            echo "::error::SHA256 calculation failed for $TARBALL (got '$SHA256')"
+            exit 1
+          fi
+          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+          echo "Resolved v$VERSION -> $SHA256"
+
+  update-homebrew:
+    name: Update Homebrew Formula
+    needs: prepare
+    uses: Data-Wise/homebrew-tap/.github/workflows/update-formula.yml@main
+    with:
+      formula_name: obsidian-cli-ops
+      version: ${{ needs.prepare.outputs.version }}
+      sha256: ${{ needs.prepare.outputs.sha256 }}
+      source_type: github
+      auto_merge: ${{ github.event_name == 'release' || github.event.inputs.auto_merge == 'true' }}
+    secrets:
+      app_id: ${{ secrets.APP_ID }}
+      app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      tap_token: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
