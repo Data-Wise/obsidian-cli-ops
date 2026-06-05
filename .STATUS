@@ -10,7 +10,7 @@ target: v3.3.0 - bridge + temporal
 
 **Phase**: v3.2.0 Phases 1-7 complete (version bumped)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 235 pytest + 59 Jest = 294 total
+**Tests**: 235 pytest + 69 Jest = 304 total
 **Commands**: 18 focused commands under `obs` (+3 new: merge-suggest, tag-suggest, quality)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
@@ -26,7 +26,10 @@ Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own t
 - **`man/man1/obs.1`** — first man page in this repo. Single comprehensive page for the v3.2.1 surface, built from the `src/obs.zsh` dispatch table (not `obs help`). Modeled on flow-cli `g.1`; mandoc lint clean.
 - **Help backfill** — added `ai merge-suggest`/`tag-suggest`/`quality` to `obs help --all` (were dispatched but undocumented; help and man page now agree).
 - **`install.sh`** — symlinks the page into `$XDG_DATA_HOME/man/man1` with a MANPATH hint.
-- **Deferred:** Homebrew formula `man1.install` (tap repo) so `brew install` ships it; optional `.TH` version-sync guard test (model flow-cli `test-manpage-version-sync.zsh`).
+- **`.TH` version-sync guard** — `__tests__/man-page-version-sync.test.js` asserts the `.TH` product/version track `package.json` (hard CI gate against drift). Date is ISO `YYYY-MM-DD`, mandoc-clean, intentionally unguarded.
+- **`--json`/`--verbose` bug fix** — review of the man page surfaced that these *global* argparse flags were appended *after* the subcommand by the zsh `merge-suggest`/`tag-suggest`/`quality` handlers, so `obs_cli.py` rejected them ("unrecognized arguments"). Handlers now route global flags ahead of the `ai` token; 4 regression tests added (Jest 65 → 69). Now the man-page-documented `--json` actually works.
+- **Version-bump checklist** — `man/man1/obs.1` added to `.claude/rules/workflows.md` so future bumps move the `.TH` version (now CI-enforced).
+- **Deferred:** Homebrew formula `man1.install` (tap repo) so `brew install` ships it.
 
 ---
 

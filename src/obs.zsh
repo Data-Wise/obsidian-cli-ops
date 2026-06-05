@@ -473,20 +473,21 @@ obs_ai() {
             fi
             shift
             _log_verbose "Finding merge candidates"
-            local cmd=("$python_cli" "ai" "merge-suggest" "$vault_id")
+            # --json/--verbose are GLOBAL argparse flags: they must precede the
+            # subcommand or obs_cli.py rejects them as unrecognized. Route them
+            # to gflags (before "ai"); keep value flags with the subcommand.
+            local gflags=()
+            [[ "$VERBOSE" == "true" ]] && gflags+=(--verbose)
+            local subargs=()
             while [[ "$1" == --* ]]; do
-                if [[ "$1" == "--threshold" || "$1" == "--provider" ]]; then
-                    cmd+=("$1" "$2")
-                    shift 2
-                else
-                    # Boolean flags (--json, --verbose, unknown)
-                    cmd+=("$1")
-                    shift
-                fi
+                case "$1" in
+                    --json) gflags+=(--json); shift ;;
+                    --verbose|-v) gflags+=(--verbose); shift ;;
+                    --threshold|--provider) subargs+=("$1" "$2"); shift 2 ;;
+                    *) subargs+=("$1"); shift ;;
+                esac
             done
-            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
-            $OBS_PYTHON "${cmd[@]}"
+            $OBS_PYTHON "$python_cli" "${gflags[@]}" "ai" "merge-suggest" "$vault_id" "${subargs[@]}"
             ;;
 
         tag-suggest)
@@ -498,19 +499,20 @@ obs_ai() {
             fi
             shift
             _log_verbose "Suggesting tags"
-            local cmd=("$python_cli" "ai" "tag-suggest" "$target")
+            # --json/--verbose are GLOBAL flags (must precede the subcommand);
+            # --apply is a subcommand boolean, --min-confidence/--provider take values.
+            local gflags=()
+            [[ "$VERBOSE" == "true" ]] && gflags+=(--verbose)
+            local subargs=()
             while [[ "$1" == --* ]]; do
-                if [[ "$1" == "--apply" ]]; then
-                    cmd+=("$1")
-                    shift
-                else
-                    cmd+=("$1" "$2")
-                    shift 2
-                fi
+                case "$1" in
+                    --json) gflags+=(--json); shift ;;
+                    --verbose|-v) gflags+=(--verbose); shift ;;
+                    --min-confidence|--provider) subargs+=("$1" "$2"); shift 2 ;;
+                    *) subargs+=("$1"); shift ;;
+                esac
             done
-            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
-            $OBS_PYTHON "${cmd[@]}"
+            $OBS_PYTHON "$python_cli" "${gflags[@]}" "ai" "tag-suggest" "$target" "${subargs[@]}"
             ;;
 
         quality)
@@ -522,19 +524,18 @@ obs_ai() {
             fi
             shift
             _log_verbose "Scoring note quality"
-            local cmd=("$python_cli" "ai" "quality" "$target")
+            # --json/--verbose are GLOBAL flags and must precede the subcommand.
+            local gflags=()
+            [[ "$VERBOSE" == "true" ]] && gflags+=(--verbose)
+            local subargs=()
             while [[ "$1" == --* ]]; do
-                if [[ "$1" == "--json" ]]; then
-                    cmd+=("$1")
-                    shift
-                else
-                    cmd+=("$1" "$2")
-                    shift 2
-                fi
+                case "$1" in
+                    --json) gflags+=(--json); shift ;;
+                    --verbose|-v) gflags+=(--verbose); shift ;;
+                    *) subargs+=("$1"); shift ;;
+                esac
             done
-            [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            [[ "$JSON_OUTPUT" == "true" ]] && cmd+=(--json)
-            $OBS_PYTHON "${cmd[@]}"
+            $OBS_PYTHON "$python_cli" "${gflags[@]}" "ai" "quality" "$target" "${subargs[@]}"
             ;;
 
         *)
