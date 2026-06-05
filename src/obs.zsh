@@ -171,6 +171,9 @@ obs_help() {
         echo "  obs ai gaps <vault>       Find knowledge gaps"
         echo "  obs ai summarize <vault>  Summarize vault themes"
         echo "  obs ai refactor <vault>   AI-powered reorganization"
+        echo "  obs ai merge-suggest <vault> Find merge candidates"
+        echo "  obs ai tag-suggest <target>  Suggest tags for notes"
+        echo "  obs ai quality <target>      Score note quality"
         echo ""
 
         echo "🔧 UTILITIES"
