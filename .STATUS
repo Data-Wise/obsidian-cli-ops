@@ -1,9 +1,9 @@
 priority: P1
-status: 🚀 v3.2.1 release wiring — version bumped + changelog done, dev→main PR next
-progress: 80
+status: 🚀 v3.2.1 release — PR #23 (dev→main) OPEN, awaiting CI + merge
+progress: 85
 updated: 2026-06-04
 version: 3.2.1
-next: dev→main release PR (v3.2.1) → tag → GitHub release → Homebrew formula (tap branch feature/obs-v3.2.1-venv) → CI verify on main
+next: verify PR #23 CI green → merge to main → tag v3.2.1 → GitHub release → Homebrew formula (tap branch feature/obs-v3.2.1-venv) → CI verify on main
 target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
