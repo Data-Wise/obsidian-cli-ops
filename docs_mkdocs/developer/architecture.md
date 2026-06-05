@@ -1,6 +1,6 @@
 # Architecture
 
-**Version:** 3.2.0
+**Version:** 3.2.1
 
 Obsidian CLI Ops follows a clean **three-layer architecture** with an optional AI feature layer.
 
@@ -169,6 +169,6 @@ src/python/
 ## Testing
 
 - **235 pytest tests** covering core, AI, vault features, and data layers
-- **30 Jest tests** for ZSH wrapper validation
+- **59 Jest tests** for ZSH wrapper + dependency-bootstrapping validation (2 network-gated, run in CI)
 - Core layer tested independently with mocked dependencies
 - AI providers mocked for deterministic tests

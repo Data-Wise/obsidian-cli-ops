@@ -81,13 +81,22 @@ Add `--verbose` to any command for detailed output:
 obs analyze Knowledge_Base --verbose
 ```
 
-### Custom Python Path
+### Python Interpreter Resolution
 
-If your Python installation is in a non-standard location:
+As of **v3.2.1**, `obs` runs against an interpreter that has its core deps provisioned in an **isolated venv** — it never silently trusts a bare `python3`. The launcher (`_obs_resolve_python`) resolves in priority order:
+
+1. **`$OBS_PYTHON`** — explicit override (below), or set by the Homebrew formula
+2. **install.sh user venv** — `~/.local/share/obs/venv`
+3. **Homebrew formula venv** — `libexec/venv`
+4. **ambient `python3`** — last resort, with a warning that deps may be missing
+
+To force a specific interpreter (non-standard location, or a venv you manage):
 
 ```bash
 export OBS_PYTHON=/path/to/python3
 ```
+
+If you ever see `[obs] WARN: ... ambient python3 ... deps may be missing`, provision an isolated env with `./install.sh` (or `brew reinstall obsidian-cli-ops`). See [Installation](installation.md#how-dependencies-are-provisioned) for the full model.
 
 ### iCloud Vault Auto-Detection
 

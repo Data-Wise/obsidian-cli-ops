@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 3.2.0
+**Current Version**: 3.2.1
 **Status**: Stable release
 **Priority**: P1
 
@@ -56,10 +56,9 @@ Presentation → Application → Data
 # Option 1: Homebrew (recommended)
 brew install data-wise/tap/obsidian-cli-ops
 
-# Option 2: Manual
-pip3 install -r src/python/requirements.txt
+# Option 2: Manual (isolated venv + symlink, no manual pip)
+./install.sh
 python3 src/python/obs_cli.py db init
-ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 ```
 
 ### Essential Commands
@@ -105,13 +104,13 @@ mkdocs serve                    # Serve docs locally
 
 ```bash
 pytest src/python/tests/        # 235 tests passing
-npx jest                        # 30 Jest tests passing
+npx jest                        # 59 Jest tests passing
 obs --verbose <command>         # Run any command with verbose output
 ```
 
 ### Python Path Note
 
-Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. `obs.zsh` uses `${OBS_PYTHON:-$(command -v python3)}` for Homebrew portability.
+Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH issues when called from unified dispatcher. As of v3.2.1, `obs.zsh` resolves the interpreter via `_obs_resolve_python` — priority: explicit `$OBS_PYTHON` → install.sh user venv (`~/.local/share/obs/venv`) → Homebrew formula venv (`libexec/venv`) → ambient `python3` (with a warning). It no longer silently trusts a bare `command -v python3` (that was the v3.2.0 clean-install crash). Core deps are pinned in `requirements.lock`.
 
 ## Key Locations
 

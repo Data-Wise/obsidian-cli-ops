@@ -93,8 +93,8 @@ obs ai refactor MyVault --provider anthropic-api
 ## Common Workflows
 
 ```bash
-# First-time setup
-pip3 install -r src/python/requirements.txt
+# First-time setup (isolated venv, no manual pip)
+./install.sh
 python3 src/python/obs_cli.py db init
 obs discover ~/Documents --scan
 
@@ -154,4 +154,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.2.0 | **Commands:** 18 | **AI Providers:** 5
+**Version:** 3.2.1 | **Commands:** 18 | **AI Providers:** 5

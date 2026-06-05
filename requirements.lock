@@ -1,0 +1,28 @@
+# requirements.lock — pinned CORE runtime dependencies for `obs`
+#
+# SINGLE SOURCE OF TRUTH for the isolated environment provisioned by:
+#   - Homebrew formula  (virtualenv_install_with_resources → libexec/venv)
+#   - install.sh        (~/.local/share/obs/venv)
+#
+# Derived from the [project.dependencies] block in pyproject.toml (the 6 core
+# deps). AI extras (gemini/anthropic/ollama/local) are intentionally EXCLUDED —
+# they remain optional and out of scope for the base install.
+#
+# Pins are exact (==) for the 6 DIRECT deps. NOTE: transitive deps are NOT
+# pinned here (they resolve to the latest compatible release) and there are no
+# integrity hashes (no --require-hashes) — this is a reproducibility *floor* for
+# obs's own imports, not a fully-locked tree. Sufficient for a dev tool; revisit
+# if stronger supply-chain guarantees are needed. To regenerate after a pyproject
+# floor bump, install the core set into a clean venv and freeze:
+#   python3 -m venv /tmp/obs-lock && /tmp/obs-lock/bin/pip install \
+#     python-frontmatter PyYAML networkx rich requests click && \
+#     /tmp/obs-lock/bin/pip freeze   # then re-pin the 6 lines below
+#
+# Last pinned: 2026-06-04 (for v3.2.1)
+
+python-frontmatter==1.1.0
+PyYAML==6.0.3
+networkx==3.6.1
+rich==14.2.0
+requests==2.32.5
+click==8.3.1
