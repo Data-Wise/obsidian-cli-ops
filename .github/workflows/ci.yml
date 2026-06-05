@@ -44,3 +44,46 @@ jobs:
 
     - name: Check Formatting
       run: npx prettier --check "**/*.js" "!node_modules/**"
+
+  # Clean-install smoke test: proves a fresh machine runs obs with NO manual pip.
+  # This guards the v3.2.0 regression (ModuleNotFoundError: 'rich') and every
+  # future release, including v3.3.0.
+  smoke-test:
+    name: Clean-install smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install ZSH
+      run: sudo apt-get update && sudo apt-get install -y zsh
+
+    - name: Clean install (install.sh — no manual pip)
+      run: ./install.sh
+
+    - name: Assert isolated venv has all core deps
+      run: |
+        VENV_PY="$HOME/.local/share/obs/venv/bin/python"
+        test -x "$VENV_PY" || { echo "::error::isolated venv missing at $VENV_PY"; exit 1; }
+        "$VENV_PY" -c "import frontmatter, yaml, networkx, rich, requests, click; print('core deps OK')"
+
+    - name: Assert launcher resolves OBS_PYTHON to the isolated venv (not ambient)
+      shell: zsh {0}
+      run: |
+        source "$HOME/.config/zsh/functions/obs.zsh"
+        echo "Resolved OBS_PYTHON=$OBS_PYTHON"
+        case "$OBS_PYTHON" in
+          *.local/share/obs/venv/bin/python) echo "✓ resolved to isolated venv" ;;
+          *) echo "::error::expected isolated venv, got: $OBS_PYTHON"; exit 1 ;;
+        esac
+
+    - name: Assert obs CLI --help exits 0 through the resolved interpreter
+      shell: zsh {0}
+      run: |
+        source "$HOME/.config/zsh/functions/obs.zsh"
+        "$OBS_PYTHON" src/python/obs_cli.py --help
