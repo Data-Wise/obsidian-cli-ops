@@ -1,16 +1,16 @@
 priority: P1
-status: 🚀 v3.2.1 release — PR #23 (dev→main) OPEN, awaiting CI + merge
-progress: 85
-updated: 2026-06-04
-version: 3.2.1
-next: verify PR #23 CI green → merge to main → tag v3.2.1 → GitHub release → Homebrew formula (tap branch feature/obs-v3.2.1-venv) → CI verify on main
-target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
+status: 🚀 v3.2.2 RELEASING — man page + ai --json/--verbose fix (version bumped, PR dev→main next)
+progress: 100
+updated: 2026-06-05
+version: 3.2.2
+next: Finish v3.2.2 release (PR dev→main → tag → GitHub release → bump tap formula url+sha256 to v3.2.2 → brew reinstall --build-from-source to verify `man obs`). Then resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
+target: v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
 
 **Phase**: v3.2.0 Phases 1-7 complete (version bumped)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 235/235 passing (pytest) + 30 Jest = 265 total
+**Tests**: 235 pytest + 69 Jest = 304 total
 **Commands**: 18 focused commands under `obs` (+3 new: merge-suggest, tag-suggest, quality)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
@@ -19,19 +19,35 @@ target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ---
 
-## 🚧 Active Work
+## 📄 obs man page (2026-06-05) — ✅ MERGED (PR #25 → dev, tap PR #110 → main)
 
-**v3.3.0 planned (2026-06-04).** Brainstorm → 2 specs in `docs/specs/`:
-- `SPEC-dependency-bootstrapping-2026-06-04.md` → **ships first as v3.2.1** (P0: `obs` crashes on clean install, missing `rich`)
-- `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` → bridge (consume official Obsidian CLI) + temporal analytics
+Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own the binary). Implements `SPEC-obs-man-page-2026-06-04.md`.
 
-**Worktrees:**
-- ✅ **MERGED** `feature/dep-bootstrap` (PR #22, squash `5010f9a`) — safe to remove worktree + branch
-  - Delivered: `requirements.lock`, 4-tier `_obs_resolve_python` resolver, `install.sh` venv bootstrap, CI clean-install smoke test, 29 dep-bootstrap Jest tests (2 network-gated)
-  - Review fixes applied pre-merge (resolver ordering clarity, lock scoping, +2 tests); CI green
-- 🟡 **HANDOFF** `feature/release-homebrew` → `~/.git-worktrees/obsidian-cli-ops/feature-release-homebrew`
-  - `scripts/release-homebrew.sh` (local, credential-free Homebrew release) delivered as `HANDOFF-release-homebrew.md` — materialize + commit in a worktree session
-- 🔜 Pending: `homebrew-tap` branch `feature/obs-v3.2.1-venv` (Approach-A formula) — finalize at release
+- **`man/man1/obs.1`** — first man page in this repo. Single comprehensive page for the v3.2.1 surface, built from the `src/obs.zsh` dispatch table (not `obs help`). Modeled on flow-cli `g.1`; mandoc lint clean.
+- **Help backfill** — added `ai merge-suggest`/`tag-suggest`/`quality` to `obs help --all` (were dispatched but undocumented; help and man page now agree).
+- **`install.sh`** — symlinks the page into `$XDG_DATA_HOME/man/man1` with a MANPATH hint.
+- **`.TH` version-sync guard** — `__tests__/man-page-version-sync.test.js` asserts the `.TH` product/version track `package.json` (hard CI gate against drift). Date is ISO `YYYY-MM-DD`, mandoc-clean, intentionally unguarded.
+- **`--json`/`--verbose` bug fix** — review of the man page surfaced that these *global* argparse flags were appended *after* the subcommand by the zsh `merge-suggest`/`tag-suggest`/`quality` handlers, so `obs_cli.py` rejected them ("unrecognized arguments"). Handlers now route global flags ahead of the `ai` token; 4 regression tests added (Jest 65 → 69). Now the man-page-documented `--json` actually works.
+- **Version-bump checklist** — `man/man1/obs.1` added to `.claude/rules/workflows.md` so future bumps move the `.TH` version (now CI-enforced).
+- **Homebrew `man1.install`** — ✅ merged (tap PR #110, conditional `if exist?`, install-safe). No-op on the v3.2.1 tarball (predates the page); fires automatically once an obs release bundles `man/man1/obs.1`. That release is the remaining runtime gate for `man obs` from a brew install.
+
+---
+
+## ✅ v3.2.1 Released (2026-06-04) — install reliability
+
+- **dep-bootstrap fix** (PR #22): `requirements.lock`, 4-tier `_obs_resolve_python` resolver, `install.sh` isolated-venv bootstrap, clean-install CI smoke test, 29 Jest tests. Fixes the v3.2.0 `ModuleNotFoundError: 'rich'` clean-install crash.
+- **GitHub release** v3.2.1 (PR #23 dev→main, tag, release, main CI green).
+- **Homebrew live** (tap PR #109): formula = isolated venv, 13 resources (6 core pinned to `requirements.lock` + 7 transitive), install-layout fix (`libexec/src/...` so schema resolves). Validated: `brew build-from-source` + post_install db-init + audit. `brew info` → stable 3.2.1.
+- **Release CI automated** (PR #24): `.github/workflows/homebrew-release.yml` (flow-cli model + reusable `update-formula.yml`) auto-bumps the formula on future releases. **Needs repo secrets `APP_ID`+`APP_PRIVATE_KEY` to run** (copy from flow-cli).
+- Worktrees cleaned up; tests now 235 pytest + 59 Jest (294).
+
+---
+
+## 🔜 Next: v3.3.0 (bridge + temporal)
+
+Spec `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` is **reviewed** (0 open questions). Theme A (consume official Obsidian CLI as "hands") + Theme B (temporal analytics: trends, stale, daily-digest). Ready to implement in a worktree.
+
+**🚧 WIP / running (2026-06-04):** `SPEC-obs-man-page-2026-06-04.md` — flow-cli dropped its `obs.1` (doesn't own the binary); author the man page here + backfill the 3 undocumented `obs ai` commands (`merge-suggest`, `tag-suggest`, `quality`) into `obs help --all`.
 
 ---
 

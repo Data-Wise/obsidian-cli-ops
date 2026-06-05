@@ -1,6 +1,6 @@
 # obs -- Your Vault's Command Line
 
-[![Version](https://img.shields.io/badge/version-3.2.1-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.2.2-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
 [![Tests](https://img.shields.io/badge/tests-294%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)

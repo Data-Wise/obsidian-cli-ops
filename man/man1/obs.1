@@ -1,0 +1,188 @@
+.\" Man page for obs (Obsidian CLI Ops)
+.\" Updated: 2026-06-05
+.TH OBS 1 "2026-06-05" "obsidian-cli-ops 3.2.2" "User Commands"
+.SH NAME
+obs \- manage Obsidian vaults with AI\-powered knowledge\-graph analysis
+.SH SYNOPSIS
+.B obs
+[\fB\-\-verbose\fR] [\fIcommand\fR] [\fIarguments\fR]
+.br
+.B obs ai
+\fIsubcommand\fR [\fIarguments\fR]
+.SH DESCRIPTION
+.B obs
+(Obsidian CLI Ops) is a command\-line tool for managing one or more
+Obsidian vaults, analyzing their knowledge graph, and applying optional
+AI assistance over notes and links.
+.PP
+A thin ZSH launcher (\fBobs.zsh\fR) dispatches to a Python core. The launcher
+resolves a Python interpreter that has the required dependencies, in priority
+order: an explicit
+.BR OBS_PYTHON ,
+an install.sh\-provisioned user venv
+.RI ( ~/.local/share/obs/venv ),
+the Homebrew formula venv
+.RI ( libexec/venv ),
+and finally the ambient
+.B python3
+(with a warning, since its dependencies may be missing).
+.PP
+When called without a command,
+.B obs
+lists the known vaults (equivalent to \fBobs vaults\fR).
+.SH GLOBAL OPTIONS
+.TP
+.B \-\-verbose\fR, \fB\-v
+Enable verbose output. May be given before the command.
+.SH COMMANDS
+.SS Primary
+.TP
+.B (none)\fR, \fBvaults
+List all known vaults from the database.
+.TP
+.B stats\fR [\fIvault\fR]
+Show statistics. With a vault name or ID, show that vault's statistics;
+with no argument, show overall statistics across vaults.
+.TP
+.B discover\fR \fIpath\fR [\fB\-\-scan\fR]
+Find Obsidian vaults under
+.IR path
+(defaults to the current directory). With
+.BR \-\-scan ,
+perform a deeper scan.
+.SS Graph Analysis
+.TP
+.B analyze\fR \fIvault\fR
+Analyze the vault's graph metrics (PageRank, centrality, clustering,
+orphan and hub detection). Accepts a vault name or ID prefix.
+.TP
+.B health\fR \fIvault\fR [\fB\-\-json\fR]
+Show a vault health dashboard scoring four dimensions (connectivity,
+link integrity, structure, freshness) with recommendations. With
+.BR \-\-json ,
+emit machine\-readable output.
+.SS AI Features
+AI features require a configured provider (Gemini API, Anthropic API,
+Gemini CLI, Claude CLI, or Ollama). Run \fBobs ai setup\fR first.
+.TP
+.B ai status
+Show AI provider status.
+.TP
+.B ai setup
+Run the interactive AI setup wizard.
+.TP
+.B ai test\fR [\fB\-\-provider\fR \fIname\fR]
+Test all configured AI providers, or only the named provider.
+.TP
+.B ai similar\fR \fInote\fR
+Find notes similar to the given note ID.
+.TP
+.B ai analyze\fR \fInote\fR
+Analyze a note with AI.
+.TP
+.B ai duplicates\fR \fIvault\fR
+Find duplicate notes within a vault.
+.TP
+.B ai suggest\-links\fR \fInote\fR
+Suggest new links for a note.
+.TP
+.B ai gaps\fR \fIvault\fR
+Find knowledge gaps in a vault.
+.TP
+.B ai summarize\fR \fIvault\fR
+Summarize a vault's themes.
+.TP
+.B ai refactor\fR \fIvault\fR [\fB\-\-dry\-run\fR]
+Propose an AI\-powered reorganization of a vault. With
+.BR \-\-dry\-run ,
+preview without applying.
+.TP
+.B ai merge\-suggest\fR \fIvault\fR [\fB\-\-threshold\fR \fIN\fR] [\fB\-\-provider\fR \fIname\fR] [\fB\-\-json\fR]
+Find candidate notes to merge.
+.TP
+.B ai tag\-suggest\fR \fItarget\fR [\fB\-\-apply\fR] [\fB\-\-min\-confidence\fR \fIN\fR] [\fB\-\-json\fR]
+Suggest tags for a vault or a single note. With
+.BR \-\-apply ,
+write the suggested tags.
+.I target
+may be a vault name/ID or a note ID.
+.TP
+.B ai quality\fR \fItarget\fR [\fB\-\-json\fR]
+Score a vault or note on quality dimensions.
+.I target
+may be a vault name/ID or a note ID.
+.SS Utilities
+.TP
+.B help\fR [\fB\-\-all\fR]
+Show help. With
+.BR \-\-all ,
+list every command.
+.TP
+.B version
+Show the version.
+.SH ENVIRONMENT
+.TP
+.B OBS_PYTHON
+Path to the Python interpreter used to run the core. Overrides automatic
+resolution; must point to an interpreter that has obs's dependencies.
+.TP
+.B NO_COLOR
+When set, disable colored output. Color is also disabled when standard
+output is not a terminal.
+.TP
+.B XDG_DATA_HOME
+Base directory for the install.sh\-provisioned user venv. Defaults to
+.IR ~/.local/share ,
+so the venv lives at
+.IR $XDG_DATA_HOME/obs/venv .
+.SH FILES
+.TP
+.I ~/.config/obs/obsidian_vaults.db
+Knowledge\-graph database (SQLite).
+.TP
+.I ~/.config/obs/last_vault
+Last\-used vault ID.
+.TP
+.I ~/Library/Mobile Documents/iCloud~md~obsidian/Documents
+Default Obsidian root searched on macOS (iCloud).
+.SH EXAMPLES
+.TP
+List vaults:
+.B obs
+.TP
+Show statistics for a vault:
+.B obs stats my\-vault
+.TP
+Discover vaults under a directory:
+.B obs discover ~/Notes
+.TP
+Analyze a vault's graph:
+.B obs analyze my\-vault
+.TP
+Check vault health as JSON:
+.B obs health my\-vault \-\-json
+.TP
+Configure and test AI providers:
+.B obs ai setup
+.br
+.B obs ai test
+.TP
+Preview an AI refactor without applying it:
+.B obs ai refactor my\-vault \-\-dry\-run
+.SH EXIT STATUS
+.B obs
+exits
+.B 0
+on success and non\-zero on error (for example, a missing required
+argument or an unresolved Python interpreter).
+.SH SEE ALSO
+.BR jq (1),
+.BR python3 (1)
+.PP
+Project: https://github.com/Data-Wise/obsidian-cli-ops
+.br
+Documentation: https://data-wise.github.io/obsidian-cli-ops/
+.SH AUTHOR
+Data\-Wise.
+.SH REPORTING BUGS
+https://github.com/Data-Wise/obsidian-cli-ops/issues

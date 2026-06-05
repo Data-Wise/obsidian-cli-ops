@@ -18,6 +18,7 @@ FUNCS_DIR="$HOME/.config/zsh/functions"
 DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/obs"
 VENV_DIR="$DATA_DIR/venv"
 SENTINEL="$DATA_DIR/.deps.sentinel"
+MAN_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/man/man1"
 
 log()  { printf '%s\n' "$*"; }
 warn() { printf '%s\n' "$*" >&2; }
@@ -37,6 +38,18 @@ hash_file() {
 mkdir -p "$FUNCS_DIR"
 ln -sf "$PROJECT_DIR/src/obs.zsh" "$FUNCS_DIR/obs.zsh"
 log "Symlinked obs.zsh to $FUNCS_DIR/obs.zsh"
+
+# --- 1b. Symlink the man page so `man obs` works (Homebrew handles this via
+#         the formula's man1 install; this covers the from-source path). ---
+if [[ -f "$PROJECT_DIR/man/man1/obs.1" ]]; then
+    mkdir -p "$MAN_DIR"
+    ln -sf "$PROJECT_DIR/man/man1/obs.1" "$MAN_DIR/obs.1"
+    log "Symlinked obs.1 to $MAN_DIR/obs.1"
+    case ":${MANPATH:-}:" in
+        *":${MAN_DIR%/man1}:"*) ;;
+        *) log "  (add ${MAN_DIR%/man1} to MANPATH if 'man obs' is not found)" ;;
+    esac
+fi
 
 # --- 2. Provision the isolated dependency environment ---
 if [[ ! -f "$LOCKFILE" ]]; then

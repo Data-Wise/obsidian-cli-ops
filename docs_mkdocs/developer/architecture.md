@@ -1,6 +1,6 @@
 # Architecture
 
-**Version:** 3.2.1
+**Version:** 3.2.2
 
 Obsidian CLI Ops follows a clean **three-layer architecture** with an optional AI feature layer.
 
