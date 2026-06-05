@@ -98,6 +98,24 @@ obs_export() {
 3. Add query method in `DatabaseManager`
 4. Expose in CLI commands
 
+## Releasing: Version-Bump Checklist
+
+When bumping the version, update **every** file that carries the version string —
+grep the old version across the whole repo first (`grep -rn "<old>" --include='*.json'
+--include='*.toml' --include='*.zsh' --include='*.py' --include='*.1' --include='*.md'
+. | grep -v node_modules`). The files that must move together:
+
+- `package.json` / `package-lock.json`
+- `pyproject.toml`
+- `src/python/__init__.py`
+- `src/obs.zsh` (header `# Version:` comment)
+- **`man/man1/obs.1`** — the `.TH` line's `obsidian-cli-ops <version>` field.
+  `__tests__/man-page-version-sync.test.js` asserts this equals `package.json`,
+  so a forgotten man-page bump is a **hard CI failure**, not silent drift. (The
+  `.TH` date field is ISO `YYYY-MM-DD`, mandoc-clean, and intentionally unguarded
+  — it is decoupled from the version and may go stale without breaking anything.)
+- `README.md` / `CLAUDE.md` (version badges and references)
+
 ## R-Dev Integration Flow
 
 The R-Dev module requires a two-step workflow:

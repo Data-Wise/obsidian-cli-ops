@@ -68,3 +68,29 @@ describe('Obsidian CLI Ops v3.0', () => {
     expect(result.stdout).not.toContain('Unknown command');
   });
 });
+
+// Regression guard: --json / --verbose are GLOBAL argparse flags on obs_cli.py,
+// recognized only BEFORE the subcommand. The zsh handlers used to append them
+// AFTER the subcommand, so `obs ai quality <v> --json` died with
+// "unrecognized arguments: --json". The handlers now route global flags ahead of
+// the "ai" token. We assert argparse never rejects them. (When the resolved
+// interpreter lacks deps the core can't run at all, so this is vacuously true
+// rather than flaky — it only fails if the flag is genuinely mis-positioned.)
+describe('global flag routing for v3.2.0 ai commands', () => {
+  for (const sub of ['merge-suggest', 'tag-suggest', 'quality']) {
+    test(`obs ai ${sub} <vault> --json is not rejected by argparse`, () => {
+      const { stdout, stderr } = runCli(['ai', sub, 'NOVAULT', '--json']);
+      expect(stdout + stderr).not.toMatch(/unrecognized arguments/i);
+    });
+  }
+
+  test('obs --verbose ai quality <vault> is not rejected by argparse', () => {
+    const { stdout, stderr } = runCli([
+      '--verbose',
+      'ai',
+      'quality',
+      'NOVAULT',
+    ]);
+    expect(stdout + stderr).not.toMatch(/unrecognized arguments/i);
+  });
+});

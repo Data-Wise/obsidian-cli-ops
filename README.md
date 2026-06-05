@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-3.2.1-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-294%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-304%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
@@ -155,7 +155,7 @@ obs version                     # Show version
 
 ## 🧪 Test Coverage
 
-- **235 pytest + 59 Jest** tests passing (2 Jest network-gated, run in CI)
+- **235 pytest + 69 Jest** tests passing (2 Jest network-gated, run in CI)
 - CI: GitHub Actions on push/PR to `main` and `dev`
 - Python coverage reporting via `pytest-cov`
 
