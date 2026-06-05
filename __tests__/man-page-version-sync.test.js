@@ -37,12 +37,16 @@ describe('man page version sync (obs.1)', () => {
 
   // --- parser self-tests: prove the guard is not vacuous ---
   test('parser extracts product and version from a .TH line', () => {
-    const th = parseTh('.TH OBS 1 "June 2026" "obsidian-cli-ops 9.9.9" "User Commands"\n');
+    const th = parseTh(
+      '.TH OBS 1 "June 2026" "obsidian-cli-ops 9.9.9" "User Commands"\n'
+    );
     expect(th).toEqual({ product: 'obsidian-cli-ops', version: '9.9.9' });
   });
 
   test('parser detects a deliberately mismatched version', () => {
-    const th = parseTh('.TH OBS 1 "June 2026" "obsidian-cli-ops 1.2.3" "User Commands"\n');
+    const th = parseTh(
+      '.TH OBS 1 "June 2026" "obsidian-cli-ops 1.2.3" "User Commands"\n'
+    );
     expect(th.version).not.toBe(PKG.version);
   });
 

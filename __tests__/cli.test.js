@@ -85,7 +85,12 @@ describe('global flag routing for v3.2.0 ai commands', () => {
   }
 
   test('obs --verbose ai quality <vault> is not rejected by argparse', () => {
-    const { stdout, stderr } = runCli(['--verbose', 'ai', 'quality', 'NOVAULT']);
+    const { stdout, stderr } = runCli([
+      '--verbose',
+      'ai',
+      'quality',
+      'NOVAULT',
+    ]);
     expect(stdout + stderr).not.toMatch(/unrecognized arguments/i);
   });
 });
