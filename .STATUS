@@ -30,7 +30,8 @@ target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
   - Delivered: `requirements.lock`, 4-tier `_obs_resolve_python` resolver, `install.sh` venv bootstrap, CI clean-install smoke test, 29 dep-bootstrap Jest tests (2 network-gated)
   - Review fixes applied pre-merge (resolver ordering clarity, lock scoping, +2 tests); CI green
 - 🟡 **HANDOFF** `feature/release-homebrew` → `~/.git-worktrees/obsidian-cli-ops/feature-release-homebrew`
-  - `scripts/release-homebrew.sh` (local, credential-free Homebrew release) delivered as `HANDOFF-release-homebrew.md` — materialize + commit in a worktree session
+  - **Homebrew → GitHub CI** (flow-cli model): `.github/workflows/homebrew-release.yml` delivered in `HANDOFF-release-homebrew.md` — materialize + PR in a worktree session
+  - Prereqs: repo secrets `APP_ID`/`APP_PRIVATE_KEY` (GitHub App, copy from flow-cli) + one-time transitive venv resources on the formula
 - 🔜 Pending: `homebrew-tap` branch `feature/obs-v3.2.1-venv` (Approach-A formula) — finalize at release
 
 ---
