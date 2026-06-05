@@ -1,9 +1,9 @@
 priority: P1
-status: 🚀 v3.2.1 release — PR #23 (dev→main) OPEN, awaiting CI + merge
-progress: 85
+status: ✅ v3.2.1 RELEASED on GitHub — Homebrew formula finalize pending
+progress: 95
 updated: 2026-06-04
 version: 3.2.1
-next: verify PR #23 CI green → merge to main → tag v3.2.1 → GitHub release → Homebrew formula (tap branch feature/obs-v3.2.1-venv) → CI verify on main
+next: finish Homebrew — add transitive resources to tap formula (obs is not a PyPI pkg, may need manual/poet resolution) → brew install --build-from-source test → brew audit → merge tap feature/obs-v3.2.1-venv to tap main
 target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
