@@ -22,6 +22,7 @@ const INSTALL_SCRIPT = path.join(REPO_ROOT, 'install.sh');
 const LOCKFILE = path.join(REPO_ROOT, 'requirements.lock');
 const PYPROJECT = path.join(REPO_ROOT, 'pyproject.toml');
 const OBS_CLI = path.join(REPO_ROOT, 'src/python/obs_cli.py');
+const CI_WORKFLOW = path.join(REPO_ROOT, '.github/workflows/ci.yml');
 
 // The 6 core deps declared in pyproject [project.dependencies].
 const CORE_DEPS = [
@@ -143,6 +144,11 @@ describe('requirements.lock — pinned dependency contract', () => {
     const norm = (s) => s.toLowerCase();
     expect(pyNames.map(norm).sort()).toEqual(CORE_DEPS.map(norm).sort());
   });
+
+  test('has no duplicate package names', () => {
+    const names = depLines.map((l) => l.split('==')[0]);
+    expect(new Set(names).size).toBe(names.length);
+  });
 });
 
 // ---- obs.zsh resolver: static structure -----------------------------------
@@ -183,6 +189,20 @@ describe('obs.zsh — _obs_resolve_python tier selection', () => {
     writeStubExecutable(stub);
     const { resolved } = resolvePython({ home: mkdtemp(), obsPython: stub });
     expect(resolved).toBe(stub);
+  });
+
+  test('tier 1: an override with trailing args validates only the interpreter path', () => {
+    const stubDir = mkdtemp();
+    const stub = path.join(stubDir, 'python');
+    writeStubExecutable(stub);
+    // e.g. OBS_PYTHON="/path/to/python -E -X utf8" — the `-x` check uses
+    // ${OBS_PYTHON%% *}, but the full string is what gets used to invoke.
+    const override = `${stub} -E -X utf8`;
+    const { resolved } = resolvePython({
+      home: mkdtemp(),
+      obsPython: override,
+    });
+    expect(resolved).toBe(override);
   });
 
   test('tier 1: a non-existent $OBS_PYTHON override is ignored (falls through)', () => {
@@ -284,6 +304,60 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
     const { out } = stagedInstall();
     expect(out).toMatch(/already provisioned/);
   });
+
+  test('fails clearly when requirements.lock is missing', () => {
+    // Run a copy of install.sh from a project dir that has no lockfile, so the
+    // PROJECT_DIR-relative lookup misses and the script must error out.
+    const projectDir = mkdtemp();
+    const installCopy = path.join(projectDir, 'install.sh');
+    fs.copyFileSync(INSTALL_SCRIPT, installCopy);
+    fs.chmodSync(installCopy, 0o755);
+
+    let err;
+    try {
+      execFileSync('bash', [installCopy], {
+        env: cleanEnv({ HOME: mkdtemp() }),
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
+    } catch (e) {
+      err = e;
+    }
+    expect(err).toBeDefined();
+    expect(err.status).not.toBe(0);
+    expect(`${err.stderr || ''}${err.stdout || ''}`).toMatch(
+      /requirements\.lock not found/i
+    );
+  });
+});
+
+// ---- ci.yml: the clean-install safety net ---------------------------------
+
+describe('ci.yml — clean-install smoke-test job', () => {
+  const ci = fs.readFileSync(CI_WORKFLOW, 'utf8');
+
+  test('defines a dedicated smoke-test job', () => {
+    expect(ci).toMatch(/^\s{2}smoke-test:/m);
+  });
+
+  test('runs install.sh with no manual pip', () => {
+    expect(ci).toContain('./install.sh');
+    // The smoke job must not lean on the repo requirements.txt to provision.
+    const smoke = ci.slice(ci.indexOf('smoke-test:'));
+    expect(smoke).not.toContain('pip install -r');
+  });
+
+  test('asserts the isolated venv imports all 6 core deps', () => {
+    expect(ci).toContain(
+      'import frontmatter, yaml, networkx, rich, requests, click'
+    );
+    expect(ci).toContain('.local/share/obs/venv');
+  });
+
+  test('asserts the CLI --help exits 0 through the resolved interpreter', () => {
+    expect(ci).toContain('obs_cli.py --help');
+    expect(ci).toContain('OBS_PYTHON');
+  });
 });
 
 // ---- install.sh: real provisioning (network, gated) -----------------------
@@ -327,6 +401,35 @@ describeE2E(
       const { resolved } = resolvePython({ home });
       expect(resolved).toBe(venvPy);
       execFileSync(venvPy, [OBS_CLI, '--help'], { stdio: 'pipe' });
+    }, 240000);
+
+    test('re-provisions when a stale sentinel does not match the lock', () => {
+      const home = mkdtemp();
+      // Pre-stage a stale stub venv + a deliberately wrong sentinel.
+      const venvPy = path.join(home, '.local/share/obs/venv/bin/python');
+      writeStubExecutable(venvPy, '#!/bin/sh\necho stale\n');
+      fs.writeFileSync(
+        path.join(home, '.local/share/obs/.deps.sentinel'),
+        'deadbeef-not-the-real-hash'
+      );
+
+      const out = execFileSync('bash', [INSTALL_SCRIPT], {
+        env: cleanEnv({ HOME: home }),
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
+      expect(out).toMatch(/Provisioning isolated obs environment/);
+
+      // The stub was replaced by a real venv with the deps installed...
+      execFileSync(venvPy, ['-c', 'import rich, click'], { stdio: 'pipe' });
+      // ...and the sentinel now records the real lock hash.
+      const sentinel = fs
+        .readFileSync(
+          path.join(home, '.local/share/obs/.deps.sentinel'),
+          'utf8'
+        )
+        .trim();
+      expect(sentinel).toBe(sha256OfFile(LOCKFILE));
     }, 240000);
   }
 );
