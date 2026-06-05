@@ -1,9 +1,9 @@
 priority: P1
 status: ✅ v3.2.1 FULLY RELEASED — GitHub + Homebrew live, release CI automated
 progress: 100
-updated: 2026-06-04
+updated: 2026-06-05
 version: 3.2.1
-next: Resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI for future releases, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
+next: Merge feature/obs-manpage (obs.1 man page), then wire the Homebrew formula man1 install (tap repo). Resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI for future releases, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
 target: v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
@@ -16,6 +16,17 @@ target: v3.3.0 - bridge + temporal
 **Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 **Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
+
+---
+
+## 📄 obs man page (2026-06-05) — feature/obs-manpage
+
+Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own the binary). Implements `SPEC-obs-man-page-2026-06-04.md`.
+
+- **`man/man1/obs.1`** — first man page in this repo. Single comprehensive page for the v3.2.1 surface, built from the `src/obs.zsh` dispatch table (not `obs help`). Modeled on flow-cli `g.1`; mandoc lint clean.
+- **Help backfill** — added `ai merge-suggest`/`tag-suggest`/`quality` to `obs help --all` (were dispatched but undocumented; help and man page now agree).
+- **`install.sh`** — symlinks the page into `$XDG_DATA_HOME/man/man1` with a MANPATH hint.
+- **Deferred:** Homebrew formula `man1.install` (tap repo) so `brew install` ships it; optional `.TH` version-sync guard test (model flow-cli `test-manpage-version-sync.zsh`).
 
 ---
 
