@@ -33,6 +33,8 @@ target: v3.3.0 - bridge + temporal
 
 Spec `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` is **reviewed** (0 open questions). Theme A (consume official Obsidian CLI as "hands") + Theme B (temporal analytics: trends, stale, daily-digest). Ready to implement in a worktree.
 
+**Captured (2026-06-04):** `SPEC-obs-man-page-2026-06-04.md` — flow-cli dropped its `obs.1` (doesn't own the binary); author the man page here + backfill the 3 undocumented `obs ai` commands (`merge-suggest`, `tag-suggest`, `quality`) into `obs help --all`.
+
 ---
 
 ## ✅ Post-Release Docs Polish (2026-03-06)
