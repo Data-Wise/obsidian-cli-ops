@@ -1,6 +1,6 @@
 # Testing Overview
 
-**Version:** 3.2.1
+**Version:** 3.2.2
 **Total Tests:** 294 (235 pytest + 59 Jest)
 
 ## Test Coverage

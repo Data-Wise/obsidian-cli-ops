@@ -1,9 +1,9 @@
 priority: P1
-status: ✅ v3.2.1 FULLY RELEASED — GitHub + Homebrew live, release CI automated
+status: 🚀 v3.2.2 RELEASING — man page + ai --json/--verbose fix (version bumped, PR dev→main next)
 progress: 100
 updated: 2026-06-05
-version: 3.2.1
-next: Resume v3.3.0 (bridge + temporal — spec reviewed). Man page shipped on dev (PR #25) + tap man1.install merged (tap PR #110) — the conditional install fires once the next obs release bundles man/man1/obs.1. To activate auto Homebrew CI for future releases, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
+version: 3.2.2
+next: Finish v3.2.2 release (PR dev→main → tag → GitHub release → bump tap formula url+sha256 to v3.2.2 → brew reinstall --build-from-source to verify `man obs`). Then resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
 target: v3.3.0 - bridge + temporal
 
 ## 🎯 Current State

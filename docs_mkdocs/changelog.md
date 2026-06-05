@@ -4,6 +4,26 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.2.2 (2026-06-05)
+
+Documentation + bug-fix release. Ships the first `obs` man page and fixes the `--json`/`--verbose` flags on the v3.2.0 AI quality commands.
+
+### Added
+
+- **`man/man1/obs.1`** -- first man page; `man obs` documents the full command surface. Homebrew now installs it (`man1.install`), and `install.sh` symlinks it for from-source installs.
+- **Help backfill** -- `obs ai merge-suggest`/`tag-suggest`/`quality` now appear in `obs help --all` (were dispatched but undocumented).
+- **Man-page version-sync guard** (`__tests__/man-page-version-sync.test.js`) -- CI fails if the `.TH` version drifts from `package.json`.
+
+### Fixed
+
+- **`obs ai merge-suggest|tag-suggest|quality --json` (and `--verbose`)** -- these are global flags on the Python CLI and must precede the subcommand, but the ZSH handlers appended them *after* it, so `obs_cli.py` rejected them with "unrecognized arguments". The handlers now route global flags ahead of the `ai` token; `--json` output works for all three commands.
+
+### Changed
+
+- Test counts now **235 pytest + 69 Jest (304 total)** (+4 flag-routing regression tests, +6 man-page guard tests).
+
+---
+
 ## v3.2.1 (2026-06-04)
 
 Install-reliability release. No command or behavior changes for existing working installs.
