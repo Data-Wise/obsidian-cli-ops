@@ -9,7 +9,10 @@
 # Project: obsidian-cli-ops
 #
 # DEPENDENCIES:
-# - python3 (with requirements.txt)
+# - python3 with obs core deps provisioned in an ISOLATED env (see requirements.lock):
+#     * Homebrew: libexec/venv (formula sets $OBS_PYTHON)
+#     * install.sh: ~/.local/share/obs/venv
+#   The launcher NEVER assumes ambient python3 has the deps (see _obs_resolve_python).
 # - jq (for vault operations)
 #
 # CONFIGURATION:
@@ -20,7 +23,62 @@
 # --- Configuration ---
 LAST_VAULT_FILE="$HOME/.config/obs/last_vault"
 ICLOUD_OBSIDIAN="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents"
-OBS_PYTHON="${OBS_PYTHON:-$(command -v python3)}"
+
+# --- Python interpreter resolution ---
+# obs runs the bundled obs_cli.py against an interpreter that MUST have the core
+# deps from requirements.lock provisioned. Resolve, in priority order:
+#   1. Explicit $OBS_PYTHON (user override, or the Homebrew formula launcher)
+#   2. install.sh-provisioned user venv (~/.local/share/obs/venv) — checked
+#      before brew so we can SKIP the `brew --prefix` subprocess (resolution
+#      runs once when this file is sourced; keeps shell startup fast).
+#   3. Homebrew formula venv (libexec/venv) — probed only when no user venv.
+#   4. Last resort: ambient python3 — deps may be MISSING, so warn loudly.
+# Resolving to a bare `command -v python3` was the v3.2.0 crash: in the field it
+# landed on a dep-less python@3.x and obs died with ModuleNotFoundError: 'rich'.
+_obs_resolve_python() {
+    # 1. Honor an explicit override if its interpreter actually exists.
+    if [[ -n "$OBS_PYTHON" && -x "${OBS_PYTHON%% *}" ]]; then
+        echo "$OBS_PYTHON"
+        return 0
+    fi
+
+    # 2. install.sh-provisioned user venv. Checked before brew so the common
+    #    dev-from-source case never pays for the `brew --prefix` subprocess.
+    local user_venv="${XDG_DATA_HOME:-$HOME/.local/share}/obs/venv/bin/python"
+    if [[ -x "$user_venv" ]]; then
+        echo "$user_venv"
+        return 0
+    fi
+
+    # 3. Homebrew formula venv (libexec/venv) — only reached when no user venv
+    #    exists; brew --prefix is a subprocess, so it is intentionally last-ish.
+    if command -v brew >/dev/null 2>&1; then
+        local brew_prefix brew_venv
+        brew_prefix="$(brew --prefix obsidian-cli-ops 2>/dev/null)"
+        brew_venv="$brew_prefix/libexec/venv/bin/python"
+        if [[ -n "$brew_prefix" && -x "$brew_venv" ]]; then
+            echo "$brew_venv"
+            return 0
+        fi
+    fi
+
+    # 4. Last resort: ambient interpreter, which may lack obs's dependencies.
+    local ambient
+    ambient="$(command -v python3 2>/dev/null)"
+    if [[ -n "$ambient" ]]; then
+        echo "[obs] WARN: no isolated environment found; falling back to ambient python3 ($ambient)." >&2
+        echo "[obs] WARN: obs dependencies may be missing. Provision an isolated env:" >&2
+        echo "[obs] WARN:   brew reinstall obsidian-cli-ops   # Homebrew" >&2
+        echo "[obs] WARN:   ./install.sh                      # manual install" >&2
+        echo "$ambient"
+        return 0
+    fi
+
+    echo "[obs] ERROR: no python3 interpreter found on PATH." >&2
+    return 1
+}
+
+OBS_PYTHON="$(_obs_resolve_python)"
 
 _ensure_config_dir() {
     mkdir -p "$HOME/.config/obs"

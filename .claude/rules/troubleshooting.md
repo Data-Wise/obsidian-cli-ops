@@ -15,8 +15,13 @@ paths:
 - Check permissions on `~/.config/obs/`
 - Verify SQLite3 is installed
 
-## Import Errors
-- Install dependencies: `pip3 install -r src/python/requirements.txt`
+## Import Errors (`ModuleNotFoundError`)
+- Deps live in an **isolated venv**, not system Python. Provision it:
+  `./install.sh` (creates `~/.local/share/obs/venv` from `requirements.lock`)
+  or `brew reinstall obsidian-cli-ops` (Homebrew `libexec/venv`).
+- A `[obs] WARN: ... ambient python3 ... deps may be missing` line means the
+  launcher fell through to the ambient interpreter — run one of the above.
+- Force a specific interpreter with `export OBS_PYTHON=/path/to/python` (tier 1).
 - Check Python version: `python3 --version` (must be 3.9+)
 
 ## Link Resolution Issues

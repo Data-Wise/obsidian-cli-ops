@@ -92,8 +92,8 @@ graph LR
 ### First-Time Setup
 
 ```bash
-# Install dependencies
-pip3 install -r src/python/requirements.txt
+# Provision deps in an isolated venv (no manual pip)
+./install.sh
 
 # Initialize the database
 python3 src/python/obs_cli.py db init

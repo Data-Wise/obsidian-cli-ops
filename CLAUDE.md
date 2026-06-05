@@ -56,10 +56,9 @@ Presentation → Application → Data
 # Option 1: Homebrew (recommended)
 brew install data-wise/tap/obsidian-cli-ops
 
-# Option 2: Manual
-pip3 install -r src/python/requirements.txt
+# Option 2: Manual (isolated venv + symlink, no manual pip)
+./install.sh
 python3 src/python/obs_cli.py db init
-ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
 ```
 
 ### Essential Commands

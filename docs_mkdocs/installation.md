@@ -15,7 +15,7 @@
 brew install data-wise/tap/obsidian-cli-ops
 ```
 
-This installs `obs` with all Python dependencies and sets up the shell integration automatically.
+This installs `obs` with all Python dependencies in an **isolated virtual environment** (`libexec/venv`) and sets up the shell integration automatically. No manual `pip` step is ever needed, and a system Python upgrade won't break `obs`.
 
 ## :hammer_and_wrench: Manual Install
 
@@ -35,19 +35,23 @@ This installs `obs` with all Python dependencies and sets up the shell integrati
     cd ~/projects/obsidian-cli-ops
     ```
 
-2. **Install Python dependencies**:
+2. **Run the installer** (symlinks the CLI **and** provisions deps):
 
     ```bash
-    pip3 install -r src/python/requirements.txt
+    ./install.sh
     ```
 
-3. **Symlink the CLI function**:
+    This creates an isolated virtual environment at `~/.local/share/obs/venv`,
+    installs the pinned dependencies from `requirements.lock`, and symlinks the
+    `obs.zsh` launcher into `~/.config/zsh/functions`. It is **idempotent** — it
+    only re-provisions when `requirements.lock` changes. No manual `pip` needed.
 
-    ```bash
-    ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
-    ```
+    !!! note "Why not `pip install`?"
+        Installing into your system/ambient Python is fragile: a `python@3.x`
+        minor upgrade silently drops the packages and `obs` breaks with
+        `ModuleNotFoundError`. The isolated venv avoids this entirely.
 
-    Then add to your `~/.zshrc`:
+3. **Enable shell autoload** — add to your `~/.zshrc`:
 
     ```zsh
     fpath=(~/.config/zsh/functions $fpath)
@@ -66,6 +70,40 @@ This installs `obs` with all Python dependencies and sets up the shell integrati
     source ~/.zshrc
     ```
 
+## :package: How dependencies are provisioned
+
+`obs` runs its bundled Python code against an interpreter that **must** have the
+core dependencies (`rich`, `networkx`, `click`, `python-frontmatter`, `PyYAML`,
+`requests`). Both install paths put those deps in a **dedicated, isolated
+environment** — never your system Python:
+
+| Install path | Environment | Source of pins |
+|---|---|---|
+| Homebrew | `libexec/venv` (formula-owned) | formula `resource` blocks |
+| `install.sh` | `~/.local/share/obs/venv` | `requirements.lock` |
+
+Each run, the launcher resolves `OBS_PYTHON` in priority order. It **never**
+silently trusts a bare `python3` (that was the source of the historical
+`ModuleNotFoundError: 'rich'` crash):
+
+```mermaid
+flowchart TD
+    Start([obs invoked]) --> Q1{"$OBS_PYTHON set<br/>and executable?"}
+    Q1 -->|yes| U1[Use $OBS_PYTHON]
+    Q1 -->|no| Q2{"no user venv<br/>and brew available?"}
+    Q2 -->|yes| Q2b{"libexec/venv<br/>exists?"}
+    Q2b -->|yes| U2[Use Homebrew libexec/venv]
+    Q2b -->|no| Q3
+    Q2 -->|no| Q3{"~/.local/share/obs/venv<br/>exists?"}
+    Q3 -->|yes| U3[Use install.sh user venv]
+    Q3 -->|no| Q4{"ambient python3<br/>on PATH?"}
+    Q4 -->|yes| U4["Use ambient python3<br/>⚠️ warn: deps may be missing"]
+    Q4 -->|no| Err["ERROR: no python3 found"]
+```
+
+You can always force a specific interpreter by exporting `OBS_PYTHON` (tier 1),
+which takes precedence over everything else.
+
 ## :white_check_mark: Verify Installation
 
 ```bash
@@ -79,6 +117,22 @@ obs
 You should see the version number and any Obsidian vaults found in your iCloud directory.
 
 ## :sos: Troubleshooting
+
+### `ModuleNotFoundError` (e.g. `No module named 'rich'`)
+
+This means `obs` resolved to a Python **without** its deps — usually because no
+isolated environment exists yet. If you also see a `[obs] WARN: ... ambient
+python3 ... dependencies may be missing` line, that's the launcher telling you
+it fell through to tier 4. Provision an isolated env:
+
+```bash
+brew reinstall obsidian-cli-ops   # Homebrew
+# or, for a manual checkout:
+./install.sh
+```
+
+After a `python@3.x` upgrade via Homebrew, `obs` keeps working because its deps
+live in `libexec/venv`, not in the upgraded interpreter.
 
 ### Python not found
 

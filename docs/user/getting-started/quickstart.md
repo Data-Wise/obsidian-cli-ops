@@ -23,8 +23,8 @@
 ### 1. Install Dependencies
 
 ```bash
-# Install Python packages
-pip3 install -r src/python/requirements.txt
+# Provision Python deps in an isolated venv (no manual pip)
+./install.sh
 
 # Install Node.js packages (for testing)
 npm install
