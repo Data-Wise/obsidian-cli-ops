@@ -1,7 +1,8 @@
 # SPEC: v3.3.0 — Integration Bridge + Temporal Analytics
 
-**Status:** draft
+**Status:** reviewed
 **Created:** 2026-06-04
+**Reviewed:** 2026-06-04 (open questions resolved; approval held until v3.2.1 ships)
 **Type:** feature (multi-theme release)
 **From brainstorm:** `/workflow:brainstorm -d --save` ("brainstorm v3.3.0 features; research the latest official obsidian cli and check for overlap")
 **Trigger:** On **2026-02-27, Obsidian 1.12.4** shipped an official, free CLI (now ~115 commands) covering primitive vault operations (search, tags, backlinks, orphans, deadends, unresolved, note CRUD, daily notes, tasks, properties). This forces a strategic decision for `obs`: stop duplicating primitives, double down on the moat (graph + AI + temporal), and **consume** the official CLI rather than compete with it.
@@ -137,18 +138,20 @@ CLI-only (no GUI). Rich-formatted tables/sparklines for `trends`, importance-ran
 
 ---
 
-## Open Questions
+## Resolved Decisions (2026-06-04, via `/spec-review`)
 
-1. `trends` heatmap in a terminal — Rich sparkline row, or ASCII calendar-heatmap grid? (Lean: sparkline + weekly buckets table.)
-2. `apply` plan-file format — accept the JSON that `refactor`/`tag-suggest --json` already emit, or a dedicated plan schema? (Lean: consume existing `--json` output → zero new format.)
-3. Should read-side bridge enrichment (alias/backlinks) be opt-in (`--use-obsidian`) or automatic-when-available? (Lean: automatic with silent fallback, `--no-bridge` to force offline.)
-4. `daily-digest` "decayed hub / new orphan" deltas need a prior snapshot — derive from `scan_history` + last digest cache, or require two scans? (Lean: diff latest two `scan_history` rows.)
+All four formerly-open questions resolved by adopting the recommended leans — each reuses an existing mechanism, preserving the "zero new deps / no schema migration" promise. No open questions remain.
+
+1. **`trends` heatmap** → Rich **sparkline row + weekly-buckets table**. (Rejected: ASCII calendar grid — heavier, lower terminal portability.)
+2. **`apply` plan-file format** → **Consume the existing `--json`** emitted by `refactor` / `tag-suggest`. No new plan schema. (Implication: those commands' `--json` output is the contract `apply` reads.)
+3. **Read-side bridge enrichment** → **Automatic when the official CLI + app are available**, silent fallback to file scan; `--no-bridge` forces offline. (Rejected: opt-in `--use-obsidian` — worse default UX.)
+4. **`daily-digest` deltas** → **Diff the latest two `scan_history` rows**. No prior-snapshot cache, no two-scan requirement. (Edge: first-ever scan → digest reports absolute state, no deltas.)
 
 ---
 
 ## Review Checklist
 
-- [ ] Spec reviewed via `/spec-review`
+- [x] Spec reviewed via `/spec-review` (2026-06-04 — 4 open questions resolved, status → reviewed)
 - [ ] Each command wired across all three layers (zsh → argparse → core/ai) per CLAUDE.md "Adding a New Command"
 - [ ] `--json` on every new command
 - [ ] Bridge degrades silently (CLI absent / app closed) — covered by tests
@@ -167,3 +170,4 @@ CLI-only (no GUI). Rich-formatted tables/sparklines for `trends`, importance-ran
 ## History
 
 - **2026-06-04** — Created from a deep brainstorm triggered by the official Obsidian CLI (1.12.4, 2026-02-27) reaching ~115 commands. Decided scope: Theme A (bridge) + Theme B (temporal), larger multi-theme release. User-confirmed direction and size.
+- **2026-06-04** — Reviewed via `/spec-review`. All 4 open questions resolved (adopt recommended leans). Status draft → **reviewed**; final approval intentionally held until `SPEC-dependency-bootstrapping` (v3.2.1) ships.
