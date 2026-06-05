@@ -3,7 +3,7 @@ status: v3.3.0 planned — dep-bootstrap (v3.2.1) up next
 progress: 100
 updated: 2026-06-04
 version: 3.2.0
-next: Implement dependency-bootstrapping fix (v3.2.1) in feature/dep-bootstrap worktree
+next: Implement dependency-bootstrapping fix (v3.2.1) in feature/dep-bootstrap worktree via /craft:orchestrate (Option A) — start a session IN the worktree
 target: v3.2.1 - install reliability, then v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
