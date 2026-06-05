@@ -1,6 +1,6 @@
 # SPEC: Ship an `obs` man page (own the binary's docs)
 
-**Status:** Implemented (feature/obs-manpage) — man page + help backfill + install.sh wiring done; Homebrew-formula man1 install + optional .TH version guard remain
+**Status:** Implemented (feature/obs-manpage) — man page + help backfill + install.sh wiring + `.TH` version-sync guard done; Homebrew-formula man1 install wired on a separate tap branch (`homebrew-tap/feature/obs-manpage-install`)
 **Created:** 2026-06-04
 **Type:** docs / packaging
 **Origin:** flow-cli is removing its `man/man1/obs.1` because it doesn't own `obs` (see `flow-cli/docs/specs/SPEC-obs-dispatcher-shadowing-2026-06-04.md` → "Man-Page Ownership"). obsidian-cli-ops owns `/opt/homebrew/bin/obs` and currently ships **zero** man pages — the page should live here.
@@ -46,4 +46,5 @@ Author `obs.1` (troff) covering the **v3.2.1** command surface, built from the *
 ## History
 
 - **2026-06-04** — Captured during flow-cli's obs-dispatcher-shadowing planning, which audited this repo's v3.2.1 surface and found the 3 undocumented AI subcommands.
-- **2026-06-05** — Implemented on `feature/obs-manpage`: authored `man/man1/obs.1` (single page, all v3.2.1 commands incl. the 3 AI ones missing from help; modeled on flow-cli `g.1`), backfilled `merge-suggest`/`tag-suggest`/`quality` into `obs_help()` so help and man page agree, and wired `install.sh` to symlink the page into the user man dir. Deferred: Homebrew-formula `man1.install` (tap repo) and an optional `.TH` version-sync guard test. Single-page chosen over `obs.1`+`obs-ai.1` for simpler version tracking.
+- **2026-06-05** — Implemented on `feature/obs-manpage`: authored `man/man1/obs.1` (single page, all v3.2.1 commands incl. the 3 AI ones missing from help; modeled on flow-cli `g.1`), backfilled `merge-suggest`/`tag-suggest`/`quality` into `obs_help()` so help and man page agree, and wired `install.sh` to symlink the page into the user man dir. Single-page chosen over `obs.1`+`obs-ai.1` for simpler version tracking.
+- **2026-06-05** — Added `__tests__/man-page-version-sync.test.js` (jest): asserts the `obs.1` `.TH` product is `obsidian-cli-ops` and its version matches `package.json`, with parser self-tests proving it catches drift (verified: a simulated 3.2.1→9.9.9 edit fails the guard). Jest suite 59 → 65. Homebrew-formula `man1.install` wired on `homebrew-tap/feature/obs-manpage-install` (conditional, install-safe). Spec fully delivered.
