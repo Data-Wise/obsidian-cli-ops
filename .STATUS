@@ -3,7 +3,7 @@ status: ✅ v3.2.1 FULLY RELEASED — GitHub + Homebrew live, release CI automat
 progress: 100
 updated: 2026-06-05
 version: 3.2.1
-next: Merge feature/obs-manpage (obs.1 man page), then wire the Homebrew formula man1 install (tap repo). Resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI for future releases, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
+next: Resume v3.3.0 (bridge + temporal — spec reviewed). Man page shipped on dev (PR #25) + tap man1.install merged (tap PR #110) — the conditional install fires once the next obs release bundles man/man1/obs.1. To activate auto Homebrew CI for future releases, add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
 target: v3.3.0 - bridge + temporal
 
 ## 🎯 Current State
@@ -19,7 +19,7 @@ target: v3.3.0 - bridge + temporal
 
 ---
 
-## 📄 obs man page (2026-06-05) — feature/obs-manpage
+## 📄 obs man page (2026-06-05) — ✅ MERGED (PR #25 → dev, tap PR #110 → main)
 
 Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own the binary). Implements `SPEC-obs-man-page-2026-06-04.md`.
 
@@ -29,7 +29,7 @@ Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own t
 - **`.TH` version-sync guard** — `__tests__/man-page-version-sync.test.js` asserts the `.TH` product/version track `package.json` (hard CI gate against drift). Date is ISO `YYYY-MM-DD`, mandoc-clean, intentionally unguarded.
 - **`--json`/`--verbose` bug fix** — review of the man page surfaced that these *global* argparse flags were appended *after* the subcommand by the zsh `merge-suggest`/`tag-suggest`/`quality` handlers, so `obs_cli.py` rejected them ("unrecognized arguments"). Handlers now route global flags ahead of the `ai` token; 4 regression tests added (Jest 65 → 69). Now the man-page-documented `--json` actually works.
 - **Version-bump checklist** — `man/man1/obs.1` added to `.claude/rules/workflows.md` so future bumps move the `.TH` version (now CI-enforced).
-- **Deferred:** Homebrew formula `man1.install` (tap repo) so `brew install` ships it.
+- **Homebrew `man1.install`** — ✅ merged (tap PR #110, conditional `if exist?`, install-safe). No-op on the v3.2.1 tarball (predates the page); fires automatically once an obs release bundles `man/man1/obs.1`. That release is the remaining runtime gate for `man obs` from a brew install.
 
 ---
 
