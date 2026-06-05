@@ -72,14 +72,11 @@ obs analyze <vault>    # Analyze knowledge graph
 
 ### Installation
 ```bash
-# 1. Symlink the script
-ln -s "$(pwd)/src/obs.zsh" ~/.config/zsh/functions/obs.zsh
+# 1. Provision deps in an isolated venv + symlink the launcher (no manual pip)
+./install.sh
 
 # 2. Autoload in .zshrc
 echo "autoload -Uz obs" >> ~/.zshrc
-
-# 3. Install Python dependencies
-pip3 install -r src/python/requirements.txt
 ```
 
 ### Basic Usage

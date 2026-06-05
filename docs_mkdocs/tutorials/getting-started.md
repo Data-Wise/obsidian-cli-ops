@@ -21,12 +21,14 @@ Get obs installed and scanning your first vault in under 10 minutes.
 ## Step 2: Install Dependencies
 
 ```bash
-# Install Python dependencies
-pip3 install -r src/python/requirements.txt
+# Provision deps in an isolated venv (no manual pip)
+./install.sh
 ```
 
 ??? tip "Already have dependencies?"
-    If you've installed before, you can skip this step. Run `python3 -c "import networkx; import rich"` to verify.
+    If you've run `install.sh` before, it's a no-op unless `requirements.lock`
+    changed. Verify with `python3 -c "import networkx; import rich"` against the
+    venv at `~/.local/share/obs/venv/bin/python`.
 
 ---
 
