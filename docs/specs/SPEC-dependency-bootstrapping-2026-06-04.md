@@ -1,7 +1,9 @@
 # SPEC: Robust Python Dependency Provisioning for `obs` (no manual pip)
 
-**Status:** draft
+**Status:** approved
 **Created:** 2026-06-04
+**Approved:** 2026-06-04
+**Target:** v3.2.1 (ships before v3.3.0)
 **Type:** packaging / install reliability
 **Trigger:** On 2026-06-04, `obs` crashed at startup with `ModuleNotFoundError: No module named 'rich'`. The Homebrew launcher runs `libexec/python/obs_cli.py` under `OBS_PYTHON=/opt/homebrew/opt/python@3.12/bin/python3.12`, but **nothing installs the declared `pyproject` dependencies into that interpreter**. The CLI was unusable until deps were installed by hand (`pip install rich networkx click pyyaml python-frontmatter requests`).
 
@@ -57,6 +59,12 @@ The tool should provision its dependencies **deterministically and in isolation*
 
 **Recommendation:** **A** for the Homebrew formula (canonical), with **B**'s bootstrap as the fallback used by `install.sh`. Both reference a single pinned dependency manifest.
 
+### ✅ Decision (locked 2026-06-04)
+
+**Approach A + B.** Implement **A** — Homebrew formula venv via `virtualenv_install_with_resources` creating `libexec/venv`, with the launcher pointing `OBS_PYTHON` at `libexec/venv/bin/python` — as the canonical path. Implement **B** — first-run/version-sentinel bootstrap into a user venv (`~/.local/share/obs/venv`) — as the `install.sh` (non-Homebrew) fallback. Approach **C is rejected** (it is today's failure mode). Both paths consume **one** source of truth: a generated `requirements.lock` (pinned from `pyproject.toml`). Option C's table row is retained above for rationale/history only.
+
+**First implementation task:** generate `requirements.lock` (resolves the "versions are pinned" acceptance criterion, which is otherwise untestable).
+
 ---
 
 ## Out of Scope / Related
@@ -73,3 +81,4 @@ The tool should provision its dependencies **deterministically and in isolation*
 ## History
 
 - **2026-06-04** — Created after `obs` broke on missing `rich`; deps installed manually into `python@3.12` as a stopgap. This spec proposes a permanent, isolated provisioning fix.
+- **2026-06-04** — Reviewed via `/spec-review`. Validation passed (6 testable acceptance criteria); locked decision to Approach **A + B** (C rejected); status → **approved**, target **v3.2.1**.
