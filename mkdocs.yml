@@ -85,6 +85,7 @@ nav:
           - Core Tests: developer/testing/core-tests.md
           - Sandbox: developer/testing/sandbox.md
       - Migration Guide: migration.md
+  - Claude Integration: claude-integration.md
 
 extra_css:
   - stylesheets/adhd.css

@@ -1,13 +1,13 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 15 `obs` commands with flags and examples
+> - **What:** Full reference for all 18 `obs` commands + 18 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 3.2.2
+**Version:** 3.3.0
 
 ---
 
@@ -322,7 +322,43 @@ obs version
 
 ---
 
+## :robot_face: Claude / MCP Integration
+
+`obs` exposes **18 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
+Claude Code, and Cowork. Once configured (see [Claude Integration](claude-integration.md)),
+you can ask Claude natural-language questions about your vaults.
+
+### MCP Tool Groups
+
+**Vault** — `list_vaults`, `get_vault_stats`, `discover_vaults`
+
+**Search** — `search_notes`, `find_similar_notes`
+
+**Graph** — `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`
+
+**Health** — `get_vault_health`
+
+**Notes** — `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`,
+`rename_note`, `delete_note`, `get_note_links`, `rescan_vault`
+
+**AI** — `run_obs_ai` (bridges all `obs ai` subcommands)
+
+### Example Claude prompts
+
+```
+"Search my research vault for causal inference"
+"List orphaned notes in MyVault"
+"Create a note titled 'Meeting 2026-06-15'"
+"Read the note on causal mediation"
+"Run a quality check on MyVault"
+```
+
+See [Claude Integration](claude-integration.md) for full setup instructions and all 18 tools.
+
+---
+
 ## Next Steps
 
 - [Cookbook](cookbook.md) -- Task-based recipes
 - [Quick Reference](refcard.md) -- Command cheat sheet
+- [Claude Integration](claude-integration.md) -- MCP server setup

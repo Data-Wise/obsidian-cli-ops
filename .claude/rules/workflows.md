@@ -116,6 +116,19 @@ grep the old version across the whole repo first (`grep -rn "<old>" --include='*
   — it is decoupled from the version and may go stale without breaking anything.)
 - `README.md` / `CLAUDE.md` (version badges and references)
 
+### MCP server dep changes (separate from version bump)
+
+If `mcp_server.py` deps change (new import, upgraded `mcp` lib, new transitive):
+1. Update `requirements.lock` with pinned versions
+2. Update `pyproject.toml` `dependencies` block
+3. **Manually** regenerate Homebrew resource blocks:
+   ```bash
+   brew update-python-resources data-wise/tap/obsidian-cli-ops
+   ```
+   The release CI (`homebrew-release.yml`) only bumps `url` + main `sha256` — resource
+   blocks are **static** and must be updated by hand before tagging the release.
+4. Run `brew audit --strict data-wise/tap/obsidian-cli-ops` to verify clean.
+
 ## R-Dev Integration Flow
 
 The R-Dev module requires a two-step workflow:

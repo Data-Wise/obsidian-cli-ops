@@ -1,10 +1,15 @@
 priority: P1
-status: ✅ v3.2.2 FULLY RELEASED — GitHub + Homebrew live, `man obs` ships
-progress: 100
-updated: 2026-06-05
-version: 3.2.2
-next: Resume v3.3.0 (bridge + temporal — spec reviewed). To activate auto Homebrew CI (the v3.2.2 homebrew-release.yml run failed on missing token — formula bumped manually via tap PR #111), add repo secrets APP_ID + APP_PRIVATE_KEY (copy from flow-cli).
-target: v3.3.0 - bridge + temporal
+status: 🟡 v3.2.2 released; MCP server expanded to 18 tools — pre-release for v3.3.0
+progress: 85
+updated: 2026-06-15
+version: 3.2.2 (next: v3.3.0)
+next: |
+  1. Restart Claude Desktop to activate obsidian-ops MCP (18 tools).
+  2. Commit mcp_server.py + requirements.lock + pyproject.toml changes on feature/mcp-server branch.
+  3. Tag v3.3.0 → CI auto-bumps tap url+sha256 (resource blocks already updated in tap formula).
+  4. Add repo secrets APP_ID + APP_PRIVATE_KEY to enable auto Homebrew CI.
+  5. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+target: v3.3.0 - bridge + temporal + MCP server (18 tools)
 
 ## 🎯 Current State
 
@@ -48,6 +53,27 @@ Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own t
 - **Homebrew live** (tap PR #109): formula = isolated venv, 13 resources (6 core pinned to `requirements.lock` + 7 transitive), install-layout fix (`libexec/src/...` so schema resolves). Validated: `brew build-from-source` + post_install db-init + audit. `brew info` → stable 3.2.1.
 - **Release CI automated** (PR #24): `.github/workflows/homebrew-release.yml` (flow-cli model + reusable `update-formula.yml`) auto-bumps the formula on future releases. **Needs repo secrets `APP_ID`+`APP_PRIVATE_KEY` to run** (copy from flow-cli).
 - Worktrees cleaned up; tests now 235 pytest + 59 Jest (294).
+
+---
+
+## 🟡 MCP Server — v3.3.0 pre-work (2026-06-15)
+
+### Claude Desktop Integration (Option A complete)
+
+- **`src/python/mcp_server.py`** — expanded 276 → 956 lines; 18 tools in 6 groups:
+  - Vault: `list_vaults`, `get_vault_stats`, `discover_vaults`
+  - Search: `search_notes`, `find_similar_notes`
+  - Graph: `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`
+  - Health: `get_vault_health` (4-dimension scoring)
+  - Notes: `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault`
+  - AI: `run_obs_ai` (bridges 9 obs ai subcommands via subprocess)
+  - 4 MCP resources: `vault://`, `note://`, `obsidian://overview`
+- **`mcp_config.json`** — updated (Homebrew venv python path)
+- **`~/Library/Application Support/Claude/claude_desktop_config.json`** — updated with 3-candidate venv resolver
+- **`requirements.lock`** — added `mcp==1.27.2` + 22 transitive deps
+- **`pyproject.toml`** — added `mcp>=1.27.2` to core deps
+- **Homebrew formula** (`data-wise/tap/Formula/obsidian-cli-ops.rb`) — added 23 resource blocks for mcp + transitive tree; `brew audit --strict` clean
+- **Pending**: restart Claude Desktop, commit on `feature/mcp-server`, tag v3.3.0
 
 ---
 

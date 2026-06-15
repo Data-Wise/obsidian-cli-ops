@@ -1,7 +1,7 @@
 {
     "mcpServers": {
         "obsidian-ops": {
-            "command": "python3",
+            "command": "/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3",
             "args": [
                 "/Users/dt/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
             ],

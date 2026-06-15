@@ -124,6 +124,44 @@ obs ai quality MyVault --json | python3 -m json.tool
 
 ---
 
+## Claude / MCP Tools (v3.3.0)
+
+Ask Claude natural-language questions about your vaults. Requires one-time Claude Desktop setup
+— see [Claude Integration](claude-integration.md).
+
+| MCP Tool | Description |
+|----------|-------------|
+| `list_vaults()` | List all registered vaults |
+| `get_vault_stats(vault_id)` | Vault statistics |
+| `discover_vaults(path)` | Find vaults in a directory |
+| `search_notes(query, vault_id)` | Full-text search |
+| `find_similar_notes(note_id)` | Semantically similar notes |
+| `get_hub_notes(vault_id)` | Most-connected notes |
+| `get_orphaned_notes(vault_id)` | Notes with no links |
+| `get_broken_links(vault_id)` | Unresolved wikilinks |
+| `analyze_vault(vault_id)` | Graph metrics |
+| `get_vault_health(vault_id)` | 4-dimension health score |
+| `list_notes(vault_id)` | Paginated note listing |
+| `read_note(note_id)` | Read note content |
+| `write_note(note_id, content)` | Overwrite note (auto-backup) |
+| `create_note(vault_id, title, content)` | Create new note |
+| `append_to_note(note_id, content)` | Append to note |
+| `rename_note(note_id, new_title)` | Rename note |
+| `delete_note(note_id, confirm=True)` | Delete note (dry-run by default) |
+| `run_obs_ai(command, target)` | All `obs ai` subcommands |
+
+**Example Claude prompts:**
+
+```
+"Search my research vault for causal inference"
+"List orphaned notes in MyVault"
+"Create a note called 'Meeting 2026-06-15'"
+"Check vault health for Research"
+"Run a quality check on all notes in MyVault"
+```
+
+---
+
 ## Native Obsidian CLI (v1.12.4+)
 
 Obsidian ships its own CLI for note-level operations. Use it alongside `obs` for a complete workflow.
@@ -154,4 +192,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.2.2 | **Commands:** 18 | **AI Providers:** 5
+**Version:** 3.3.0 | **Commands:** 18 | **MCP Tools:** 18 | **AI Providers:** 5

@@ -133,6 +133,36 @@ graph LR
 
 ---
 
+## :robot_face: Claude / MCP Workflow (v3.3.0)
+
+Use Claude Desktop to query and edit your vaults in natural language:
+
+```mermaid
+graph TD
+    A[Claude Desktop] --> B{obsidian-ops MCP connected?}
+    B -->|No| C[claude_desktop_config.json setup]
+    C --> D[Restart Claude Desktop]
+    D --> A
+    B -->|Yes| E[Natural language query]
+    E --> F[Search / Analyze]
+    E --> G[Read / Write Notes]
+    E --> H[AI Features]
+    F --> I["search_notes, get_hub_notes,<br/>analyze_vault, get_vault_health"]
+    G --> J["read_note, create_note,<br/>append_to_note, write_note"]
+    H --> K["run_obs_ai: gaps, quality,<br/>refactor, merge-suggest"]
+    style A fill:#6366f1,color:#fff
+    style C fill:#f59e0b,color:#000
+    style I fill:#22c55e,color:#fff
+    style J fill:#22c55e,color:#fff
+    style K fill:#22c55e,color:#fff
+```
+
+!!! tip "5-minute setup"
+    See [Claude Integration](claude-integration.md) to connect `obs` to Claude Desktop.
+    Once connected, all 18 MCP tools are available in every Claude conversation.
+
+---
+
 ## :arrow_right: Next Steps
 
 | Want to... | Go to |
@@ -141,3 +171,4 @@ graph LR
 | See all commands | [CLI Reference](cli-reference.md) |
 | Copy-paste recipes | [Cookbook](cookbook.md) |
 | Set up AI | [AI Setup Guide](ai-setup.md) |
+| Connect Claude Desktop | [Claude Integration](claude-integration.md) |
