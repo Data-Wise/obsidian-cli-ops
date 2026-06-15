@@ -567,6 +567,13 @@ def main():
                              help='Force reinitialize existing database')
     db_subparsers.add_parser('stats', help='Show database stats')
 
+    # search command
+    search_parser = subparsers.add_parser('search', help='Search notes by title')
+    search_parser.add_argument('query', help='Search query (title match)')
+    search_parser.add_argument('--vault', '-v', help='Limit search to vault name or ID')
+    search_parser.add_argument('--limit', '-n', type=int, default=20,
+                               help='Max results (default: 20)')
+
     # health command
     health_parser = subparsers.add_parser('health', help='Vault health dashboard')
     health_parser.add_argument('vault', help='Vault name or ID')
@@ -718,6 +725,48 @@ def main():
                     }, indent=2, default=str))
             else:
                 cli.stats(vault_identifier=args.vault, verbose=args.verbose)
+
+        elif args.command == 'search':
+            query = args.query
+            vault_id = None
+            if args.vault:
+                try:
+                    vault = cli.db.get_vault_by_name_or_id(args.vault)
+                except ValueError as e:
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        console.print(f"[red]❌ {e}[/]")
+                    sys.exit(1)
+                if not vault:
+                    if args.json:
+                        print(json.dumps({"error": f"Vault not found: {args.vault}"}), file=sys.stderr)
+                    else:
+                        console.print(f"[red]❌ Vault not found: {args.vault}[/]")
+                    sys.exit(1)
+                vault_id = vault['id']
+
+            results = cli.db.search_notes(query, vault_id=vault_id, limit=args.limit)
+
+            if args.json:
+                print(json.dumps(results, indent=2, default=str))
+            else:
+                if not results:
+                    console.print(f"[dim]No notes found matching '{query}'[/]")
+                else:
+                    table = Table(
+                        title=f"🔍 Search: {query}  ({len(results)} result{'s' if len(results) != 1 else ''})",
+                        box=box.ROUNDED,
+                        header_style="bold cyan",
+                    )
+                    table.add_column("Title", style="bold", min_width=20)
+                    table.add_column("Vault", style="cyan", min_width=10)
+                    table.add_column("Path", style="dim")
+                    for r in results:
+                        table.add_row(r['title'], r.get('vault_name', ''), r['path'])
+                    console.print()
+                    console.print(table)
+                    console.print()
 
         elif args.command == 'vaults':
             if args.json:

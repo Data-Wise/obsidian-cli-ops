@@ -176,6 +176,12 @@ obs_help() {
         echo "  obs ai quality <target>      Score note quality"
         echo ""
 
+        echo "🔍 SEARCH"
+        echo "  obs search <query>        Search notes by title"
+        echo "  obs search <query> --vault <name>  Limit to a vault"
+        echo "  obs search <query> --limit N       Max results (default 20)"
+        echo ""
+
         echo "🔧 UTILITIES"
         echo "  obs help [--all]          Show help"
         echo "  obs version               Show version"
@@ -562,6 +568,30 @@ obs_ai() {
     esac
 }
 
+# --- Search Notes ---
+
+obs_search() {
+    local python_cli=$(_get_python_cli) || return 1
+    local query="$1"
+
+    if [[ -z "$query" ]]; then
+        echo "Usage: obs search <query> [--vault <name>] [--limit N]"
+        return 1
+    fi
+
+    shift
+    local cmd=("$python_cli" "search" "$query")
+
+    # Pass remaining flags (--vault, --limit, --json) through
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
 # --- Option D Commands Removed ---
 # The following commands were removed in Phase 7.1 Part 3 (CLI consolidation):
 # - obs_switch() → replaced by 'obs' (default command shows vault list)
@@ -621,6 +651,9 @@ obs() {
             ;;
         "ai")
             obs_ai "$@"
+            ;;
+        "search")
+            obs_search "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"
