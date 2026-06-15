@@ -1,11 +1,15 @@
 priority: P1
-status: 🟡 v3.2.3 released; obs search + bug fixes + test expansion — pre-release for v3.3.0
-progress: 87
+status: 🟡 v3.2.3 shipped — next: Homebrew tap bump + v3.3.0 MCP server release
+progress: 89
 updated: 2026-06-15
 version: 3.2.3 (next: v3.3.0)
 next: |
-  1. Restart Claude Desktop to activate obsidian-ops MCP (18 tools).
-  2. Commit mcp_server.py + requirements.lock + pyproject.toml changes on feature/mcp-server branch.
+  1. Bump Homebrew tap formula to v3.2.3 (url + sha256) — auto via homebrew-release.yml once APP_ID/APP_PRIVATE_KEY secrets added, or bump manually.
+  2. Verify: brew upgrade data-wise/tap/obsidian-cli-ops && obs version → 3.2.3
+  3. Add repo secrets APP_ID + APP_PRIVATE_KEY to enable auto Homebrew CI (copy from flow-cli).
+  4. Next release v3.3.0: commit mcp_server.py to main branch (currently on dev only), tag v3.3.0.
+  5. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+target: v3.3.0 - MCP server production release (18 tools, Claude Desktop integration)
   3. Tag v3.3.0 → CI auto-bumps tap url+sha256 (resource blocks already updated in tap formula).
   4. Add repo secrets APP_ID + APP_PRIVATE_KEY to enable auto Homebrew CI.
   5. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
@@ -33,6 +37,7 @@ target: v3.3.0 - bridge + temporal + MCP server (18 tools)
 - **32 E2E dogfood tests** (`tests/e2e/test_e2e_mcp.py`) — real subprocess JSON-RPC; run with `E2E=1`.
 - **numpy test fix** — numpy-dependent tests now skip gracefully under system Python (was erroring at collection).
 - **Docs updated** — cli-reference, refcard, usage, getting-started, testing/overview, changelog, claude-mcp, CLAUDE.md, .STATUS.
+- **Release**: PR #27 dev→main merged, tag `v3.2.3`, GitHub release live.
 
 ---
 
