@@ -43,8 +43,9 @@ def _find_obs_python() -> str:
 
     candidates = [
         Path.home() / ".local/share/obs/venv/bin/python3",
+        # Homebrew `opt` prefix is a stable symlink to the active Cellar version,
+        # so this covers any brew-installed version without a per-release pin.
         Path("/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3"),
-        Path("/opt/homebrew/Cellar/obsidian-cli-ops/3.2.3/libexec/venv/bin/python3"),
     ]
     for p in candidates:
         if p.exists():
