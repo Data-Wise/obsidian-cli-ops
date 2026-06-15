@@ -4,9 +4,11 @@ progress: 93
 updated: 2026-06-15
 version: 3.3.0 (next: v3.4.0 — bridge + temporal)
 next: |
-  1. Verify MCP server live in Claude Desktop (was shipped on test coverage; confirm the real handshake — restart Claude Desktop, try list_vaults).
-  2. v3.4.0: bridge (consume official Obsidian CLI as "hands") + temporal analytics (trends, stale, daily-digest) — SPEC-v3.3.0-bridge-temporal reviewed, ready to implement in a worktree.
-  3. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+  1. v3.4.0: bridge (consume official Obsidian CLI as "hands") + temporal analytics (trends, stale, daily-digest) — SPEC-v3.3.0-bridge-temporal reviewed, ready to implement in a worktree.
+  2. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+  3. Minor cleanup: docs say "18 MCP tools" but server exposes 20 (reconcile changelog/README); claude_desktop_config.json candidate-3 hardcodes stale 3.2.2 Cellar path (harmless, opt-symlink #2 wins — remove the pin).
+verified: |
+  MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults returned 3016-note Documents vault) using the exact claude_desktop_config.json launch command. Claude Desktop will connect.
 target: v3.4.0 - bridge + temporal analytics
 
 ## 🎯 Current State
