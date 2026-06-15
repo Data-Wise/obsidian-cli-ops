@@ -1,174 +1,279 @@
 # Architecture
 
-**Version:** 3.2.2
+**Version:** 3.3.0
 
-Obsidian CLI Ops follows a clean **three-layer architecture** with an optional AI feature layer.
+Obsidian CLI Ops follows a clean **four-layer architecture**: Presentation, Application (Core), AI Features, and Data — plus an MCP Integration layer added in v3.3.0.
 
-## Overview
+---
 
-```
-Presentation (CLI)  -->  Application (Core Logic)  -->  Data (DB/Files)
-                              |
-                         AI Features (optional)
-```
+## High-Level Overview
 
-**Goals:** Code reusability, testability, flexibility, maintainability.
+```mermaid
+flowchart TD
+    subgraph Presentation["Presentation Layer"]
+        Z[obs.zsh\n501 lines]
+        P[obs_cli.py\n985 lines]
+    end
 
-## Layer Diagram
+    subgraph MCP["MCP Integration Layer (v3.3.0)"]
+        M[mcp_server.py\n956 lines\n18 tools · 4 resources]
+    end
 
-```
-Presentation Layer
-  ZSH CLI (obs.zsh, 386 lines) --> Python CLI (obs_cli.py)
+    subgraph Core["Application Layer (Core)"]
+        VM[VaultManager]
+        GA[GraphAnalyzer]
+        DM[Domain Models]
+    end
 
-Application Layer (Core)
-  VaultManager (311 lines)    GraphAnalyzer (311 lines)
-  Domain Models (237 lines)   Custom Exceptions
+    subgraph AI["AI Features Layer (Optional)"]
+        AR[AIRouter]
+        FT[features.py]
+        FV[features_vault.py]
+        FR[features_refactor.py]
+        OB[ObsidianBridge\nNull Object]
+        PR[5 Providers]
+    end
 
-AI Features Layer (Optional)
-  AIRouter (312 lines)        Features (~744 lines)
-  FeaturesVault (~500 lines)  FeaturesRefactor (~345 lines)
-  5 Providers                 ObsidianBridge (123 lines)
+    subgraph Data["Data Layer"]
+        DB[DatabaseManager]
+        VS[VaultScanner]
+        GB[GraphBuilder]
+        SQ[(SQLite\nvault_db)]
+        FS[Vault .md files]
+    end
 
-Data Layer
-  DatabaseManager (469 lines) VaultScanner (373 lines)
-  GraphBuilder (307 lines)    SQLite Database
-```
-
-## Key Principles
-
-### Zero Duplication
-
-Business logic lives in the Core layer only. The CLI is a thin presentation layer that formats output.
-
-```python
-# Core layer (shared logic)
-class VaultManager:
-    def scan_vault(self, path: str) -> ScanResult:
-        # Business logic once
-        ...
-
-# CLI (presentation only)
-def scan_command(args):
-    result = vault_manager.scan_vault(args.path)
-    print(f"Scanned {result.notes_scanned} notes")  # Formatting
-```
-
-### Domain Models
-
-Type-safe dataclasses for all business entities:
-
-- `Vault`, `Note`, `ScanResult`, `GraphMetrics`, `VaultStats`
-- AI models: `AnalysisResult`, `ComparisonResult`, `SimilarNote`
-- Quality models (v3.2.0): `MergeCandidate`, `TagSuggestion`, `NoteQuality`
-
-All models have `from_dict()`, `to_dict()`, and `from_json()` methods.
-
-### AI Provider Architecture
-
-5 providers with automatic fallback routing:
-
-```
-gemini-api > anthropic-api > ollama > gemini-cli > claude-cli
+    Z --> P
+    P --> VM
+    P --> GA
+    M --> P
+    VM --> DB
+    GA --> DB
+    VM --> VS
+    VS --> FS
+    FT --> DB
+    FV --> DB
+    FR --> DB
+    AR --> PR
+    DB --> SQ
+    GB --> SQ
 ```
 
-- Providers implement a common `AIProvider` interface
-- All return the same dataclass types (no provider-specific returns)
-- Embedding cache in SQLite with mtime invalidation
-- ObsidianBridge uses the Null Object pattern (returns empty results when CLI unavailable)
+**Key principle:** Business logic lives in the Core layer only. Both the ZSH CLI and the MCP server are thin presentation layers that call `obs_cli.py` subprocesses or Python APIs.
 
-## Data Flow
+---
 
-### Scanning a Vault
+## Layer Details
 
-```
-User --> obs scan /vault
-  --> ZSH CLI (dispatcher)
-    --> Python CLI (parse args)
-      --> VaultManager.scan_vault()
-        --> VaultScanner.scan_vault()
-          --> DatabaseManager (INSERT notes, links, tags)
-            --> SQLite
+### Presentation Layer
+
+```mermaid
+flowchart LR
+    U([User / Terminal]) -->|shell command| Z[obs.zsh\n501 lines]
+    Z -->|subprocess| P[obs_cli.py\n985 lines]
+    P -->|imports| VM[VaultManager]
+    P -->|imports| GA[GraphAnalyzer]
+    P --> Rich[Rich Output\ntables, colors, progress]
 ```
 
-### AI Feature (suggest-links)
+- **`obs.zsh`** — ZSH dispatcher. Resolves Python interpreter (3-candidate chain: `$OBS_PYTHON` → user venv → Homebrew venv → ambient), calls `obs_cli.py` via subprocess, handles `--verbose`.
+- **`obs_cli.py`** — Python CLI. Argparse subcommands, calls Core/AI methods, formats output with Rich.
 
-```
-User --> obs ai suggest-links note-1
-  --> Python CLI
-    --> suggest_links(note_id, db)
-      --> Get note embedding (cached in note_embeddings table)
-      --> Compare to all candidates
-      --> Exclude existing links
-      --> Return top-N suggestions
-```
+### MCP Integration Layer (v3.3.0)
 
-### Quality Scoring (graph-only, no AI)
-
-```
-User --> obs ai quality MyVault
-  --> Python CLI
-    --> note_quality_vault(vault_id, db)
-      --> list_notes() + get_orphaned_notes()
-      --> For each note:
-        --> Read file content (completeness: word count, headings)
-        --> get_outgoing_links() + get_incoming_links() (connectivity)
-        --> get_note_tags() (metadata)
-        --> Check modified_at (freshness)
-      --> Weighted score: completeness 30% + connectivity 30% + metadata 20% + freshness 20%
-      --> Return List[NoteQuality] sorted worst-first
+```mermaid
+flowchart LR
+    C([Claude Desktop\nClaude Code\nCowork]) -->|"stdio (JSON-RPC)"| M[mcp_server.py\nFastMCP · 956 lines]
+    M -->|subprocess| P[obs_cli.py]
+    M -->|"direct Python\nimport"| VM[VaultManager]
+    M -->|"direct Python\nimport"| GA[GraphAnalyzer]
+    M --> RES["4 MCP Resources\nvault://{id}/stats\nnote://{id}\nobsidian://overview\n..."]
 ```
 
-### Merge Suggest (embedding similarity)
+- **18 MCP tools** in 6 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1)
+- **FastMCP** (`from mcp.server.fastmcp import FastMCP`) — stdio transport, clean exit when no client
+- Note write tools include built-in safety: `delete_note` defaults `confirm=False` (dry-run), `write_note` defaults `create_backup=True`
 
+### Application Layer (Core)
+
+```mermaid
+flowchart TD
+    VM[VaultManager] -->|scan, discover, list| VS[VaultScanner]
+    VM -->|CRUD operations| DB[DatabaseManager]
+    GA[GraphAnalyzer] -->|PageRank, centrality| GB[GraphBuilder]
+    GA -->|read metrics| DB
+    DM[Domain Models] -->|"Vault, Note, ScanResult\nGraphMetrics, VaultStats"| VM
+    DM --> GA
 ```
-User --> obs ai merge-suggest MyVault
-  --> Python CLI
-    --> merge_suggest_vault(vault_id, db)
-      --> Batch-load all note_embeddings (single SQL JOIN)
-      --> L2-normalize, compute np.dot(matrix, matrix.T) for all pairs
-      --> Filter pairs above threshold (default 0.8)
-      --> Enrich with shared links/tags from DB
-      --> Return List[MergeCandidate] sorted by similarity
+
+- **VaultManager** — vault discovery, scanning, database registration, stats
+- **GraphAnalyzer** — graph metrics, hub detection, orphan detection, clustering
+- **Domain Models** — typed dataclasses with `from_dict()`, `to_dict()`, `from_json()`
+
+### AI Features Layer
+
+```mermaid
+flowchart TD
+    AR[AIRouter\nSmart fallback] -->|priority chain| P1[gemini-api]
+    AR --> P2[anthropic-api]
+    AR --> P3[ollama]
+    AR --> P4[gemini-cli]
+    AR --> P5[claude-cli]
+
+    FT[features.py\nCore AI] -->|similar, analyze\nduplicates, gaps| AR
+    FV[features_vault.py\nVault AI] -->|merge-suggest\ntag-suggest, quality| DB[(SQLite)]
+    FR[features_refactor.py\nRefactor] -->|plan generation| AR
+    OB[ObsidianBridge\nNull Object] -->|safe fallback| FT
 ```
+
+- All providers implement a common `AIProvider` interface and return identical dataclass types
+- Embedding cache in `note_embeddings` SQLite table with mtime invalidation
+- **ObsidianBridge** uses Null Object pattern: returns empty results when Obsidian CLI is unavailable (never crashes)
+
+### Data Layer
+
+```mermaid
+flowchart LR
+    DB[DatabaseManager\n469 lines] -->|CRUD| SQ[(vault_db.sqlite)]
+    VS[VaultScanner\n373 lines] -->|parse .md files| FS[Vault Files]
+    VS -->|INSERT notes, links, tags| DB
+    GB[GraphBuilder\n307 lines] -->|NetworkX graph| SQ
+    SQ --- T1[vaults]
+    SQ --- T2[notes]
+    SQ --- T3[links]
+    SQ --- T4[tags]
+    SQ --- T5[graph_metrics]
+    SQ --- T6[note_embeddings]
+```
+
+---
+
+## Key Data Flows
+
+### Vault Scan
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant Z as obs.zsh
+    participant P as obs_cli.py
+    participant VM as VaultManager
+    participant VS as VaultScanner
+    participant DB as DatabaseManager
+    participant FS as .md Files
+
+    U->>Z: obs scan /vault
+    Z->>P: subprocess call
+    P->>VM: scan_vault(path)
+    VM->>VS: scan_vault(path)
+    VS->>FS: read all .md files
+    FS-->>VS: note content, wikilinks
+    VS->>DB: INSERT notes, links, tags
+    DB-->>VS: row IDs
+    VS-->>VM: ScanResult
+    VM-->>P: ScanResult
+    P-->>U: "Scanned 847 notes"
+```
+
+### MCP Tool Call (note creation via Claude)
+
+```mermaid
+sequenceDiagram
+    participant C as Claude Desktop
+    participant M as mcp_server.py
+    participant P as obs_cli.py
+    participant VM as VaultManager
+    participant FS as .md Files
+
+    C->>M: create_note(vault_id, title, content)
+    M->>P: subprocess: obs_cli create-note ...
+    P->>VM: create_note(vault_id, title, content)
+    VM->>FS: write title.md
+    FS-->>VM: success
+    VM-->>P: NoteCreateResult
+    P-->>M: JSON result
+    M-->>C: tool response
+```
+
+### AI Suggest-Links
+
+```mermaid
+sequenceDiagram
+    participant P as obs_cli.py
+    participant FT as features.py
+    participant DB as DatabaseManager
+    participant AR as AIRouter
+    participant PR as AI Provider
+
+    P->>FT: suggest_links(note_id, db)
+    FT->>DB: get_note_embedding(note_id)
+    alt Embedding cached
+        DB-->>FT: cached embedding vector
+    else Not cached
+        FT->>AR: embed(note_content)
+        AR->>PR: generate_embedding(text)
+        PR-->>AR: embedding vector
+        AR-->>FT: embedding
+        FT->>DB: cache embedding
+    end
+    FT->>DB: get_all_embeddings(vault_id)
+    DB-->>FT: candidate embeddings
+    FT->>FT: cosine similarity, filter existing links
+    FT-->>P: List[SimilarNote] top-N
+```
+
+---
+
+## Design Patterns
+
+| Pattern | Where Used |
+|---------|-----------|
+| **Repository** | `DatabaseManager` wraps all SQLite operations |
+| **Facade** | `VaultManager` / `GraphAnalyzer` simplify complex multi-step operations |
+| **Factory** | `from_db_row()` class methods on every domain model |
+| **Dependency Injection** | Core classes accept an optional `DatabaseManager` |
+| **Null Object** | `ObsidianBridge` returns empty results when Obsidian CLI unavailable |
+| **Strategy** | `AIRouter` selects among 5 interchangeable provider strategies |
+| **Adapter** | Each AI provider adapts a different API to the common `AIProvider` interface |
+
+---
 
 ## File Structure
 
 ```
 src/python/
   core/                      # APPLICATION LAYER
-    vault_manager.py         # Vault operations
-    graph_analyzer.py        # Graph operations
-    models.py                # Domain models
+    vault_manager.py         # Vault operations (~400 lines)
+    graph_analyzer.py        # Graph operations (~350 lines)
+    models.py                # Domain models (~310 lines)
     exceptions.py            # Custom exceptions
 
   ai/                        # AI FEATURES LAYER
-    features.py              # Core AI features (similar, analyze, duplicates, suggest-links, gaps, summarize)
-    features_vault.py        # Vault-level features (merge-suggest, tag-suggest, quality) [v3.2.0]
-    features_refactor.py     # Refactor vault feature (extracted from features.py) [v3.2.0]
-    router.py                # Smart provider selection
-    models.py                # AI dataclasses (6 types)
-    obsidian_bridge.py       # Obsidian CLI bridge
-    providers/               # 5 AI providers
+    features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
+    features_vault.py        # Vault AI: merge-suggest, tag-suggest, quality (v3.2.0)
+    features_refactor.py     # Refactor pipeline (extracted v3.2.0)
+    router.py                # Smart provider selection + fallback chain
+    models.py                # AI dataclasses: AnalysisResult, SimilarNote, MergeCandidate, TagSuggestion, NoteQuality...
+    obsidian_bridge.py       # Null Object bridge to Obsidian CLI
+    providers/               # 5 provider implementations
 
-  obs_cli.py                 # PRESENTATION LAYER
-  db_manager.py              # DATA LAYER
-  vault_scanner.py           # DATA LAYER
-  graph_builder.py           # DATA LAYER
+  mcp_server.py              # MCP INTEGRATION LAYER (v3.3.0, 956 lines)
+  obs_cli.py                 # PRESENTATION LAYER (985 lines)
+  db_manager.py              # DATA LAYER: SQLite CRUD
+  vault_scanner.py           # DATA LAYER: .md file parsing
+  graph_builder.py           # DATA LAYER: NetworkX graph construction
+
+src/obs.zsh                  # PRESENTATION LAYER: ZSH dispatcher (501 lines)
+schema/vault_db.sql          # Database schema
 ```
 
-## Design Patterns
-
-| Pattern | Where Used |
-|---------|-----------|
-| **Repository** | DatabaseManager wraps SQLite |
-| **Facade** | VaultManager/GraphAnalyzer simplify complex operations |
-| **Factory** | `from_db_row()` class methods on domain models |
-| **Dependency Injection** | Core classes accept optional DatabaseManager |
-| **Null Object** | ObsidianBridge returns empty results when unavailable |
+---
 
 ## Testing
 
-- **235 pytest tests** covering core, AI, vault features, and data layers
-- **59 Jest tests** for ZSH wrapper + dependency-bootstrapping validation (2 network-gated, run in CI)
+- **304 pytest tests** covering core, AI, vault features, data layer, and MCP server
+- **69 Jest tests** for ZSH wrapper + dependency-bootstrapping validation
 - Core layer tested independently with mocked dependencies
 - AI providers mocked for deterministic tests
+- MCP tools tested via FastMCP test client
+
+See [Testing Overview](testing/overview.md) for full details.
