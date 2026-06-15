@@ -1,8 +1,8 @@
 priority: P1
-status: 🟡 v3.2.2 released; MCP server expanded to 18 tools — pre-release for v3.3.0
-progress: 85
+status: 🟡 v3.2.3 released; obs search + bug fixes + test expansion — pre-release for v3.3.0
+progress: 87
 updated: 2026-06-15
-version: 3.2.2 (next: v3.3.0)
+version: 3.2.3 (next: v3.3.0)
 next: |
   1. Restart Claude Desktop to activate obsidian-ops MCP (18 tools).
   2. Commit mcp_server.py + requirements.lock + pyproject.toml changes on feature/mcp-server branch.
@@ -15,12 +15,24 @@ target: v3.3.0 - bridge + temporal + MCP server (18 tools)
 
 **Phase**: v3.2.0 Phases 1-7 complete (version bumped)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 235 pytest + 69 Jest = 304 total
-**Commands**: 18 focused commands under `obs` (+3 new: merge-suggest, tag-suggest, quality)
+**Tests**: 230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest = 383 total
+**Commands**: 19 focused commands under `obs` (+1 new: search; +3 v3.2.0: merge-suggest, tag-suggest, quality)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 **Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
+
+---
+
+## ✅ v3.2.3 Released (2026-06-15) — obs search + graph fix + stats fix + test suite expansion
+
+- **`obs search <query>`** — new native CLI command: title search across all vaults; `--vault` / `--limit` / `--json` flags.
+- **Graph fix** — `obs analyze` cross-vault edge contamination fixed (link queries now JOIN on notes table to scope to target vault).
+- **Stats fix** — `obs stats` now shows internal links and broken links separately: `Links: 56 (635 broken)`.
+- **52 MCP unit tests** (`test_mcp_server.py`) — full coverage of all 20 MCP tools + 4 resources; edge cases: unicode, empty inputs, path traversal, server stability.
+- **32 E2E dogfood tests** (`tests/e2e/test_e2e_mcp.py`) — real subprocess JSON-RPC; run with `E2E=1`.
+- **numpy test fix** — numpy-dependent tests now skip gracefully under system Python (was erroring at collection).
+- **Docs updated** — cli-reference, refcard, usage, getting-started, testing/overview, changelog, claude-mcp, CLAUDE.md, .STATUS.
 
 ---
 

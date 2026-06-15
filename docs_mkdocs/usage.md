@@ -39,6 +39,7 @@ Lists all your registered vaults with stats at a glance. This is your starting p
 | Command | What It Does |
 |---------|-------------|
 | `obs` | List all vaults |
+| `obs search <query>` | Search notes by title across all vaults |
 | `obs stats <vault>` | Show vault statistics |
 | `obs discover <path>` | Find vaults in a directory |
 
@@ -108,6 +109,10 @@ obs discover ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents
 ```bash
 # See all your vaults
 obs
+
+# Search for a note by title
+obs search "causal mediation"
+obs search "meeting" --vault Work --limit 5
 
 # Check a vault's health
 obs stats MyVault

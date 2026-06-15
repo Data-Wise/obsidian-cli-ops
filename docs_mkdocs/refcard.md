@@ -14,6 +14,10 @@
 | Command | Description |
 |---------|-------------|
 | `obs` | List all registered vaults |
+| `obs search <query>` | Search notes by title (all vaults) |
+| `obs search <query> --vault <name>` | Limit title search to one vault |
+| `obs search <query> --limit N` | Cap results (default 20) |
+| `obs search <query> --json` | Machine-readable JSON output |
 | `obs stats [vault]` | Show vault or global statistics |
 | `obs discover <path>` | Find Obsidian vaults in a directory |
 | `obs analyze <vault>` | Analyze vault graph metrics |

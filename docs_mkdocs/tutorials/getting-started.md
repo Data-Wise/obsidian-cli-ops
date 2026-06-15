@@ -136,7 +136,37 @@ obs stats --vault MyVault
 
 ---
 
-## Step 7: Next Steps
+## Step 7: Search Your Notes
+
+Once your vault is scanned, you can search for notes by title directly from the terminal:
+
+```bash
+obs search "causal mediation"
+```
+
+**Expected output:**
+
+```
+🔍 Results for "causal mediation" (3 found)
+
+  • Causal Mediation Analysis — Research / note-a1b2c3
+  • Intro to Causal Mediation — Research / note-d4e5f6
+  • Causal Mediation with Covariates — Work / note-g7h8i9
+```
+
+Narrow results with flags:
+
+```bash
+obs search "meeting" --vault Work --limit 5   # One vault, cap at 5
+obs search "causal" --json                    # Machine-readable output
+```
+
+!!! tip "Native search, no AI required"
+    `obs search` is a fast graph-database title search — no AI provider needed. For semantic/content search, see [AI Features](ai-features.md).
+
+---
+
+## Step 8: Next Steps
 
 You now have obs set up and your vault scanned. Here's where to go next:
 
@@ -148,4 +178,4 @@ You now have obs set up and your vault scanned. Here's where to go next:
 
 ---
 
-**Summary:** You installed obs, initialized the database, discovered vaults, scanned one, and viewed its statistics. Your knowledge graph is ready for analysis.
+**Summary:** You installed obs, initialized the database, discovered vaults, scanned one, viewed statistics, and ran your first title search. Your knowledge graph is ready for analysis.

@@ -32,6 +32,31 @@ into Claude Desktop via a robust venv-aware launcher. No changes to the existing
 
 ---
 
+## v3.2.3 (2026-06-15)
+
+Patch release: new `obs search` command, graph bug fix, stats display fix, and test suite expansion.
+
+### Added
+
+- **`obs search <query>`** — native CLI command for title search across all vaults
+  - `--vault` / `-v` to scope to one vault
+  - `--limit` / `-n` to cap results (default 20)
+  - `--json` for machine-readable output
+- **52 MCP unit tests** (`test_mcp_server.py`) — full coverage of all 20 MCP tools + 4 resources; includes unicode, empty inputs, path traversal safety, and server stability edge cases
+- **32 E2E dogfood tests** (`tests/e2e/test_e2e_mcp.py`) — real subprocess JSON-RPC; run with `E2E=1 pytest src/python/tests/e2e/ -v`
+
+### Fixed
+
+- **`obs analyze <vault>` cross-vault edge contamination** — graph builder now scopes link queries to the target vault via JOIN on the notes table; graphs for different vaults no longer bleed edges into each other
+- **`obs stats <vault>` misleading link count** — now shows internal links and broken links separately (e.g. `Links: 56 (635 broken)`) instead of a single ambiguous total
+- **numpy-dependent tests** now skip gracefully under system Python (was erroring at collection time)
+
+### Changed
+
+- **Test counts:** 230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest = **383 total**
+
+---
+
 ## v3.2.2 (2026-06-05)
 
 Documentation + bug-fix release. Ships the first `obs` man page and fixes the `--json`/`--verbose` flags on the v3.2.0 AI quality commands.

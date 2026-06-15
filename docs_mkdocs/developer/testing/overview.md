@@ -1,9 +1,11 @@
 # Testing Overview
 
-**Version:** 3.2.2
-**Total Tests:** 294 (235 pytest + 59 Jest)
+**Version:** 3.2.3
+**Total Tests:** 353 (230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest)
 
 ## Test Coverage
+
+### Unit Tests (pytest)
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
@@ -28,24 +30,54 @@
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
 | DB Metrics | 1 | pytest | `test_db_metrics.py` |
 | Vault Features | 16 | pytest | `test_features_vault.py` |
-| **Python Subtotal** | **235** | **pytest** | |
+| **Unit Subtotal** | **230** | **pytest** | |
+
+### MCP Unit Tests (pytest)
+
+| Component | Tests | Framework | File |
+|-----------|-------|-----------|------|
+| MCP Server — all 20 tools + 4 resources | 52 | pytest | `test_mcp_server.py` |
+| **MCP Subtotal** | **52** | **pytest** | |
+
+Covers all 20 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.
+
+### E2E Tests (pytest, gated)
+
+| Component | Tests | Framework | File |
+|-----------|-------|-----------|------|
+| MCP dogfood — real subprocess JSON-RPC | 32 | pytest | `tests/e2e/test_e2e_mcp.py` |
+| **E2E Subtotal** | **32** | **pytest** | |
+
+E2E tests spin up the real MCP server as a subprocess and exercise the JSON-RPC protocol end-to-end. **Gated behind `E2E=1`** — not run in standard CI to avoid environment dependencies.
+
+### Jest Tests
+
+| Component | Tests | Framework | File |
+|-----------|-------|-----------|------|
 | ZSH CLI Wrapper | 30 | Jest | `obs.test.js`, `cli.test.js` |
 | Dependency Bootstrapping | 29 | Jest | `dep_bootstrap.test.js` (2 network-gated, run in CI) |
-| **Jest Subtotal** | **59** | **Jest** | |
-| **Total** | **294** | | |
+| Man-page version sync | 6 | Jest | `man-page-version-sync.test.js` |
+| Flag-routing regression | 4 | Jest | *(in cli.test.js)* |
+| **Jest Subtotal** | **69** | **Jest** | |
 
 ---
 
 ## Running Tests
 
 ```bash
-# Python tests (run from src/python/)
+# Python unit tests (run from src/python/)
 cd src/python && python3 -m pytest tests/ -q
+
+# MCP unit tests
+cd src/python && python3 -m pytest tests/test_mcp_server.py -v
+
+# E2E tests (requires E2E=1 env var)
+E2E=1 pytest src/python/tests/e2e/ -v
 
 # Jest tests
 npx jest
 
-# All tests
+# All tests (unit + Jest, no E2E)
 npm test
 ```
 
@@ -61,6 +93,9 @@ python3 -m pytest tests/ -k "test_refactor"
 # Run with coverage
 python3 -m pytest tests/ --cov=. --cov-report=term-missing
 ```
+
+!!! note "numpy-dependent tests"
+    Tests that require numpy skip gracefully when running under system Python (no isolated venv). Use `./install.sh` to provision the venv so all tests run.
 
 ---
 

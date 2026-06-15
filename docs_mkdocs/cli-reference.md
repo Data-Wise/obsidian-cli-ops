@@ -38,6 +38,32 @@ obs
 
 ---
 
+### obs search
+
+Search notes by title across all registered vaults.
+
+```bash
+obs search <query> [--vault <name|id>] [--limit N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `query` | required | Search string (title match) |
+| `--vault` / `-v` | all vaults | Limit search to one vault |
+| `--limit` / `-n` | `20` | Maximum results to return |
+| `--json` | | Machine-readable JSON output |
+
+**Examples:**
+
+```bash
+obs search "causal mediation"                     # Search all vaults
+obs search "causal mediation" --vault Research    # One vault only
+obs search "meeting" --limit 5                    # Cap at 5 results
+obs search "causal" --json                        # JSON output
+```
+
+---
+
 ### obs discover
 
 Find Obsidian vaults in a directory tree.
@@ -74,6 +100,9 @@ obs stats                    # Global stats (all vaults)
 obs stats --vault MyVault    # Specific vault stats
 obs stats --vault abc        # Prefix lookup
 ```
+
+!!! info "Link count display (v3.2.3+)"
+    Stats now shows internal and broken links separately, e.g. `Links: 56 (635 broken)`. The first number is valid internal links; the parenthetical is the broken-link count.
 
 ---
 
@@ -301,6 +330,7 @@ obs version
 | Command | Purpose |
 |---------|---------|
 | `obs` | List registered vaults |
+| `obs search <query>` | Search notes by title |
 | `obs discover <path>` | Find vaults in directory |
 | `obs stats` | Show statistics |
 | `obs health <vault>` | Vault health dashboard |

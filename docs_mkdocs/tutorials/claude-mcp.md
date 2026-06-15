@@ -136,6 +136,8 @@ Claude calls: search_notes("causal mediation", vault_id="Research", limit=5)
 Returns: ranked list of matching notes with titles and snippets
 ```
 
+> **Tip:** You can also search natively from your terminal: `obs search "causal mediation"`
+
 **Graph analysis:**
 > *"What are the 10 most connected notes in Research?"*
 
