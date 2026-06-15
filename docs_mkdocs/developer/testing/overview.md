@@ -1,6 +1,6 @@
 # Testing Overview
 
-**Version:** 3.2.3
+**Version:** 3.3.0
 **Total Tests:** 353 (230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest)
 
 ## Test Coverage
