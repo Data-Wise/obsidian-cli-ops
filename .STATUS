@@ -1,12 +1,13 @@
 priority: P1
-status: 🟢 v3.2.3 fully shipped — tap live @ 3.2.3, main CI green, auto-Homebrew CI armed. Next: v3.3.0 MCP release
-progress: 91
+status: 🟢 v3.3.0 SHIPPED — MCP server (18 tools), GitHub release + main CI green + Homebrew tap @ 3.3.0 (40-resource mcp closure, build-validated)
+progress: 93
 updated: 2026-06-15
-version: 3.2.3 (next: v3.3.0)
+version: 3.3.0 (next: v3.4.0 — bridge + temporal)
 next: |
-  1. Next release v3.3.0: commit mcp_server.py to main (currently dev only), tag v3.3.0 → homebrew-release.yml now auto-bumps the tap (secrets configured; dry run green). Note: mcp dep + lock tree already on main (folded into v3.2.3 line); regenerate tap mcp resource blocks before tagging (brew update-python-resources).
-  2. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
-target: v3.3.0 - MCP server production release (18 tools, Claude Desktop integration)
+  1. Verify MCP server live in Claude Desktop (was shipped on test coverage; confirm the real handshake — restart Claude Desktop, try list_vaults).
+  2. v3.4.0: bridge (consume official Obsidian CLI as "hands") + temporal analytics (trends, stale, daily-digest) — SPEC-v3.3.0-bridge-temporal reviewed, ready to implement in a worktree.
+  3. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+target: v3.4.0 - bridge + temporal analytics
 
 ## 🎯 Current State
 
@@ -18,6 +19,16 @@ target: v3.3.0 - MCP server production release (18 tools, Claude Desktop integra
 **Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 **Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
+
+---
+
+## ✅ v3.3.0 Released (2026-06-15) — MCP server production release (18 tools)
+
+- **GitHub release v3.3.0 live** (PR #29 dev→main, tag, main CI green). 18-tool MCP server (`mcp_server.py`) promoted to production; no `obs` CLI changes.
+- **Version bump** 3.2.3→3.3.0 across 13 files; 2nd hardcoded version assertion found in `__tests__/cli.test.js` (separate dir from `tests/obs.test.js`). Tests: 287 pytest + 67 Jest.
+- **Fix:** removed stale pinned Cellar path (`…/3.2.3/…`) in `mcp_server._find_obs_python` — the Homebrew `opt` symlink candidate resolves the active version (no per-release pin).
+- **Homebrew tap @ 3.3.0** (tap PR #127): resources **13→40** — full `requirements.lock` closure (mcp + transitive). Derived via `pip install -r requirements.lock --dry-run --report` (lock-faithful), NOT `brew update-python-resources` (resolved un-buildable `attrs==26.1.0`). Added `sniffio` (update-python-resources omits it), `depends_on "rust" => :build` (rpds-py/pydantic-core/cryptography sdists), `depends_on "libyaml"`. Gated by `brew reinstall --build-from-source` (built 6m13s, mcp imports OK, db-init clean) + `brew audit --strict` clean. `obs version` → 3.3.0.
+- Auto `homebrew-release.yml` fired on the release event (bumped url+sha w/ 13 resources); superseded by manual PR #127 (resources changed → auto-release insufficient).
 
 ---
 
