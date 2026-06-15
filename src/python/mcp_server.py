@@ -44,7 +44,7 @@ def _find_obs_python() -> str:
     candidates = [
         Path.home() / ".local/share/obs/venv/bin/python3",
         Path("/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3"),
-        Path("/opt/homebrew/Cellar/obsidian-cli-ops/3.2.2/libexec/venv/bin/python3"),
+        Path("/opt/homebrew/Cellar/obsidian-cli-ops/3.2.3/libexec/venv/bin/python3"),
     ]
     for p in candidates:
         if p.exists():
