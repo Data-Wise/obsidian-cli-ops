@@ -24,7 +24,10 @@ const PYPROJECT = path.join(REPO_ROOT, 'pyproject.toml');
 const OBS_CLI = path.join(REPO_ROOT, 'src/python/obs_cli.py');
 const CI_WORKFLOW = path.join(REPO_ROOT, '.github/workflows/ci.yml');
 
-// The 6 core deps declared in pyproject [project.dependencies].
+// The core deps declared in pyproject [project.dependencies]. mcp (+ its full
+// transitive tree) was added in v3.3.0 for mcp_server.py, so the lock now
+// carries the transitive closure too. The contract is therefore "every core
+// dep present, no AI/optional extras" — not "exactly these names".
 const CORE_DEPS = [
   'python-frontmatter',
   'PyYAML',
@@ -32,6 +35,19 @@ const CORE_DEPS = [
   'rich',
   'requests',
   'click',
+  'mcp',
+];
+
+// AI/optional extras that must never leak into the base lock.
+const FORBIDDEN_EXTRAS = [
+  'numpy',
+  'anthropic',
+  'google-genai',
+  'scikit-learn',
+  'markdown',
+  'mistune',
+  'tqdm',
+  'typer',
 ];
 
 // Run the real network-provisioning test only where a network + clean state are
@@ -117,20 +133,13 @@ describe('requirements.lock — pinned dependency contract', () => {
     }
   });
 
-  test('pins exactly the 6 core deps and no AI/optional extras', () => {
-    const names = depLines.map((l) => l.split('==')[0]);
-    expect([...names].sort()).toEqual([...CORE_DEPS].sort());
-    for (const extra of [
-      'numpy',
-      'anthropic',
-      'google-genai',
-      'scikit-learn',
-      'markdown',
-      'mistune',
-      'tqdm',
-      'typer',
-    ]) {
-      expect(names).not.toContain(extra);
+  test('includes every core dep and no AI/optional extras', () => {
+    const names = depLines.map((l) => l.split('==')[0].toLowerCase());
+    for (const core of CORE_DEPS) {
+      expect(names).toContain(core.toLowerCase());
+    }
+    for (const extra of FORBIDDEN_EXTRAS) {
+      expect(names).not.toContain(extra.toLowerCase());
     }
   });
 
