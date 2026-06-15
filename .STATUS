@@ -1,19 +1,13 @@
 priority: P1
-status: 🟡 v3.2.3 shipped — next: Homebrew tap bump + v3.3.0 MCP server release
-progress: 89
+status: 🟢 v3.2.3 fully shipped — tap live @ 3.2.3, main CI green. Next: APP_ID/APP_PRIVATE_KEY secrets + v3.3.0 MCP release
+progress: 90
 updated: 2026-06-15
 version: 3.2.3 (next: v3.3.0)
 next: |
-  1. Bump Homebrew tap formula to v3.2.3 (url + sha256) — auto via homebrew-release.yml once APP_ID/APP_PRIVATE_KEY secrets added, or bump manually.
-  2. Verify: brew upgrade data-wise/tap/obsidian-cli-ops && obs version → 3.2.3
-  3. Add repo secrets APP_ID + APP_PRIVATE_KEY to enable auto Homebrew CI (copy from flow-cli).
-  4. Next release v3.3.0: commit mcp_server.py to main branch (currently on dev only), tag v3.3.0.
-  5. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+  1. Add repo secrets APP_ID + APP_PRIVATE_KEY (GitHub App, copy from flow-cli) to enable auto Homebrew CI — last open item, needs user-supplied App ID + .pem.
+  2. Next release v3.3.0: commit mcp_server.py to main (currently dev only), tag v3.3.0 → CI auto-bumps tap. Note: mcp dep + lock tree already on main (folded into v3.2.3 line).
+  3. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
 target: v3.3.0 - MCP server production release (18 tools, Claude Desktop integration)
-  3. Tag v3.3.0 → CI auto-bumps tap url+sha256 (resource blocks already updated in tap formula).
-  4. Add repo secrets APP_ID + APP_PRIVATE_KEY to enable auto Homebrew CI.
-  5. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
-target: v3.3.0 - bridge + temporal + MCP server (18 tools)
 
 ## 🎯 Current State
 
@@ -38,6 +32,7 @@ target: v3.3.0 - bridge + temporal + MCP server (18 tools)
 - **numpy test fix** — numpy-dependent tests now skip gracefully under system Python (was erroring at collection).
 - **Docs updated** — cli-reference, refcard, usage, getting-started, testing/overview, changelog, claude-mcp, CLAUDE.md, .STATUS.
 - **Release**: PR #27 dev→main merged, tag `v3.2.3`, GitHub release live.
+- **Post-release completion (2026-06-15)**: PR #27's main CI was RED — `--strict-markers` rejected the unregistered `asyncio` marker (CI installs `requirements.txt`, no `pytest-asyncio`). Fixing it unmasked 2 more latent Jest failures (man `.TH` not bumped to 3.2.3; the v3.3.0 `mcp` lock tree broke the 6-core contract test). All three fixed in **PR #28** (dev→main, merged, **main CI green**): register `asyncio` marker, bump man `.TH`→3.2.3, fold `mcp` into the lock contract (`CORE_DEPS` 6→7). **Homebrew tap @ 3.2.3** via tap PR #126 (url+sha256 only; gated by `brew reinstall --build-from-source` + `audit --strict`); `obs version`→3.2.3. Only open item: APP_ID/APP_PRIVATE_KEY secrets.
 
 ---
 
