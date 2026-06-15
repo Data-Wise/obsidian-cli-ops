@@ -12,13 +12,13 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/graph-analysis/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/claude-mcp/">
       
       
-        <link rel="prev" href="../getting-started/">
+        <link rel="prev" href="../ai-features/">
       
       
-        <link rel="next" href="../ai-features/">
+        <link rel="next" href="../../cookbook/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Graph Analysis - Obsidian CLI Ops</title>
+        <title>Claude / MCP Integration - Obsidian CLI Ops</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#graph-analysis" class="md-skip">
+        <a href="#claude-mcp-integration-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Graph Analysis
+              Claude / MCP Integration
             
           </span>
         </div>
@@ -684,37 +684,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Graph Analysis
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../graph-analysis/" class="md-nav__link">
         
   
   
@@ -730,125 +703,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#step-1-what-is-graph-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: What is Graph Analysis?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-2-run-graph-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Run Graph Analysis
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-3-understand-graph-density" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Understand Graph Density
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-find-hub-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Find Hub Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-5-find-orphaned-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Find Orphaned Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-6-detect-broken-links" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Detect Broken Links
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-7-understand-clusters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 7: Understand Clusters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-8-track-changes-over-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 8: Track Changes Over Time
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-9-next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 9: Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -886,10 +740,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../claude-mcp/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude / MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -905,6 +786,186 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-what-is-the-mcp-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: What Is the MCP Integration?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-install-obs-via-homebrew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Install obs via Homebrew
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-register-your-vaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Register Your Vaults
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-the-mcp-server-to-claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add the MCP Server to Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-restart-claude-desktop-and-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Restart Claude Desktop and Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-search-and-explore-read-only-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Search and Explore (Read-Only Tools)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-read-and-navigate-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Read and Navigate Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-create-and-edit-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Create and Edit Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-9-ai-features-via-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: AI Features via MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-10-advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 10: Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chain-tools-for-a-research-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chain tools for a research workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-vault-fresh-after-editing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep vault fresh after editing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-as-script-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export-as-script pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1486,10 +1547,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-what-is-graph-analysis" class="md-nav__link">
+  <a href="#step-1-what-is-the-mcp-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: What is Graph Analysis?
+        Step 1: What Is the MCP Integration?
       
     </span>
   </a>
@@ -1497,10 +1558,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-run-graph-analysis" class="md-nav__link">
+  <a href="#step-2-install-obs-via-homebrew" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Run Graph Analysis
+        Step 2: Install obs via Homebrew
       
     </span>
   </a>
@@ -1508,10 +1569,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-understand-graph-density" class="md-nav__link">
+  <a href="#step-3-register-your-vaults" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Understand Graph Density
+        Step 3: Register Your Vaults
       
     </span>
   </a>
@@ -1519,10 +1580,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-find-hub-notes" class="md-nav__link">
+  <a href="#step-4-add-the-mcp-server-to-claude-desktop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Find Hub Notes
+        Step 4: Add the MCP Server to Claude Desktop
       
     </span>
   </a>
@@ -1530,10 +1591,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-5-find-orphaned-notes" class="md-nav__link">
+  <a href="#step-5-restart-claude-desktop-and-verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Find Orphaned Notes
+        Step 5: Restart Claude Desktop and Verify
       
     </span>
   </a>
@@ -1541,10 +1602,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-6-detect-broken-links" class="md-nav__link">
+  <a href="#step-6-search-and-explore-read-only-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Detect Broken Links
+        Step 6: Search and Explore (Read-Only Tools)
       
     </span>
   </a>
@@ -1552,10 +1613,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-7-understand-clusters" class="md-nav__link">
+  <a href="#step-7-read-and-navigate-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 7: Understand Clusters
+        Step 7: Read and Navigate Notes
       
     </span>
   </a>
@@ -1563,10 +1624,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-8-track-changes-over-time" class="md-nav__link">
+  <a href="#step-8-create-and-edit-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 8: Track Changes Over Time
+        Step 8: Create and Edit Notes
       
     </span>
   </a>
@@ -1574,10 +1635,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-9-next-steps" class="md-nav__link">
+  <a href="#step-9-ai-features-via-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 9: Next Steps
+        Step 9: AI Features via MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-10-advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 10: Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chain-tools-for-a-research-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chain tools for a research workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-vault-fresh-after-editing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep vault fresh after editing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-as-script-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export-as-script pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
       
     </span>
   </a>
@@ -1604,171 +1726,288 @@
   
 
 
-<h1 id="graph-analysis">Graph Analysis<a class="headerlink" href="#graph-analysis" title="Permanent link">&para;</a></h1>
-<p>Learn to analyze your vault's knowledge graph and interpret the metrics.</p>
-<p><strong>Time:</strong> ~15 minutes | <strong>Level:</strong> Intermediate | <strong>Steps:</strong> 9</p>
-<p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> (vault scanned)</p>
+<h1 id="claude-mcp-integration-tutorial">Claude / MCP Integration Tutorial<a class="headerlink" href="#claude-mcp-integration-tutorial" title="Permanent link">&para;</a></h1>
+<p>Connect <code>obs</code> to Claude Desktop and use natural language to search, analyze, and edit your Obsidian vaults.</p>
+<p><strong>Time:</strong> ~20 minutes | <strong>Level:</strong> 🟣 Integration | <strong>Steps:</strong> 10</p>
+<p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> and have Claude Desktop installed.</p>
 <hr />
-<h2 id="step-1-what-is-graph-analysis">Step 1: What is Graph Analysis?<a class="headerlink" href="#step-1-what-is-graph-analysis" title="Permanent link">&para;</a></h2>
-<p>Your Obsidian vault is a graph — notes are nodes, wikilinks are edges. Graph analysis reveals the structure of your knowledge:</p>
+<h2 id="step-1-what-is-the-mcp-integration">Step 1: What Is the MCP Integration?<a class="headerlink" href="#step-1-what-is-the-mcp-integration" title="Permanent link">&para;</a></h2>
+<p>MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. <code>obs</code> ships an MCP server (<code>mcp_server.py</code>) that exposes <strong>18 tools</strong> covering your full vault workflow:</p>
+<pre class="mermaid"><code>flowchart LR
+    A([You, in Claude chat]) --&gt;|"natural language"| B[Claude Desktop]
+    B --&gt;|"MCP stdio"| C[obs mcp_server.py]
+    C --&gt;|subprocess| D[obs_cli.py / core]
+    D --&gt;|SQL| E[(SQLite vault DB)]
+    D --&gt;|read/write| F[Vault .md files]</code></pre>
+<p><strong>What becomes possible:</strong></p>
 <ul>
-<li><strong>Hub notes</strong> — highly connected, central to your thinking</li>
-<li><strong>Orphan notes</strong> — isolated, may need integration</li>
-<li><strong>Clusters</strong> — groups of tightly related notes</li>
-<li><strong>Broken links</strong> — wikilinks pointing to non-existent notes</li>
+<li><em>"Search my research vault for causal inference"</em> → <code>search_notes()</code></li>
+<li><em>"Create a note called 'Meeting 2026-06-15'"</em> → <code>create_note()</code></li>
+<li><em>"What are my most orphaned notes?"</em> → <code>get_orphaned_notes()</code></li>
+<li><em>"Run a quality check on MyVault"</em> → <code>run_obs_ai("quality", "MyVault")</code></li>
 </ul>
 <hr />
-<h2 id="step-2-run-graph-analysis">Step 2: Run Graph Analysis<a class="headerlink" href="#step-2-run-graph-analysis" title="Permanent link">&para;</a></h2>
-<p>Analyze a vault by name or ID prefix:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault
+<h2 id="step-2-install-obs-via-homebrew">Step 2: Install <code>obs</code> via Homebrew<a class="headerlink" href="#step-2-install-obs-via-homebrew" title="Permanent link">&para;</a></h2>
+<p>If not already installed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>install<span class="w"> </span>data-wise/tap/obsidian-cli-ops
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>version<span class="w">   </span><span class="c1"># should print 3.3.0</span>
 </code></pre></div>
-<p><strong>Expected output:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>📊 Graph Analysis: MyVault
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   Notes: 142
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   Links: 387
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   Density: 0.0193
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   Clusters: 8
+<p>The Homebrew formula includes <code>mcp==1.27.2</code> and all transitive deps in an isolated
+venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
+<hr />
+<h2 id="step-3-register-your-vaults">Step 3: Register Your Vaults<a class="headerlink" href="#step-3-register-your-vaults" title="Permanent link">&para;</a></h2>
+<p>Claude's MCP tools query the obs database. Make sure your vaults are registered:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs<span class="w">   </span><span class="c1"># verify vaults appear</span>
 </code></pre></div>
-<details class="tip">
-<summary>Verbose mode</summary>
-<p>Add <code>-v</code> for detailed output including top hub notes and orphan counts:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│  Vault           Notes   Links   Last Scanned        │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  Research        847     2,341   2 minutes ago       │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│  Work            234     891     5 minutes ago       │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>└──────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>If you add new notes later, rescan with <code>obs analyze MyVault</code> or ask Claude: <em>"Rescan MyVault"</em>.</p>
+<hr />
+<h2 id="step-4-add-the-mcp-server-to-claude-desktop">Step 4: Add the MCP Server to Claude Desktop<a class="headerlink" href="#step-4-add-the-mcp-server-to-claude-desktop" title="Permanent link">&para;</a></h2>
+<p>Open (or create) this file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>~/Library/Application Support/Claude/claude_desktop_config.json
+</code></pre></div>
+<p>Add the <code>obsidian-ops</code> entry inside <code>"mcpServers"</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;obsidian-ops&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/bin/zsh&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>Replace <code>YOUR_USERNAME</code> with your macOS username (<code>whoami</code> in Terminal).</p>
+<div class="admonition warning">
+<p class="admonition-title">JSON is strict</p>
+<p>No trailing commas. Validate with:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>~/Library/<span class="s2">&quot;Application Support&quot;</span>/Claude/claude_desktop_config.json
 </code></pre></div></p>
-</details>
+</div>
 <hr />
-<h2 id="step-3-understand-graph-density">Step 3: Understand Graph Density<a class="headerlink" href="#step-3-understand-graph-density" title="Permanent link">&para;</a></h2>
-<p><strong>Density</strong> measures how interconnected your vault is, from 0.0 (no links) to 1.0 (every note links to every other).</p>
+<h2 id="step-5-restart-claude-desktop-and-verify">Step 5: Restart Claude Desktop and Verify<a class="headerlink" href="#step-5-restart-claude-desktop-and-verify" title="Permanent link">&para;</a></h2>
+<p><code>Cmd+Q</code> → reopen Claude Desktop. The <code>obsidian-ops</code> connector should appear in the tool panel.</p>
+<p>Test it by typing:</p>
+<blockquote>
+<p><em>"List my Obsidian vaults"</em></p>
+</blockquote>
+<p>Claude should call <code>list_vaults()</code> and return your vault list. If it doesn't, see
+<a href="../../claude-integration/#troubleshooting">Troubleshooting</a>.</p>
+<hr />
+<h2 id="step-6-search-and-explore-read-only-tools">Step 6: Search and Explore (Read-Only Tools)<a class="headerlink" href="#step-6-search-and-explore-read-only-tools" title="Permanent link">&para;</a></h2>
+<p>Try these prompts — they only read data, nothing is modified:</p>
+<p><strong>Vault overview:</strong></p>
+<blockquote>
+<p><em>"Show me stats for my Research vault"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Claude calls: get_vault_stats(&quot;Research&quot;)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Returns: 847 notes, 2,341 links, density 0.023, 12 clusters
+</code></pre></div>
+<p><strong>Search:</strong></p>
+<blockquote>
+<p><em>"Search my Research vault for causal mediation, show the top 5"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Claude calls: search_notes(&quot;causal mediation&quot;, vault_id=&quot;Research&quot;, limit=5)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Returns: ranked list of matching notes with titles and snippets
+</code></pre></div>
+<blockquote>
+<p><strong>Tip:</strong> You can also search natively from your terminal: <code>obs search "causal mediation"</code></p>
+</blockquote>
+<p><strong>Graph analysis:</strong></p>
+<blockquote>
+<p><em>"What are the 10 most connected notes in Research?"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Claude calls: get_hub_notes(&quot;Research&quot;, limit=10)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Returns: hub notes ranked by PageRank with connection counts
+</code></pre></div>
+<p><strong>Orphan detection:</strong></p>
+<blockquote>
+<p><em>"List orphaned notes in Research that I should link up"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Claude calls: get_orphaned_notes(&quot;Research&quot;, limit=20)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Returns: list of isolated notes with word counts and last modified dates
+</code></pre></div>
+<p><strong>Health check:</strong></p>
+<blockquote>
+<p><em>"Run a health check on Research and give me a priority fix list"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Claude calls: get_vault_health(&quot;Research&quot;)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Returns: 4-dimension scores + Claude&#39;s prioritized recommendations
+</code></pre></div>
+<hr />
+<h2 id="step-7-read-and-navigate-notes">Step 7: Read and Navigate Notes<a class="headerlink" href="#step-7-read-and-navigate-notes" title="Permanent link">&para;</a></h2>
+<p><strong>Read a specific note:</strong></p>
+<blockquote>
+<p><em>"Read the note about collider bias in my Research vault"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Claude calls: search_notes(&quot;collider bias&quot;, vault_id=&quot;Research&quot;, limit=1)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>             then: read_note(note_id)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Returns: full note content including YAML frontmatter
+</code></pre></div>
+<p><strong>Find related notes:</strong></p>
+<blockquote>
+<p><em>"Find notes similar to my collider-bias note"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Claude calls: find_similar_notes(note_id, limit=10)
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Returns: semantically similar notes with similarity scores
+</code></pre></div>
+<p><strong>Inspect links:</strong></p>
+<blockquote>
+<p><em>"What notes link to collider-bias? What does it link to?"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Claude calls: get_note_links(note_id)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Returns: incoming links (backlinks) and outgoing links
+</code></pre></div>
+<hr />
+<h2 id="step-8-create-and-edit-notes">Step 8: Create and Edit Notes<a class="headerlink" href="#step-8-create-and-edit-notes" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">These tools modify your vault files</p>
+<p>Claude will describe the action before calling write tools. Review before confirming.</p>
+</div>
+<p><strong>Create a new note:</strong></p>
+<blockquote>
+<p><em>"Create a note in Research called 'Sensitivity Analysis 2026-06-15' with these sections: Overview, Methods, Results, References"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Claude calls: create_note(
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    vault_id=&quot;Research&quot;,
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    title=&quot;Sensitivity Analysis 2026-06-15&quot;,
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    content=&quot;# Sensitivity Analysis 2026-06-15\n\n## Overview\n\n## Methods\n...&quot;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>)
+</code></pre></div>
+<p><strong>Append to an existing note:</strong></p>
+<blockquote>
+<p><em>"Append these key points from today's meeting to my collider-bias note: [...]"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Claude calls: append_to_note(note_id, content=&quot;---\n## Meeting Notes 2026-06-15\n[...]&quot;)
+</code></pre></div>
+<p><strong>Edit a note:</strong></p>
+<blockquote>
+<p><em>"Rewrite the abstract section of my collider-bias note to be more concise: [...]"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Claude calls: read_note(note_id)          # get current content
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>             then: write_note(note_id, new_content, create_backup=True)
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>             # .bak backup is created automatically
+</code></pre></div>
+<p><strong>Rename a note:</strong></p>
+<blockquote>
+<p><em>"Rename 'collider-bias' to 'Collider Bias - Regression Discontinuity'"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Claude calls: rename_note(note_id, &quot;Collider Bias - Regression Discontinuity&quot;)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Returns: warning if other notes link to the old name (wikilinks will break)
+</code></pre></div>
+<p><strong>Delete a note (dry-run first):</strong></p>
+<blockquote>
+<p><em>"Delete the note 'scratch-pad-old'"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Claude calls: delete_note(note_id, confirm=False)   # dry-run by default
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Returns: &quot;Would delete: scratch-pad-old.md (234 words, 0 incoming links)&quot;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Claude asks: &quot;Confirm deletion?&quot;
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>You: &quot;Yes&quot;
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Claude calls: delete_note(note_id, confirm=True)
+</code></pre></div>
+<hr />
+<h2 id="step-9-ai-features-via-mcp">Step 9: AI Features via MCP<a class="headerlink" href="#step-9-ai-features-via-mcp" title="Permanent link">&para;</a></h2>
+<p>The <code>run_obs_ai</code> tool bridges all <code>obs ai</code> subcommands:</p>
+<p><strong>Find knowledge gaps:</strong></p>
+<blockquote>
+<p><em>"What topics are missing from my Research vault?"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Claude calls: run_obs_ai(&quot;gaps&quot;, &quot;Research&quot;)
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Returns: stub notes, orphaned topics, suggested new notes
+</code></pre></div>
+<p><strong>Quality scoring:</strong></p>
+<blockquote>
+<p><em>"Score all notes in Research and show me the 5 worst"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Claude calls: run_obs_ai(&quot;quality&quot;, &quot;Research&quot;)
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Returns: notes ranked by weighted score (completeness/connectivity/metadata/freshness)
+</code></pre></div>
+<p><strong>Merge candidates:</strong></p>
+<blockquote>
+<p><em>"Find notes in Research that overlap so much they might be merged"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Claude calls: run_obs_ai(&quot;merge-suggest&quot;, &quot;Research&quot;)
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Returns: note pairs with cosine similarity &gt; 0.8, shared links/tags
+</code></pre></div>
+<p><strong>Tag suggestions:</strong></p>
+<blockquote>
+<p><em>"Suggest tags for all untagged notes in Research"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Claude calls: run_obs_ai(&quot;tag-suggest&quot;, &quot;Research&quot;)
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Returns: tag suggestions per note with confidence scores
+</code></pre></div>
+<p><strong>Vault reorganization:</strong></p>
+<blockquote>
+<p><em>"Give me a reorganization plan for Research"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Claude calls: run_obs_ai(&quot;refactor&quot;, &quot;Research&quot;)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Returns: categorized suggestions: move, archive, merge-folder, connect, create-folder
+</code></pre></div>
+<hr />
+<h2 id="step-10-advanced-patterns">Step 10: Advanced Patterns<a class="headerlink" href="#step-10-advanced-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="chain-tools-for-a-research-workflow">Chain tools for a research workflow<a class="headerlink" href="#chain-tools-for-a-research-workflow" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><em>"I'm starting a new paper on sensitivity analysis. Search for related notes, find gaps, then create a project outline note linking the most relevant ones."</em></p>
+</blockquote>
+<p>Claude chains: <code>search_notes</code> → <code>get_vault_health</code> → <code>run_obs_ai("gaps")</code> → <code>create_note</code></p>
+<h3 id="keep-vault-fresh-after-editing">Keep vault fresh after editing<a class="headerlink" href="#keep-vault-fresh-after-editing" title="Permanent link">&para;</a></h3>
+<p>After writing notes in Obsidian, rescan so Claude sees the changes:</p>
+<blockquote>
+<p><em>"I just added 10 new notes. Please rescan my Research vault."</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Claude calls: rescan_vault(&quot;Research&quot;)
+</code></pre></div>
+<h3 id="export-as-script-pattern">Export-as-script pattern<a class="headerlink" href="#export-as-script-pattern" title="Permanent link">&para;</a></h3>
+<p>Ask Claude to generate a shell script from its analysis:</p>
+<blockquote>
+<p><em>"Based on the orphaned notes you found, generate an obs command I can run to analyze each one"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Claude generates:</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">for</span><span class="w"> </span>id<span class="w"> </span><span class="k">in</span><span class="w"> </span>note-abc123<span class="w"> </span>note-def456<span class="w"> </span>note-ghi789<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">    </span>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span><span class="nv">$id</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Density</th>
-<th>Interpretation</th>
+<th>Goal</th>
+<th>Tutorial / Doc</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>&lt; 0.01</td>
-<td>Sparse — many isolated notes</td>
+<td>Full tool reference</td>
+<td><a href="../../claude-integration/">Claude Integration</a></td>
 </tr>
 <tr>
-<td>0.01–0.05</td>
-<td>Typical — healthy vault</td>
+<td>All 18 MCP tools</td>
+<td><a href="../../cli-reference/#claude-mcp-integration">CLI Reference — MCP section</a></td>
 </tr>
 <tr>
-<td>0.05–0.10</td>
-<td>Dense — well-connected</td>
+<td>Cowork plugin (Phase 2)</td>
+<td><a href="https://github.com/Data-Wise/obsidian-cli-ops/blob/dev/PROPOSAL-claude-integration-2026-06-15.md">Proposal</a></td>
 </tr>
 <tr>
-<td>&gt; 0.10</td>
-<td>Very dense — may have over-linking</td>
-</tr>
-</tbody>
-</table>
-<p>Most Obsidian vaults fall in the 0.01–0.05 range.</p>
-<hr />
-<h2 id="step-4-find-hub-notes">Step 4: Find Hub Notes<a class="headerlink" href="#step-4-find-hub-notes" title="Permanent link">&para;</a></h2>
-<p>Hub notes are the most connected in your vault — they're the backbone of your knowledge graph.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v
-</code></pre></div>
-<p>Look for the "Top Hub Notes" section:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>  🌟 Top Hub Notes:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    • MOC - Machine Learning (47 connections)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    • Index - Projects (32 connections)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    • Daily Notes Overview (28 connections)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    • Research Methods (21 connections)
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    • Tool Comparisons (18 connections)
-</code></pre></div>
-<p><strong>What to do with hubs:</strong></p>
-<ul>
-<li>Review them regularly — they influence many notes</li>
-<li>Consider splitting hubs with 50+ connections</li>
-<li>Hubs are great starting points for new readers</li>
-</ul>
-<hr />
-<h2 id="step-5-find-orphaned-notes">Step 5: Find Orphaned Notes<a class="headerlink" href="#step-5-find-orphaned-notes" title="Permanent link">&para;</a></h2>
-<p>Orphaned notes have no incoming or outgoing links. They're invisible to graph navigation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault
-</code></pre></div>
-<p>Check the "Orphaned" count in Graph Health:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>  Graph Health
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    Orphaned: 12
-</code></pre></div>
-<p><strong>What to do with orphans:</strong></p>
-<ul>
-<li>Link them to relevant hub notes or MOCs (Maps of Content)</li>
-<li>Some orphans are fine (daily notes, templates)</li>
-<li>High orphan count (&gt;20%) suggests poor linking habits</li>
-</ul>
-<hr />
-<h2 id="step-6-detect-broken-links">Step 6: Detect Broken Links<a class="headerlink" href="#step-6-detect-broken-links" title="Permanent link">&para;</a></h2>
-<p>Broken links are wikilinks (<code>[[target]]</code>) that don't resolve to any existing note.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault
-</code></pre></div>
-<p>Check the "Broken Links" count:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>  Graph Health
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    Broken Links: 3
-</code></pre></div>
-<p><strong>Common causes:</strong></p>
-<ul>
-<li>Renamed notes without updating links</li>
-<li>Deleted notes that were referenced</li>
-<li>Typos in wikilink targets</li>
-</ul>
-<p><strong>Fix:</strong> Create the missing notes, or update the links to point to correct targets.</p>
-<hr />
-<h2 id="step-7-understand-clusters">Step 7: Understand Clusters<a class="headerlink" href="#step-7-understand-clusters" title="Permanent link">&para;</a></h2>
-<p>Clusters are groups of notes that are more connected to each other than to the rest of the vault. They often represent topic areas.</p>
-<p>The "Clusters" count in your analysis output tells you how many distinct communities exist:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>   Clusters: 8
-</code></pre></div>
-<p><strong>Interpreting clusters:</strong></p>
-<ul>
-<li>Each cluster typically represents a topic or project</li>
-<li>Very few clusters (1-2) might mean your vault lacks structure</li>
-<li>Many small clusters might mean topics aren't cross-linked enough</li>
-</ul>
-<hr />
-<h2 id="step-8-track-changes-over-time">Step 8: Track Changes Over Time<a class="headerlink" href="#step-8-track-changes-over-time" title="Permanent link">&para;</a></h2>
-<p>Re-scan and re-analyze periodically to track how your vault evolves:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Re-scan to pick up new notes and links</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>obs<span class="w"> </span>scan<span class="w"> </span>/path/to/vault
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Re-analyze</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v
-</code></pre></div>
-<p><strong>Watch for:</strong></p>
-<ul>
-<li>Orphan count increasing — linking habits may be slipping</li>
-<li>Broken links growing — maintenance needed</li>
-<li>Density increasing — vault is becoming better connected</li>
-<li>New clusters forming — your knowledge is expanding</li>
-</ul>
-<hr />
-<h2 id="step-9-next-steps">Step 9: Next Steps<a class="headerlink" href="#step-9-next-steps" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Want to...</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Use AI to find similar notes</td>
-<td><a href="../ai-features/">AI Features Tutorial</a></td>
-</tr>
-<tr>
-<td>Set up automated scanning</td>
-<td>Add <code>obs scan</code> to a cron job</td>
-</tr>
-<tr>
-<td>See all analysis commands</td>
-<td><code>obs help --all</code></td>
+<td>Developer API details</td>
+<td><a href="../../developer/api-reference/">API Reference</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<p><strong>Summary:</strong> You ran graph analysis, interpreted density, found hubs and orphans, detected broken links, and understand clusters. You can now monitor your vault's health over time.</p>
+<p><strong>Summary:</strong> You wired the MCP server into Claude Desktop, searched and explored vaults, read and wrote notes, and ran AI analysis — all from a Claude chat session. The <code>obsidian-ops</code> MCP server is now a permanent connector available in every Claude Desktop conversation.</p>
 
 
 

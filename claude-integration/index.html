@@ -12,13 +12,13 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/cli-reference/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/claude-integration/">
       
       
-        <link rel="prev" href="../refcard/">
+        <link rel="prev" href="../ai-setup/">
       
       
-        <link rel="next" href="../workflows/">
+        <link rel="next" href="../changelog/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>CLI Reference - Obsidian CLI Ops</title>
+        <title>Claude Integration - Obsidian CLI Ops</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli-command-reference" class="md-skip">
+        <a href="#claude-mcp-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI Reference
+              Claude Integration
             
           </span>
         </div>
@@ -883,37 +883,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    CLI Reference
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../cli-reference/" class="md-nav__link">
         
   
   
@@ -929,442 +902,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#global-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Global Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vault-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vault Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Vault Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs search
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-discover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs discover
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-stats" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs stats
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs health
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#graph-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Graph Analysis
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Graph Analysis">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-analyze" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs analyze
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Database">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-db-init" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs db init
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ai-provider-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Provider Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="AI Provider Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai status
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai setup
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai test
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ai-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="AI Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-similar" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai similar
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-analyze" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai analyze
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-duplicates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai duplicates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-suggest-links" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai suggest-links
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-gaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai gaps
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-summarize" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai summarize
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-refactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai refactor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-merge-suggest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai merge-suggest
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-tag-suggest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai tag-suggest
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai quality
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#utility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Utility
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Utility">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs help
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs version
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#claude-mcp-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude / MCP Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Claude / MCP Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mcp-tool-groups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP Tool Groups
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-claude-prompts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example Claude prompts
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1430,10 +967,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../claude-integration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Integration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1449,6 +1013,347 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Get
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-edit-claude-desktop-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Edit Claude Desktop config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-restart-claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Restart Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-18-mcp-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All 18 MCP Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="All 18 MCP Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vault-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-analysis-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Analysis Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-crud-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note CRUD Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-passthrough-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Passthrough Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#daily-vault-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily vault check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research assistant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-creation-from-conversation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note creation from conversation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vault-reorganization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault reorganization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#safety-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obsidian-ops-doesnt-appear-in-claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "obsidian-ops" doesn't appear in Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfounderror-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ModuleNotFoundError: mcp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-return-vault-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools return "vault not found"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-the-server-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test the server directly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1803,10 +1708,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#global-options" class="md-nav__link">
+  <a href="#what-you-get" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Global Options
+        What You Get
       
     </span>
   </a>
@@ -1814,22 +1719,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vault-management" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vault Management
+        Prerequisites
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Vault Management">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obs" class="md-nav__link">
+  <a href="#step-1-edit-claude-desktop-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs
+        Step 1 — Edit Claude Desktop config
       
     </span>
   </a>
@@ -1837,10 +1753,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#obs-search" class="md-nav__link">
+  <a href="#step-2-restart-claude-desktop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs search
+        Step 2 — Restart Claude Desktop
       
     </span>
   </a>
@@ -1848,32 +1764,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#obs-discover" class="md-nav__link">
+  <a href="#step-3-verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs discover
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-stats" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs stats
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs health
+        Step 3 — Verify
       
     </span>
   </a>
@@ -1886,22 +1780,77 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#graph-analysis" class="md-nav__link">
+  <a href="#all-18-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Graph Analysis
+        All 18 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Graph Analysis">
+    <nav class="md-nav" aria-label="All 18 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obs-analyze" class="md-nav__link">
+  <a href="#vault-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs analyze
+        Vault Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-analysis-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Analysis Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-crud-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note CRUD Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-passthrough-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Passthrough Tool
       
     </span>
   </a>
@@ -1914,22 +1863,66 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
+  <a href="#mcp-resources" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Database
+        MCP Resources
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Database">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Workflows">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obs-db-init" class="md-nav__link">
+  <a href="#daily-vault-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs db init
+        Daily vault check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research assistant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-creation-from-conversation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note creation from conversation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vault-reorganization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault reorganization
       
     </span>
   </a>
@@ -1942,22 +1935,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-provider-management" class="md-nav__link">
+  <a href="#safety-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Provider Management
+        Safety Notes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="AI Provider Management">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obs-ai-status" class="md-nav__link">
+  <a href="#obsidian-ops-doesnt-appear-in-claude-desktop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs ai status
+        "obsidian-ops" doesn't appear in Claude Desktop
       
     </span>
   </a>
@@ -1965,10 +1969,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#obs-ai-setup" class="md-nav__link">
+  <a href="#modulenotfounderror-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs ai setup
+        ModuleNotFoundError: mcp
       
     </span>
   </a>
@@ -1976,10 +1980,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#obs-ai-test" class="md-nav__link">
+  <a href="#tools-return-vault-not-found" class="md-nav__link">
     <span class="md-ellipsis">
       
-        obs ai test
+        Tools return "vault not found"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-the-server-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test the server directly
       
     </span>
   </a>
@@ -1992,176 +2007,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-features" class="md-nav__link">
+  <a href="#roadmap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="AI Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-similar" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai similar
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-analyze" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai analyze
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-duplicates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai duplicates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-suggest-links" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai suggest-links
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-gaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai gaps
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-summarize" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai summarize
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-refactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai refactor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-merge-suggest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai merge-suggest
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-tag-suggest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai tag-suggest
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai quality
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#utility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Utility
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Utility">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs help
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs version
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
+        Roadmap
       
     </span>
   </a>
@@ -2169,49 +2018,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#claude-mcp-integration" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Claude / MCP Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Claude / MCP Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mcp-tool-groups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP Tool Groups
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-claude-prompts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example Claude prompts
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        See Also
       
     </span>
   </a>
@@ -2238,457 +2048,374 @@
   
 
 
-<h1 id="cli-command-reference">CLI Command Reference<a class="headerlink" href="#cli-command-reference" title="Permanent link">&para;</a></h1>
+<h1 id="claude-mcp-integration">Claude / MCP Integration<a class="headerlink" href="#claude-mcp-integration" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p class="tldr"><strong>TL;DR</strong> (30 seconds)
-- <strong>What:</strong> Full reference for all 18 <code>obs</code> commands + 18 MCP tools for Claude
-- <strong>Why:</strong> One-stop lookup for exact syntax and options
-- <strong>How:</strong> <code>obs help --all</code> — see this in your terminal
-- <strong>Next:</strong> <a href="../refcard/">Quick Reference</a> for a printable cheat sheet</p>
+- <strong>What:</strong> Connect <code>obs</code> to Claude Desktop, Claude Code, or Cowork via MCP
+- <strong>Why:</strong> Ask Claude in plain English to search, analyze, and edit your vaults
+- <strong>How:</strong> Add one JSON block to <code>claude_desktop_config.json</code>, restart Claude
+- <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Version:</strong> 3.3.0</p>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 3.3.0</p>
 <hr />
-<h2 id="global-options"><img alt="⚙" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2699.svg" title=":gear:" /> Global Options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>-v</code>, <code>--verbose</code></td>
-<td>Enable verbose output</td>
-</tr>
-<tr>
-<td><code>-h</code>, <code>--help</code></td>
-<td>Show help</td>
-</tr>
-<tr>
-<td><code>--json</code></td>
-<td>Output as JSON (supported on data commands)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="vault-management"><img alt="📁" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4c1.svg" title=":file_folder:" /> Vault Management<a class="headerlink" href="#vault-management" title="Permanent link">&para;</a></h2>
-<h3 id="obs">obs<a class="headerlink" href="#obs" title="Permanent link">&para;</a></h3>
-<p>List all registered vaults.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs
-</code></pre></div>
-<p><strong>Output:</strong> Rich-formatted table with status, name, note count, link count, last scanned, and ID.</p>
-<div class="admonition tip">
-<p class="admonition-title">Pro tip</p>
-<p>This is the only command you need on day one. Everything starts from the vault list.</p>
-</div>
-<hr />
-<h3 id="obs-search">obs search<a class="headerlink" href="#obs-search" title="Permanent link">&para;</a></h3>
-<p>Search notes by title across all registered vaults.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name<span class="p">|</span>id&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>query</code></td>
-<td>required</td>
-<td>Search string (title match)</td>
-</tr>
-<tr>
-<td><code>--vault</code> / <code>-v</code></td>
-<td>all vaults</td>
-<td>Limit search to one vault</td>
-</tr>
-<tr>
-<td><code>--limit</code> / <code>-n</code></td>
-<td><code>20</code></td>
-<td>Maximum results to return</td>
-</tr>
-<tr>
-<td><code>--json</code></td>
-<td></td>
-<td>Machine-readable JSON output</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w">                     </span><span class="c1"># Search all vaults</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">    </span><span class="c1"># One vault only</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;meeting&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">                    </span><span class="c1"># Cap at 5 results</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal&quot;</span><span class="w"> </span>--json<span class="w">                        </span><span class="c1"># JSON output</span>
-</code></pre></div>
-<hr />
-<h3 id="obs-discover">obs discover<a class="headerlink" href="#obs-discover" title="Permanent link">&para;</a></h3>
-<p>Find Obsidian vaults in a directory tree.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>&lt;path&gt;<span class="w"> </span><span class="o">[</span>--scan<span class="o">]</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>path</code></td>
-<td>Root directory to search</td>
-</tr>
-<tr>
-<td><code>--scan</code></td>
-<td>Scan discovered vaults immediately</td>
-</tr>
-</tbody>
-</table>
-<p>Searches for <code>.obsidian/</code> directories recursively. With <code>--scan</code>, populates the database for each found vault.</p>
-<hr />
-<h3 id="obs-stats">obs stats<a class="headerlink" href="#obs-stats" title="Permanent link">&para;</a></h3>
-<p>Show vault or global statistics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name<span class="p">|</span>id&gt;<span class="o">]</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--vault</code></td>
-<td>Vault name or ID (full or prefix). Omit for global stats.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>stats<span class="w">                    </span><span class="c1"># Global stats (all vaults)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w">    </span><span class="c1"># Specific vault stats</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>abc<span class="w">        </span><span class="c1"># Prefix lookup</span>
-</code></pre></div>
-<div class="admonition info">
-<p class="admonition-title">Link count display (v3.2.3+)</p>
-<p>Stats now shows internal and broken links separately, e.g. <code>Links: 56 (635 broken)</code>. The first number is valid internal links; the parenthetical is the broken-link count.</p>
-</div>
-<hr />
-<h3 id="obs-health">obs health<a class="headerlink" href="#obs-health" title="Permanent link">&para;</a></h3>
-<p>Vault health dashboard with scores and recommendations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>health<span class="w"> </span>&lt;vault&gt;
-</code></pre></div>
-<p><strong>Dimensions scored:</strong></p>
+<h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
+<p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
 <ul>
-<li><strong>Connectivity</strong> -- orphan ratio</li>
-<li><strong>Link Integrity</strong> -- broken link count</li>
-<li><strong>Structure</strong> -- tag coverage, hub balance</li>
-<li><strong>Freshness</strong> -- stale note detection</li>
+<li><strong>"Search my research vault for causal inference"</strong> — full-text search across notes</li>
+<li><strong>"What are the most connected notes in MyVault?"</strong> — PageRank hub detection</li>
+<li><strong>"Create a note called 'Meeting 2026-06-15'"</strong> — note CRUD directly in Claude chat</li>
+<li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
+<li><strong>"Run a quality check on all notes"</strong> — <code>obs ai quality</code> via AI passthrough</li>
+</ul>
+<p>The MCP server exposes <strong>18 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>obs</code> installed: <code>brew install data-wise/tap/obsidian-cli-ops</code></li>
+<li>Claude Desktop (any recent version)</li>
+<li>At least one vault registered: <code>obs discover ~/Documents --scan</code></li>
 </ul>
 <hr />
-<h2 id="graph-analysis"><img alt="📈" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4c8.svg" title=":chart_with_upwards_trend:" /> Graph Analysis<a class="headerlink" href="#graph-analysis" title="Permanent link">&para;</a></h2>
-<h3 id="obs-analyze">obs analyze<a class="headerlink" href="#obs-analyze" title="Permanent link">&para;</a></h3>
-<p>Analyze vault graph structure (PageRank, centrality, clustering).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>&lt;vault&gt;
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-edit-claude-desktop-config">Step 1 — Edit Claude Desktop config<a class="headerlink" href="#step-1-edit-claude-desktop-config" title="Permanent link">&para;</a></h3>
+<p>Open (or create) <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>
+and add the <code>obsidian-ops</code> entry inside <code>"mcpServers"</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;obsidian-ops&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/bin/zsh&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot; \&quot;/opt/homebrew/Cellar/obsidian-cli-ops/3.3.0/libexec/venv/bin/python\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
 </code></pre></div>
-<p>With <code>--verbose</code>, also shows top hub notes, orphaned notes, and broken links.</p>
-<hr />
-<h2 id="database"><img alt="💾" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4be.svg" title=":floppy_disk:" /> Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h2>
-<h3 id="obs-db-init">obs db init<a class="headerlink" href="#obs-db-init" title="Permanent link">&para;</a></h3>
-<p>Initialize or rebuild the SQLite database.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>db<span class="w"> </span>init
-</code></pre></div>
-<p>Creates the database at <code>~/.config/obs/vault_db.sqlite</code> with all tables and views.</p>
-<hr />
-<h2 id="ai-provider-management"><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> AI Provider Management<a class="headerlink" href="#ai-provider-management" title="Permanent link">&para;</a></h2>
-<h3 id="obs-ai-status">obs ai status<a class="headerlink" href="#obs-ai-status" title="Permanent link">&para;</a></h3>
-<p>Show status of all configured AI providers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
-</code></pre></div>
-<h3 id="obs-ai-setup">obs ai setup<a class="headerlink" href="#obs-ai-setup" title="Permanent link">&para;</a></h3>
-<p>Interactive wizard for configuring AI providers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup
-</code></pre></div>
-<h3 id="obs-ai-test">obs ai test<a class="headerlink" href="#obs-ai-test" title="Permanent link">&para;</a></h3>
-<p>Test AI provider availability and functionality.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>&lt;name&gt;<span class="o">]</span>
-</code></pre></div>
-<p><strong>Available providers:</strong> <code>gemini-api</code>, <code>anthropic-api</code>, <code>ollama</code>, <code>gemini-cli</code>, <code>claude-cli</code></p>
-<hr />
-<h2 id="ai-features"><img alt="✨" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2728.svg" title=":sparkles:" /> AI Features<a class="headerlink" href="#ai-features" title="Permanent link">&para;</a></h2>
-<p>All AI commands require at least one configured provider. Use <code>obs ai setup</code> to configure.</p>
-<div class="admonition warning">
-<p class="admonition-title">Provider required</p>
-<p>AI commands will fail gracefully if no provider is available. Run <code>obs ai status</code> first to check.</p>
+<p>Replace <code>YOUR_USERNAME</code> with your macOS username (run <code>whoami</code> in Terminal).</p>
+<div class="admonition tip">
+<p class="admonition-title">From-source install</p>
+<p>If you cloned the repo instead of using Homebrew, replace the path with the absolute
+path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 </div>
-<h3 id="obs-ai-similar">obs ai similar<a class="headerlink" href="#obs-ai-similar" title="Permanent link">&para;</a></h3>
-<p>Find notes semantically similar to a given note.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--threshold<span class="w"> </span>F<span class="o">]</span><span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>NAME<span class="o">]</span>
-</code></pre></div>
+<h3 id="step-2-restart-claude-desktop">Step 2 — Restart Claude Desktop<a class="headerlink" href="#step-2-restart-claude-desktop" title="Permanent link">&para;</a></h3>
+<p><code>Cmd+Q</code> → reopen. The <code>obsidian-ops</code> server should appear in the tool panel.</p>
+<h3 id="step-3-verify">Step 3 — Verify<a class="headerlink" href="#step-3-verify" title="Permanent link">&para;</a></h3>
+<p>Ask Claude: <strong>"List my Obsidian vaults"</strong></p>
+<p>Claude should call <code>list_vaults()</code> and return your vault list. If nothing happens, see
+<a href="#troubleshooting">Troubleshooting</a> below.</p>
+<hr />
+<h2 id="all-18-mcp-tools">All 18 MCP Tools<a class="headerlink" href="#all-18-mcp-tools" title="Permanent link">&para;</a></h2>
+<h3 id="vault-tools">Vault Tools<a class="headerlink" href="#vault-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Argument</th>
-<th>Default</th>
+<th>Tool</th>
+<th>Arguments</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>--limit</code></td>
-<td><code>10</code></td>
-<td>Maximum results</td>
+<td><code>list_vaults</code></td>
+<td>—</td>
+<td>List all registered vaults with note/link counts</td>
 </tr>
 <tr>
-<td><code>--threshold</code></td>
-<td><code>0.3</code></td>
-<td>Minimum similarity (0.0-1.0)</td>
+<td><code>get_vault_stats</code></td>
+<td><code>vault_id</code></td>
+<td>Detailed statistics for a vault</td>
 </tr>
 <tr>
-<td><code>--provider</code></td>
-<td>auto</td>
-<td>Force specific AI provider</td>
+<td><code>discover_vaults</code></td>
+<td><code>path</code></td>
+<td>Find Obsidian vaults in a directory tree</td>
 </tr>
 </tbody>
 </table>
-<h3 id="obs-ai-analyze">obs ai analyze<a class="headerlink" href="#obs-ai-analyze" title="Permanent link">&para;</a></h3>
-<p>Deep AI analysis of a single note -- themes, quality, suggestions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>NAME<span class="o">]</span>
-</code></pre></div>
-<h3 id="obs-ai-duplicates">obs ai duplicates<a class="headerlink" href="#obs-ai-duplicates" title="Permanent link">&para;</a></h3>
-<p>Find potential duplicate notes using embedding similarity.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--threshold<span class="w"> </span>F<span class="o">]</span><span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
-</code></pre></div>
-<h3 id="obs-ai-suggest-links">obs ai suggest-links<a class="headerlink" href="#obs-ai-suggest-links" title="Permanent link">&para;</a></h3>
-<p>Suggest new wikilinks for a note based on embedding similarity.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
-</code></pre></div>
-<h3 id="obs-ai-gaps">obs ai gaps<a class="headerlink" href="#obs-ai-gaps" title="Permanent link">&para;</a></h3>
-<p>Identify knowledge gaps in a vault.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>NAME<span class="o">]</span>
-</code></pre></div>
-<p><strong>Gap detection:</strong></p>
-<ol>
-<li><strong>Stub notes</strong> -- High incoming links but low word count</li>
-<li><strong>Orphaned notes</strong> -- No connections in either direction</li>
-</ol>
-<h3 id="obs-ai-summarize">obs ai summarize<a class="headerlink" href="#obs-ai-summarize" title="Permanent link">&para;</a></h3>
-<p>Generate a vault-wide summary with themes and statistics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--folder<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag<span class="w"> </span>TAG<span class="o">]</span>
-</code></pre></div>
-<h3 id="obs-ai-refactor">obs ai refactor<a class="headerlink" href="#obs-ai-refactor" title="Permanent link">&para;</a></h3>
-<p>AI-powered vault reorganization suggestions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</code></pre></div>
-<p><strong>Suggestion categories:</strong> <code>move</code>, <code>archive</code>, <code>merge-folder</code>, <code>create-folder</code>, <code>connect</code></p>
-<details class="info">
-<summary>Refactor is read-only</summary>
-<p><code>obs ai refactor</code> only <strong>suggests</strong> changes — it never moves or deletes files. Use <code>--dry-run</code> to preview scope without AI calls.</p>
-</details>
-<h3 id="obs-ai-merge-suggest">obs ai merge-suggest<a class="headerlink" href="#obs-ai-merge-suggest" title="Permanent link">&para;</a></h3>
-<p>Find note pairs with high embedding similarity that may be merge candidates.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--threshold<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>X<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</code></pre></div>
+<h3 id="search-tools">Search Tools<a class="headerlink" href="#search-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Flag</th>
-<th>Default</th>
+<th>Tool</th>
+<th>Arguments</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>--threshold</code></td>
-<td><code>0.8</code></td>
-<td>Minimum cosine similarity (0-1)</td>
+<td><code>search_notes</code></td>
+<td><code>query</code>, <code>vault_id</code>, <code>limit</code></td>
+<td>Full-text search across notes</td>
 </tr>
 <tr>
-<td><code>--provider</code></td>
-<td>auto</td>
-<td>AI provider for embeddings</td>
-</tr>
-<tr>
-<td><code>--json</code></td>
-<td></td>
-<td>Machine-readable output</td>
+<td><code>find_similar_notes</code></td>
+<td><code>note_id</code>, <code>limit</code>, <code>threshold</code></td>
+<td>Semantically similar notes by embedding</td>
 </tr>
 </tbody>
 </table>
-<h3 id="obs-ai-tag-suggest">obs ai tag-suggest<a class="headerlink" href="#obs-ai-tag-suggest" title="Permanent link">&para;</a></h3>
-<p>Suggest tags for untagged notes using AI and vault context.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>&lt;target&gt;<span class="w"> </span><span class="o">[</span>--apply<span class="o">]</span><span class="w"> </span><span class="o">[</span>--min-confidence<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>X<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</code></pre></div>
+<h3 id="graph-analysis-tools">Graph Analysis Tools<a class="headerlink" href="#graph-analysis-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Flag</th>
-<th>Default</th>
+<th>Tool</th>
+<th>Arguments</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>--apply</code></td>
-<td></td>
-<td>Auto-apply tags with &gt;80% confidence to frontmatter</td>
+<td><code>get_hub_notes</code></td>
+<td><code>vault_id</code>, <code>limit</code></td>
+<td>Most-connected notes (PageRank)</td>
 </tr>
 <tr>
-<td><code>--min-confidence</code></td>
-<td><code>0.0</code></td>
-<td>Only show suggestions above this threshold</td>
+<td><code>get_orphaned_notes</code></td>
+<td><code>vault_id</code>, <code>limit</code></td>
+<td>Notes with no incoming or outgoing links</td>
 </tr>
 <tr>
-<td><code>--provider</code></td>
-<td>auto</td>
-<td>AI provider</td>
+<td><code>get_broken_links</code></td>
+<td><code>vault_id</code></td>
+<td>Unresolved wikilinks</td>
 </tr>
 <tr>
-<td><code>--json</code></td>
-<td></td>
-<td>Machine-readable output</td>
+<td><code>analyze_vault</code></td>
+<td><code>vault_id</code></td>
+<td>Full graph metrics: PageRank, centrality, clustering</td>
 </tr>
 </tbody>
 </table>
-<p><code>&lt;target&gt;</code> accepts a vault name/ID (vault-wide) or a note ID (single note).</p>
-<h3 id="obs-ai-quality">obs ai quality<a class="headerlink" href="#obs-ai-quality" title="Permanent link">&para;</a></h3>
-<p>Score notes across 4 quality dimensions (graph-only, no AI required).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>&lt;target&gt;<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</code></pre></div>
-<p><strong>Dimensions</strong> (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).</p>
-<p><code>&lt;target&gt;</code> accepts a vault name/ID (vault-wide) or a note ID (single note). Vault-wide output is sorted worst-first.</p>
-<hr />
-<h2 id="utility"><img alt="🔧" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f527.svg" title=":wrench:" /> Utility<a class="headerlink" href="#utility" title="Permanent link">&para;</a></h2>
-<h3 id="obs-help">obs help<a class="headerlink" href="#obs-help" title="Permanent link">&para;</a></h3>
-<p>Show help for commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span>
-</code></pre></div>
-<h3 id="obs-version">obs version<a class="headerlink" href="#obs-version" title="Permanent link">&para;</a></h3>
-<p>Show version information.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>obs<span class="w"> </span>version
-</code></pre></div>
-<hr />
-<h2 id="quick-reference"><img alt="⚡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a1.svg" title=":zap:" /> Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<h3 id="health-tools">Health Tools<a class="headerlink" href="#health-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Command</th>
-<th>Purpose</th>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>obs</code></td>
-<td>List registered vaults</td>
+<td><code>get_vault_health</code></td>
+<td><code>vault_id</code></td>
+<td>4-dimension score: connectivity (30%), link integrity (25%), structure (25%), freshness (20%)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="note-crud-tools">Note CRUD Tools<a class="headerlink" href="#note-crud-tools" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_notes</code></td>
+<td><code>vault_id</code>, <code>limit</code>, <code>offset</code>, <code>tag</code>, <code>sort_by</code></td>
+<td>Paginated note listing with tag filter</td>
 </tr>
 <tr>
-<td><code>obs search &lt;query&gt;</code></td>
-<td>Search notes by title</td>
+<td><code>read_note</code></td>
+<td><code>note_id</code></td>
+<td>Read full note content and frontmatter</td>
 </tr>
 <tr>
-<td><code>obs discover &lt;path&gt;</code></td>
-<td>Find vaults in directory</td>
+<td><code>write_note</code></td>
+<td><code>note_id</code>, <code>content</code>, <code>create_backup=True</code></td>
+<td>Overwrite note (backup created by default)</td>
 </tr>
 <tr>
-<td><code>obs stats</code></td>
-<td>Show statistics</td>
+<td><code>create_note</code></td>
+<td><code>vault_id</code>, <code>title</code>, <code>content</code>, <code>folder</code>, <code>tags</code></td>
+<td>Create a new note</td>
 </tr>
 <tr>
-<td><code>obs health &lt;vault&gt;</code></td>
-<td>Vault health dashboard</td>
+<td><code>append_to_note</code></td>
+<td><code>note_id</code>, <code>content</code>, <code>separator</code></td>
+<td>Append text to an existing note</td>
 </tr>
 <tr>
-<td><code>obs analyze &lt;vault&gt;</code></td>
-<td>Graph analysis</td>
+<td><code>rename_note</code></td>
+<td><code>note_id</code>, <code>new_title</code></td>
+<td>Rename note (warns about wikilink breakage)</td>
 </tr>
 <tr>
-<td><code>obs db init</code></td>
-<td>Initialize database</td>
+<td><code>delete_note</code></td>
+<td><code>note_id</code>, <code>confirm=False</code></td>
+<td>Delete note — <code>confirm=True</code> required; default is <strong>dry-run</strong></td>
 </tr>
 <tr>
-<td><code>obs ai status</code></td>
-<td>Provider status</td>
+<td><code>get_note_links</code></td>
+<td><code>note_id</code></td>
+<td>Incoming + outgoing links</td>
 </tr>
 <tr>
-<td><code>obs ai setup</code></td>
-<td>Configure AI</td>
+<td><code>rescan_vault</code></td>
+<td><code>vault_id</code></td>
+<td>Re-scan vault to pick up file system changes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-passthrough-tool">AI Passthrough Tool<a class="headerlink" href="#ai-passthrough-tool" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run_obs_ai</code></td>
+<td><code>command</code>, <code>target</code>, <code>options</code></td>
+<td>Runs any <code>obs ai</code> subcommand</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>command</code> values:</strong> <code>similar</code>, <code>analyze</code>, <code>duplicates</code>, <code>suggest-links</code>, <code>gaps</code>,
+<code>summarize</code>, <code>refactor</code>, <code>merge-suggest</code>, <code>tag-suggest</code>, <code>quality</code></p>
+<hr />
+<h2 id="mcp-resources">MCP Resources<a class="headerlink" href="#mcp-resources" title="Permanent link">&para;</a></h2>
+<p>Resources provide structured data that Claude can read directly:</p>
+<table>
+<thead>
+<tr>
+<th>URI</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vault://{vault_id}/stats</code></td>
+<td>Live vault statistics</td>
 </tr>
 <tr>
-<td><code>obs ai test</code></td>
-<td>Test providers</td>
+<td><code>vault://{vault_id}/health</code></td>
+<td>Live health scores</td>
 </tr>
 <tr>
-<td><code>obs ai similar &lt;id&gt;</code></td>
-<td>Find similar notes</td>
+<td><code>obsidian://overview</code></td>
+<td>Cross-vault summary</td>
 </tr>
 <tr>
-<td><code>obs ai analyze &lt;id&gt;</code></td>
-<td>Analyze a note</td>
-</tr>
-<tr>
-<td><code>obs ai duplicates &lt;vault&gt;</code></td>
-<td>Find duplicates</td>
-</tr>
-<tr>
-<td><code>obs ai suggest-links &lt;id&gt;</code></td>
-<td>Suggest new links</td>
-</tr>
-<tr>
-<td><code>obs ai gaps &lt;vault&gt;</code></td>
-<td>Find knowledge gaps</td>
-</tr>
-<tr>
-<td><code>obs ai summarize &lt;vault&gt;</code></td>
-<td>Summarize vault</td>
-</tr>
-<tr>
-<td><code>obs ai refactor &lt;vault&gt;</code></td>
-<td>Reorganization suggestions</td>
-</tr>
-<tr>
-<td><code>obs ai merge-suggest &lt;vault&gt;</code></td>
-<td>Find merge candidates</td>
-</tr>
-<tr>
-<td><code>obs ai tag-suggest &lt;target&gt;</code></td>
-<td>Suggest tags</td>
-</tr>
-<tr>
-<td><code>obs ai quality &lt;target&gt;</code></td>
-<td>Score note quality</td>
+<td><code>note://{note_id}</code></td>
+<td>Note content</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="claude-mcp-integration"><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot_face:" /> Claude / MCP Integration<a class="headerlink" href="#claude-mcp-integration" title="Permanent link">&para;</a></h2>
-<p><code>obs</code> exposes <strong>18 MCP tools</strong> via <code>src/python/mcp_server.py</code> for use in Claude Desktop,
-Claude Code, and Cowork. Once configured (see <a href="../claude-integration/">Claude Integration</a>),
-you can ask Claude natural-language questions about your vaults.</p>
-<h3 id="mcp-tool-groups">MCP Tool Groups<a class="headerlink" href="#mcp-tool-groups" title="Permanent link">&para;</a></h3>
-<p><strong>Vault</strong> — <code>list_vaults</code>, <code>get_vault_stats</code>, <code>discover_vaults</code></p>
-<p><strong>Search</strong> — <code>search_notes</code>, <code>find_similar_notes</code></p>
-<p><strong>Graph</strong> — <code>get_hub_notes</code>, <code>get_orphaned_notes</code>, <code>get_broken_links</code>, <code>analyze_vault</code></p>
-<p><strong>Health</strong> — <code>get_vault_health</code></p>
-<p><strong>Notes</strong> — <code>list_notes</code>, <code>read_note</code>, <code>write_note</code>, <code>create_note</code>, <code>append_to_note</code>,
-<code>rename_note</code>, <code>delete_note</code>, <code>get_note_links</code>, <code>rescan_vault</code></p>
-<p><strong>AI</strong> — <code>run_obs_ai</code> (bridges all <code>obs ai</code> subcommands)</p>
-<h3 id="example-claude-prompts">Example Claude prompts<a class="headerlink" href="#example-claude-prompts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>&quot;List orphaned notes in MyVault&quot;
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>&quot;Read the note on causal mediation&quot;
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>&quot;Run a quality check on MyVault&quot;
-</code></pre></div>
-<p>See <a href="../claude-integration/">Claude Integration</a> for full setup instructions and all 18 tools.</p>
+<h2 id="example-workflows">Example Workflows<a class="headerlink" href="#example-workflows" title="Permanent link">&para;</a></h2>
+<h3 id="daily-vault-check">Daily vault check<a class="headerlink" href="#daily-vault-check" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>You:</strong> "Show me the health of my Research vault, then list the top 5 orphaned notes"</p>
+</blockquote>
+<p>Claude calls <code>get_vault_health("Research")</code> → <code>get_orphaned_notes("Research", limit=5)</code> and
+summarizes the results with recommendations.</p>
+<h3 id="research-assistant">Research assistant<a class="headerlink" href="#research-assistant" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>You:</strong> "Search my causal inference vault for notes about mediation analysis, then find
+notes similar to the top result"</p>
+</blockquote>
+<p>Claude chains <code>search_notes</code> → <code>find_similar_notes</code> and presents a connected cluster of
+related notes.</p>
+<h3 id="note-creation-from-conversation">Note creation from conversation<a class="headerlink" href="#note-creation-from-conversation" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>You:</strong> "I just had a meeting about the collider bias paper. Create a note in my Research
+vault called 'Collider Bias Meeting 2026-06-15' with these key points: [...]"</p>
+</blockquote>
+<p>Claude calls <code>create_note("Research", "Collider Bias Meeting 2026-06-15", content=...)</code>.</p>
+<h3 id="vault-reorganization">Vault reorganization<a class="headerlink" href="#vault-reorganization" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>You:</strong> "Find knowledge gaps in MyVault and suggest which orphaned notes to link"</p>
+</blockquote>
+<p>Claude calls <code>run_obs_ai("gaps", "MyVault")</code> → <code>get_orphaned_notes</code> and synthesizes a
+linking plan with specific recommendations.</p>
 <hr />
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="safety-notes">Safety Notes<a class="headerlink" href="#safety-notes" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Write operations</p>
+<p>The note CRUD tools (<code>write_note</code>, <code>create_note</code>, <code>append_to_note</code>, <code>rename_note</code>,
+<code>delete_note</code>) modify vault files. Claude will describe what it's about to do before
+calling any write tool — review before confirming.</p>
+</div>
 <ul>
-<li><a href="../cookbook/">Cookbook</a> -- Task-based recipes</li>
-<li><a href="../refcard/">Quick Reference</a> -- Command cheat sheet</li>
-<li><a href="../claude-integration/">Claude Integration</a> -- MCP server setup</li>
+<li><strong><code>delete_note</code></strong> defaults to dry-run (<code>confirm=False</code>). Claude must pass <code>confirm=True</code>
+  to actually delete. You'll see the dry-run result first.</li>
+<li><strong><code>write_note</code></strong> creates a <code>.bak</code> backup automatically.</li>
+<li><strong><code>rename_note</code></strong> warns you if other notes link to the note being renamed.</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="obsidian-ops-doesnt-appear-in-claude-desktop">"obsidian-ops" doesn't appear in Claude Desktop<a class="headerlink" href="#obsidian-ops-doesnt-appear-in-claude-desktop" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Validate your JSON: <code>python3 -m json.tool ~/Library/"Application Support"/Claude/claude_desktop_config.json</code></li>
+<li>Check the zsh one-liner manually in Terminal — paste the <code>command</code>+<code>args</code> values</li>
+<li>Confirm <code>obs</code> is installed: <code>obs version</code></li>
+<li>Restart Claude Desktop fully (<code>Cmd+Q</code>, not just closing the window)</li>
+</ol>
+<h3 id="modulenotfounderror-mcp"><code>ModuleNotFoundError: mcp</code><a class="headerlink" href="#modulenotfounderror-mcp" title="Permanent link">&para;</a></h3>
+<p>The launcher resolved to a Python outside the obs venv. Force the correct interpreter:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3
+</code></pre></div>
+<p>Or reinstall: <code>brew reinstall obsidian-cli-ops</code></p>
+<h3 id="tools-return-vault-not-found">Tools return "vault not found"<a class="headerlink" href="#tools-return-vault-not-found" title="Permanent link">&para;</a></h3>
+<p>The vault isn't registered in the obs database. Fix with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w">  </span><span class="c1"># verify vault appears</span>
+</code></pre></div>
+<h3 id="test-the-server-directly">Test the server directly<a class="headerlink" href="#test-the-server-directly" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Should exit 0 with no output (no client connected = normal)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Interactive inspector (requires npx)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>npx<span class="w"> </span>@modelcontextprotocol/inspector<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
+</code></pre></div>
+<hr />
+<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
+<p>The Claude integration is being built in three phases:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A — Claude Desktop MCP</strong></td>
+<td>✅ v3.3.0</td>
+<td>18 tools, venv-aware, note CRUD</td>
+</tr>
+<tr>
+<td><strong>B — Cowork Plugin</strong></td>
+<td>🔜 v3.4.0</td>
+<td><code>.plugin</code> bundle with skills + MCP for Cowork</td>
+</tr>
+<tr>
+<td><strong>C — Claude Code Plugin</strong></td>
+<td>🔜 future</td>
+<td><code>bin/</code> wrapper, hooks, marketplace distribution</td>
+</tr>
+</tbody>
+</table>
+<p>See <code>PROPOSAL-claude-integration-2026-06-15.md</code> for full proposal and open questions.</p>
+<hr />
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../cli-reference/">CLI Reference</a> — All <code>obs</code> commands</li>
+<li><a href="../refcard/">Quick Reference</a> — MCP tools cheat sheet</li>
+<li><a href="https://github.com/Data-Wise/obsidian-cli-ops/blob/main/MCP_README.md">MCP_README.md</a> — Setup guide in the repo</li>
 </ul>
 
 
