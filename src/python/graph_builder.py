@@ -181,14 +181,16 @@ class GraphBuilder:
         for note in notes:
             graph.add_node(note['id'], **note)
 
-        # Add edges (links)
+        # Add edges (links) — scoped to this vault via notes join
         with self.db.get_connection() as conn:
             cursor = conn.execute("""
-                SELECT source_note_id, target_note_id
-                FROM links
-                WHERE link_type = 'internal'
-                AND target_note_id IS NOT NULL
-            """)
+                SELECT l.source_note_id, l.target_note_id
+                FROM links l
+                JOIN notes n ON l.source_note_id = n.id
+                WHERE l.link_type = 'internal'
+                AND l.target_note_id IS NOT NULL
+                AND n.vault_id = ?
+            """, (vault_id,))
             for row in cursor.fetchall():
                 graph.add_edge(row[0], row[1])
 

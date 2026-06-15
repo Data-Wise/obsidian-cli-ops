@@ -188,7 +188,15 @@ class ObsCLI:
             vault_id = vault['id']
 
             notes = self.db.list_notes(vault_id)
-            link_count = sum(len(self.db.get_outgoing_links(note['id'])) for note in notes)
+            # Count only resolved internal links (excludes broken links)
+            with self.db.get_connection() as conn:
+                cursor = conn.execute("""
+                    SELECT COUNT(*) FROM links l
+                    JOIN notes n ON l.source_note_id = n.id
+                    WHERE l.link_type = 'internal'
+                    AND n.vault_id = ?
+                """, (vault_id,))
+                internal_link_count = cursor.fetchone()[0]
             tag_stats = self.db.get_tag_stats()
 
             # Graph health
@@ -198,12 +206,15 @@ class ObsCLI:
             broken_count = sum(b['broken_count'] for b in broken)
 
             # Build stats content
+            links_display = f"{internal_link_count}"
+            if broken_count > 0:
+                links_display += f" ({broken_count} broken)"
             stats_content = f"""[bold]Path:[/] {vault['path']}
 [bold]Last Scanned:[/] {format_relative_time(vault.get('last_scanned'))}
 
 [cyan]Content[/]
   Notes: [bold]{len(notes)}[/]
-  Links: [bold]{link_count}[/]
+  Links: [bold]{links_display}[/]
   Tags: [bold]{len(tag_stats)}[/]
 
 [cyan]Graph Health[/]
@@ -672,7 +683,14 @@ def main():
                         sys.exit(1)
                     vault_id = vault['id']
                     notes = cli.db.list_notes(vault_id)
-                    link_count = sum(len(cli.db.get_outgoing_links(note['id'])) for note in notes)
+                    with cli.db.get_connection() as conn:
+                        cursor = conn.execute("""
+                            SELECT COUNT(*) FROM links l
+                            JOIN notes n ON l.source_note_id = n.id
+                            WHERE l.link_type = 'internal'
+                            AND n.vault_id = ?
+                        """, (vault_id,))
+                        link_count = cursor.fetchone()[0]
                     tag_stats = cli.db.get_tag_stats()
                     orphans = cli.db.get_orphaned_notes(vault_id)
                     hubs = cli.db.get_hub_notes(vault_id, limit=10)
@@ -683,10 +701,10 @@ def main():
                         "path": vault['path'],
                         "notes": len(notes),
                         "links": link_count,
+                        "broken_links": broken_count,
                         "tags": len(tag_stats),
                         "orphaned": len(orphans),
                         "hubs": len(hubs),
-                        "broken_links": broken_count,
                     }, indent=2, default=str))
                 else:
                     db_stats = cli.db.get_stats()
