@@ -33,6 +33,7 @@ target: v3.3.0 - bridge + temporal + MCP server (18 tools)
 - **32 E2E dogfood tests** (`tests/e2e/test_e2e_mcp.py`) — real subprocess JSON-RPC; run with `E2E=1`.
 - **numpy test fix** — numpy-dependent tests now skip gracefully under system Python (was erroring at collection).
 - **Docs updated** — cli-reference, refcard, usage, getting-started, testing/overview, changelog, claude-mcp, CLAUDE.md, .STATUS.
+- **Release**: PR #27 dev→main merged, tag `v3.2.3`, GitHub release live.
 
 ---
 
