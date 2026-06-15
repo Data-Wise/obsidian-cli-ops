@@ -2,7 +2,7 @@
 
 import json
 import pytest
-import numpy as np
+np = pytest.importorskip("numpy", reason="numpy not installed in this Python env")
 from unittest.mock import patch, MagicMock
 from datetime import datetime, timezone, timedelta
 

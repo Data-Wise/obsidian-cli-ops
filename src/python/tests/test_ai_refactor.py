@@ -2,6 +2,7 @@
 
 import json
 import pytest
+pytest.importorskip("numpy", reason="numpy not installed in this Python env")
 from unittest.mock import patch, MagicMock
 
 from ai.features import (
