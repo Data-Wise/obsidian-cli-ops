@@ -4,6 +4,59 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.3.0 (2026-06-15)
+
+Claude / MCP integration release. Expands the MCP server from 7 tools to 18 and wires it
+into Claude Desktop via a robust venv-aware launcher. No changes to the existing `obs` CLI.
+
+### Added
+
+- **MCP server — 18 tools** (`src/python/mcp_server.py`, 276 → 956 lines):
+  - *Vault:* `list_vaults`, `get_vault_stats`, `discover_vaults`
+  - *Search:* `search_notes`, `find_similar_notes`
+  - *Graph:* `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`
+  - *Health:* `get_vault_health` (4-dimension scoring)
+  - *Notes (new):* `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault`
+  - *AI passthrough:* `run_obs_ai` (bridges all `obs ai` subcommands with `--json`)
+  - *MCP resources:* `vault://{id}/stats`, `vault://{id}/health`, `obsidian://overview`, `note://{id}`
+- **Venv-aware MCP launcher** — `claude_desktop_config.json` uses a 3-candidate zsh resolver; never calls `brew --prefix` (subprocess-in-MCP-env risk eliminated).
+- **`mcp==1.27.2`** + 22 transitive deps added to `requirements.lock`, `pyproject.toml`, and Homebrew formula resource blocks. `brew audit --strict` clean.
+- **`MCP_README.md`** — comprehensive setup guide, all 18 tools documented.
+- **`docs_mkdocs/claude-integration.md`** — MkDocs page for Claude Desktop integration.
+
+### Safety
+
+- `delete_note` defaults to dry-run (`confirm=False`); requires `confirm=True` to actually delete.
+- `write_note` creates a `.bak` backup by default.
+- `rename_note` warns when other notes link to the renamed note.
+
+---
+
+## v3.2.3 (2026-06-15)
+
+Patch release: new `obs search` command, graph bug fix, stats display fix, and test suite expansion.
+
+### Added
+
+- **`obs search <query>`** — native CLI command for title search across all vaults
+  - `--vault` / `-v` to scope to one vault
+  - `--limit` / `-n` to cap results (default 20)
+  - `--json` for machine-readable output
+- **52 MCP unit tests** (`test_mcp_server.py`) — full coverage of all 20 MCP tools + 4 resources; includes unicode, empty inputs, path traversal safety, and server stability edge cases
+- **32 E2E dogfood tests** (`tests/e2e/test_e2e_mcp.py`) — real subprocess JSON-RPC; run with `E2E=1 pytest src/python/tests/e2e/ -v`
+
+### Fixed
+
+- **`obs analyze <vault>` cross-vault edge contamination** — graph builder now scopes link queries to the target vault via JOIN on the notes table; graphs for different vaults no longer bleed edges into each other
+- **`obs stats <vault>` misleading link count** — now shows internal links and broken links separately (e.g. `Links: 56 (635 broken)`) instead of a single ambiguous total
+- **numpy-dependent tests** now skip gracefully under system Python (was erroring at collection time)
+
+### Changed
+
+- **Test counts:** 230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest = **383 total**
+
+---
+
 ## v3.2.2 (2026-06-05)
 
 Documentation + bug-fix release. Ships the first `obs` man page and fixes the `--json`/`--verbose` flags on the v3.2.0 AI quality commands.

@@ -1,15 +1,18 @@
 # obs -- Your Vault's Command Line
 
-[![Version](https://img.shields.io/badge/version-3.2.2-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.3.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Tests](https://img.shields.io/badge/tests-294%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-304%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![MCP Tools](https://img.shields.io/badge/MCP%20tools-18-purple.svg)](claude-integration.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/LICENSE)
 
-A laser-focused CLI for Obsidian vault management with AI-powered graph analysis.
+A laser-focused CLI for Obsidian vault management with AI-powered graph analysis — and a full
+Claude / MCP integration so you can query your vaults in natural language.
 
 [Install Now](installation.md){ .md-button .md-button--primary }
 [Quick Reference](refcard.md){ .md-button }
+[Claude Integration](claude-integration.md){ .md-button }
 
 ---
 
@@ -23,6 +26,9 @@ A laser-focused CLI for Obsidian vault management with AI-powered graph analysis
 
 !!! tip "Graph Analysis"
     PageRank, centrality, clustering, orphan/hub detection. Understand your vault's structure at a glance with the health dashboard.
+
+!!! tip "Claude Integration (v3.3.0)"
+    18 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
 
 ---
 
@@ -63,4 +69,5 @@ graph LR
 - [Quick Reference](refcard.md) -- Command cheat sheet
 - [Cookbook](cookbook.md) -- Task-based recipes
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
+- [Claude Integration](claude-integration.md) -- MCP server setup (18 tools)
 - [Architecture](developer/architecture.md) -- How it works

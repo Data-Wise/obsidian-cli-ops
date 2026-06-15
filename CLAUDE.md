@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 3.2.2
+**Current Version**: 3.2.3
 **Status**: Stable release
 **Priority**: P1
 
@@ -28,7 +28,7 @@ Developer guide for Claude Code when working with this repository.
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
 - **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
-- **Pytest**: Testing harness (235 tests)
+- **Pytest**: Testing harness (230 unit + 52 MCP unit + 32 E2E = 314 pytest tests)
 
 ## Architecture
 
@@ -63,12 +63,13 @@ python3 src/python/obs_cli.py db init
 
 ### Essential Commands
 
-**v3.2.0** - 18 focused commands:
+**v3.2.3** - 19 focused commands:
 
 ```bash
 # PRIMARY COMMANDS
 obs                             # List vaults
-obs stats <vault>               # Show vault statistics
+obs search <query>              # Search notes by title (--vault, --limit, --json)
+obs stats <vault>               # Show vault statistics (shows "Links: N (M broken)")
 obs discover <path>             # Find vaults in directory
 
 # GRAPH ANALYSIS
@@ -94,8 +95,14 @@ obs ai quality <target>         # Score notes on quality dimensions (v3.2.0)
 obs help [--all]                # Show help
 obs version                     # Show version
 
+# UTILITIES
+obs help [--all]                # Show help
+obs version                     # Show version
+
 # Development
-pytest src/python/tests/        # Run Python tests (235 tests)
+pytest src/python/tests/        # Run Python unit tests (230 tests)
+pytest tests/test_mcp_server.py # Run MCP unit tests (52 tests)
+E2E=1 pytest src/python/tests/e2e/ -v  # Run E2E tests (32 tests, gated)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
 ```
@@ -103,7 +110,9 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # 235 tests passing
+pytest src/python/tests/        # 230 unit tests passing
+pytest tests/test_mcp_server.py # 52 MCP unit tests
+E2E=1 pytest src/python/tests/e2e/ -v  # 32 E2E tests (requires real env)
 npx jest                        # 69 Jest tests passing
 obs --verbose <command>         # Run any command with verbose output
 ```
@@ -128,7 +137,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `core/` - Business logic (1,128 lines)
   - `obs_cli.py` - CLI interface (985 lines)
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
-  - `tests/` - Test suite (235 pytest tests)
+  - `tests/` - Test suite (230 unit + 52 MCP unit + 32 E2E pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
 
 ### Documentation

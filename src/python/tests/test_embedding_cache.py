@@ -1,7 +1,7 @@
 """Tests for embedding cache in DatabaseManager."""
 
-import numpy as np
 import pytest
+np = pytest.importorskip("numpy", reason="numpy not installed in this Python env")
 from db_manager import DatabaseManager
 
 

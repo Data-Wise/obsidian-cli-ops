@@ -188,7 +188,15 @@ class ObsCLI:
             vault_id = vault['id']
 
             notes = self.db.list_notes(vault_id)
-            link_count = sum(len(self.db.get_outgoing_links(note['id'])) for note in notes)
+            # Count only resolved internal links (excludes broken links)
+            with self.db.get_connection() as conn:
+                cursor = conn.execute("""
+                    SELECT COUNT(*) FROM links l
+                    JOIN notes n ON l.source_note_id = n.id
+                    WHERE l.link_type = 'internal'
+                    AND n.vault_id = ?
+                """, (vault_id,))
+                internal_link_count = cursor.fetchone()[0]
             tag_stats = self.db.get_tag_stats()
 
             # Graph health
@@ -198,12 +206,15 @@ class ObsCLI:
             broken_count = sum(b['broken_count'] for b in broken)
 
             # Build stats content
+            links_display = f"{internal_link_count}"
+            if broken_count > 0:
+                links_display += f" ({broken_count} broken)"
             stats_content = f"""[bold]Path:[/] {vault['path']}
 [bold]Last Scanned:[/] {format_relative_time(vault.get('last_scanned'))}
 
 [cyan]Content[/]
   Notes: [bold]{len(notes)}[/]
-  Links: [bold]{link_count}[/]
+  Links: [bold]{links_display}[/]
   Tags: [bold]{len(tag_stats)}[/]
 
 [cyan]Graph Health[/]
@@ -556,6 +567,13 @@ def main():
                              help='Force reinitialize existing database')
     db_subparsers.add_parser('stats', help='Show database stats')
 
+    # search command
+    search_parser = subparsers.add_parser('search', help='Search notes by title')
+    search_parser.add_argument('query', help='Search query (title match)')
+    search_parser.add_argument('--vault', '-v', help='Limit search to vault name or ID')
+    search_parser.add_argument('--limit', '-n', type=int, default=20,
+                               help='Max results (default: 20)')
+
     # health command
     health_parser = subparsers.add_parser('health', help='Vault health dashboard')
     health_parser.add_argument('vault', help='Vault name or ID')
@@ -672,7 +690,14 @@ def main():
                         sys.exit(1)
                     vault_id = vault['id']
                     notes = cli.db.list_notes(vault_id)
-                    link_count = sum(len(cli.db.get_outgoing_links(note['id'])) for note in notes)
+                    with cli.db.get_connection() as conn:
+                        cursor = conn.execute("""
+                            SELECT COUNT(*) FROM links l
+                            JOIN notes n ON l.source_note_id = n.id
+                            WHERE l.link_type = 'internal'
+                            AND n.vault_id = ?
+                        """, (vault_id,))
+                        link_count = cursor.fetchone()[0]
                     tag_stats = cli.db.get_tag_stats()
                     orphans = cli.db.get_orphaned_notes(vault_id)
                     hubs = cli.db.get_hub_notes(vault_id, limit=10)
@@ -683,10 +708,10 @@ def main():
                         "path": vault['path'],
                         "notes": len(notes),
                         "links": link_count,
+                        "broken_links": broken_count,
                         "tags": len(tag_stats),
                         "orphaned": len(orphans),
                         "hubs": len(hubs),
-                        "broken_links": broken_count,
                     }, indent=2, default=str))
                 else:
                     db_stats = cli.db.get_stats()
@@ -700,6 +725,48 @@ def main():
                     }, indent=2, default=str))
             else:
                 cli.stats(vault_identifier=args.vault, verbose=args.verbose)
+
+        elif args.command == 'search':
+            query = args.query
+            vault_id = None
+            if args.vault:
+                try:
+                    vault = cli.db.get_vault_by_name_or_id(args.vault)
+                except ValueError as e:
+                    if args.json:
+                        print(json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        console.print(f"[red]❌ {e}[/]")
+                    sys.exit(1)
+                if not vault:
+                    if args.json:
+                        print(json.dumps({"error": f"Vault not found: {args.vault}"}), file=sys.stderr)
+                    else:
+                        console.print(f"[red]❌ Vault not found: {args.vault}[/]")
+                    sys.exit(1)
+                vault_id = vault['id']
+
+            results = cli.db.search_notes(query, vault_id=vault_id, limit=args.limit)
+
+            if args.json:
+                print(json.dumps(results, indent=2, default=str))
+            else:
+                if not results:
+                    console.print(f"[dim]No notes found matching '{query}'[/]")
+                else:
+                    table = Table(
+                        title=f"🔍 Search: {query}  ({len(results)} result{'s' if len(results) != 1 else ''})",
+                        box=box.ROUNDED,
+                        header_style="bold cyan",
+                    )
+                    table.add_column("Title", style="bold", min_width=20)
+                    table.add_column("Vault", style="cyan", min_width=10)
+                    table.add_column("Path", style="dim")
+                    for r in results:
+                        table.add_row(r['title'], r.get('vault_name', ''), r['path'])
+                    console.print()
+                    console.print(table)
+                    console.print()
 
         elif args.command == 'vaults':
             if args.json:

@@ -71,15 +71,23 @@ nav:
       - Installation: installation.md
       - Configuration: configuration.md
       - Usage: usage.md
+  - Tutorials & Cookbook:
+      - Overview: tutorials/index.md
+      - Getting Started: tutorials/getting-started.md
+      - Graph Analysis: tutorials/graph-analysis.md
+      - AI Features: tutorials/ai-features.md
+      - Claude / MCP Integration: tutorials/claude-mcp.md
+      - Cookbook: cookbook.md
   - Reference:
       - Quick Reference: refcard.md
-      - Visual Workflows: workflows.md
-      - Cookbook: cookbook.md
       - CLI Reference: cli-reference.md
+      - Visual Workflows: workflows.md
       - AI Setup Guide: ai-setup.md
+      - Claude Integration: claude-integration.md
       - Changelog: changelog.md
   - Developer:
       - Architecture: developer/architecture.md
+      - API Reference: developer/api-reference.md
       - Testing:
           - Overview: developer/testing/overview.md
           - Core Tests: developer/testing/core-tests.md

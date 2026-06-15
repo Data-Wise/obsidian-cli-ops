@@ -494,7 +494,70 @@ obsidian create name="Missing Topic" template="note-template"
 
 ---
 
+## Claude Desktop Integration (v3.3.0)
+
+Once `obs` is connected to Claude Desktop via MCP ([setup guide](claude-integration.md)),
+you can use natural language for all vault operations — no terminal required.
+
+### Ask Claude to search your vaults
+
+> *"Search my research vault for causal inference and list the top 5 results"*
+
+Claude calls `search_notes("causal inference", vault_id="Research", limit=5)` and summarizes
+the matching notes.
+
+### Ask Claude for a vault health check
+
+> *"Run a health check on MyVault and tell me the top issues to fix"*
+
+Claude calls `get_vault_health("MyVault")` and `get_orphaned_notes` and presents a
+prioritized fix list.
+
+### Create notes from conversation
+
+> *"I just had a key insight about collider bias. Create a note called 'Collider Bias Insight
+> 2026-06-15' in my research vault with these points: [...]"*
+
+Claude calls `create_note("Research", "Collider Bias Insight 2026-06-15", content=...)`.
+
+### Append to your daily note
+
+> *"Append these meeting notes to today's daily note: [...]"*
+
+Claude looks up the daily note via `search_notes` or `list_notes`, then calls `append_to_note`.
+
+### AI analysis via Claude
+
+> *"Find knowledge gaps in MyVault and suggest three new notes I should create"*
+
+Claude calls `run_obs_ai("gaps", "MyVault")` and presents actionable gap-filling suggestions.
+
+### Batch quality review
+
+> *"Run a quality check on all notes in MyVault and show me the 5 worst-scoring ones"*
+
+Claude calls `run_obs_ai("quality", "MyVault")` and presents the lowest-scoring notes with
+their dimension breakdowns.
+
+### Find merge candidates
+
+> *"Find notes in MyVault that are very similar to each other and might be merged"*
+
+Claude calls `run_obs_ai("merge-suggest", "MyVault")` and lists candidate pairs with
+similarity scores and merge rationale.
+
+!!! tip "Three tools, one workflow"
+    **`obs` CLI** = terminal scripts and automation. **Native Obsidian CLI** = note CRUD.
+    **Claude MCP** = natural language queries and AI-assisted editing. Use all three.
+
+??? info "Setup"
+    See [Claude Integration](claude-integration.md) for the 5-minute setup. Requires
+    `obs` installed via Homebrew and Claude Desktop.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
+- [Claude Integration](claude-integration.md) -- MCP server setup

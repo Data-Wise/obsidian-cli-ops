@@ -55,7 +55,8 @@
       "Bash(obs version:*)",
       "Bash(git checkout:*)",
       "WebFetch(domain:data-wise.github.io)",
-      "Bash(obs:*)"
+      "Bash(obs:*)",
+      "WebFetch(domain:obsidian.md)"
     ]
   }
 }
