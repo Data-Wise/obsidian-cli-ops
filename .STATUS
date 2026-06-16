@@ -1,12 +1,11 @@
 priority: P1
-status: 🟢 v3.3.0 SHIPPED — MCP server (18 tools), GitHub release + main CI green + Homebrew tap @ 3.3.0 (40-resource mcp closure, build-validated)
+status: 🟢 v3.3.0 SHIPPED — MCP server (20 tools), GitHub release + main CI green + Homebrew tap @ 3.3.0 (40-resource mcp closure, build-validated)
 progress: 93
 updated: 2026-06-15
 version: 3.3.0 (next: v3.4.0 — bridge + temporal)
 next: |
   1. v3.4.0: bridge (consume official Obsidian CLI as "hands") + temporal analytics (trends, stale, daily-digest) — SPEC-v3.3.0-bridge-temporal reviewed, ready to implement in a worktree.
   2. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
-  3. Minor cleanup: docs say "18 MCP tools" but server exposes 20 (reconcile changelog/README); claude_desktop_config.json candidate-3 hardcodes stale 3.2.2 Cellar path (harmless, opt-symlink #2 wins — remove the pin).
 verified: |
   MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults returned 3016-note Documents vault) using the exact claude_desktop_config.json launch command. Claude Desktop will connect.
 target: v3.4.0 - bridge + temporal analytics
@@ -24,9 +23,9 @@ target: v3.4.0 - bridge + temporal analytics
 
 ---
 
-## ✅ v3.3.0 Released (2026-06-15) — MCP server production release (18 tools)
+## ✅ v3.3.0 Released (2026-06-15) — MCP server production release (20 tools)
 
-- **GitHub release v3.3.0 live** (PR #29 dev→main, tag, main CI green). 18-tool MCP server (`mcp_server.py`) promoted to production; no `obs` CLI changes.
+- **GitHub release v3.3.0 live** (PR #29 dev→main, tag, main CI green). 20-tool MCP server (`mcp_server.py`) promoted to production; no `obs` CLI changes.
 - **Version bump** 3.2.3→3.3.0 across 13 files; 2nd hardcoded version assertion found in `__tests__/cli.test.js` (separate dir from `tests/obs.test.js`). Tests: 287 pytest + 67 Jest.
 - **Fix:** removed stale pinned Cellar path (`…/3.2.3/…`) in `mcp_server._find_obs_python` — the Homebrew `opt` symlink candidate resolves the active version (no per-release pin).
 - **Homebrew tap @ 3.3.0** (tap PR #127): resources **13→40** — full `requirements.lock` closure (mcp + transitive). Derived via `pip install -r requirements.lock --dry-run --report` (lock-faithful), NOT `brew update-python-resources` (resolved un-buildable `attrs==26.1.0`). Added `sniffio` (update-python-resources omits it), `depends_on "rust" => :build` (rpds-py/pydantic-core/cryptography sdists), `depends_on "libyaml"`. Gated by `brew reinstall --build-from-source` (built 6m13s, mcp imports OK, db-init clean) + `brew audit --strict` clean. `obs version` → 3.3.0.
@@ -84,7 +83,7 @@ Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own t
 
 ### Claude Desktop Integration (Option A complete)
 
-- **`src/python/mcp_server.py`** — expanded 276 → 956 lines; 18 tools in 6 groups:
+- **`src/python/mcp_server.py`** — expanded 276 → 956 lines; 20 tools in 6 groups:
   - Vault: `list_vaults`, `get_vault_stats`, `discover_vaults`
   - Search: `search_notes`, `find_similar_notes`
   - Graph: `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`

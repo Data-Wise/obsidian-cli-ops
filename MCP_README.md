@@ -147,7 +147,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 18 tools)
+     mcp_server.py   (FastMCP, 20 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓
