@@ -1,16 +1,19 @@
 priority: P1
-status: ✅ v3.4.0 RELEASED — Bridge + Temporal Analytics + Daily-Digest (PR #30, main CI green, Homebrew updated)
-progress: 100
+status: 🚀 v3.4.1 releasing — iCloud MCP write-hang patch (PR pending)
+progress: 80
 updated: 2026-06-19
-version: 3.4.0 (prev: v3.3.0)
+version: 3.4.1 (prev: v3.4.0)
 next: |
-  1. IDEAS.md — review v3.5.0 candidates (write-path bridge, batch ops, obs apply)
+  1. Merge v3.4.1 PR → tag → GitHub release → Homebrew formula bump
+  2. Rescan vaults after iCloud materialization (obs scan a812d844 + obs analyze a812d844)
+  3. v3.5.0: obs doctor self-diagnostic command (SPEC-obs-doctor-v3.5.0-2026-06-19.md)
 verified: |
+  v3.4.1 in progress 2026-06-19: version bump committed, PR pending.
+  Fix: _fs_op() + _is_dataless() + SF_DATALESS detection — 5 MCP write tools wrapped with 30s timeout.
+  61 MCP unit tests pass (was 60 before test_create_note_fs_timeout added).
   v3.4.0 released 2026-06-19: PR #30 merged, tag pushed, GitHub release live, Homebrew tap auto-updated.
   322 tests passing (255 pytest + 67 Jest). Main CI green. Docs deployed.
-  INC 1+2+3 verified 2026-06-19: bridge+trends+stale+daily-digest across core/CLI/ZSH/MCP, 8 new MCP temporal tests.
-  MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults OK).
-target: v3.5.0 - write-path bridge + batch ops
+target: v3.5.0 - obs doctor self-diagnostic + write-path bridge
 
 ## 🎯 Current State
 

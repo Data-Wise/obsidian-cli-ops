@@ -1,6 +1,6 @@
 # Architecture
 
-**Version:** 3.4.0
+**Version:** 3.4.1
 
 Obsidian CLI Ops follows a clean **four-layer architecture**: Presentation, Application (Core), AI Features, and Data — plus an MCP Integration layer added in v3.3.0.
 
