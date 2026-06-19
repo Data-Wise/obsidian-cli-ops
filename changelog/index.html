@@ -2244,11 +2244,11 @@
 <p>All notable changes to Obsidian CLI Ops.</p>
 <hr />
 <h2 id="v330-2026-06-15">v3.3.0 (2026-06-15)<a class="headerlink" href="#v330-2026-06-15" title="Permanent link">&para;</a></h2>
-<p>Claude / MCP integration release. Expands the MCP server from 7 tools to 18 and wires it
+<p>Claude / MCP integration release. Expands the MCP server from 7 tools to 20 and wires it
 into Claude Desktop via a robust venv-aware launcher. No changes to the existing <code>obs</code> CLI.</p>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>MCP server — 18 tools</strong> (<code>src/python/mcp_server.py</code>, 276 → 956 lines):</li>
+<li><strong>MCP server — 20 tools</strong> (<code>src/python/mcp_server.py</code>, 276 → 956 lines):</li>
 <li><em>Vault:</em> <code>list_vaults</code>, <code>get_vault_stats</code>, <code>discover_vaults</code></li>
 <li><em>Search:</em> <code>search_notes</code>, <code>find_similar_notes</code></li>
 <li><em>Graph:</em> <code>get_hub_notes</code>, <code>get_orphaned_notes</code>, <code>get_broken_links</code>, <code>analyze_vault</code></li>
@@ -2258,7 +2258,7 @@ into Claude Desktop via a robust venv-aware launcher. No changes to the existing
 <li><em>MCP resources:</em> <code>vault://{id}/stats</code>, <code>vault://{id}/health</code>, <code>obsidian://overview</code>, <code>note://{id}</code></li>
 <li><strong>Venv-aware MCP launcher</strong> — <code>claude_desktop_config.json</code> uses a 3-candidate zsh resolver; never calls <code>brew --prefix</code> (subprocess-in-MCP-env risk eliminated).</li>
 <li><strong><code>mcp==1.27.2</code></strong> + 22 transitive deps added to <code>requirements.lock</code>, <code>pyproject.toml</code>, and Homebrew formula resource blocks. <code>brew audit --strict</code> clean.</li>
-<li><strong><code>MCP_README.md</code></strong> — comprehensive setup guide, all 18 tools documented.</li>
+<li><strong><code>MCP_README.md</code></strong> — comprehensive setup guide, all 20 tools documented.</li>
 <li><strong><code>docs_mkdocs/claude-integration.md</code></strong> — MkDocs page for Claude Desktop integration.</li>
 </ul>
 <h3 id="safety">Safety<a class="headerlink" href="#safety" title="Permanent link">&para;</a></h3>

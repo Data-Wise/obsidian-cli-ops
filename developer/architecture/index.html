@@ -1742,7 +1742,7 @@
 
 
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 3.3.0</p>
+<p><strong>Version:</strong> 3.4.0</p>
 <p>Obsidian CLI Ops follows a clean <strong>four-layer architecture</strong>: Presentation, Application (Core), AI Features, and Data — plus an MCP Integration layer added in v3.3.0.</p>
 <hr />
 <h2 id="high-level-overview">High-Level Overview<a class="headerlink" href="#high-level-overview" title="Permanent link">&para;</a></h2>
@@ -1753,7 +1753,7 @@
     end
 
     subgraph MCP["MCP Integration Layer (v3.3.0)"]
-        M[mcp_server.py\n956 lines\n18 tools · 4 resources]
+        M[mcp_server.py\n956 lines\n20 tools · 4 resources]
     end
 
     subgraph Core["Application Layer (Core)"]
@@ -1815,7 +1815,7 @@
     M --&gt;|"direct Python\nimport"| GA[GraphAnalyzer]
     M --&gt; RES["4 MCP Resources\nvault://{id}/stats\nnote://{id}\nobsidian://overview\n..."]</code></pre>
 <ul>
-<li><strong>18 MCP tools</strong> in 6 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1)</li>
+<li><strong>20 MCP tools</strong> in 6 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1)</li>
 <li><strong>FastMCP</strong> (<code>from mcp.server.fastmcp import FastMCP</code>) — stdio transport, clean exit when no client</li>
 <li>Note write tools include built-in safety: <code>delete_note</code> defaults <code>confirm=False</code> (dry-run), <code>write_note</code> defaults <code>create_backup=True</code></li>
 </ul>
