@@ -11,9 +11,16 @@ import hashlib
 import json
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional, Dict, List, Any
 from contextlib import contextmanager
+
+
+class _DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 class DatabaseManager:
@@ -195,7 +202,12 @@ class DatabaseManager:
         """List all vaults."""
         with self.get_connection() as conn:
             cursor = conn.execute("""
-                SELECT * FROM vaults ORDER BY name
+                SELECT v.*,
+                    (SELECT COUNT(*) FROM links l
+                     JOIN notes n ON l.source_note_id = n.id
+                     WHERE n.vault_id = v.id) AS link_count
+                FROM vaults v
+                ORDER BY v.name
             """)
             return [dict(row) for row in cursor.fetchall()]
 
@@ -303,7 +315,7 @@ class DatabaseManager:
                 char_count,
                 meta.get('created_at', datetime.now().isoformat()),
                 meta.get('modified_at', datetime.now().isoformat()),
-                json.dumps(meta)
+                json.dumps(meta, cls=_DateEncoder)
             ))
 
             # Initialize graph metrics

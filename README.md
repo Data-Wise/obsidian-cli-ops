@@ -10,7 +10,7 @@
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 3.4.1
+**Current Version**: 3.4.2
 
 ## 🚀 Quick Start
 
@@ -118,7 +118,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v3.4.1 Stable
+**Current Status:** v3.4.2 Stable
 
 ### Active Planning Files
 - **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now

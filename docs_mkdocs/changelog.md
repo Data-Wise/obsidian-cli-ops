@@ -4,6 +4,39 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.4.2 (2026-06-19)
+
+Patch release: two bug fixes discovered during vault dogfood testing.
+
+### Fixed
+
+- **Links column always showed 0 in vault list** — `list_vaults()` queried the `vaults` table directly, which has no `link_count` column; the column now computed via a correlated subquery over `links + notes` (no schema migration required).
+- **Vault scan crashed on YAML date frontmatter** — PyYAML parses `created: 2024-01-15` as Python `datetime.date`; `json.dumps()` cannot serialize `date` without a custom encoder. Added `_DateEncoder` to `db_manager.py` so frontmatter with date fields scans without error.
+
+---
+
+## v3.4.1 (2026-06-19)
+
+Patch release: iCloud Drive write-hang fix for MCP server.
+
+### Fixed
+
+- **MCP stdio server blocked on iCloud writes** — file-system operations against iCloud-backed vault paths could block indefinitely, hanging the MCP event loop for the full 4-minute Claude Desktop timeout. Added `_fs_op(fn, timeout)` wrapper using `ThreadPoolExecutor` to enforce a hard deadline on all FS writes; times out with a structured MCP error instead of blocking.
+
+---
+
+## v3.4.0 (2026-06-19)
+
+Bridge + Temporal Analytics + Daily Digest release.
+
+### Added
+
+- **`obs temporal`** — temporal knowledge analytics: growth trends, freshness scoring, activity heatmaps, stale note detection (`obs temporal growth/freshness/heatmap/stale`).
+- **`obs bridge`** — integration between `obs` graph analysis and the official Obsidian CLI for note CRUD; lets `obs` identify what to fix, and the native CLI execute it.
+- **`obs ai daily-digest`** — AI-generated daily digest of vault activity, linking patterns, and knowledge gaps.
+
+---
+
 ## v3.3.0 (2026-06-15)
 
 Claude / MCP integration release. Expands the MCP server from 7 tools to 20 and wires it
