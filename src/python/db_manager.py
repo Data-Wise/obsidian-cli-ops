@@ -230,10 +230,12 @@ class DatabaseManager:
         params = []
 
         # Text search (Title only - content is not stored in DB)
+        # Split into words so multi-word queries match notes containing all terms
         if query:
-            sql += " AND n.title LIKE ?"
-            wildcard = f"%{query}%"
-            params.append(wildcard)
+            words = query.split()
+            for word in words:
+                sql += " AND n.title LIKE ?"
+                params.append(f"%{word}%")
 
         # Vault Scope
         if vault_id:
