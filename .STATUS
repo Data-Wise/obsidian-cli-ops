@@ -1,16 +1,16 @@
 priority: P1
-status: ✅ v3.4.2 released — two bug fixes (Links display + date frontmatter)
-progress: 100
+status: 🔄 v3.5.0 in progress — obs doctor implementation on feature/obs-doctor
+progress: 90
 updated: 2026-06-19
-version: 3.4.2 (prev: v3.4.1)
+version: 3.5.0 (prev: v3.4.2)
 next: |
-  1. v3.5.0: obs doctor self-diagnostic command (SPEC-obs-doctor-v3.5.0-2026-06-19.md)
+  1. Open PR feature/obs-doctor → dev
+  2. Merge + tag v3.5.0 + GitHub release + Homebrew formula update
 verified: |
-  v3.4.1 released 2026-06-19: PR #31 merged, tag v3.4.1 pushed, GitHub release live, Homebrew auto-updated.
-  v3.4.2 fixes: (1) Links:0 in vault list — list_vaults() now computes link_count via JOIN; (2) date frontmatter
-  scan crash — added _DateEncoder(JSONEncoder) to handle datetime.date from PyYAML.
-  313 pytest + 59 Jest = 372 total. All pass on dev.
-target: v3.5.0 - obs doctor self-diagnostic + write-path bridge
+  v3.4.2 released 2026-06-19: PR merged, fixes (1) Links:0 display (2) date frontmatter scan crash.
+  v3.5.0 implementation complete: obs doctor (5-layer checks), fs_utils.py, diagnose MCP tool (#25).
+  341 pytest + 59 Jest = 400 total. 341 passed, 33 skipped, 0 failed on feature branch.
+target: v3.5.0 - obs doctor self-diagnostic (feature/obs-doctor)
 
 ## 🎯 Current State
 

@@ -4,6 +4,18 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v3.5.0 (2026-06-19)
+
+Self-diagnostics release: `obs doctor` command and `diagnose` MCP tool.
+
+### Added
+
+- **`obs doctor`** — five-layer self-diagnostic command covering Python runtime, database integrity, vault health, MCP configuration, and iCloud filesystem status. Returns structured pass/warn/fail/skip results with fix hints. Accepts `--vault`, `--layer` (repeatable), and `--json` flags. Exits 0 on pass/warn, 1 on any fail.
+- **`diagnose` MCP tool** (tool #25) — exposes the same diagnostics over the MCP protocol for Claude Desktop integration.
+- **`fs_utils.py`** — shared filesystem utility module (`is_icloud_path`, `is_dataless`, `fs_op`, `FS_WRITE_TIMEOUT`, `FS_PROBE_TIMEOUT`) extracted from `mcp_server.py` to enable reuse without circular imports.
+
+---
+
 ## v3.4.2 (2026-06-19)
 
 Patch release: two bug fixes discovered during vault dogfood testing.

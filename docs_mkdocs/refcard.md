@@ -196,4 +196,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.4.2 | **Commands:** 18 | **MCP Tools:** 24 | **AI Providers:** 5
+**Version:** 3.5.0 | **Commands:** 19 | **MCP Tools:** 25 | **AI Providers:** 5

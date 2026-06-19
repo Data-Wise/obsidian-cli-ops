@@ -452,7 +452,7 @@ class TestNoteCRUD:
         mock_executor.__exit__ = MagicMock(return_value=False)
         mock_executor.submit.return_value = mock_future
 
-        with patch("mcp_server.ThreadPoolExecutor", return_value=mock_executor):
+        with patch("fs_utils.ThreadPoolExecutor", return_value=mock_executor):
             with patch.object(mcp_mod, "_FS_WRITE_TIMEOUT", 0.001):
                 result = mcp_mod.create_note(vault_id, "HangTest", "content")
 
