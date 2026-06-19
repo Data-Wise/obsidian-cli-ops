@@ -31,6 +31,8 @@ from __future__ import annotations
 import os
 import sys
 import subprocess
+import stat
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -124,6 +126,43 @@ def _vault_path(vault_id: str) -> Optional[Path]:
     """Return the filesystem path for a vault_id, or None."""
     row = db.get_vault(vault_id)
     return Path(row["path"]) if row else None
+
+
+# iCloud Drive: SF_DATALESS means the file/dir is a dataless placeholder (not materialized)
+_SF_DATALESS = 0x40000000
+_ICLOUD_MARKER = "iCloud~md~obsidian"
+_FS_WRITE_TIMEOUT = 30  # seconds before giving up on a blocked FS write
+
+
+def _is_icloud_path(p: Path) -> bool:
+    return _ICLOUD_MARKER in str(p)
+
+
+def _is_dataless(p: Path) -> bool:
+    """Return True if path exists but is an iCloud dataless placeholder."""
+    try:
+        return bool(os.stat(p).st_flags & _SF_DATALESS)
+    except (OSError, AttributeError):
+        return False
+
+
+def _fs_op(fn, timeout: int = _FS_WRITE_TIMEOUT):
+    """
+    Run a blocking filesystem callable in a thread with a hard timeout.
+    Raises TimeoutError with a human-readable message if the operation hangs
+    (typical cause: iCloud Drive materializing an offloaded placeholder).
+    """
+    with ThreadPoolExecutor(max_workers=1) as ex:
+        future = ex.submit(fn)
+        try:
+            return future.result(timeout=timeout)
+        except FuturesTimeoutError:
+            raise TimeoutError(
+                f"Filesystem operation timed out after {timeout}s. "
+                "The vault path may be an iCloud Drive placeholder that hasn't been "
+                "downloaded. In Finder, right-click the vault folder → Download Now, "
+                "or disable 'Optimize Mac Storage' in System Settings → Apple ID → iCloud."
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -577,22 +616,35 @@ def write_note(note_id: str, content: str, create_backup: bool = True) -> str:
         if not note_path.exists():
             return f"Note file not found on disk: {note_path}"
 
-        # Backup
-        if create_backup:
-            bak_path = note_path.with_suffix(".md.bak")
-            bak_path.write_text(note_path.read_text(encoding="utf-8"), encoding="utf-8")
+        if _is_dataless(note_path):
+            return (
+                f"❌ Note is an iCloud placeholder (not downloaded): {note_path}\n"
+                "In Finder, right-click the file → Download Now before writing."
+            )
 
-        # Write
-        note_path.write_text(content, encoding="utf-8")
+        icloud_warn = "\n⚠️  iCloud path detected — write may be slow if parent dirs are not materialized." if _is_icloud_path(note_path) else ""
+
+        def _do_write():
+            bak_path = None
+            if create_backup:
+                bak_path = note_path.with_suffix(".md.bak")
+                bak_path.write_text(note_path.read_text(encoding="utf-8"), encoding="utf-8")
+            note_path.write_text(content, encoding="utf-8")
+            return bak_path
+
+        bak_path = _fs_op(_do_write)
         word_count = len(content.split())
 
         return (
             f"✅ **Note written**: {note['title']}\n"
             f"- Path: {note_path}\n"
             f"- Words: {word_count}\n"
-            + (f"- Backup: {bak_path}\n" if create_backup else "")
+            + (f"- Backup: {bak_path}\n" if bak_path else "")
             + f"\n⚠️  Run analyze_vault('{note['vault_id']}') to update graph metrics."
+            + icloud_warn
         )
+    except TimeoutError as e:
+        return f"❌ Write timed out: {e}"
     except Exception as e:
         return f"Error writing note: {e}"
 
@@ -627,12 +679,7 @@ def create_note(
         if not safe_title.endswith(".md"):
             safe_title += ".md"
 
-        if subfolder:
-            note_dir = vault_root / subfolder
-            note_dir.mkdir(parents=True, exist_ok=True)
-        else:
-            note_dir = vault_root
-
+        note_dir = (vault_root / subfolder) if subfolder else vault_root
         note_path = note_dir / safe_title
 
         if note_path.exists():
@@ -641,7 +688,19 @@ def create_note(
                 f"Use write_note() with the existing note's ID to overwrite."
             )
 
-        note_path.write_text(content, encoding="utf-8")
+        if _is_dataless(note_dir) or (not note_dir.exists() and _is_icloud_path(note_dir)):
+            icloud_warn = (
+                f"\n⚠️  Target directory is an iCloud placeholder or doesn't exist yet: {note_dir}\n"
+                "mkdir + write may be slow. If it times out, download the vault in Finder first."
+            )
+        else:
+            icloud_warn = ""
+
+        def _do_create():
+            note_dir.mkdir(parents=True, exist_ok=True)
+            note_path.write_text(content, encoding="utf-8")
+
+        _fs_op(_do_create)
         word_count = len(content.split())
         rel_path = note_path.relative_to(vault_root)
 
@@ -651,7 +710,10 @@ def create_note(
             f"- Relative: {rel_path}\n"
             f"- Words: {word_count}\n\n"
             f"⚠️  Run analyze_vault('{vault_id}') to index the note in graph analysis."
+            + icloud_warn
         )
+    except TimeoutError as e:
+        return f"❌ Create timed out: {e}"
     except Exception as e:
         return f"Error creating note: {e}"
 
@@ -687,10 +749,19 @@ def append_to_note(note_id: str, content: str, separator: str = "\n\n") -> str:
         if not note_path.exists():
             return f"Note file not found on disk: {note_path}"
 
-        existing = note_path.read_text(encoding="utf-8")
-        new_content = existing.rstrip() + separator + content
-        note_path.write_text(new_content, encoding="utf-8")
+        if _is_dataless(note_path):
+            return (
+                f"❌ Note is an iCloud placeholder (not downloaded): {note_path}\n"
+                "In Finder, right-click the file → Download Now before appending."
+            )
 
+        def _do_append():
+            existing = note_path.read_text(encoding="utf-8")
+            new_content = existing.rstrip() + separator + content
+            note_path.write_text(new_content, encoding="utf-8")
+            return new_content
+
+        new_content = _fs_op(_do_append)
         added_words = len(content.split())
         return (
             f"✅ **Appended to**: {note['title']}\n"
@@ -699,6 +770,8 @@ def append_to_note(note_id: str, content: str, separator: str = "\n\n") -> str:
             f"- Total: {len(new_content.split())} words\n\n"
             f"⚠️  Run analyze_vault('{note['vault_id']}') to update graph metrics."
         )
+    except TimeoutError as e:
+        return f"❌ Append timed out: {e}"
     except Exception as e:
         return f"Error appending to note: {e}"
 
@@ -736,18 +809,16 @@ def rename_note(note_id: str, new_title: str, subfolder: str = "") -> str:
         if not safe_title.endswith(".md"):
             safe_title += ".md"
 
-        # Determine target directory
-        if subfolder:
-            target_dir = vault_root / subfolder
-            target_dir.mkdir(parents=True, exist_ok=True)
-        else:
-            target_dir = old_path.parent
-
+        target_dir = (vault_root / subfolder) if subfolder else old_path.parent
         new_path = target_dir / safe_title
         if new_path.exists():
             return f"❌ A note already exists at: {new_path}"
 
-        old_path.rename(new_path)
+        def _do_rename():
+            target_dir.mkdir(parents=True, exist_ok=True)
+            old_path.rename(new_path)
+
+        _fs_op(_do_rename)
         old_rel = old_path.relative_to(vault_root)
         new_rel = new_path.relative_to(vault_root)
 
@@ -758,6 +829,8 @@ def rename_note(note_id: str, new_title: str, subfolder: str = "") -> str:
             f"⚠️  Wikilinks to '{note['title']}' in other notes are now broken.\n"
             f"   Run analyze_vault('{note['vault_id']}') then get_broken_links() to find them."
         )
+    except TimeoutError as e:
+        return f"❌ Rename timed out: {e}"
     except Exception as e:
         return f"Error renaming note: {e}"
 
@@ -799,7 +872,7 @@ def delete_note(note_id: str, confirm: bool = False) -> str:
         # Delete from filesystem
         deleted_from_disk = False
         if note_path.exists():
-            note_path.unlink()
+            _fs_op(note_path.unlink)
             deleted_from_disk = True
 
         return (
@@ -808,6 +881,8 @@ def delete_note(note_id: str, confirm: bool = False) -> str:
             f"- Path was: {note_path}\n\n"
             f"⚠️  Run analyze_vault('{note['vault_id']}') to remove it from graph metrics."
         )
+    except TimeoutError as e:
+        return f"❌ Delete timed out: {e}"
     except Exception as e:
         return f"Error deleting note: {e}"
 
