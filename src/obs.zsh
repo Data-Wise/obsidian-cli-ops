@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 3.4.2
+# Version: 3.5.0
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="3.4.2"
+VERSION="3.5.0"
 
 # --- Helper Functions ---
 
@@ -687,6 +687,32 @@ obs_daily_digest() {
     $OBS_PYTHON "${cmd[@]}"
 }
 
+obs_doctor() {
+    local python_cli=$(_get_python_cli) || return 1
+    local cmd=("$python_cli" "doctor")
+    while [[ "$1" == --* ]]; do
+        case "$1" in
+            --vault)
+                cmd+=(--vault "$2")
+                shift 2
+                ;;
+            --layer)
+                cmd+=(--layer "$2")
+                shift 2
+                ;;
+            --json)
+                cmd+=(--json)
+                shift
+                ;;
+            *)
+                cmd+=("$1")
+                shift
+                ;;
+        esac
+    done
+    $OBS_PYTHON "${cmd[@]}"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -754,6 +780,9 @@ obs() {
             ;;
         "daily-digest")
             obs_daily_digest "$@"
+            ;;
+        "doctor")
+            obs_doctor "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

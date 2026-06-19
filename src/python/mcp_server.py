@@ -32,7 +32,6 @@ import os
 import sys
 import subprocess
 import stat
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -128,41 +127,8 @@ def _vault_path(vault_id: str) -> Optional[Path]:
     return Path(row["path"]) if row else None
 
 
-# iCloud Drive: SF_DATALESS means the file/dir is a dataless placeholder (not materialized)
-_SF_DATALESS = 0x40000000
-_ICLOUD_MARKER = "iCloud~md~obsidian"
-_FS_WRITE_TIMEOUT = 30  # seconds before giving up on a blocked FS write
-
-
-def _is_icloud_path(p: Path) -> bool:
-    return _ICLOUD_MARKER in str(p)
-
-
-def _is_dataless(p: Path) -> bool:
-    """Return True if path exists but is an iCloud dataless placeholder."""
-    try:
-        return bool(os.stat(p).st_flags & _SF_DATALESS)
-    except (OSError, AttributeError):
-        return False
-
-
-def _fs_op(fn, timeout: int = _FS_WRITE_TIMEOUT):
-    """
-    Run a blocking filesystem callable in a thread with a hard timeout.
-    Raises TimeoutError with a human-readable message if the operation hangs
-    (typical cause: iCloud Drive materializing an offloaded placeholder).
-    """
-    with ThreadPoolExecutor(max_workers=1) as ex:
-        future = ex.submit(fn)
-        try:
-            return future.result(timeout=timeout)
-        except FuturesTimeoutError:
-            raise TimeoutError(
-                f"Filesystem operation timed out after {timeout}s. "
-                "The vault path may be an iCloud Drive placeholder that hasn't been "
-                "downloaded. In Finder, right-click the vault folder → Download Now, "
-                "or disable 'Optimize Mac Storage' in System Settings → Apple ID → iCloud."
-            )
+# iCloud / FS utilities — shared with core/doctor.py via fs_utils
+from fs_utils import is_icloud_path as _is_icloud_path, is_dataless as _is_dataless, fs_op as _fs_op, FS_WRITE_TIMEOUT as _FS_WRITE_TIMEOUT
 
 
 # ---------------------------------------------------------------------------
@@ -1095,6 +1061,37 @@ def get_daily_digest(vault_id: str, days: int = 90, limit: int = 5) -> str:
         return json.dumps(report.to_dict(), indent=2)
     except Exception as e:
         return f"Error getting daily digest: {e}"
+
+
+@mcp.tool()
+def diagnose(vault_id: str = "", layers: str = "") -> str:
+    """
+    Run self-diagnostic checks and return a structured health report.
+
+    Runs five check layers: python (runtime & imports), database (SQLite integrity),
+    vault (path, freshness, note/link counts), mcp (Claude Desktop config), and
+    icloud (macOS iCloud write latency and offload detection).
+
+    Args:
+        vault_id: Optional vault ID or name to scope vault-layer checks. Empty = all vaults.
+        layers:   Comma-separated subset of layers to run. Empty = all layers.
+                  Valid values: python, database, vault, mcp, icloud.
+
+    Returns JSON array of check results. Each result has:
+      id, layer, label, status (pass/warn/fail/skip/error), message, fix_hint.
+
+    Exit interpretation: any 'fail' result means obs is misconfigured or data is stale.
+    'warn' results are advisory. 'skip' results indicate inapplicable checks.
+    """
+    import json as _json
+    try:
+        from core.doctor import run_checks
+        _vault_id = vault_id.strip() or None
+        _layers_list = [l.strip() for l in layers.split(",") if l.strip()] if layers.strip() else None
+        results = run_checks(vault_id=_vault_id, layers=_layers_list)
+        return _json.dumps([r.to_dict() for r in results], indent=2)
+    except Exception as e:
+        return _json.dumps({"error": f"diagnose failed: {e}"})
 
 
 # ---------------------------------------------------------------------------

@@ -613,6 +613,62 @@ def _print_stale_report(report):
     console.print()
 
 
+def _print_doctor_results(results):
+    """Render DoctorResult list as a layered Rich table."""
+    from rich.table import Table
+
+    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥"}
+    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red"}
+
+    current_layer = None
+    table = None
+
+    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0}
+    for r in results:
+        counts[r.status] = counts.get(r.status, 0) + 1
+
+    for r in results:
+        if r.layer != current_layer:
+            if table is not None:
+                console.print(table)
+                console.print()
+            table = Table(show_header=False, box=None, padding=(0, 1))
+            table.add_column("Icon", width=3)
+            table.add_column("Label", style="bold", min_width=28)
+            table.add_column("Message")
+            table.add_column("Fix", style="dim")
+            console.print(f"[bold blue]── {r.layer.upper()} ──────────────────────────────────────[/]")
+            current_layer = r.layer
+
+        icon = STATUS_ICON.get(r.status, "?")
+        color = STATUS_COLOR.get(r.status, "white")
+        table.add_row(
+            icon,
+            f"[{color}]{r.label}[/]",
+            f"[{color}]{r.message}[/]",
+            r.fix_hint or "",
+        )
+
+    if table is not None:
+        console.print(table)
+        console.print()
+
+    # Summary line
+    parts = []
+    if counts["fail"]:
+        parts.append(f"[red]{counts['fail']} fail[/]")
+    if counts["error"]:
+        parts.append(f"[bold red]{counts['error']} error[/]")
+    if counts["warn"]:
+        parts.append(f"[yellow]{counts['warn']} warn[/]")
+    if counts["pass"]:
+        parts.append(f"[green]{counts['pass']} pass[/]")
+    if counts["skip"]:
+        parts.append(f"[dim]{counts['skip']} skip[/]")
+    verdict = "[bold green]All checks passed ✅[/]" if not counts["fail"] and not counts["error"] else "[bold red]Issues found — see hints above[/]"
+    console.print(f"{verdict}  ({', '.join(parts)})")
+
+
 def _print_digest_report(report):
     """Render DigestReport as a three-section Rich summary."""
     console.print(f"\n[bold cyan]Daily Digest[/] — [dim]{report.vault_id}[/]\n")
@@ -781,6 +837,13 @@ def main():
     digest_parser.add_argument('vault', help='Vault name or ID')
     digest_parser.add_argument('--days', type=int, default=90, help='Trend lookback window in days (default: 90)')
     digest_parser.add_argument('--limit', type=int, default=5, help='Max stale notes to show (default: 5)')
+
+    doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
+    doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
+    doctor_parser.add_argument('--layer', action='append', dest='layers',
+                               choices=['python', 'database', 'vault', 'mcp', 'icloud'],
+                               help='Run only specified layer(s) (repeatable)')
+    doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
     args = parser.parse_args()
 
@@ -1428,6 +1491,30 @@ def main():
                 print(json.dumps(report.to_dict(), indent=2, default=str))
             else:
                 _print_digest_report(report)
+
+        elif args.command == 'doctor':
+            import sys as _sys
+            _vault_arg = getattr(args, 'vault', None)
+            _layers = getattr(args, 'layers', None)
+            vault_id = None
+            if _vault_arg:
+                try:
+                    vault = cli.db.get_vault_by_name_or_id(_vault_arg)
+                    vault_id = vault['id'] if vault else None
+                    if vault_id is None:
+                        print(f"❌ Vault not found: {_vault_arg}", file=sys.stderr)
+                        sys.exit(1)
+                except ValueError as e:
+                    print(f"❌ {e}", file=sys.stderr)
+                    sys.exit(1)
+            from core.doctor import run_checks
+            results = run_checks(vault_id=vault_id, layers=_layers)
+            if args.json:
+                print(json.dumps([r.to_dict() for r in results], indent=2))
+            else:
+                _print_doctor_results(results)
+            has_fail = any(r.status == 'fail' for r in results)
+            sys.exit(1 if has_fail else 0)
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")
