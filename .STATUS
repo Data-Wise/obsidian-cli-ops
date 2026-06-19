@@ -1,23 +1,26 @@
 priority: P1
-status: 🟢 v3.3.0 SHIPPED — MCP server (20 tools), GitHub release + main CI green + Homebrew tap @ 3.3.0 (40-resource mcp closure, build-validated)
-progress: 93
-updated: 2026-06-15
-version: 3.3.0 (next: v3.4.0 — bridge + temporal)
+status: 🔵 v3.4.0-dev IN PROGRESS — INC 1 shipped (bridge status + trends + stale, 17 tests green, 3 MCP tools added)
+progress: 96
+updated: 2026-06-19
+version: 3.4.0-dev (prev: v3.3.0)
 next: |
-  1. v3.4.0: bridge (consume official Obsidian CLI as "hands") + temporal analytics (trends, stale, daily-digest) — SPEC-v3.3.0-bridge-temporal reviewed, ready to implement in a worktree.
-  2. Phase 2: Cowork plugin bundle (obsidian-cli-ops-plugin/ repo).
+  1. INC 2: MCP test coverage for 3 new tools + ZSH integration test.
+  2. INC 3: daily-digest command (combines bridge + trends + stale in one summary).
+  3. v3.4.0 release: version finalize → PR → Homebrew formula update.
 verified: |
-  MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults returned 3016-note Documents vault) using the exact claude_desktop_config.json launch command. Claude Desktop will connect.
+  INC 1 verified 2026-06-19: 304 pytest pass (17 new temporal tests), full suite green.
+  MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults returned 3016-note Documents vault) using the exact claude_desktop_config.json launch command.
 target: v3.4.0 - bridge + temporal analytics
 
 ## 🎯 Current State
 
-**Phase**: v3.2.0 Phases 1-7 complete (version bumped)
+**Phase**: v3.4.0-dev INC 1 complete — bridge + temporal analytics
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest = 383 total
-**Commands**: 19 focused commands under `obs` (+1 new: search; +3 v3.2.0: merge-suggest, tag-suggest, quality)
+**Tests**: 252 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest = 405 total (304 pytest pass on dev)
+**Commands**: 22 focused commands under `obs` (+ bridge status, trends, stale from INC 1)
+**MCP Tools**: 23 (added get_bridge_status, get_trends, get_stale_notes)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
-**Code**: ~8,500 lines (ZSH 501 + Python ~3,500 + AI 1,500+)
+**Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 **Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
 

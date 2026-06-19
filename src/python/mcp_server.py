@@ -6,13 +6,15 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (15):
-  Vault:   list_vaults, get_vault_stats, discover_vaults
-  Search:  search_notes, find_similar_notes
-  Graph:   get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
-  Health:  get_vault_health
-  Notes:   read_note, write_note, create_note, list_notes
-  AI:      run_obs_ai
+Tools (23):
+  Vault:    list_vaults, get_vault_stats, discover_vaults
+  Search:   search_notes, find_similar_notes
+  Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
+  Health:   get_vault_health
+  Notes:    read_note, write_note, create_note, list_notes, append_to_note,
+            rename_note, delete_note, get_note_links, rescan_vault
+  AI:       run_obs_ai
+  Temporal: get_bridge_status, get_trends, get_stale_notes
 
 Venv resolution (priority order):
   1. $OBS_PYTHON env var
@@ -919,6 +921,82 @@ def run_obs_ai(
 
     args = ["ai", command, target, "--json"]
     return _obs(args, timeout=120)
+
+
+# ---------------------------------------------------------------------------
+# TOOLS — Bridge & Temporal (offline, zero-dep)
+# ---------------------------------------------------------------------------
+
+@mcp.tool()
+def get_bridge_status() -> str:
+    """
+    Check whether the Obsidian official CLI is installed and the app is running.
+
+    Returns a JSON object with:
+      cli_installed (bool), cli_version (str), app_running (bool),
+      capabilities (list of command strings available right now).
+
+    Use this before calling obsidian CLI commands to understand what's available.
+    """
+    try:
+        result = vault_manager.get_bridge_status()
+        import json
+        return json.dumps(result.to_dict(), indent=2)
+    except Exception as e:
+        return f"Error checking bridge status: {e}"
+
+
+@mcp.tool()
+def get_trends(vault_id: str, days: int = 90) -> str:
+    """
+    Get weekly activity trends for a vault (notes created and modified per week).
+
+    Args:
+        vault_id: Vault name or ID.
+        days:     Lookback window in days (default 90).
+
+    Returns JSON with:
+      total_notes, lookback_days, velocity_notes_per_week,
+      insufficient_data (True when < 2 weeks of data),
+      buckets (list of {week, notes_created, notes_modified}).
+
+    Use to understand vault growth rate and activity patterns over time.
+    Requires notes to have been scanned (run analyze_vault first if empty).
+    """
+    try:
+        report = vault_manager.get_trends(vault_id, lookback_days=days)
+        import json
+        return json.dumps(report.to_dict(), indent=2)
+    except Exception as e:
+        return f"Error getting trends: {e}"
+
+
+@mcp.tool()
+def get_stale_notes(vault_id: str, limit: int = 20) -> str:
+    """
+    Find the most stale high-importance notes in a vault.
+
+    Staleness score = pagerank × (days_since_modified / 365).
+    Falls back to date-only ranking when graph metrics are unavailable.
+
+    Args:
+        vault_id: Vault name or ID.
+        limit:    Max notes to return (default 20).
+
+    Returns JSON with:
+      has_graph_metrics (bool),
+      notes (list of {note_id, title, path, days_since_modified,
+                       pagerank, staleness_score}).
+
+    High staleness_score = important note that hasn't been touched in a long time.
+    Use to surface review candidates that matter most to the knowledge graph.
+    """
+    try:
+        report = vault_manager.get_stale_notes(vault_id, limit=limit)
+        import json
+        return json.dumps(report.to_dict(), indent=2)
+    except Exception as e:
+        return f"Error getting stale notes: {e}"
 
 
 # ---------------------------------------------------------------------------

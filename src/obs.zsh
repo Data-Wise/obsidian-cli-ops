@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 3.3.0
+# Version: 3.4.0-dev
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="3.3.0"
+VERSION="3.4.0-dev"
 
 # --- Helper Functions ---
 
@@ -174,6 +174,14 @@ obs_help() {
         echo "  obs ai merge-suggest <vault> Find merge candidates"
         echo "  obs ai tag-suggest <target>  Suggest tags for notes"
         echo "  obs ai quality <target>      Score note quality"
+        echo ""
+
+        echo "🌉 BRIDGE & TEMPORAL"
+        echo "  obs bridge status         Obsidian CLI availability + capabilities"
+        echo "  obs trends <vault>        Weekly activity buckets + velocity"
+        echo "  obs stale <vault>         Importance-weighted stale notes"
+        echo "  obs trends <vault> --days N   Lookback window (default 90)"
+        echo "  obs stale <vault> --limit N   Max notes to show (default 20)"
         echo ""
 
         echo "🔍 SEARCH"
