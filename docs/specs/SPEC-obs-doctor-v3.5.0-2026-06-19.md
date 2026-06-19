@@ -1,6 +1,6 @@
 # SPEC: v3.5.0 — obs doctor (Setup Diagnostics + MCP Health Check)
 
-**Status:** draft  
+**Status:** approved  
 **Created:** 2026-06-19  
 **Type:** feature  
 **From brainstorm:** `BRAINSTORM-obs-doctor-2026-06-19.md`  
@@ -67,8 +67,10 @@ Resolver tiers (from `_obs_resolve_python`): `$OBS_PYTHON` → install.sh user v
 | `vault-path` | Path accessible | ✅ | iCloud path (note) | path missing |
 | `vault-dataless` | iCloud materialized | no SF_DATALESS flag | some placeholders | root is dataless |
 | `vault-stale` | Last scanned | < 7 days | 7–30 days | > 30 days or never |
-| `vault-fts` | Search index | FTS row count > 0 | — | 0 rows or missing |
+| `vault-notes` | Note count | notes > 0 | — | 0 notes (never scanned or empty) |
 | `vault-links` | Link graph | links > 0 | 0 links | — |
+
+> **Decision (2026-06-19):** No FTS table exists in the schema (`search_notes` uses `LIKE` on `notes.title`). `vault-fts` replaced by `vault-notes`: `SELECT COUNT(*) FROM notes WHERE vault_id = ?`.
 
 Stale thresholds are configurable via `~/.config/obs/config.yaml` (`doctor.warn_days`, `doctor.fail_days`; defaults 7 / 30).
 
@@ -98,6 +100,12 @@ Write latency test: write a 1-byte `.obs-doctor-probe` temp file into the vault 
 ## Architecture
 
 Three-layer per project conventions, plus a new MCP tool.
+
+### `src/python/fs_utils.py` (new — extracted from `mcp_server.py`)
+
+Extract `_fs_op()` and `_SF_DATALESS`/`_is_icloud_path()` from `mcp_server.py` into a shared module. `mcp_server.py` imports from here; `doctor.py` imports from here. No circular dependency.
+
+> **Decision (2026-06-19):** `_fs_op` and `_SF_DATALESS` are private to `mcp_server.py`. Extract to `fs_utils.py`; update both `mcp_server.py` and `doctor.py` to import from there.
 
 ### `src/python/core/doctor.py` (new)
 
@@ -134,13 +142,13 @@ Each `_check_*` function returns `list[DoctorResult]`. Checks are independent �
 Add `doctor` subparser:
 
 ```
-obs_cli.py doctor [--json] [--fix] [--vault VAULT_ID] [--layers LAYER,...]
+obs_cli.py doctor [--json] [--vault VAULT_ID] [--layers LAYER,...]
 ```
 
 - `--json`: emit `list[DoctorResult]` as JSON, exit 0/1/2
-- `--fix`: after printing report, attempt safe auto-remediations (see §Auto-fix)
 - `--vault`: scope vault checks to one vault
 - `--layers`: comma-separated subset (e.g. `mcp,icloud`)
+- `--fix`: **reserved, not implemented in v3.5.0 (see §Auto-fix)**
 
 ### `src/obs.zsh` (extend)
 
@@ -173,19 +181,19 @@ def diagnose(vault_id: str = "") -> str:
 
 ---
 
-## Auto-fix (`--fix`)
+## Auto-fix (`--fix`) — **deferred to v3.5.1**
 
-Only safe, non-destructive remediations run automatically:
+> **Decision (2026-06-19):** `--fix` deferred to v3.5.1. v3.5.0 ships as read-only diagnostics + JSON output + MCP `diagnose` tool. The core value — identifying problems with actionable fix hints — is complete without auto-remediation. Deferral avoids subprocess complexity and the iCloud-backed scan confirmation UX in the initial release.
+
+When implemented in v3.5.1, safe auto-remediations will be:
 
 | Failure | Auto-fix action |
 |---------|----------------|
 | `db-exists` fails | `obs db init` |
-| `vault-stale` warns/fails | `obs scan <vault_id>` (offers prompt if multiple vaults) |
+| `vault-stale` warns/fails | `obs scan <vault_id>` — gated behind confirmation prompt when vault is iCloud-backed; `--yes` bypasses |
 | `vault-links` warns | `obs analyze <vault_id>` |
-| `mcp-entry` missing | Print exact JSON snippet to add to `claude_desktop_config.json`; do NOT write the file (user must restart Claude Desktop) |
+| `mcp-entry` missing | Print exact JSON snippet; do NOT write the file (user must restart Claude Desktop) |
 | `icloud-write` slow | Print Finder + `brctl download` instructions; cannot auto-fix |
-
-Anything that mutates the Claude Desktop config or triggers iCloud download is print-only — the user executes.
 
 ---
 
@@ -280,7 +288,7 @@ No new dependencies. Uses:
 
 1. **Linux support for iCloud checks**: `stat.SF_DATALESS` is macOS-only. On Linux, iCloud layer should `skip` with message "iCloud checks not applicable on Linux". Use `platform.system() == "Darwin"` guard.
 2. **Claude Desktop config path on Windows**: Not in current scope (obs is macOS-first), but the config path should be behind a platform helper for future portability.
-3. **`--fix` for stale vaults**: Should auto-scan be gated behind a confirmation prompt when the vault is iCloud-backed? (Risk: scan itself may be slow if files are offloaded.) Lean yes — add `--yes` to bypass prompt.
+3. **`--fix` for stale vaults**: ~~Should auto-scan be gated behind a confirmation prompt when the vault is iCloud-backed?~~ **Resolved: `--fix` deferred to v3.5.1. When implemented, yes — prompt required for iCloud vaults; `--yes` bypasses.**
 
 ---
 
@@ -316,3 +324,4 @@ No new dependencies. Uses:
 | Date | Author | Note |
 |------|--------|------|
 | 2026-06-19 | dt | Initial draft from brainstorm `BRAINSTORM-obs-doctor-2026-06-19.md` |
+| 2026-06-19 | dt | Approved: (1) vault-fts → vault-notes; (2) extract fs_utils.py; (3) defer --fix to v3.5.1 |

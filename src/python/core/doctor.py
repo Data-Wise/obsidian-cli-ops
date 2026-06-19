@@ -1,0 +1,523 @@
+"""
+obs doctor — self-diagnostic checks across five layers.
+
+Each _check_* function returns list[DoctorResult]. Checks are independent;
+a failure in one layer does not skip later layers (though vault checks short-
+circuit gracefully when the DB is unavailable).
+"""
+from __future__ import annotations
+
+import json
+import os
+import platform
+import sqlite3
+import sys
+import time
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import Literal, Optional
+
+Status = Literal["pass", "warn", "fail", "skip", "error"]
+
+_CLAUDE_DESKTOP_CONFIG_PATHS = [
+    Path.home() / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json",
+    Path.home() / ".config" / "claude" / "claude_desktop_config.json",
+]
+
+_CORE_IMPORTS = ["rich", "networkx", "mcp"]   # sqlite3 is stdlib, checked separately
+
+
+@dataclass
+class DoctorResult:
+    id: str
+    layer: str
+    label: str
+    status: Status
+    message: str
+    fix_hint: str = ""
+
+    def to_dict(self):
+        return asdict(self)
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+def run_checks(vault_id: Optional[str] = None, layers: Optional[list[str]] = None) -> list[DoctorResult]:
+    """Run all (or a subset of) checks and return results in layer order."""
+    all_layers = {
+        "python": _check_python,
+        "database": _check_database,
+        "vault": lambda: _check_vaults(vault_id),
+        "mcp": _check_mcp,
+        "icloud": _check_icloud,
+    }
+    selected = layers if layers else list(all_layers.keys())
+    results: list[DoctorResult] = []
+    db_ok = True
+    for name in selected:
+        fn = all_layers.get(name)
+        if fn is None:
+            continue
+        if name == "vault" and not db_ok:
+            results.append(DoctorResult(
+                id="vault-skip", layer="vault", label="Vault checks",
+                status="skip", message="skipped: DB unavailable",
+            ))
+            continue
+        layer_results = fn()
+        results.extend(layer_results)
+        if name == "database":
+            db_ok = not any(r.status == "fail" for r in layer_results if r.id in ("db-exists", "db-query"))
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Layer 1 — Python runtime
+# ---------------------------------------------------------------------------
+
+def _check_python() -> list[DoctorResult]:
+    results = []
+
+    # py-version
+    vi = sys.version_info
+    version_str = f"Python {vi.major}.{vi.minor}.{vi.micro}"
+    if vi >= (3, 10):
+        results.append(DoctorResult("py-version", "python", "Python version", "pass", version_str))
+    elif vi >= (3, 9):
+        results.append(DoctorResult("py-version", "python", "Python version", "warn",
+                                    f"{version_str} — 3.10+ recommended",
+                                    "Upgrade: brew install python@3.12"))
+    else:
+        results.append(DoctorResult("py-version", "python", "Python version", "fail",
+                                    f"{version_str} — 3.9+ required",
+                                    "Upgrade: brew install python@3.12"))
+
+    # py-resolver
+    obs_python = os.environ.get("OBS_PYTHON", "")
+    exe = sys.executable
+    if obs_python and exe == obs_python:
+        src = f"$OBS_PYTHON ({exe})"
+        status: Status = "pass"
+    elif ".local/share/obs/venv" in exe:
+        src = f"user venv ({exe})"
+        status = "pass"
+    elif "libexec" in exe and "obs" in exe:
+        src = f"Homebrew formula venv ({exe})"
+        status = "pass"
+    else:
+        src = f"ambient ({exe})"
+        # warn only if core imports are available, else fail is caught by py-imports
+        status = "warn"
+    results.append(DoctorResult("py-resolver", "python", "Interpreter source", status, src,
+                                "" if status == "pass" else "Run: ./install.sh  or  brew reinstall obsidian-cli-ops"))
+
+    # py-imports
+    missing = []
+    for mod in _CORE_IMPORTS:
+        try:
+            __import__(mod)
+        except ImportError:
+            missing.append(mod)
+    # sqlite3 is stdlib but confirm it
+    try:
+        import sqlite3 as _s3  # noqa: F401
+    except ImportError:
+        missing.append("sqlite3")
+
+    if not missing:
+        results.append(DoctorResult("py-imports", "python", "Core imports", "pass",
+                                    f"All required: {', '.join(_CORE_IMPORTS + ['sqlite3'])}"))
+    else:
+        results.append(DoctorResult("py-imports", "python", "Core imports", "fail",
+                                    f"Missing: {', '.join(missing)}",
+                                    "Run: ./install.sh  or  brew reinstall obsidian-cli-ops"))
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Layer 2 — Database
+# ---------------------------------------------------------------------------
+
+def _check_database() -> list[DoctorResult]:
+    results = []
+    db_path = Path.home() / ".config" / "obs" / "vault_db.sqlite"
+
+    # db-exists
+    if not db_path.exists():
+        results.append(DoctorResult("db-exists", "database", "DB file exists", "fail",
+                                    f"Not found: {db_path}",
+                                    "Run: obs db init"))
+        # remaining checks can't run
+        for cid, label in [("db-schema", "Schema version"), ("db-query", "Can query vaults"),
+                            ("db-vaults", "Vault count")]:
+            results.append(DoctorResult(cid, "database", label, "skip", "skipped: DB missing"))
+        return results
+
+    results.append(DoctorResult("db-exists", "database", "DB file exists", "pass", str(db_path)))
+
+    # db-schema
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+        row = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
+        version = row["v"] if row and row["v"] is not None else 0
+        results.append(DoctorResult("db-schema", "database", "Schema version", "pass",
+                                    f"schema v{version}"))
+    except sqlite3.OperationalError as e:
+        results.append(DoctorResult("db-schema", "database", "Schema version", "warn",
+                                    f"schema_version table missing ({e})",
+                                    "Run: obs db init"))
+        conn = None
+    except Exception as e:
+        results.append(DoctorResult("db-schema", "database", "Schema version", "error",
+                                    f"Unexpected error: {e}"))
+        conn = None
+
+    # db-query
+    if conn is None:
+        try:
+            conn = sqlite3.connect(str(db_path))
+            conn.row_factory = sqlite3.Row
+        except Exception as e:
+            results.append(DoctorResult("db-query", "database", "Can query vaults", "fail",
+                                        f"Cannot open DB: {e}", "Run: obs db init"))
+            results.append(DoctorResult("db-vaults", "database", "Vault count", "skip", "skipped: DB unavailable"))
+            return results
+
+    try:
+        rows = conn.execute("SELECT COUNT(*) AS n FROM vaults").fetchone()
+        count = rows["n"] if rows else 0
+        results.append(DoctorResult("db-query", "database", "Can query vaults", "pass",
+                                    "SELECT ok"))
+    except sqlite3.OperationalError as e:
+        results.append(DoctorResult("db-query", "database", "Can query vaults", "fail",
+                                    f"Query failed: {e}", "Run: obs db init"))
+        results.append(DoctorResult("db-vaults", "database", "Vault count", "skip", "skipped: query failed"))
+        conn.close()
+        return results
+
+    # db-vaults
+    if count == 0:
+        results.append(DoctorResult("db-vaults", "database", "Vault count", "warn",
+                                    "No vaults registered",
+                                    "Run: obs discover <path>  to register a vault"))
+    else:
+        results.append(DoctorResult("db-vaults", "database", "Vault count", "pass",
+                                    f"{count} vault{'s' if count != 1 else ''} registered"))
+    conn.close()
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Layer 3 — Vault health (per registered vault)
+# ---------------------------------------------------------------------------
+
+def _check_vaults(vault_id: Optional[str] = None) -> list[DoctorResult]:
+    from fs_utils import is_icloud_path, is_dataless
+
+    db_path = Path.home() / ".config" / "obs" / "vault_db.sqlite"
+    if not db_path.exists():
+        return [DoctorResult("vault-skip", "vault", "Vault checks", "skip", "skipped: DB missing")]
+
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+        if vault_id:
+            rows = conn.execute("SELECT * FROM vaults WHERE id = ?", (vault_id,)).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM vaults ORDER BY name").fetchall()
+    except Exception as e:
+        return [DoctorResult("vault-skip", "vault", "Vault checks", "skip", f"skipped: {e}")]
+
+    if not rows:
+        return [DoctorResult("vault-skip", "vault", "Vault checks", "skip",
+                             "No vaults registered" if not vault_id else f"Vault {vault_id!r} not found")]
+
+    results = []
+    for vault in rows:
+        vid = vault["id"]
+        name = vault["name"]
+        path = Path(vault["path"])
+        prefix = f"{name} ({vid[:8]})"
+
+        # vault-path
+        if not path.exists():
+            results.append(DoctorResult(f"vault-path:{vid}", "vault", f"{prefix}: Path accessible",
+                                        "fail", f"Path missing: {path}",
+                                        f"Re-register: obs discover {path.parent}"))
+            for cid in ("vault-dataless", "vault-stale", "vault-notes", "vault-links"):
+                results.append(DoctorResult(f"{cid}:{vid}", "vault", f"{prefix}: {cid}", "skip",
+                                            "skipped: path missing"))
+            continue
+
+        if is_icloud_path(path):
+            results.append(DoctorResult(f"vault-path:{vid}", "vault", f"{prefix}: Path accessible",
+                                        "warn", f"iCloud path — writes may be slow: {path}",
+                                        "Finder → right-click vault → Download Now"))
+        else:
+            results.append(DoctorResult(f"vault-path:{vid}", "vault", f"{prefix}: Path accessible",
+                                        "pass", str(path)))
+
+        # vault-dataless
+        if platform.system() == "Darwin":
+            if is_dataless(path):
+                results.append(DoctorResult(f"vault-dataless:{vid}", "vault",
+                                            f"{prefix}: iCloud materialized", "fail",
+                                            "Vault root is a dataless placeholder",
+                                            f'Run: brctl download "{path}"'))
+            else:
+                dataless_count = sum(1 for f in path.rglob("*.md") if is_dataless(f))
+                if dataless_count > 0:
+                    results.append(DoctorResult(f"vault-dataless:{vid}", "vault",
+                                                f"{prefix}: iCloud materialized", "warn",
+                                                f"{dataless_count} note files are offloaded placeholders",
+                                                f'Run: brctl download "{path}"'))
+                else:
+                    results.append(DoctorResult(f"vault-dataless:{vid}", "vault",
+                                                f"{prefix}: iCloud materialized", "pass",
+                                                "All files materialized"))
+        else:
+            results.append(DoctorResult(f"vault-dataless:{vid}", "vault",
+                                        f"{prefix}: iCloud materialized", "skip",
+                                        "iCloud checks not applicable on Linux"))
+
+        # vault-stale
+        last_scan = vault["last_scan"]
+        warn_days = int(os.environ.get("OBS_DOCTOR_WARN_DAYS", "7"))
+        fail_days = int(os.environ.get("OBS_DOCTOR_FAIL_DAYS", "30"))
+        if not last_scan:
+            results.append(DoctorResult(f"vault-stale:{vid}", "vault", f"{prefix}: Last scanned",
+                                        "fail", "Never scanned",
+                                        f"Run: obs scan {vid}"))
+        else:
+            from datetime import datetime, timezone
+            try:
+                ts = datetime.fromisoformat(last_scan.replace("Z", "+00:00"))
+                now = datetime.now(timezone.utc)
+                if ts.tzinfo is None:
+                    from datetime import timezone as tz
+                    ts = ts.replace(tzinfo=tz.utc)
+                days = (now - ts).days
+                if days >= fail_days:
+                    results.append(DoctorResult(f"vault-stale:{vid}", "vault", f"{prefix}: Last scanned",
+                                                "fail", f"{days} days since last scan",
+                                                f"Run: obs scan {vid}"))
+                elif days >= warn_days:
+                    results.append(DoctorResult(f"vault-stale:{vid}", "vault", f"{prefix}: Last scanned",
+                                                "warn", f"{days} days since last scan",
+                                                f"Run: obs scan {vid}"))
+                else:
+                    results.append(DoctorResult(f"vault-stale:{vid}", "vault", f"{prefix}: Last scanned",
+                                                "pass", f"Last scanned {days} day{'s' if days != 1 else ''} ago"))
+            except Exception:
+                results.append(DoctorResult(f"vault-stale:{vid}", "vault", f"{prefix}: Last scanned",
+                                            "warn", f"Cannot parse timestamp: {last_scan}"))
+
+        # vault-notes
+        try:
+            row = conn.execute("SELECT COUNT(*) AS n FROM notes WHERE vault_id = ?", (vid,)).fetchone()
+            note_count = row["n"] if row else 0
+            if note_count == 0:
+                results.append(DoctorResult(f"vault-notes:{vid}", "vault", f"{prefix}: Note count",
+                                            "fail", "0 notes — vault never scanned or empty",
+                                            f"Run: obs scan {vid}"))
+            else:
+                results.append(DoctorResult(f"vault-notes:{vid}", "vault", f"{prefix}: Note count",
+                                            "pass", f"{note_count:,} notes indexed"))
+        except sqlite3.OperationalError as e:
+            results.append(DoctorResult(f"vault-notes:{vid}", "vault", f"{prefix}: Note count",
+                                        "error", f"Query failed: {e}"))
+
+        # vault-links
+        try:
+            row = conn.execute(
+                "SELECT COUNT(*) AS n FROM links l JOIN notes n ON l.source_note_id = n.id WHERE n.vault_id = ?",
+                (vid,)
+            ).fetchone()
+            link_count = row["n"] if row else 0
+            if link_count == 0:
+                results.append(DoctorResult(f"vault-links:{vid}", "vault", f"{prefix}: Link graph",
+                                            "warn", "0 links — graph not built",
+                                            f"Run: obs analyze {vid}"))
+            else:
+                results.append(DoctorResult(f"vault-links:{vid}", "vault", f"{prefix}: Link graph",
+                                            "pass", f"{link_count:,} links in graph"))
+        except sqlite3.OperationalError as e:
+            results.append(DoctorResult(f"vault-links:{vid}", "vault", f"{prefix}: Link graph",
+                                        "error", f"Query failed: {e}"))
+
+    conn.close()
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Layer 4 — MCP server
+# ---------------------------------------------------------------------------
+
+def _check_mcp() -> list[DoctorResult]:
+    results = []
+
+    # mcp-config
+    config_path = None
+    for p in _CLAUDE_DESKTOP_CONFIG_PATHS:
+        if p.exists():
+            config_path = p
+            break
+
+    if config_path is None:
+        results.append(DoctorResult("mcp-config", "mcp", "Claude Desktop config", "fail",
+                                    "claude_desktop_config.json not found",
+                                    f"Expected at: {_CLAUDE_DESKTOP_CONFIG_PATHS[0]}"))
+        for cid, label in [("mcp-entry", "obsidian-ops entry"), ("mcp-server", "mcp_server.py importable"),
+                            ("mcp-fastmcp", "FastMCP available")]:
+            results.append(DoctorResult(cid, "mcp", label, "skip", "skipped: config missing"))
+        return results
+
+    results.append(DoctorResult("mcp-config", "mcp", "Claude Desktop config", "pass", str(config_path)))
+
+    # mcp-entry
+    try:
+        with open(config_path) as f:
+            config = json.load(f)
+        servers = config.get("mcpServers", {})
+        entry = servers.get("obsidian-ops")
+        if entry is None:
+            results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "fail",
+                                        "obsidian-ops not found in mcpServers",
+                                        'Add "obsidian-ops" entry to claude_desktop_config.json'))
+        else:
+            cmd = entry.get("command", "")
+            # Resolve the script path from the command args if present
+            args = entry.get("args", [])
+            server_path = None
+            for a in args:
+                if "mcp_server.py" in a:
+                    server_path = Path(a)
+                    break
+            if server_path and not server_path.exists():
+                results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "warn",
+                                            f"Entry exists but mcp_server.py path is wrong: {server_path}",
+                                            f"Update path in {config_path}"))
+            else:
+                results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "pass",
+                                            f"Entry present (command: {cmd})"))
+    except (json.JSONDecodeError, OSError) as e:
+        results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "error",
+                                    f"Cannot parse config: {e}"))
+        for cid, label in [("mcp-server", "mcp_server.py importable"), ("mcp-fastmcp", "FastMCP available")]:
+            results.append(DoctorResult(cid, "mcp", label, "skip", "skipped: config unreadable"))
+        return results
+
+    # mcp-fastmcp
+    try:
+        import mcp  # noqa: F401
+        results.append(DoctorResult("mcp-fastmcp", "mcp", "FastMCP available", "pass",
+                                    f"mcp package importable"))
+    except ImportError:
+        results.append(DoctorResult("mcp-fastmcp", "mcp", "FastMCP available", "fail",
+                                    "mcp package not importable",
+                                    "Run: ./install.sh  or  brew reinstall obsidian-cli-ops"))
+
+    # mcp-server (check mcp_server.py exists alongside this file)
+    candidate = Path(__file__).parent.parent / "mcp_server.py"
+    if candidate.exists():
+        results.append(DoctorResult("mcp-server", "mcp", "mcp_server.py importable", "pass",
+                                    str(candidate)))
+    else:
+        results.append(DoctorResult("mcp-server", "mcp", "mcp_server.py importable", "fail",
+                                    f"mcp_server.py not found at {candidate}",
+                                    "Reinstall: brew reinstall obsidian-cli-ops"))
+
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Layer 5 — iCloud write path
+# ---------------------------------------------------------------------------
+
+def _check_icloud() -> list[DoctorResult]:
+    from fs_utils import is_icloud_path, is_dataless, fs_op, FS_PROBE_TIMEOUT
+
+    if platform.system() != "Darwin":
+        return [DoctorResult("icloud-skip", "icloud", "iCloud checks", "skip",
+                             "iCloud checks not applicable on Linux")]
+
+    results = []
+
+    # Find iCloud vaults
+    db_path = Path.home() / ".config" / "obs" / "vault_db.sqlite"
+    icloud_vaults: list[Path] = []
+    if db_path.exists():
+        try:
+            conn = sqlite3.connect(str(db_path))
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute("SELECT path FROM vaults").fetchall()
+            icloud_vaults = [Path(r["path"]) for r in rows if is_icloud_path(Path(r["path"]))]
+            conn.close()
+        except Exception:
+            pass
+
+    # icloud-detect
+    if not icloud_vaults:
+        results.append(DoctorResult("icloud-detect", "icloud", "Vault on iCloud Drive", "pass",
+                                    "No iCloud-backed vaults detected"))
+        return results
+
+    results.append(DoctorResult("icloud-detect", "icloud", "Vault on iCloud Drive", "warn",
+                                f"{len(icloud_vaults)} iCloud vault(s) — writes may be slow",
+                                "Monitor 'bird' / 'fileproviderd' in Activity Monitor during operations"))
+
+    # icloud-write — test write latency using the first iCloud vault
+    probe_vault = icloud_vaults[0]
+    probe_file = probe_vault / ".obs-doctor-probe"
+    start = time.monotonic()
+    timed_out = False
+    write_error: Optional[str] = None
+    try:
+        def _write():
+            probe_file.write_bytes(b"x")
+            probe_file.unlink(missing_ok=True)
+
+        fs_op(_write, timeout=FS_PROBE_TIMEOUT)
+    except TimeoutError:
+        timed_out = True
+    except Exception as e:
+        write_error = str(e)
+    latency = time.monotonic() - start
+
+    if timed_out:
+        results.append(DoctorResult("icloud-write", "icloud", "Write latency", "fail",
+                                    f"Write timed out after {FS_PROBE_TIMEOUT}s (iCloud placeholder not materialized)",
+                                    f'Run: brctl download "{probe_vault}"  or Finder → Download Now'))
+    elif write_error:
+        results.append(DoctorResult("icloud-write", "icloud", "Write latency", "error",
+                                    f"Write failed: {write_error}"))
+    elif latency > 5.0:
+        results.append(DoctorResult("icloud-write", "icloud", "Write latency", "fail",
+                                    f"Write took {latency:.1f}s (>{FS_PROBE_TIMEOUT}s threshold)",
+                                    f'Run: brctl download "{probe_vault}"'))
+    elif latency > 1.0:
+        results.append(DoctorResult("icloud-write", "icloud", "Write latency", "warn",
+                                    f"Write took {latency:.1f}s (1–5s range, iCloud may be syncing)",
+                                    "Check Activity Monitor for 'bird' CPU usage"))
+    else:
+        results.append(DoctorResult("icloud-write", "icloud", "Write latency", "pass",
+                                    f"Write latency {latency:.2f}s"))
+
+    # icloud-offload — check if Optimize Mac Storage is likely active
+    offloaded = sum(1 for v in icloud_vaults for f in v.rglob("*.md") if is_dataless(f))
+    if offloaded > 50:
+        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "fail",
+                                    f"{offloaded} vault files are offloaded (dataless placeholders)",
+                                    "System Settings → Apple ID → iCloud → disable 'Optimize Mac Storage'"))
+    elif offloaded > 0:
+        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "warn",
+                                    f"{offloaded} files are offloaded placeholders",
+                                    f'Run: brctl download "{probe_vault}"'))
+    else:
+        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "pass",
+                                    "No offloaded files detected"))
+
+    return results

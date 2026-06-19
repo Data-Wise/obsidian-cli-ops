@@ -1,6 +1,6 @@
 .\" Man page for obs (Obsidian CLI Ops)
 .\" Updated: 2026-06-19
-.TH OBS 1 "2026-06-19" "obsidian-cli-ops 3.4.2" "User Commands"
+.TH OBS 1 "2026-06-19" "obsidian-cli-ops 3.5.0" "User Commands"
 .SH NAME
 obs \- manage Obsidian vaults with AI\-powered knowledge\-graph analysis
 .SH SYNOPSIS
@@ -111,6 +111,20 @@ may be a vault name/ID or a note ID.
 Score a vault or note on quality dimensions.
 .I target
 may be a vault name/ID or a note ID.
+.SS Diagnostics
+.TP
+.B doctor\fR [\fB\-\-vault\fR \fIid\fR] [\fB\-\-layer\fR \fIlayer\fR]... [\fB\-\-json\fR]
+Run self\-diagnostic checks across five layers:
+.BR python " (runtime & imports),"
+.BR database " (SQLite integrity & vault count),"
+.BR vault " (path, freshness, note/link counts),"
+.BR mcp " (Claude Desktop config),"
+and
+.BR icloud " (macOS write\-latency & offload detection)."
+Use
+.B \-\-layer
+(repeatable) to restrict to a subset.
+Exits 0 when all checks pass/warn; 1 on any fail; 2 on unexpected error.
 .SS Utilities
 .TP
 .B help\fR [\fB\-\-all\fR]

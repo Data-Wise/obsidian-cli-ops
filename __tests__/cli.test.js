@@ -50,7 +50,7 @@ describe('Obsidian CLI Ops v3.0', () => {
   test('should show version', () => {
     const result = runCli(['version']);
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain('3.4.2');
+    expect(result.stdout).toContain('3.5.0');
   });
 
   test('should accept discover command', () => {
