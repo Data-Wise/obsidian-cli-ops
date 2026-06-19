@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "obsidian-cli-ops"
-version = "3.3.0"
+version = "3.4.0"
 description = "Intelligent CLI for multi-vault Obsidian knowledge management"
 readme = "README.md"
 license = {text = "MIT"}
@@ -101,6 +101,7 @@ warn_unused_configs = true
 
 [tool.pytest.ini_options]
 testpaths = ["src/python/tests"]
+pythonpath = ["src/python"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]

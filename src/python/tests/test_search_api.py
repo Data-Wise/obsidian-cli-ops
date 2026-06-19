@@ -50,7 +50,17 @@ class TestSearchAPI:
             results = vm.search_notes("", tags=["idea"])
             assert len(results) == 1
             assert results[0]['title'] == "New Idea"
-            
+
+            # 4. Multi-word search: all words must appear in title (AND logic)
+            # "Important Diary" should match n1 but not n2
+            results = vm.search_notes("Important Diary")
+            assert len(results) == 1
+            assert results[0]['title'] == "Important Project Diary"
+
+            # "Project Missing" matches no notes (AND, not OR)
+            results = vm.search_notes("Project Missing")
+            assert len(results) == 0
+
         finally:
             if os.path.exists(db_path):
                 os.remove(db_path)

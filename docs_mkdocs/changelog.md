@@ -6,12 +6,12 @@ All notable changes to Obsidian CLI Ops.
 
 ## v3.3.0 (2026-06-15)
 
-Claude / MCP integration release. Expands the MCP server from 7 tools to 18 and wires it
+Claude / MCP integration release. Expands the MCP server from 7 tools to 20 and wires it
 into Claude Desktop via a robust venv-aware launcher. No changes to the existing `obs` CLI.
 
 ### Added
 
-- **MCP server — 18 tools** (`src/python/mcp_server.py`, 276 → 956 lines):
+- **MCP server — 20 tools** (`src/python/mcp_server.py`, 276 → 956 lines):
   - *Vault:* `list_vaults`, `get_vault_stats`, `discover_vaults`
   - *Search:* `search_notes`, `find_similar_notes`
   - *Graph:* `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`
@@ -21,7 +21,7 @@ into Claude Desktop via a robust venv-aware launcher. No changes to the existing
   - *MCP resources:* `vault://{id}/stats`, `vault://{id}/health`, `obsidian://overview`, `note://{id}`
 - **Venv-aware MCP launcher** — `claude_desktop_config.json` uses a 3-candidate zsh resolver; never calls `brew --prefix` (subprocess-in-MCP-env risk eliminated).
 - **`mcp==1.27.2`** + 22 transitive deps added to `requirements.lock`, `pyproject.toml`, and Homebrew formula resource blocks. `brew audit --strict` clean.
-- **`MCP_README.md`** — comprehensive setup guide, all 18 tools documented.
+- **`MCP_README.md`** — comprehensive setup guide, all 20 tools documented.
 - **`docs_mkdocs/claude-integration.md`** — MkDocs page for Claude Desktop integration.
 
 ### Safety

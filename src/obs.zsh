@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 3.3.0
+# Version: 3.4.0
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="3.3.0"
+VERSION="3.4.0"
 
 # --- Helper Functions ---
 
@@ -174,6 +174,16 @@ obs_help() {
         echo "  obs ai merge-suggest <vault> Find merge candidates"
         echo "  obs ai tag-suggest <target>  Suggest tags for notes"
         echo "  obs ai quality <target>      Score note quality"
+        echo ""
+
+        echo "🌉 BRIDGE & TEMPORAL"
+        echo "  obs bridge status         Obsidian CLI availability + capabilities"
+        echo "  obs trends <vault>        Weekly activity buckets + velocity"
+        echo "  obs stale <vault>         Importance-weighted stale notes"
+        echo "  obs daily-digest <vault>  Bridge + trends + stale in one summary"
+        echo "  obs trends <vault> --days N   Lookback window (default 90)"
+        echo "  obs stale <vault> --limit N   Max notes to show (default 20)"
+        echo "  obs daily-digest <vault> --days N --limit N"
         echo ""
 
         echo "🔍 SEARCH"
@@ -599,6 +609,84 @@ obs_search() {
 # - obs_manage() → functionality split into 'obs discover' and 'obs stats'
 # - obs_graph() → replaced by 'obs analyze <vault_id>'
 
+# --- v3.4.0: Bridge + Temporal Commands ---
+
+obs_bridge() {
+    local python_cli=$(_get_python_cli) || return 1
+    local subcmd="$1"
+
+    if [[ -z "$subcmd" ]]; then
+        echo "Usage: obs bridge <status>"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "bridge" "$subcmd")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
+obs_trends() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault="$1"
+
+    if [[ -z "$vault" ]]; then
+        echo "Usage: obs trends <vault> [--days N] [--json]"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "trends" "$vault")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
+obs_stale() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault="$1"
+
+    if [[ -z "$vault" ]]; then
+        echo "Usage: obs stale <vault> [--limit N] [--json]"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "stale" "$vault")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
+obs_daily_digest() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault="$1"
+
+    if [[ -z "$vault" ]]; then
+        echo "Usage: obs daily-digest <vault> [--days N] [--limit N] [--json]"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "daily-digest" "$vault")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -654,6 +742,18 @@ obs() {
             ;;
         "search")
             obs_search "$@"
+            ;;
+        "bridge")
+            obs_bridge "$@"
+            ;;
+        "trends")
+            obs_trends "$@"
+            ;;
+        "stale")
+            obs_stale "$@"
+            ;;
+        "daily-digest")
+            obs_daily_digest "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

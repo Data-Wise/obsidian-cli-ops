@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 18 `obs` commands + 18 MCP tools for Claude
+> - **What:** Full reference for all 18 `obs` commands + 20 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
@@ -354,7 +354,7 @@ obs version
 
 ## :robot_face: Claude / MCP Integration
 
-`obs` exposes **18 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
+`obs` exposes **20 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
 Claude Code, and Cowork. Once configured (see [Claude Integration](claude-integration.md)),
 you can ask Claude natural-language questions about your vaults.
 
@@ -383,7 +383,7 @@ you can ask Claude natural-language questions about your vaults.
 "Run a quality check on MyVault"
 ```
 
-See [Claude Integration](claude-integration.md) for full setup instructions and all 18 tools.
+See [Claude Integration](claude-integration.md) for full setup instructions and all 20 tools.
 
 ---
 
