@@ -10,6 +10,9 @@ Developer guide for Claude Code when working with this repository.
 **Status**: Stable release
 **Priority**: P1
 
+> [!important] Pending merge (RFC 2026-06-19)
+> `obs` is the proposed **survivor** of a merge with `nexus-cli`. RFC **#35** (`SPEC-merge-nexus-cli-2026-06-19.md`) scopes absorbing nexus-cli's vault ops, graph export, `doctor` (PARA/convention validator), and tutorials into `obs` under a **layered-AI** model (deterministic core default; AI opt-in). The merged `doctor` should enforce the live vault convention: **`NN_snake_case` top-level + `snake_case` subfolders**. Non-vault domains (Zotero/PDF/teaching/writing) stay out of `obs` (option B).
+
 ### Core Features
 
 - **Vault Management**: Discovery, scanning across multiple vaults

@@ -1,24 +1,24 @@
 priority: P1
-status: 🔄 v3.5.0 in progress — obs doctor implementation on feature/obs-doctor
-progress: 90
+status: ✅ v3.5.0 released — obs doctor shipped, dev synced with main
+progress: 100
 updated: 2026-06-19
 version: 3.5.0 (prev: v3.4.2)
 next: |
-  1. Open PR feature/obs-doctor → dev
-  2. Merge + tag v3.5.0 + GitHub release + Homebrew formula update
+  1. 🔀 Decide the nexus-cli merge (RFC #35): absorb nexus-cli's vault+graph+doctor+tutorials into obs; pick Tier-2 option (A absorb non-vault / B sibling-depends-on-obs [recommended] / C spin-out). Spec: SPEC-merge-nexus-cli-2026-06-19.md.
+  2. Plan next feature (see BRAINSTORM-v3.4.0-bridge-temporal-2026-06-19.md + IDEAS.md)
+  3. Consider worktree cleanup: delete feature/obs-doctor worktree if still present
 verified: |
-  v3.4.2 released 2026-06-19: PR merged, fixes (1) Links:0 display (2) date frontmatter scan crash.
-  v3.5.0 implementation complete: obs doctor (5-layer checks), fs_utils.py, diagnose MCP tool (#25).
-  341 pytest + 59 Jest = 400 total. 341 passed, 33 skipped, 0 failed on feature branch.
-target: v3.5.0 - obs doctor self-diagnostic (feature/obs-doctor)
+  v3.5.0 released 2026-06-19: PR #36 (dev→main) squash-merged. Homebrew tap auto-updated.
+  dev synced post-release (295573a). feature/obs-doctor merged and closed (PR #33).
+target: v3.6.0 - TBD
 
 ## 🎯 Current State
 
-**Phase**: v3.4.2 patch release
+**Phase**: post v3.5.0 release — ready for next feature
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 255 unit pytest + 32 E2E pytest + 67 Jest = 354 total (255 pytest pass on main)
-**Commands**: 24 total (23 obs + 1 MCP-only)
-**MCP Tools**: 24 (get_bridge_status, get_trends, get_stale_notes, get_daily_digest)
+**Tests**: 341 pytest + 59 Jest = 400 total (on main)
+**Commands**: 25 total (24 obs + 1 MCP-only: diagnose)
+**MCP Tools**: 25 (includes diagnose from v3.5.0)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
