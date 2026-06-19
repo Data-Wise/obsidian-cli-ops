@@ -202,7 +202,12 @@ class DatabaseManager:
         """List all vaults."""
         with self.get_connection() as conn:
             cursor = conn.execute("""
-                SELECT * FROM vaults ORDER BY name
+                SELECT v.*,
+                    (SELECT COUNT(*) FROM links l
+                     JOIN notes n ON l.source_note_id = n.id
+                     WHERE n.vault_id = v.id) AS link_count
+                FROM vaults v
+                ORDER BY v.name
             """)
             return [dict(row) for row in cursor.fetchall()]
 
