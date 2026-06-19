@@ -11,9 +11,16 @@ import hashlib
 import json
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional, Dict, List, Any
 from contextlib import contextmanager
+
+
+class _DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 class DatabaseManager:
@@ -303,7 +310,7 @@ class DatabaseManager:
                 char_count,
                 meta.get('created_at', datetime.now().isoformat()),
                 meta.get('modified_at', datetime.now().isoformat()),
-                json.dumps(meta)
+                json.dumps(meta, cls=_DateEncoder)
             ))
 
             # Initialize graph metrics
