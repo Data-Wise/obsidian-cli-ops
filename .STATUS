@@ -1,22 +1,23 @@
 priority: P1
-status: 🔵 v3.4.0-dev IN PROGRESS — INC 1+2+3 shipped (bridge+trends+stale+daily-digest, 8 new MCP tests, 312 pytest pass)
-progress: 98
+status: ✅ v3.4.0 RELEASED — Bridge + Temporal Analytics + Daily-Digest (PR #30, main CI green, Homebrew updated)
+progress: 100
 updated: 2026-06-19
-version: 3.4.0-dev (prev: v3.3.0)
+version: 3.4.0 (prev: v3.3.0)
 next: |
-  1. v3.4.0 release: version finalize → PR dev→main → Homebrew formula update.
+  1. IDEAS.md — review v3.5.0 candidates (write-path bridge, batch ops, obs apply)
 verified: |
-  INC 1+2+3 verified 2026-06-19: 312 pytest pass (25 new tests: 17 temporal + 8 MCP temporal), full suite green.
-  INC 3: daily-digest command (bridge+trends+stale in one call) — core/CLI/ZSH/MCP + 2 MCP tests.
-  MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults returned 3016-note Documents vault) using the exact claude_desktop_config.json launch command.
-target: v3.4.0 - bridge + temporal analytics
+  v3.4.0 released 2026-06-19: PR #30 merged, tag pushed, GitHub release live, Homebrew tap auto-updated.
+  322 tests passing (255 pytest + 67 Jest). Main CI green. Docs deployed.
+  INC 1+2+3 verified 2026-06-19: bridge+trends+stale+daily-digest across core/CLI/ZSH/MCP, 8 new MCP temporal tests.
+  MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults OK).
+target: v3.5.0 - write-path bridge + batch ops
 
 ## 🎯 Current State
 
-**Phase**: v3.4.0-dev INC 1+2+3 complete — bridge + temporal analytics + daily-digest
+**Phase**: v3.4.0 stable release
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 252 unit pytest + 60 MCP unit pytest + 32 E2E pytest + 69 Jest = 413 total (312 pytest pass on dev)
-**Commands**: 23 focused commands under `obs` (bridge status, trends, stale, daily-digest from v3.4.0)
+**Tests**: 255 unit pytest + 32 E2E pytest + 67 Jest = 354 total (255 pytest pass on main)
+**Commands**: 24 total (23 obs + 1 MCP-only)
 **MCP Tools**: 24 (get_bridge_status, get_trends, get_stale_notes, get_daily_digest)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
