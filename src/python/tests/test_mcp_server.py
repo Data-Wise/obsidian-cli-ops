@@ -1,5 +1,5 @@
 """
-Unit tests for mcp_server.py — all 20 MCP tools + 4 resources.
+Unit tests for mcp_server.py — all 24 MCP tools + 4 resources.
 
 Strategy
 --------
@@ -485,6 +485,86 @@ class TestRunObsAI:
         assert "ai" in args_list
         assert cmd in args_list
         assert "--json" in args_list
+
+
+# ---------------------------------------------------------------------------
+# Temporal tools — get_bridge_status, get_trends, get_stale_notes, get_daily_digest
+# ---------------------------------------------------------------------------
+
+class TestTemporalTools:
+    def test_bridge_status_returns_json_string(self, mcp_mod):
+        """get_bridge_status() always returns a JSON string (subprocess mocked)."""
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(returncode=1, stdout="", stderr="")
+            result = mcp_mod.get_bridge_status()
+        assert isinstance(result, str)
+        import json
+        data = json.loads(result)
+        assert "cli_installed" in data
+        assert isinstance(data["cli_installed"], bool)
+
+    def test_bridge_status_error_returns_string(self, mcp_mod):
+        """get_bridge_status() returns error string on unexpected failure."""
+        with patch.object(mcp_mod.vault_manager, "get_bridge_status", side_effect=RuntimeError("boom")):
+            result = mcp_mod.get_bridge_status()
+        assert "Error" in result or "boom" in result
+
+    def test_get_trends_returns_json_string(self, mcp_mod, obs_vault):
+        """get_trends() returns JSON with expected keys."""
+        vault_id, _, _ = obs_vault
+        result = mcp_mod.get_trends(vault_id, days=90)
+        assert isinstance(result, str)
+        import json
+        data = json.loads(result)
+        assert "vault_id" in data
+        assert "buckets" in data
+        assert isinstance(data["buckets"], list)
+
+    def test_get_trends_unknown_vault(self, mcp_mod):
+        """get_trends() with unknown vault returns error string."""
+        result = mcp_mod.get_trends("vault-xyz-does-not-exist")
+        assert isinstance(result, str)
+        assert "Error" in result or "not found" in result.lower()
+
+    def test_get_stale_notes_returns_json_string(self, mcp_mod, obs_vault):
+        """get_stale_notes() returns JSON with notes list."""
+        vault_id, _, _ = obs_vault
+        result = mcp_mod.get_stale_notes(vault_id, limit=5)
+        assert isinstance(result, str)
+        import json
+        data = json.loads(result)
+        assert "vault_id" in data
+        assert "notes" in data
+        assert isinstance(data["notes"], list)
+        assert len(data["notes"]) <= 5
+
+    def test_get_stale_notes_unknown_vault(self, mcp_mod):
+        """get_stale_notes() with unknown vault returns error string."""
+        result = mcp_mod.get_stale_notes("vault-xyz-does-not-exist")
+        assert isinstance(result, str)
+        assert "Error" in result or "not found" in result.lower()
+
+    def test_get_daily_digest_returns_json_string(self, mcp_mod, obs_vault):
+        """get_daily_digest() returns JSON with bridge, trends, and stale sub-objects."""
+        vault_id, _, _ = obs_vault
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(returncode=1, stdout="", stderr="")
+            result = mcp_mod.get_daily_digest(vault_id, days=90, limit=3)
+        assert isinstance(result, str)
+        import json
+        data = json.loads(result)
+        assert "bridge" in data
+        assert "trends" in data
+        assert "stale" in data
+        assert "cli_installed" in data["bridge"]
+        assert "buckets" in data["trends"]
+        assert "notes" in data["stale"]
+
+    def test_get_daily_digest_unknown_vault(self, mcp_mod):
+        """get_daily_digest() with unknown vault returns error string."""
+        result = mcp_mod.get_daily_digest("vault-xyz-does-not-exist")
+        assert isinstance(result, str)
+        assert "Error" in result or "not found" in result.lower()
 
 
 # ---------------------------------------------------------------------------

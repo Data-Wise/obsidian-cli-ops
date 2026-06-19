@@ -469,6 +469,23 @@ class VaultManager:
             raise VaultNotFoundError(f"Vault not found: {vault_identifier}")
         return compute_stale(vault['id'], self.db, limit)
 
+    def get_daily_digest(self, vault_identifier: str, lookback_days: int = 90, stale_limit: int = 5):
+        """Return DigestReport combining bridge status, weekly trends, and top stale notes.
+
+        Raises:
+            VaultNotFoundError: If vault not found.
+            ValueError: If vault_identifier is ambiguous.
+        """
+        from ai.models import DigestReport
+        vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        if not vault:
+            raise VaultNotFoundError(f"Vault not found: {vault_identifier}")
+        bridge = self.get_bridge_status()
+        trends = self.get_trends(vault_identifier, lookback_days)
+        stale = self.get_stale_notes(vault_identifier, limit=stale_limit)
+        return DigestReport(vault_id=vault['id'], stale_limit=stale_limit,
+                            bridge=bridge, trends=trends, stale=stale)
+
     def delete_vault(self, vault_id: str) -> bool:
         """
         Delete vault from database (not from filesystem).

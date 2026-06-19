@@ -180,8 +180,10 @@ obs_help() {
         echo "  obs bridge status         Obsidian CLI availability + capabilities"
         echo "  obs trends <vault>        Weekly activity buckets + velocity"
         echo "  obs stale <vault>         Importance-weighted stale notes"
+        echo "  obs daily-digest <vault>  Bridge + trends + stale in one summary"
         echo "  obs trends <vault> --days N   Lookback window (default 90)"
         echo "  obs stale <vault> --limit N   Max notes to show (default 20)"
+        echo "  obs daily-digest <vault> --days N --limit N"
         echo ""
 
         echo "🔍 SEARCH"
@@ -666,6 +668,25 @@ obs_stale() {
     $OBS_PYTHON "${cmd[@]}"
 }
 
+obs_daily_digest() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault="$1"
+
+    if [[ -z "$vault" ]]; then
+        echo "Usage: obs daily-digest <vault> [--days N] [--limit N] [--json]"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "daily-digest" "$vault")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -730,6 +751,9 @@ obs() {
             ;;
         "stale")
             obs_stale "$@"
+            ;;
+        "daily-digest")
+            obs_daily_digest "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

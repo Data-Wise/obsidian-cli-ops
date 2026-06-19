@@ -1,24 +1,23 @@
 priority: P1
-status: 🔵 v3.4.0-dev IN PROGRESS — INC 1 shipped (bridge status + trends + stale, 17 tests green, 3 MCP tools added)
-progress: 96
+status: 🔵 v3.4.0-dev IN PROGRESS — INC 1+2+3 shipped (bridge+trends+stale+daily-digest, 8 new MCP tests, 312 pytest pass)
+progress: 98
 updated: 2026-06-19
 version: 3.4.0-dev (prev: v3.3.0)
 next: |
-  1. INC 2: MCP test coverage for 3 new tools + ZSH integration test.
-  2. INC 3: daily-digest command (combines bridge + trends + stale in one summary).
-  3. v3.4.0 release: version finalize → PR → Homebrew formula update.
+  1. v3.4.0 release: version finalize → PR dev→main → Homebrew formula update.
 verified: |
-  INC 1 verified 2026-06-19: 304 pytest pass (17 new temporal tests), full suite green.
+  INC 1+2+3 verified 2026-06-19: 312 pytest pass (25 new tests: 17 temporal + 8 MCP temporal), full suite green.
+  INC 3: daily-digest command (bridge+trends+stale in one call) — core/CLI/ZSH/MCP + 2 MCP tests.
   MCP live handshake confirmed 2026-06-15 via real MCP stdio session (initialize + tools/list=20 + list_vaults returned 3016-note Documents vault) using the exact claude_desktop_config.json launch command.
 target: v3.4.0 - bridge + temporal analytics
 
 ## 🎯 Current State
 
-**Phase**: v3.4.0-dev INC 1 complete — bridge + temporal analytics
+**Phase**: v3.4.0-dev INC 1+2+3 complete — bridge + temporal analytics + daily-digest
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 252 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest = 405 total (304 pytest pass on dev)
-**Commands**: 22 focused commands under `obs` (+ bridge status, trends, stale from INC 1)
-**MCP Tools**: 23 (added get_bridge_status, get_trends, get_stale_notes)
+**Tests**: 252 unit pytest + 60 MCP unit pytest + 32 E2E pytest + 69 Jest = 413 total (312 pytest pass on dev)
+**Commands**: 23 focused commands under `obs` (bridge status, trends, stale, daily-digest from v3.4.0)
+**MCP Tools**: 24 (get_bridge_status, get_trends, get_stale_notes, get_daily_digest)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/

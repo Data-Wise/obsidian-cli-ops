@@ -296,6 +296,30 @@ class StaleReport:
 
 
 @dataclass
+class DigestReport:
+    """Combined daily-digest: bridge status + trends + top stale notes.
+
+    Used by: obs daily-digest.
+    stale_limit: how many stale notes were requested (default 5).
+    """
+    vault_id: str = ""
+    stale_limit: int = 5
+    bridge: BridgeStatus = field(default_factory=BridgeStatus)
+    trends: TrendReport = field(default_factory=TrendReport)
+    stale: StaleReport = field(default_factory=StaleReport)
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {
+            "vault_id": self.vault_id,
+            "stale_limit": self.stale_limit,
+            "bridge": self.bridge.to_dict(),
+            "trends": self.trends.to_dict(),
+            "stale": self.stale.to_dict(),
+        }
+
+
+@dataclass
 class NoteQuality:
     """Quality score for a single note across multiple dimensions.
 

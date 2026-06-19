@@ -613,6 +613,29 @@ def _print_stale_report(report):
     console.print()
 
 
+def _print_digest_report(report):
+    """Render DigestReport as a three-section Rich summary."""
+    console.print(f"\n[bold cyan]Daily Digest[/] — [dim]{report.vault_id}[/]\n")
+
+    # Bridge
+    b = report.bridge
+    bridge_icon = "🟢" if b.cli_installed else "🔴"
+    app_icon = "🟢" if b.app_running else "🔴"
+    console.print(f"[bold]Bridge[/]  {bridge_icon} CLI {'v' + b.cli_version if b.cli_version else 'not found'}  {app_icon} App {'running' if b.app_running else 'not running'}")
+    console.print()
+
+    # Trends summary
+    tr = report.trends
+    if tr.insufficient_data:
+        console.print("[dim]Trends[/]  Insufficient data (<2 weeks)")
+    else:
+        console.print(f"[bold]Trends[/]  {tr.velocity_notes_per_week:.1f} notes/week  ({len(tr.buckets)} weeks, {tr.lookback_days}d window)")
+    console.print()
+
+    # Top stale notes
+    _print_stale_report(report.stale)
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -753,6 +776,11 @@ def main():
     stale_parser = subparsers.add_parser('stale', help='Find stale high-importance notes')
     stale_parser.add_argument('vault', help='Vault name or ID')
     stale_parser.add_argument('--limit', type=int, default=20, help='Max notes to show (default: 20)')
+
+    digest_parser = subparsers.add_parser('daily-digest', help='Combined bridge + trends + stale summary')
+    digest_parser.add_argument('vault', help='Vault name or ID')
+    digest_parser.add_argument('--days', type=int, default=90, help='Trend lookback window in days (default: 90)')
+    digest_parser.add_argument('--limit', type=int, default=5, help='Max stale notes to show (default: 5)')
 
     args = parser.parse_args()
 
@@ -1385,6 +1413,21 @@ def main():
                 print(json.dumps(report.to_dict(), indent=2, default=str))
             else:
                 _print_stale_report(report)
+
+        elif args.command == 'daily-digest':
+            try:
+                report = cli.vault_manager.get_daily_digest(
+                    args.vault, lookback_days=args.days, stale_limit=args.limit)
+            except (VaultNotFoundError, ValueError) as e:
+                if args.json:
+                    print(json.dumps({"error": str(e)}), file=sys.stderr)
+                else:
+                    print(f"❌ {e}")
+                sys.exit(1)
+            if args.json:
+                print(json.dumps(report.to_dict(), indent=2, default=str))
+            else:
+                _print_digest_report(report)
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")

@@ -6,7 +6,7 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (23):
+Tools (24):
   Vault:    list_vaults, get_vault_stats, discover_vaults
   Search:   search_notes, find_similar_notes
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
@@ -14,7 +14,7 @@ Tools (23):
   Notes:    read_note, write_note, create_note, list_notes, append_to_note,
             rename_note, delete_note, get_note_links, rescan_vault
   AI:       run_obs_ai
-  Temporal: get_bridge_status, get_trends, get_stale_notes
+  Temporal: get_bridge_status, get_trends, get_stale_notes, get_daily_digest
 
 Venv resolution (priority order):
   1. $OBS_PYTHON env var
@@ -997,6 +997,29 @@ def get_stale_notes(vault_id: str, limit: int = 20) -> str:
         return json.dumps(report.to_dict(), indent=2)
     except Exception as e:
         return f"Error getting stale notes: {e}"
+
+
+@mcp.tool()
+def get_daily_digest(vault_id: str, days: int = 90, limit: int = 5) -> str:
+    """
+    Combined daily-digest: bridge status + weekly trends + top stale notes.
+
+    Combines get_bridge_status, get_trends, and get_stale_notes in one call.
+
+    Args:
+        vault_id: Vault name or ID.
+        days:     Trend lookback window in days (default 90).
+        limit:    Max stale notes to include (default 5).
+
+    Returns JSON with bridge, trends, and stale sub-objects.
+    Use for a morning-briefing view of vault health and activity.
+    """
+    try:
+        report = vault_manager.get_daily_digest(vault_id, lookback_days=days, stale_limit=limit)
+        import json
+        return json.dumps(report.to_dict(), indent=2)
+    except Exception as e:
+        return f"Error getting daily digest: {e}"
 
 
 # ---------------------------------------------------------------------------
