@@ -1,22 +1,20 @@
 priority: P1
-status: ✅ v3.4.1 released — iCloud MCP write-hang patch shipped
-progress: 100
+status: 🚀 v3.4.2 releasing — two bug fixes (Links display + date frontmatter)
+progress: 90
 updated: 2026-06-19
-version: 3.4.1 (prev: v3.4.0)
+version: 3.4.2 (prev: v3.4.1)
 next: |
-  1. Rescan vaults after iCloud materialization (obs scan a812d844 + obs analyze a812d844)
-  2. v3.5.0: obs doctor self-diagnostic command (SPEC-obs-doctor-v3.5.0-2026-06-19.md)
+  1. v3.5.0: obs doctor self-diagnostic command (SPEC-obs-doctor-v3.5.0-2026-06-19.md)
 verified: |
   v3.4.1 released 2026-06-19: PR #31 merged, tag v3.4.1 pushed, GitHub release live, Homebrew auto-updated.
-  Fix: _fs_op() + _is_dataless() + SF_DATALESS detection — 5 MCP write tools wrapped with 30s timeout.
-  61 MCP unit tests pass (was 60 before test_create_note_fs_timeout added).
-  v3.4.0 released 2026-06-19: PR #30 merged, tag pushed, GitHub release live, Homebrew tap auto-updated.
-  354 tests total (255 pytest + 67 Jest + 32 E2E). Main CI green.
+  v3.4.2 fixes: (1) Links:0 in vault list — list_vaults() now computes link_count via JOIN; (2) date frontmatter
+  scan crash — added _DateEncoder(JSONEncoder) to handle datetime.date from PyYAML.
+  313 pytest + 59 Jest = 372 total. All pass on dev.
 target: v3.5.0 - obs doctor self-diagnostic + write-path bridge
 
 ## 🎯 Current State
 
-**Phase**: v3.4.1 stable release
+**Phase**: v3.4.2 patch release
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
 **Tests**: 255 unit pytest + 32 E2E pytest + 67 Jest = 354 total (255 pytest pass on main)
 **Commands**: 24 total (23 obs + 1 MCP-only)
