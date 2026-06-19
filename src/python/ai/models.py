@@ -198,6 +198,103 @@ class TagSuggestion:
         return {k: getattr(self, k) for k in self.__dataclass_fields__}
 
 
+# --- v3.4.0 Bridge + Temporal Models ---
+
+
+@dataclass
+class BridgeStatus:
+    """Status of the Obsidian CLI bridge connection.
+
+    Used by: obs bridge status.
+    cli_installed: obsidian binary found and responds to --version.
+    app_running: a vault-level command succeeded (requires app IPC).
+    capabilities: commands available given current status.
+    """
+    cli_installed: bool = False
+    cli_version: str = ""
+    app_running: bool = False
+    capabilities: List[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+@dataclass
+class TrendBucket:
+    """Activity counts for one ISO week.
+
+    Used by: TrendReport.buckets.
+    week: ISO week label "YYYY-WNN" (e.g. "2026-W24").
+    """
+    week: str = ""
+    notes_created: int = 0
+    notes_modified: int = 0
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+@dataclass
+class TrendReport:
+    """Weekly activity trend report for a vault.
+
+    Used by: obs trends.
+    insufficient_data: True when fewer than 2 weeks of data.
+    velocity_notes_per_week: average notes created per week.
+    """
+    vault_id: str = ""
+    total_notes: int = 0
+    lookback_days: int = 90
+    buckets: List[TrendBucket] = field(default_factory=list)
+    velocity_notes_per_week: float = 0.0
+    insufficient_data: bool = False
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        d = {k: getattr(self, k) for k in self.__dataclass_fields__}
+        d['buckets'] = [b.to_dict() for b in self.buckets]
+        return d
+
+
+@dataclass
+class StaleNote:
+    """A note ranked by importance-weighted staleness.
+
+    staleness_score = pagerank × (days_since_modified / 365).
+    Falls back to days_since_modified / 365 when pagerank unavailable.
+    """
+    note_id: str = ""
+    title: str = ""
+    path: str = ""
+    days_since_modified: int = 0
+    pagerank: float = 0.0
+    staleness_score: float = 0.0
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+@dataclass
+class StaleReport:
+    """Report of stale notes for a vault.
+
+    Used by: obs stale.
+    has_graph_metrics: False means staleness_score is date-only (no PageRank).
+    """
+    vault_id: str = ""
+    notes: List[StaleNote] = field(default_factory=list)
+    has_graph_metrics: bool = False
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        d = {k: getattr(self, k) for k in self.__dataclass_fields__}
+        d['notes'] = [n.to_dict() for n in self.notes]
+        return d
+
+
 @dataclass
 class NoteQuality:
     """Quality score for a single note across multiple dimensions.

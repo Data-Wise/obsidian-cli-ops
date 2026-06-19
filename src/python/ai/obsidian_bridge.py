@@ -104,6 +104,59 @@ class ObsidianBridge:
             pass
         return {}
 
+    def get_status(self) -> 'BridgeStatus':
+        """Check bridge status: CLI installation, app connection, capabilities.
+
+        Refreshes the availability cache each call.
+        """
+        from ai.models import BridgeStatus
+
+        cli_version = ""
+        cli_installed = False
+        try:
+            result = subprocess.run(
+                ["obsidian", "--version"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode == 0:
+                cli_installed = True
+                cli_version = result.stdout.strip()
+                self._available = True
+            else:
+                self._available = False
+        except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+            self._available = False
+
+        if not cli_installed:
+            return BridgeStatus(
+                cli_installed=False,
+                cli_version="",
+                app_running=False,
+                capabilities=[],
+            )
+
+        # Check if Obsidian app is running (IPC-required command)
+        app_running = False
+        try:
+            result = subprocess.run(
+                ["obsidian", "vaults"],
+                capture_output=True, text=True, timeout=5,
+            )
+            app_running = result.returncode == 0
+        except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+            pass
+
+        capabilities = ["search", "tags", "backlinks", "orphans", "read"]
+        if app_running:
+            capabilities += ["property:set", "daily-notes", "note:create", "note:append"]
+
+        return BridgeStatus(
+            cli_installed=cli_installed,
+            cli_version=cli_version,
+            app_running=app_running,
+            capabilities=capabilities,
+        )
+
     def read_note(self, file: str) -> Optional[str]:
         """Read note content via Obsidian CLI. Returns None if unavailable."""
         if not self.is_available():

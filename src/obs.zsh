@@ -599,6 +599,65 @@ obs_search() {
 # - obs_manage() → functionality split into 'obs discover' and 'obs stats'
 # - obs_graph() → replaced by 'obs analyze <vault_id>'
 
+# --- v3.4.0: Bridge + Temporal Commands ---
+
+obs_bridge() {
+    local python_cli=$(_get_python_cli) || return 1
+    local subcmd="$1"
+
+    if [[ -z "$subcmd" ]]; then
+        echo "Usage: obs bridge <status>"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "bridge" "$subcmd")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
+obs_trends() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault="$1"
+
+    if [[ -z "$vault" ]]; then
+        echo "Usage: obs trends <vault> [--days N] [--json]"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "trends" "$vault")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
+obs_stale() {
+    local python_cli=$(_get_python_cli) || return 1
+    local vault="$1"
+
+    if [[ -z "$vault" ]]; then
+        echo "Usage: obs stale <vault> [--limit N] [--json]"
+        return 1
+    fi
+    shift
+
+    local cmd=("$python_cli" "stale" "$vault")
+    while [[ $# -gt 0 ]]; do
+        cmd+=("$1")
+        shift
+    done
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    $OBS_PYTHON "${cmd[@]}"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -654,6 +713,15 @@ obs() {
             ;;
         "search")
             obs_search "$@"
+            ;;
+        "bridge")
+            obs_bridge "$@"
+            ;;
+        "trends")
+            obs_trends "$@"
+            ;;
+        "stale")
+            obs_stale "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

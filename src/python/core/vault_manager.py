@@ -438,6 +438,37 @@ class VaultManager:
             return None
         return Note.from_db_row(dict(row))
 
+    def get_bridge_status(self):
+        """Return BridgeStatus for the Obsidian CLI bridge."""
+        from ai.obsidian_bridge import ObsidianBridge
+        return ObsidianBridge(verbose=False).get_status()
+
+    def get_trends(self, vault_identifier: str, lookback_days: int = 90):
+        """Return TrendReport of weekly activity for a vault.
+
+        Raises:
+            VaultNotFoundError: If vault not found.
+            ValueError: If vault_identifier is ambiguous.
+        """
+        from core.temporal import compute_trends
+        vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        if not vault:
+            raise VaultNotFoundError(f"Vault not found: {vault_identifier}")
+        return compute_trends(vault['id'], self.db, lookback_days)
+
+    def get_stale_notes(self, vault_identifier: str, limit: int = 50):
+        """Return StaleReport of importance-weighted stale notes.
+
+        Raises:
+            VaultNotFoundError: If vault not found.
+            ValueError: If vault_identifier is ambiguous.
+        """
+        from core.temporal import compute_stale
+        vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        if not vault:
+            raise VaultNotFoundError(f"Vault not found: {vault_identifier}")
+        return compute_stale(vault['id'], self.db, limit)
+
     def delete_vault(self, vault_id: str) -> bool:
         """
         Delete vault from database (not from filesystem).

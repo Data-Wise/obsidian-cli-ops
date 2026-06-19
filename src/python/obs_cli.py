@@ -515,6 +515,104 @@ def _print_quality_scores(scores):
     console.print()
 
 
+def _print_bridge_status(status):
+    """Render BridgeStatus as a Rich panel."""
+    from ai.models import BridgeStatus
+
+    cli_icon = "✅" if status.cli_installed else "❌"
+    app_icon = "✅" if status.app_running else "⚠️ "
+    cli_label = f"CLI installed ({status.cli_version})" if status.cli_installed else "CLI not installed"
+    app_label = "Obsidian app connected" if status.app_running else "Obsidian app not running"
+
+    lines = [
+        f"{cli_icon}  {cli_label}",
+        f"{app_icon}  {app_label}",
+    ]
+    if status.capabilities:
+        caps = ", ".join(status.capabilities)
+        lines.append(f"\n[dim]Capabilities:[/] {caps}")
+    if not status.cli_installed:
+        lines.append("\n[dim]Install:[/] brew install obsidian-cli")
+    elif not status.app_running:
+        lines.append("\n[dim]Start Obsidian app to enable bridge commands.[/]")
+
+    console.print(Panel("\n".join(lines), title="[bold]Obsidian CLI Bridge Status[/]", expand=False))
+
+
+def _print_trend_report(report):
+    """Render TrendReport with a sparkline table."""
+    if report.insufficient_data:
+        console.print(Panel(
+            f"[yellow]Insufficient data[/] — only {len(report.buckets)} week(s) found in the last {report.lookback_days} days.\n"
+            "Run [bold]obs analyze <vault>[/] and rescan to populate temporal data.",
+            title="[bold]Vault Activity Trends[/]",
+            expand=False,
+        ))
+        return
+
+    bars = " ▁▂▃▄▅▆▇█"
+
+    def sparkbar(counts):
+        if not counts or max(counts) == 0:
+            return "─" * len(counts)
+        mx = max(counts)
+        return "".join(bars[min(int(c / mx * 8), 8)] for c in counts)
+
+    created = [b.notes_created for b in report.buckets]
+    modified = [b.notes_modified for b in report.buckets]
+
+    console.print(f"\n[bold]Vault Activity — last {report.lookback_days} days[/]  "
+                  f"[dim]({len(report.buckets)} weeks, velocity {report.velocity_notes_per_week:.1f} notes/week)[/]\n")
+
+    table = Table(box=box.SIMPLE, show_header=True, padding=(0, 1))
+    table.add_column("Week", width=10)
+    table.add_column("Created", justify="right", width=8)
+    table.add_column("Modified", justify="right", width=8)
+
+    spark_created = sparkbar(created)
+    spark_modified = sparkbar(modified)
+    table.add_row("[dim]sparkline[/]", f"[cyan]{spark_created}[/]", f"[magenta]{spark_modified}[/]")
+
+    for b in report.buckets[-16:]:  # Show last 16 weeks to avoid scroll
+        table.add_row(b.week, str(b.notes_created) if b.notes_created else "—",
+                      str(b.notes_modified) if b.notes_modified else "—")
+
+    console.print(table)
+    console.print(f"  [dim]Total notes:[/] {report.total_notes}")
+    console.print()
+
+
+def _print_stale_report(report):
+    """Render StaleReport as a Rich table ranked by staleness."""
+    if not report.notes:
+        console.print("[green]✓[/] No stale notes found.")
+        return
+
+    rank_label = "PageRank×Age" if report.has_graph_metrics else "Age (no graph metrics — run 'obs analyze' first)"
+    console.print(f"\n[bold]Stale Notes[/]  [dim]ranked by {rank_label}[/]\n")
+
+    if not report.has_graph_metrics:
+        console.print("[yellow]ℹ[/]  No graph metrics. Ranking by age only. Run [bold]obs analyze <vault>[/] for importance weighting.\n")
+
+    table = Table(box=box.SIMPLE, show_header=True, padding=(0, 1))
+    table.add_column("#", justify="right", width=3)
+    table.add_column("Title", width=40)
+    table.add_column("Age (days)", justify="right", width=10)
+    if report.has_graph_metrics:
+        table.add_column("PageRank", justify="right", width=9)
+        table.add_column("Score", justify="right", width=7)
+
+    for i, n in enumerate(report.notes, 1):
+        age_color = "red" if n.days_since_modified > 180 else "yellow" if n.days_since_modified > 90 else "white"
+        row = [str(i), n.title[:40] or n.path[:40], f"[{age_color}]{n.days_since_modified}[/]"]
+        if report.has_graph_metrics:
+            row += [f"{n.pagerank:.4f}", f"{n.staleness_score:.3f}"]
+        table.add_row(*row)
+
+    console.print(table)
+    console.print()
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -643,6 +741,18 @@ def main():
     quality_parser = ai_subparsers.add_parser('quality', help='Score notes on quality dimensions')
     quality_parser.add_argument('target', help='Vault name/ID (vault-wide) or note ID (single note)')
 
+    # --- v3.4.0: Bridge + Temporal Analytics ---
+    bridge_parser = subparsers.add_parser('bridge', help='Obsidian CLI bridge commands')
+    bridge_subparsers = bridge_parser.add_subparsers(dest='bridge_command', help='Bridge subcommands')
+    bridge_subparsers.add_parser('status', help='Show Obsidian CLI bridge status')
+
+    trends_parser = subparsers.add_parser('trends', help='Show vault activity trends (weekly buckets)')
+    trends_parser.add_argument('vault', help='Vault name or ID')
+    trends_parser.add_argument('--days', type=int, default=90, help='Lookback window in days (default: 90)')
+
+    stale_parser = subparsers.add_parser('stale', help='Find stale high-importance notes')
+    stale_parser.add_argument('vault', help='Vault name or ID')
+    stale_parser.add_argument('--limit', type=int, default=20, help='Max notes to show (default: 20)')
 
     args = parser.parse_args()
 
@@ -1237,6 +1347,44 @@ def main():
             else:
                 ai_parser.print_help()
 
+        elif args.command == 'bridge':
+            bridge_cmd = getattr(args, 'bridge_command', None)
+            if not bridge_cmd:
+                bridge_parser.print_help()
+            elif bridge_cmd == 'status':
+                status = cli.vault_manager.get_bridge_status()
+                if args.json:
+                    print(json.dumps(status.to_dict(), indent=2))
+                else:
+                    _print_bridge_status(status)
+
+        elif args.command == 'trends':
+            try:
+                report = cli.vault_manager.get_trends(args.vault, lookback_days=args.days)
+            except (VaultNotFoundError, ValueError) as e:
+                if args.json:
+                    print(json.dumps({"error": str(e)}), file=sys.stderr)
+                else:
+                    print(f"❌ {e}")
+                sys.exit(1)
+            if args.json:
+                print(json.dumps(report.to_dict(), indent=2, default=str))
+            else:
+                _print_trend_report(report)
+
+        elif args.command == 'stale':
+            try:
+                report = cli.vault_manager.get_stale_notes(args.vault, limit=args.limit)
+            except (VaultNotFoundError, ValueError) as e:
+                if args.json:
+                    print(json.dumps({"error": str(e)}), file=sys.stderr)
+                else:
+                    print(f"❌ {e}")
+                sys.exit(1)
+            if args.json:
+                print(json.dumps(report.to_dict(), indent=2, default=str))
+            else:
+                _print_stale_report(report)
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")
