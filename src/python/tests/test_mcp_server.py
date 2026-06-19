@@ -435,6 +435,29 @@ class TestNoteCRUD:
         assert "deleted" in result.lower() or "🗑️" in result
         assert not target_path.exists()
 
+    # --- timeout / iCloud hang simulation ---
+
+    def test_create_note_fs_timeout(self, mcp_mod, obs_vault):
+        """_fs_op returns a structured error when a FS op blocks past the timeout."""
+        from concurrent.futures import TimeoutError as FuturesTimeoutError
+        from unittest.mock import MagicMock
+
+        vault_id, _, _ = obs_vault
+
+        mock_future = MagicMock()
+        mock_future.result.side_effect = FuturesTimeoutError()
+
+        mock_executor = MagicMock()
+        mock_executor.__enter__ = MagicMock(return_value=mock_executor)
+        mock_executor.__exit__ = MagicMock(return_value=False)
+        mock_executor.submit.return_value = mock_future
+
+        with patch("mcp_server.ThreadPoolExecutor", return_value=mock_executor):
+            with patch.object(mcp_mod, "_FS_WRITE_TIMEOUT", 0.001):
+                result = mcp_mod.create_note(vault_id, "HangTest", "content")
+
+        assert "timed out" in result.lower() or "❌" in result
+
     # --- links ---
 
     def test_get_note_links(self, mcp_mod, obs_vault):
