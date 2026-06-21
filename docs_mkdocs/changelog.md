@@ -4,6 +4,32 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## Unreleased (Phase 1 — nexus-cli absorption)
+
+Config unification and research domain commands, completing the nexus-cli merger (RFC v2 D1=Option A).
+
+### Added
+
+- **`obs config`** — unified config management at `~/.config/obs/config.yaml`:
+  - `obs config show` — print current config and source file
+  - `obs config validate` — validate config and report errors
+  - `obs config migrate` — convert legacy obs/nexus-cli config to unified YAML
+  - `obs config init` — interactive wizard to create a fresh config
+  - `obs config edit` — open config in `$EDITOR`
+- **`obs research`** — research domain absorbed from nexus-cli (11 subcommands):
+  - `obs research zotero search/get/recent` — Zotero library operations
+  - `obs research pdf search` — full-text PDF search
+  - `obs research course list/show/lectures` — course management
+  - `obs research manuscript list/show/stats` — manuscript tracking
+  - `obs research bib check` — bibliography citation check
+- **Migration guide**: `migration.md` now includes nexus-cli → obs command mapping
+
+### Changed
+
+- `obs config migrate` absorbs nexus-cli config (`~/.config/nexus/config.yaml`) into the unified config file
+
+---
+
 ## v3.5.0 (2026-06-19)
 
 Self-diagnostics release: `obs doctor` command and `diagnose` MCP tool.

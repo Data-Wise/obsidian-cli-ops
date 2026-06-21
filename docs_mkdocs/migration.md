@@ -1,4 +1,57 @@
-# Migration Guide: v2.x → v3.0.0
+# Migration Guide
+
+## nexus-cli → obs (v3.6.0+)
+
+> **TL;DR** (30 seconds)
+> - **What:** nexus-cli was fully absorbed into `obs` as of 2026-06-21. All research, PDF, course, manuscript, and bibliography commands now live under `obs research …`
+> - **Why:** One tool, one config, no duplication
+> - **How:** `obs config migrate` to convert your nexus-cli config, then use the table below
+> - **Next:** [Research Commands](cli-reference.md#research-domain) for full reference
+{ .tldr }
+
+### Command Mapping
+
+| nexus-cli command | obs equivalent |
+|-------------------|---------------|
+| `nexus research zotero search <q>` | `obs research zotero search <q>` |
+| `nexus research zotero get <key>` | `obs research zotero get <key>` |
+| `nexus research zotero recent` | `obs research zotero recent` |
+| `nexus research pdf search <q>` | `obs research pdf search <q>` |
+| `nexus teach course list` | `obs research course list` |
+| `nexus teach course show <name>` | `obs research course show <name>` |
+| `nexus teach course lectures <name>` | `obs research course lectures <name>` |
+| `nexus write manuscript list` | `obs research manuscript list` |
+| `nexus write manuscript show <name>` | `obs research manuscript show <name>` |
+| `nexus write manuscript stats` | `obs research manuscript stats` |
+| `nexus write bib check <name>` | `obs research bib check <name>` |
+| `nexus config` | `obs config show` |
+| `nexus doctor` | `obs doctor` |
+
+### Config Migration
+
+```bash
+# Convert your ~/.config/nexus/config.yaml to ~/.config/obs/config.yaml
+obs config migrate
+
+# Verify the result
+obs config validate
+```
+
+### Uninstall nexus-cli
+
+```bash
+# If installed via Homebrew
+brew uninstall nexus-cli
+
+# If installed via uv/pip
+uv tool uninstall nexus-cli
+# or
+pip uninstall nexus-cli
+```
+
+---
+
+## v2.x → v3.0.0
 
 > **TL;DR** (30 seconds)
 > - **What:** v3.0 removed TUI, R-Dev, and legacy commands — down to 15 focused commands
