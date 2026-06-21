@@ -76,7 +76,7 @@ Before merging, the burden is on "why not coexist." Compare four TCOs in Phase 0
 - **(2) Merge + option A** (obs absorbs everything) — re-bloats obs against its v3 "do one thing" charter.
 - **(3) Facade/wrapper** — a thin `obs`/`nexus` umbrella that dispatches to both, no real merge.
 
-Recommendation stands (option 1/B), **but the decision record must state why (0) is insufficient** — concretely: duplicated vault search/orphan/backlink/graph code across two test suites + two release cadences, and user/Claude ambiguity over which tool owns vault ops.
+**Ratified choice = (2) merge + option A** (§0). The "why not (0) coexist" rationale still holds and is the record: duplicated vault search/orphan/backlink/graph code across two test suites + two release cadences, and user/Claude ambiguity over which tool owns vault ops. The cost of A over B — re-expanding obs's scope — is the accepted tradeoff, bounded by the `obs research` namespace + AI-opt-in default.
 
 ## 5. The five hard parts (Phase 0 must deliver a sub-spec for each)
 
