@@ -1,20 +1,25 @@
 priority: P1
-status: ✅ v3.5.0 released — obs doctor shipped, dev synced with main
-progress: 100
-updated: 2026-06-19
-version: 3.5.0 (prev: v3.4.2)
+status: 🔄 Phase 4 docs PR open — feature/phase4-docs → main (PR #38)
+progress: 70
+updated: 2026-06-21
+version: 3.5.0 (next: 3.6.0 — Phase 1 unreleased)
 next: |
-  1. 🔀 Decide the nexus-cli merge (RFC #35): absorb nexus-cli's vault+graph+doctor+tutorials into obs; pick Tier-2 option (A absorb non-vault / B sibling-depends-on-obs [recommended] / C spin-out). Spec: SPEC-merge-nexus-cli-2026-06-19.md.
-  2. Plan next feature (see BRAINSTORM-v3.4.0-bridge-temporal-2026-06-19.md + IDEAS.md)
-  3. Consider worktree cleanup: delete feature/obs-doctor worktree if still present
+  1. Merge PR #38 (docs: Phase 1 reference update)
+  2. Phase 5: nexus-cli v0.7.0 final deprecated release → PyPI
+  3. Retire nexus-cli Homebrew formula in data-wise/tap
+  4. Archive nexus-cli GitHub repo (Data-Wise/nexus-cli)
+  5. obs Homebrew formula resource-block regen (new Python deps)
+  6. obs v4.0.0 major release
+worktree: (none — feature/phase1-config-loader worktree closed after PR #37 merged)
 verified: |
-  v3.5.0 released 2026-06-19: PR #36 (dev→main) squash-merged. Homebrew tap auto-updated.
-  dev synced post-release (295573a). feature/obs-doctor merged and closed (PR #33).
-target: v3.6.0 - TBD
+  PR #37 merged 2026-06-21: feature/phase1-config-loader → main (squash commit 80cb505).
+  Phase 1 adds: obs config (5 subcommands) + obs research (11 subcommands) + 27 new tests.
+  Phase 4 docs committed on feature/phase4-docs (659271a): refcard, cli-reference, migration, changelog updated.
+target: v3.6.0 - nexus-cli absorption (Phase 1 config complete)
 
 ## 🎯 Current State
 
-**Phase**: post v3.5.0 release — ready for next feature
+**Phase**: nexus-cli absorption (RFC v2 = Option A full absorption) — Phase 1 config loader committed
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
 **Tests**: 341 pytest + 59 Jest = 400 total (on main)
 **Commands**: 25 total (24 obs + 1 MCP-only: diagnose)
