@@ -855,6 +855,55 @@ def main():
     config_sub.add_parser('init', help='Interactive wizard to create a fresh config')
     config_sub.add_parser('edit', help='Open config file in $EDITOR')
 
+    # --- Phase 4: obs research namespace (D8) ---
+    research_parser = subparsers.add_parser('research', help='Research domain commands (Zotero, PDF, courses, manuscripts)')
+    research_sub = research_parser.add_subparsers(dest='research_command')
+
+    # zotero subcommands
+    zotero_parser = research_sub.add_parser('zotero', help='Zotero library commands')
+    zotero_sub = zotero_parser.add_subparsers(dest='zotero_command')
+    zot_search = zotero_sub.add_parser('search', help='Search Zotero library')
+    zot_search.add_argument('query', help='Search query')
+    zot_search.add_argument('--limit', '-n', type=int, default=20, help='Max results (default: 20)')
+    zot_search.add_argument('--type', dest='item_type', default='', help='Filter by item type (e.g. journalArticle)')
+    zot_search.add_argument('--tag', default='', help='Filter by tag')
+    zot_get = zotero_sub.add_parser('get', help='Get a Zotero item by key')
+    zot_get.add_argument('key', help='Zotero item key')
+    zot_get.add_argument('--format', default='apa', choices=['apa', 'bibtex', 'full'], help='Output format (default: apa)')
+    zot_recent = zotero_sub.add_parser('recent', help='List recently modified Zotero items')
+    zot_recent.add_argument('--limit', '-n', type=int, default=10, help='Max results (default: 10)')
+
+    # pdf subcommands
+    pdf_parser = research_sub.add_parser('pdf', help='PDF search commands')
+    pdf_sub = pdf_parser.add_subparsers(dest='pdf_command')
+    pdf_search = pdf_sub.add_parser('search', help='Search PDF content')
+    pdf_search.add_argument('query', help='Search query')
+    pdf_search.add_argument('--limit', '-n', type=int, default=10, help='Max results (default: 10)')
+
+    # course subcommands
+    course_parser = research_sub.add_parser('course', help='Course management commands')
+    course_sub = course_parser.add_subparsers(dest='course_command')
+    course_sub.add_parser('list', help='List all courses')
+    course_show = course_sub.add_parser('show', help='Show course details')
+    course_show.add_argument('name', help='Course name or directory name')
+    course_lec = course_sub.add_parser('lectures', help='List lectures for a course')
+    course_lec.add_argument('name', help='Course name or directory name')
+
+    # manuscript subcommands
+    ms_parser = research_sub.add_parser('manuscript', help='Manuscript management commands')
+    ms_sub = ms_parser.add_subparsers(dest='manuscript_command')
+    ms_list = ms_sub.add_parser('list', help='List all manuscripts')
+    ms_list.add_argument('--archived', action='store_true', help='Include archived manuscripts')
+    ms_show = ms_sub.add_parser('show', help='Show manuscript details')
+    ms_show.add_argument('name', help='Manuscript name or directory name')
+    ms_sub.add_parser('stats', help='Show manuscript statistics')
+
+    # bib subcommands
+    bib_parser = research_sub.add_parser('bib', help='Bibliography commands')
+    bib_sub = bib_parser.add_subparsers(dest='bib_command')
+    bib_check = bib_sub.add_parser('check', help='Check citations in a manuscript')
+    bib_check.add_argument('name', help='Manuscript name or directory name')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -1540,6 +1589,197 @@ def main():
                 sys.exit(config_loader.cmd_edit())
             else:
                 config_parser.print_help()
+
+        elif args.command == 'research':
+            sys.path.insert(0, str(Path(__file__).parent))
+            cfg = config_loader.load()
+
+            sub = getattr(args, 'research_command', None)
+
+            if sub == 'zotero':
+                if cfg is None or cfg.research is None or cfg.research.zotero is None:
+                    print("research.zotero not configured — run `obs config show` for details")
+                    sys.exit(1)
+                from research.zotero import ZoteroClient
+                zc = ZoteroClient(cfg.research.zotero.database)
+                zcmd = getattr(args, 'zotero_command', None)
+                if zcmd == 'search':
+                    items = zc.search(args.query, limit=args.limit,
+                                      item_type=args.item_type, tag=args.tag)
+                    if not items:
+                        print("No results.")
+                    else:
+                        for i, item in enumerate(items, 1):
+                            print(f"{i}. [{item.key}] {item.title}")
+                            if item.authors:
+                                print(f"   {', '.join(item.authors[:3])}"
+                                      + (' et al.' if len(item.authors) > 3 else ''))
+                elif zcmd == 'get':
+                    item = zc.get(args.key)
+                    if item is None:
+                        print(f"Key not found: {args.key}")
+                        sys.exit(1)
+                    if args.format == 'bibtex':
+                        print(item.citation_bibtex())
+                    elif args.format == 'full':
+                        d = item.to_dict()
+                        for k, v in d.items():
+                            if v:
+                                print(f"{k}: {v}")
+                    else:
+                        print(item.citation_apa())
+                elif zcmd == 'recent':
+                    items = zc.recent(limit=args.limit)
+                    if not items:
+                        print("No recent items.")
+                    else:
+                        for i, item in enumerate(items, 1):
+                            print(f"{i}. [{item.key}] {item.title}")
+                else:
+                    zotero_parser.print_help()
+
+            elif sub == 'pdf':
+                if cfg is None or cfg.research is None or not cfg.research.pdf_directories:
+                    print("research.pdf not configured — run `obs config show` for details")
+                    sys.exit(1)
+                from research.pdf import PDFExtractor
+                extractor = PDFExtractor(cfg.research.pdf_directories)
+                pcmd = getattr(args, 'pdf_command', None)
+                if pcmd == 'search':
+                    if not extractor.available():
+                        print("pdftotext not found — install poppler: brew install poppler")
+                        sys.exit(1)
+                    results = extractor.search(args.query, limit=args.limit)
+                    if not results:
+                        print("No matches.")
+                    else:
+                        for r in results:
+                            print(f"[p.{r.page}] {r.filename}")
+                            print(f"  …{r.context}…")
+                else:
+                    pdf_parser.print_help()
+
+            elif sub == 'course':
+                if cfg is None or cfg.research is None or cfg.research.teaching is None:
+                    print("research.teaching not configured — run `obs config show` for details")
+                    sys.exit(1)
+                from research.courses import CourseManager
+                cm = CourseManager(cfg.research.teaching.courses_dir)
+                ccmd = getattr(args, 'course_command', None)
+                if ccmd == 'list':
+                    courses = cm.list_courses()
+                    if not courses:
+                        print("No courses found.")
+                    else:
+                        print(f"{'Course':<30} {'Status':<10} {'Progress':<10} {'Week':<6} {'Lectures'}")
+                        print("-" * 70)
+                        for c in courses:
+                            print(f"{c.name:<30} {(c.status.status or '-'):<10} "
+                                  f"{(c.status.progress or '-'):<10} "
+                                  f"{str(c.status.current_week or '-'):<6} {c.lecture_count}")
+                elif ccmd == 'show':
+                    course = cm.get_course(args.name)
+                    if course is None:
+                        print(f"Course not found: {args.name}")
+                        sys.exit(1)
+                    print(f"Course: {course.name}")
+                    if course.quarto_config:
+                        print(f"Title:  {course.quarto_config.title}")
+                    print(f"Status: {course.status.status or '-'}")
+                    print(f"Progress: {course.status.progress or '-'}")
+                    print(f"Week: {course.status.current_week or '-'}")
+                    if course.status.next_action:
+                        print(f"Next: {course.status.next_action}")
+                    print(f"Lectures: {course.lecture_count}")
+                elif ccmd == 'lectures':
+                    course = cm.get_course(args.name)
+                    if course is None:
+                        print(f"Course not found: {args.name}")
+                        sys.exit(1)
+                    lectures = cm.list_lectures(course)
+                    if not lectures:
+                        print("No lectures found.")
+                    else:
+                        for lec in lectures:
+                            week = f"Week {lec.week_number}" if lec.week_number else "    "
+                            print(f"  {week:<8} {lec.title or lec.filename}")
+                else:
+                    course_parser.print_help()
+
+            elif sub == 'manuscript':
+                if cfg is None or cfg.research is None or cfg.research.writing is None:
+                    print("research.writing not configured — run `obs config show` for details")
+                    sys.exit(1)
+                from research.manuscript import ManuscriptManager
+                mm = ManuscriptManager(cfg.research.writing.manuscripts_dir)
+                mcmd = getattr(args, 'manuscript_command', None)
+                if mcmd == 'list':
+                    manuscripts = mm.list_manuscripts(
+                        include_archived=getattr(args, 'archived', False))
+                    if not manuscripts:
+                        print("No manuscripts found.")
+                    else:
+                        print(f"{'Manuscript':<35} {'Status':<12} {'Progress':<10} {'Words'}")
+                        print("-" * 70)
+                        for m in manuscripts:
+                            print(f"{m.name:<35} {(m.status.status or '-'):<12} "
+                                  f"{(m.status.progress or '-'):<10} "
+                                  f"{m.word_count or '-'}")
+                elif mcmd == 'show':
+                    ms = mm.get_manuscript(args.name)
+                    if ms is None:
+                        print(f"Manuscript not found: {args.name}")
+                        sys.exit(1)
+                    print(f"Manuscript: {ms.name}")
+                    if ms.quarto_config:
+                        print(f"Title:    {ms.quarto_config.title}")
+                        if ms.quarto_config.authors:
+                            print(f"Authors:  {', '.join(ms.quarto_config.authors)}")
+                    print(f"Status:   {ms.status.status or '-'}")
+                    print(f"Progress: {ms.status.progress or '-'}")
+                    if ms.status.target:
+                        print(f"Target:   {ms.status.target}")
+                    if ms.word_count:
+                        print(f"Words:    {ms.word_count}")
+                    print(f"Format:   {ms.format}")
+                elif mcmd == 'stats':
+                    stats = mm.get_statistics()
+                    print(f"Total manuscripts: {stats['total']}")
+                    print(f"Active:            {stats['by_status'].get('active', 0)}")
+                    print(f"Total words:       {stats.get('total_words', 0)}")
+                    for fmt, count in stats.get('by_format', {}).items():
+                        print(f"  {fmt}: {count}")
+                else:
+                    ms_parser.print_help()
+
+            elif sub == 'bib':
+                if cfg is None or cfg.research is None or cfg.research.writing is None:
+                    print("research.writing not configured — run `obs config show` for details")
+                    sys.exit(1)
+                from research.bibliography import BibliographyManager
+                bm = BibliographyManager(cfg.research.writing.manuscripts_dir)
+                bcmd = getattr(args, 'bib_command', None)
+                if bcmd == 'check':
+                    result = bm.check_citations(args.name)
+                    if result is None:
+                        print(f"Manuscript not found or no .bib file: {args.name}")
+                        sys.exit(1)
+                    print(f"Cited: {result['cited_count']}  Bibliography: {result['bibliography_count']}")
+                    if result['missing']:
+                        print(f"\nMissing from bibliography ({len(result['missing'])}):")
+                        for k in result['missing']:
+                            print(f"  ❌ {k}")
+                    if result['unused']:
+                        print(f"\nUnused bibliography entries ({len(result['unused'])}):")
+                        for k in result['unused']:
+                            print(f"  ⚠️  {k}")
+                    if result['all_good']:
+                        print("✅ All citations match bibliography.")
+                else:
+                    bib_parser.print_help()
+
+            else:
+                research_parser.print_help()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")
