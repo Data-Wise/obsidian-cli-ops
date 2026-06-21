@@ -940,6 +940,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#config-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#research-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#utilities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1519,6 +1541,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#config-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#research-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#utilities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1742,6 +1786,92 @@
 <tr>
 <td><code>obs ai quality &lt;target&gt;</code></td>
 <td>Score notes on quality (completeness, connectivity, metadata, freshness)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="config-commands">Config Commands<a class="headerlink" href="#config-commands" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs config show</code></td>
+<td>Print current config and its source file</td>
+</tr>
+<tr>
+<td><code>obs config validate</code></td>
+<td>Validate config and report errors</td>
+</tr>
+<tr>
+<td><code>obs config migrate</code></td>
+<td>Convert legacy obs/nexus config to unified YAML</td>
+</tr>
+<tr>
+<td><code>obs config init</code></td>
+<td>Interactive wizard to create a fresh config</td>
+</tr>
+<tr>
+<td><code>obs config edit</code></td>
+<td>Open config file in <code>$EDITOR</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="research-commands">Research Commands<a class="headerlink" href="#research-commands" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs research zotero search &lt;query&gt;</code></td>
+<td>Search Zotero library (<code>--limit N</code>, <code>--type T</code>, <code>--tag T</code>)</td>
+</tr>
+<tr>
+<td><code>obs research zotero get &lt;key&gt;</code></td>
+<td>Get a Zotero item by key (<code>--format F</code>)</td>
+</tr>
+<tr>
+<td><code>obs research zotero recent</code></td>
+<td>List recently modified Zotero items (<code>--limit N</code>)</td>
+</tr>
+<tr>
+<td><code>obs research pdf search &lt;query&gt;</code></td>
+<td>Search PDF content (<code>--limit N</code>)</td>
+</tr>
+<tr>
+<td><code>obs research course list</code></td>
+<td>List all courses</td>
+</tr>
+<tr>
+<td><code>obs research course show &lt;name&gt;</code></td>
+<td>Show course details</td>
+</tr>
+<tr>
+<td><code>obs research course lectures &lt;name&gt;</code></td>
+<td>List lectures for a course</td>
+</tr>
+<tr>
+<td><code>obs research manuscript list</code></td>
+<td>List all manuscripts (<code>--archived</code>)</td>
+</tr>
+<tr>
+<td><code>obs research manuscript show &lt;name&gt;</code></td>
+<td>Show manuscript details</td>
+</tr>
+<tr>
+<td><code>obs research manuscript stats</code></td>
+<td>Show manuscript statistics</td>
+</tr>
+<tr>
+<td><code>obs research bib check &lt;name&gt;</code></td>
+<td>Check citations in a manuscript</td>
 </tr>
 </tbody>
 </table>
@@ -2030,7 +2160,7 @@
 </details>
 <p>See the <a href="https://help.obsidian.md/cli">official docs</a> for the full command list.</p>
 <hr />
-<p><strong>Version:</strong> 3.5.0 | <strong>Commands:</strong> 19 | <strong>MCP Tools:</strong> 25 | <strong>AI Providers:</strong> 5</p>
+<p><strong>Version:</strong> 3.5.0 | <strong>Commands:</strong> 35 | <strong>MCP Tools:</strong> 25 | <strong>AI Providers:</strong> 5</p>
 
 
 

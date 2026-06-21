@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#migration-guide-v2x-v300" class="md-skip">
+        <a href="#migration-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -1346,6 +1346,67 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#nexus-cli-obs-v360" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nexus-cli → obs (v3.6.0+)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="nexus-cli → obs (v3.6.0+)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uninstall-nexus-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uninstall nexus-cli
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2x-v300" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2.x → v3.0.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview-of-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1833,6 +1894,67 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#nexus-cli-obs-v360" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nexus-cli → obs (v3.6.0+)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="nexus-cli → obs (v3.6.0+)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uninstall-nexus-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uninstall nexus-cli
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2x-v300" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2.x → v3.0.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview-of-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2297,7 +2419,96 @@
   
 
 
-<h1 id="migration-guide-v2x-v300">Migration Guide: v2.x → v3.0.0<a class="headerlink" href="#migration-guide-v2x-v300" title="Permanent link">&para;</a></h1>
+<h1 id="migration-guide">Migration Guide<a class="headerlink" href="#migration-guide" title="Permanent link">&para;</a></h1>
+<h2 id="nexus-cli-obs-v360">nexus-cli → obs (v3.6.0+)<a class="headerlink" href="#nexus-cli-obs-v360" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p class="tldr"><strong>TL;DR</strong> (30 seconds)
+- <strong>What:</strong> nexus-cli was fully absorbed into <code>obs</code> as of 2026-06-21. All research, PDF, course, manuscript, and bibliography commands now live under <code>obs research …</code>
+- <strong>Why:</strong> One tool, one config, no duplication
+- <strong>How:</strong> <code>obs config migrate</code> to convert your nexus-cli config, then use the table below
+- <strong>Next:</strong> <a href="../cli-reference/#research-domain">Research Commands</a> for full reference</p>
+</blockquote>
+<h3 id="command-mapping">Command Mapping<a class="headerlink" href="#command-mapping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>nexus-cli command</th>
+<th>obs equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nexus research zotero search &lt;q&gt;</code></td>
+<td><code>obs research zotero search &lt;q&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus research zotero get &lt;key&gt;</code></td>
+<td><code>obs research zotero get &lt;key&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus research zotero recent</code></td>
+<td><code>obs research zotero recent</code></td>
+</tr>
+<tr>
+<td><code>nexus research pdf search &lt;q&gt;</code></td>
+<td><code>obs research pdf search &lt;q&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus teach course list</code></td>
+<td><code>obs research course list</code></td>
+</tr>
+<tr>
+<td><code>nexus teach course show &lt;name&gt;</code></td>
+<td><code>obs research course show &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus teach course lectures &lt;name&gt;</code></td>
+<td><code>obs research course lectures &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus write manuscript list</code></td>
+<td><code>obs research manuscript list</code></td>
+</tr>
+<tr>
+<td><code>nexus write manuscript show &lt;name&gt;</code></td>
+<td><code>obs research manuscript show &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus write manuscript stats</code></td>
+<td><code>obs research manuscript stats</code></td>
+</tr>
+<tr>
+<td><code>nexus write bib check &lt;name&gt;</code></td>
+<td><code>obs research bib check &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td><code>nexus config</code></td>
+<td><code>obs config show</code></td>
+</tr>
+<tr>
+<td><code>nexus doctor</code></td>
+<td><code>obs doctor</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="config-migration">Config Migration<a class="headerlink" href="#config-migration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Convert your ~/.config/nexus/config.yaml to ~/.config/obs/config.yaml</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>config<span class="w"> </span>migrate
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify the result</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>obs<span class="w"> </span>config<span class="w"> </span>validate
+</code></pre></div>
+<h3 id="uninstall-nexus-cli">Uninstall nexus-cli<a class="headerlink" href="#uninstall-nexus-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># If installed via Homebrew</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>brew<span class="w"> </span>uninstall<span class="w"> </span>nexus-cli
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If installed via uv/pip</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uv<span class="w"> </span>tool<span class="w"> </span>uninstall<span class="w"> </span>nexus-cli
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># or</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pip<span class="w"> </span>uninstall<span class="w"> </span>nexus-cli
+</code></pre></div>
+<hr />
+<h2 id="v2x-v300">v2.x → v3.0.0<a class="headerlink" href="#v2x-v300" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p class="tldr"><strong>TL;DR</strong> (30 seconds)
 - <strong>What:</strong> v3.0 removed TUI, R-Dev, and legacy commands — down to 15 focused commands
@@ -2491,30 +2702,30 @@
 <hr />
 <h2 id="workflow-changes"><img alt="🔁" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f501.svg" title=":repeat:" /> Workflow Changes<a class="headerlink" href="#workflow-changes" title="Permanent link">&para;</a></h2>
 <h3 id="before-v2x-tui-centric">Before (v2.x): TUI-Centric<a class="headerlink" href="#before-v2x-tui-centric" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Launch TUI</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or launch specific vault</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>obs<span class="w"> </span>tui<span class="w"> </span>--vault-id<span class="w"> </span>my-vault
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Switch vaults</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>obs<span class="w"> </span>switch
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Manage vaults</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>obs<span class="w"> </span>manage
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Launch TUI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or launch specific vault</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>obs<span class="w"> </span>tui<span class="w"> </span>--vault-id<span class="w"> </span>my-vault
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Switch vaults</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>obs<span class="w"> </span>switch
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Manage vaults</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>obs<span class="w"> </span>manage
 </code></pre></div>
 <h3 id="after-v300-cli-first">After (v3.0.0): CLI-First<a class="headerlink" href="#after-v300-cli-first" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all vaults</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show vault statistics</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>my-vault
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Discover new vaults</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Analyze vault graph</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>obs<span class="w"> </span>analyze<span class="w"> </span>my-vault
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all vaults</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>obs
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show vault statistics</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>my-vault
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Discover new vaults</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Analyze vault graph</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>obs<span class="w"> </span>analyze<span class="w"> </span>my-vault
 </code></pre></div>
 <hr />
 <h2 id="feature-removal-details"><img alt="🗑" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5d1.svg" title=":wastebasket:" /> Feature Removal Details<a class="headerlink" href="#feature-removal-details" title="Permanent link">&para;</a></h2>
@@ -2557,12 +2768,12 @@
 </tbody>
 </table>
 <p><strong>Example Migration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># v2.x: Open TUI, navigate to vaults, select vault, view stats</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># (press keys: v → Enter → s)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># v3.0.0: Direct CLI command</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>obs<span class="w"> </span>stats<span class="w"> </span>my-vault
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># v2.x: Open TUI, navigate to vaults, select vault, view stats</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># (press keys: v → Enter → s)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># v3.0.0: Direct CLI command</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>obs<span class="w"> </span>stats<span class="w"> </span>my-vault
 </code></pre></div>
 <h3 id="2-r-dev-integration">2. R-Dev Integration<a class="headerlink" href="#2-r-dev-integration" title="Permanent link">&para;</a></h3>
 <p><strong>Why Removed:</strong>
@@ -2577,19 +2788,19 @@
 - Use <code>fs</code> package for file operations
 - Consider creating dedicated R-Obsidian package</p>
 <p><strong>Example R Package Setup:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># In your R project</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nf">library</span><span class="p">(</span><span class="n">usethis</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nf">library</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Create functions for Obsidian integration</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">write_to_obsidian</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">vault_path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="n">path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fs</span><span class="o">::</span><span class="nf">path</span><span class="p">(</span><span class="n">vault_path</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R-Notes&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="nf">Sys.Date</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;.md&quot;</span><span class="p">))</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nf">writeLines</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nf">message</span><span class="p">(</span><span class="s">&quot;✓ Written to Obsidian: &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Use it</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nf">write_to_obsidian</span><span class="p">(</span><span class="s">&quot;# Analysis Results\n\n...&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~/Vaults/Research&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># In your R project</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nf">library</span><span class="p">(</span><span class="n">usethis</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nf">library</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Create functions for Obsidian integration</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">write_to_obsidian</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">vault_path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="n">path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fs</span><span class="o">::</span><span class="nf">path</span><span class="p">(</span><span class="n">vault_path</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R-Notes&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="nf">Sys.Date</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;.md&quot;</span><span class="p">))</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nf">writeLines</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nf">message</span><span class="p">(</span><span class="s">&quot;✓ Written to Obsidian: &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Use it</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nf">write_to_obsidian</span><span class="p">(</span><span class="s">&quot;# Analysis Results\n\n...&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~/Vaults/Research&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="3-legacy-v1x-commands">3. Legacy v1.x Commands<a class="headerlink" href="#3-legacy-v1x-commands" title="Permanent link">&para;</a></h3>
 <p><strong>Why Removed:</strong>
@@ -2612,60 +2823,60 @@
 <h2 id="breaking-changes"><img alt="⚠" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a0.svg" title=":warning:" /> Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
 <h3 id="1-default-behavior-obs-with-no-args">1. Default Behavior (<code>obs</code> with no args)<a class="headerlink" href="#1-default-behavior-obs-with-no-args" title="Permanent link">&para;</a></h3>
 <p><strong>v2.x:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w">          </span><span class="c1"># Launched TUI with last vault</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w">          </span><span class="c1"># Launched TUI with last vault</span>
 </code></pre></div></p>
 <p><strong>v3.0.0:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w">          </span><span class="c1"># Lists all vaults in database</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w">          </span><span class="c1"># Lists all vaults in database</span>
 </code></pre></div></p>
 <p><strong>Migration:</strong>
 - Update scripts that relied on TUI launching
 - Use <code>obs stats &lt;vault&gt;</code> for specific vault info</p>
 <h3 id="2-vault-selection">2. Vault Selection<a class="headerlink" href="#2-vault-selection" title="Permanent link">&para;</a></h3>
 <p><strong>v2.x:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>open<span class="w"> </span>my-vault-name<span class="w">      </span><span class="c1"># Open by name</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>obs<span class="w"> </span>tui<span class="w"> </span>--vault-id<span class="w"> </span>abc123<span class="w">   </span><span class="c1"># Open by ID</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>open<span class="w"> </span>my-vault-name<span class="w">      </span><span class="c1"># Open by name</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>obs<span class="w"> </span>tui<span class="w"> </span>--vault-id<span class="w"> </span>abc123<span class="w">   </span><span class="c1"># Open by ID</span>
 </code></pre></div></p>
 <p><strong>v3.0.0:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault&gt;<span class="w">        </span><span class="c1"># Use vault name or ID</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault&gt;<span class="w">        </span><span class="c1"># Use vault name or ID</span>
 </code></pre></div></p>
 <p><strong>Migration:</strong>
 - Update scripts to use vault name or ID
 - Get vault names/IDs with <code>obs</code> command</p>
 <h3 id="3-r-integration-workflow">3. R Integration Workflow<a class="headerlink" href="#3-r-integration-workflow" title="Permanent link">&para;</a></h3>
 <p><strong>v2.x:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>r<span class="w"> </span>link<span class="w">                  </span><span class="c1"># Link R project</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>obs<span class="w"> </span>r<span class="w"> </span>log<span class="w"> </span>results.png<span class="w">       </span><span class="c1"># Copy to vault</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>obs<span class="w"> </span>r<span class="w"> </span>link<span class="w">                  </span><span class="c1"># Link R project</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>obs<span class="w"> </span>r<span class="w"> </span>log<span class="w"> </span>results.png<span class="w">       </span><span class="c1"># Copy to vault</span>
 </code></pre></div></p>
 <p><strong>v3.0.0:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># No direct equivalent - use R package approach</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># See &quot;R-Dev Integration&quot; section above</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># No direct equivalent - use R package approach</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># See &quot;R-Dev Integration&quot; section above</span>
 </code></pre></div></p>
 <hr />
 <h2 id="installation-upgrade"><img alt="📦" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4e6.svg" title=":package:" /> Installation &amp; Upgrade<a class="headerlink" href="#installation-upgrade" title="Permanent link">&para;</a></h2>
 <h3 id="clean-install-recommended">Clean Install (Recommended)<a class="headerlink" href="#clean-install-recommended" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Backup your database</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cp<span class="w"> </span>~/.config/obs/obsidian_vaults.db<span class="w"> </span>~/.config/obs/obsidian_vaults.db.backup
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Pull latest code</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">cd</span><span class="w"> </span>~/projects/dev-tools/obsidian-cli-ops
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Reinstall dependencies (Textual removed, Rich added)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Database is compatible - no migration needed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Backup your database</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cp<span class="w"> </span>~/.config/obs/obsidian_vaults.db<span class="w"> </span>~/.config/obs/obsidian_vaults.db.backup
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Pull latest code</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">cd</span><span class="w"> </span>~/projects/dev-tools/obsidian-cli-ops
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Reinstall dependencies (Textual removed, Rich added)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Database is compatible - no migration needed</span>
 </code></pre></div>
 <h3 id="dependency-changes">Dependency Changes<a class="headerlink" href="#dependency-changes" title="Permanent link">&para;</a></h3>
 <p><strong>Removed:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>textual&gt;=0.52.0      # TUI framework (no longer needed)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>textual&gt;=0.52.0      # TUI framework (no longer needed)
 </code></pre></div></p>
 <p><strong>Added:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>rich&gt;=13.7.0         # CLI output formatting (replaces Textual tables)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>rich&gt;=13.7.0         # CLI output formatting (replaces Textual tables)
 </code></pre></div></p>
 <p><strong>Update:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pip3<span class="w"> </span>uninstall<span class="w"> </span>textual
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pip3<span class="w"> </span>install<span class="w"> </span>rich
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pip3<span class="w"> </span>uninstall<span class="w"> </span>textual
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>pip3<span class="w"> </span>install<span class="w"> </span>rich
 </code></pre></div></p>
 <hr />
 <h2 id="database-compatibility">Database Compatibility<a class="headerlink" href="#database-compatibility" title="Permanent link">&para;</a></h2>
@@ -2680,55 +2891,55 @@
 <h2 id="configuration-changes">Configuration Changes<a class="headerlink" href="#configuration-changes" title="Permanent link">&para;</a></h2>
 <h3 id="removed-configuration">Removed Configuration<a class="headerlink" href="#removed-configuration" title="Permanent link">&para;</a></h3>
 <p><strong>v1.x OBS_ROOT:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># No longer needed or used</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># export OBS_ROOT=&quot;$HOME/Vaults/Main&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># No longer needed or used</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># export OBS_ROOT=&quot;$HOME/Vaults/Main&quot;</span>
 </code></pre></div></p>
 <p><strong>R-Dev Mappings:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># ~/.config/obs/r_project_mappings (no longer used)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># ~/.config/obs/r_project_mappings (no longer used)</span>
 </code></pre></div></p>
 <h3 id="retained-configuration">Retained Configuration<a class="headerlink" href="#retained-configuration" title="Permanent link">&para;</a></h3>
 <p><strong>Last Vault:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># ~/.config/obs/last_vault (still used by some commands)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># ~/.config/obs/last_vault (still used by some commands)</span>
 </code></pre></div></p>
 <p><strong>AI Configuration:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># ~/.config/obs/ai_config.json (still used by AI features)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># ~/.config/obs/ai_config.json (still used by AI features)</span>
 </code></pre></div></p>
 <hr />
 <h2 id="testing-your-migration">Testing Your Migration<a class="headerlink" href="#testing-your-migration" title="Permanent link">&para;</a></h2>
 <p>After upgrading, verify everything works:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. List vaults (should show your existing vaults)</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>obs
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># 2. Check a vault&#39;s statistics</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault&gt;
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># 3. Analyze graph (should show existing metrics)</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>obs<span class="w"> </span>analyze<span class="w"> </span>&lt;vault&gt;
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># 4. Test AI features (if configured)</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="c1"># 5. Discover new vaults</span>
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="c1"># 6. Verify help</span>
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># 1. List vaults (should show your existing vaults)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>obs
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># 2. Check a vault&#39;s statistics</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>&lt;vault&gt;
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># 3. Analyze graph (should show existing metrics)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>obs<span class="w"> </span>analyze<span class="w"> </span>&lt;vault&gt;
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># 4. Test AI features (if configured)</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c1"># 5. Discover new vaults</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c1"># 6. Verify help</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>obs<span class="w"> </span><span class="nb">help</span><span class="w"> </span>--all
 </code></pre></div>
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="command-not-found-errors">"Command not found" errors<a class="headerlink" href="#command-not-found-errors" title="Permanent link">&para;</a></h3>
 <p>If you get errors for removed commands:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># v2.x script:</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>obs<span class="w"> </span>tui<span class="w"> </span>--vault-id<span class="w"> </span>my-vault<span class="w">   </span><span class="c1"># ERROR in v3.0.0</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Update to:</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>my-vault
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># v2.x script:</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>obs<span class="w"> </span>tui<span class="w"> </span>--vault-id<span class="w"> </span>my-vault<span class="w">   </span><span class="c1"># ERROR in v3.0.0</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Update to:</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>obs<span class="w"> </span>stats<span class="w"> </span>my-vault
 </code></pre></div>
 <h3 id="missing-tui">Missing TUI<a class="headerlink" href="#missing-tui" title="Permanent link">&para;</a></h3>
 <p>If you relied heavily on TUI:</p>
 <p><strong>Option 1:</strong> Stay on v2.2.0
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>v2.2.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>v2.2.0
 </code></pre></div></p>
 <p><strong>Option 2:</strong> Learn CLI equivalents (recommended)
 - See "Workflow Changes" section above
@@ -2739,14 +2950,14 @@
 <hr />
 <h2 id="whats-coming-in-v300">What's Coming in v3.0.0<a class="headerlink" href="#whats-coming-in-v300" title="Permanent link">&para;</a></h2>
 <h3 id="phase-72-ai-powered-note-operations-planned">Phase 7.2: AI-Powered Note Operations (Planned)<a class="headerlink" href="#phase-72-ai-powered-note-operations-planned" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>obs<span class="w"> </span>refactor<span class="w"> </span>&lt;vault&gt;<span class="w">         </span><span class="c1"># AI-powered vault reorganization</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>obs<span class="w"> </span>tag-suggest<span class="w"> </span>&lt;note&gt;<span class="w">       </span><span class="c1"># Intelligent tag suggestions</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>obs<span class="w"> </span>quality<span class="w"> </span>&lt;note&gt;<span class="w">           </span><span class="c1"># Note quality assessment</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>obs<span class="w"> </span>merge-suggest<span class="w"> </span>&lt;vault&gt;<span class="w">    </span><span class="c1"># Find merge candidates</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>obs<span class="w"> </span>refactor<span class="w"> </span>&lt;vault&gt;<span class="w">         </span><span class="c1"># AI-powered vault reorganization</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>obs<span class="w"> </span>tag-suggest<span class="w"> </span>&lt;note&gt;<span class="w">       </span><span class="c1"># Intelligent tag suggestions</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>obs<span class="w"> </span>quality<span class="w"> </span>&lt;note&gt;<span class="w">           </span><span class="c1"># Note quality assessment</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>obs<span class="w"> </span>merge-suggest<span class="w"> </span>&lt;vault&gt;<span class="w">    </span><span class="c1"># Find merge candidates</span>
 </code></pre></div>
 <h3 id="phase-73-vault-health-polish-planned">Phase 7.3: Vault Health &amp; Polish (Planned)<a class="headerlink" href="#phase-73-vault-health-polish-planned" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>obs<span class="w"> </span>health<span class="w"> </span>&lt;vault&gt;<span class="w">           </span><span class="c1"># Comprehensive vault health check</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>obs<span class="w"> </span>fix<span class="w"> </span>&lt;vault&gt;<span class="w">              </span><span class="c1"># Auto-fix common issues</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>obs<span class="w"> </span>health<span class="w"> </span>&lt;vault&gt;<span class="w">           </span><span class="c1"># Comprehensive vault health check</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obs<span class="w"> </span>fix<span class="w"> </span>&lt;vault&gt;<span class="w">              </span><span class="c1"># Auto-fix common issues</span>
 </code></pre></div>
 <hr />
 <h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
