@@ -6,7 +6,7 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (26):
+Tools (38):
   Vault:    list_vaults, get_vault_stats, discover_vaults
   Search:   search_notes, find_similar_notes, unified_search
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
@@ -16,6 +16,11 @@ Tools (26):
   AI:       run_obs_ai
   Temporal: get_bridge_status, get_trends, get_stale_notes, get_daily_digest
   Config:   diagnose
+  Zotero:   zotero_search, zotero_get, zotero_cite, zotero_recent
+  PDF:      pdf_search
+  Teaching: course_list, course_show, course_lectures
+  Writing:  manuscript_list, manuscript_show, manuscript_stats
+  Bib:      bib_check
 
 Venv resolution (priority order):
   1. $OBS_PYTHON env var
@@ -1218,6 +1223,423 @@ def unified_search(query: str, limit: int = 20) -> str:
 
     header = f"# Unified Search: '{query}' — {total_found} result(s) across {active_backends} source(s)\n"
     return header + "\n".join(sections)
+
+
+# ---------------------------------------------------------------------------
+# RESEARCH DOMAIN TOOLS — Phase 4 (Zotero, PDF, Teaching, Writing, Bib)
+# ---------------------------------------------------------------------------
+
+def _load_cfg():
+    """Load obs config; returns None if no config found."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).parent))
+    import config_loader as _cl
+    return _cl.load()
+
+@mcp.tool()
+def zotero_search(query: str, limit: int = 20, item_type: str = "", tag: str = "") -> str:
+    """Search the Zotero library by title, author, or abstract.
+
+    Args:
+        query: Search query string
+        limit: Maximum number of results (default 20)
+        item_type: Filter by item type (e.g. 'journalArticle', 'book')
+        tag: Filter by Zotero tag
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.zotero):
+        return "_Zotero not configured. Add `research.zotero` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.zotero import ZoteroClient
+        client = ZoteroClient(cfg.research.zotero.database, cfg.research.zotero.storage)
+        if not client.exists():
+            return f"_Zotero database not found: {cfg.research.zotero.database}_"
+        results = client.search(query, limit=limit, item_type=item_type or None, tag=tag or None)
+        if not results:
+            return f"No Zotero items matching '{query}'."
+        lines = [f"# Zotero Search: '{query}' — {len(results)} result(s)\n"]
+        for i, item in enumerate(results, 1):
+            authors = ", ".join(item.authors[:3]) + (" et al." if len(item.authors) > 3 else "")
+            year = item.date[:4] if item.date else "n.d."
+            lines.append(f"{i}. **{item.title}** ({year})")
+            if authors:
+                lines.append(f"   {authors}")
+            lines.append(f"   Key: `{item.key}` · Type: {item.item_type}")
+            if item.tags:
+                lines.append(f"   Tags: {', '.join(item.tags[:5])}")
+            lines.append("")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Zotero search error: {e}"
+
+
+@mcp.tool()
+def zotero_get(key: str, format: str = "apa") -> str:
+    """Get a Zotero item by key with full details.
+
+    Args:
+        key: Zotero item key (8-char alphanumeric)
+        format: Output format: 'apa', 'bibtex', or 'full' (default: apa)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.zotero):
+        return "_Zotero not configured._"
+    try:
+        from research.zotero import ZoteroClient
+        client = ZoteroClient(cfg.research.zotero.database, cfg.research.zotero.storage)
+        item = client.get(key)
+        if not item:
+            return f"No Zotero item found with key `{key}`."
+        if format == "bibtex":
+            return f"```bibtex\n{item.citation_bibtex()}\n```"
+        if format == "apa":
+            return item.citation_apa()
+        d = item.to_dict()
+        lines = [f"# {d['title']}\n"]
+        lines.append(f"**Key**: `{d['key']}` · **Type**: {d['item_type']} · **Year**: {d['date'][:4] if d['date'] else 'n.d.'}")
+        if d["authors"]:
+            lines.append(f"**Authors**: {', '.join(d['authors'])}")
+        if d["doi"]:
+            lines.append(f"**DOI**: {d['doi']}")
+        if d["url"]:
+            lines.append(f"**URL**: {d['url']}")
+        if d["tags"]:
+            lines.append(f"**Tags**: {', '.join(d['tags'])}")
+        if d["abstract"]:
+            lines.append(f"\n**Abstract**: {d['abstract']}")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Zotero get error: {e}"
+
+
+@mcp.tool()
+def zotero_cite(key: str, format: str = "apa") -> str:
+    """Get a citation string for a Zotero item.
+
+    Args:
+        key: Zotero item key
+        format: Citation format: 'apa' or 'bibtex' (default: apa)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.zotero):
+        return "_Zotero not configured._"
+    try:
+        from research.zotero import ZoteroClient
+        client = ZoteroClient(cfg.research.zotero.database, cfg.research.zotero.storage)
+        item = client.get(key)
+        if not item:
+            return f"No Zotero item found with key `{key}`."
+        if format == "bibtex":
+            return item.citation_bibtex()
+        return item.citation_apa()
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Zotero cite error: {e}"
+
+
+@mcp.tool()
+def zotero_recent(limit: int = 10) -> str:
+    """List recently modified Zotero items.
+
+    Args:
+        limit: Number of items to return (default 10)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.zotero):
+        return "_Zotero not configured. Add `research.zotero` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.zotero import ZoteroClient
+        client = ZoteroClient(cfg.research.zotero.database, cfg.research.zotero.storage)
+        if not client.exists():
+            return f"_Zotero database not found: {cfg.research.zotero.database}_"
+        items = client.recent(limit=limit)
+        if not items:
+            return "No items in Zotero library."
+        lines = [f"# Recent Zotero Items ({len(items)})\n"]
+        for i, item in enumerate(items, 1):
+            year = item.date[:4] if item.date else "n.d."
+            authors = item.authors[0].split()[-1] if item.authors else "Unknown"
+            lines.append(f"{i}. **{item.title}** — {authors}, {year} · `{item.key}`")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Zotero recent error: {e}"
+
+
+@mcp.tool()
+def pdf_search(query: str, limit: int = 10) -> str:
+    """Search PDF documents in configured directories.
+
+    Args:
+        query: Search query (matches filename and content)
+        limit: Maximum number of results (default 10)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.pdf_directories):
+        return "_PDF search not configured. Add `research.pdf.directories` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.pdf import PDFExtractor
+        extractor = PDFExtractor(cfg.research.pdf_directories)
+        if not extractor.available():
+            return "_`pdftotext` not installed. Run: `brew install poppler`_"
+        results = extractor.search(query, limit=limit)
+        if not results:
+            return f"No PDFs matching '{query}'."
+        lines = [f"# PDF Search: '{query}' — {len(results)} result(s)\n"]
+        for i, r in enumerate(results, 1):
+            lines.append(f"{i}. **{r.filename}**")
+            lines.append(f"   `{r.path}`")
+            if r.context:
+                lines.append(f"   _{r.context[:200]}_")
+            lines.append("")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"PDF search error: {e}"
+
+
+@mcp.tool()
+def course_list() -> str:
+    """List all teaching courses with status and progress."""
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.teaching):
+        return "_Teaching not configured. Add `research.teaching.courses_dir` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.courses import CourseManager
+        mgr = CourseManager(
+            cfg.research.teaching.courses_dir,
+            cfg.research.teaching.materials_dir,
+        )
+        if not mgr.exists():
+            return f"_Courses directory not found: {cfg.research.teaching.courses_dir}_"
+        courses = mgr.list_courses()
+        if not courses:
+            return "No courses found."
+        lines = ["# Teaching Courses\n"]
+        lines.append(f"{'Course':<30} {'Status':<12} {'Progress':>8} {'Week':>5} {'Lectures':>8}")
+        lines.append("-" * 68)
+        for c in courses:
+            week_str = str(c.week) if c.week is not None else "-"
+            lines.append(
+                f"{c.name:<30} {c.status:<12} {c.progress:>7}% {week_str:>5} {c.lecture_count:>8}"
+            )
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Course list error: {e}"
+
+
+@mcp.tool()
+def course_show(name: str) -> str:
+    """Show details for a specific course.
+
+    Args:
+        name: Course directory name (exact or partial match)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.teaching):
+        return "_Teaching not configured._"
+    try:
+        from research.courses import CourseManager
+        mgr = CourseManager(cfg.research.teaching.courses_dir, cfg.research.teaching.materials_dir)
+        course = mgr.get_course(name)
+        if not course:
+            return f"Course '{name}' not found."
+        d = course.to_dict()
+        lines = [f"# {d['title']}\n"]
+        lines.append(f"**Status**: {d['status']} · **Progress**: {d['progress']}%")
+        if d["week"] is not None:
+            lines.append(f"**Current Week**: {d['week']}")
+        if d["next_action"]:
+            lines.append(f"**Next**: {d['next_action']}")
+        lines.append(f"**Lectures**: {d['lecture_count']} · **Assignments**: {d['assignment_count']}")
+        if d["formats"]:
+            lines.append(f"**Formats**: {', '.join(d['formats'])}")
+        lines.append(f"\n**Path**: `{d['path']}`")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Course show error: {e}"
+
+
+@mcp.tool()
+def course_lectures(name: str) -> str:
+    """List lectures for a specific course.
+
+    Args:
+        name: Course directory name
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.teaching):
+        return "_Teaching not configured._"
+    try:
+        from research.courses import CourseManager
+        mgr = CourseManager(cfg.research.teaching.courses_dir, cfg.research.teaching.materials_dir)
+        lectures = mgr.list_lectures(name)
+        if not lectures:
+            return f"No lectures found for course '{name}'."
+        lines = [f"# Lectures: {name} ({len(lectures)} total)\n"]
+        for lec in sorted(lectures, key=lambda x: (x.week or 0, x.name)):
+            week_str = f"Week {lec.week}" if lec.week is not None else "      "
+            lines.append(f"- {week_str}: **{lec.title}** (`{lec.name}.qmd`)")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Course lectures error: {e}"
+
+
+@mcp.tool()
+def manuscript_list(include_archived: bool = False) -> str:
+    """List research manuscripts with status and progress.
+
+    Args:
+        include_archived: Include archived/completed manuscripts (default False)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.writing):
+        return "_Writing not configured. Add `research.writing.manuscripts_dir` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.manuscript import ManuscriptManager
+        mgr = ManuscriptManager(
+            cfg.research.writing.manuscripts_dir,
+            cfg.research.writing.templates_dir,
+        )
+        if not mgr.exists():
+            return f"_Manuscripts directory not found: {cfg.research.writing.manuscripts_dir}_"
+        manuscripts = mgr.list_manuscripts(include_archived=include_archived)
+        if not manuscripts:
+            return "No manuscripts found."
+        lines = ["# Research Manuscripts\n"]
+        lines.append(f"{'Manuscript':<35} {'Status':<12} {'Progress':>8} {'Words':>7}")
+        lines.append("-" * 65)
+        for m in manuscripts:
+            title_short = m.title[:33] + ".." if len(m.title) > 35 else m.title
+            lines.append(
+                f"{title_short:<35} {m.status:<12} {m.progress:>7}% {m.word_count:>7,}"
+            )
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Manuscript list error: {e}"
+
+
+@mcp.tool()
+def manuscript_show(name: str) -> str:
+    """Show details for a specific manuscript.
+
+    Args:
+        name: Manuscript directory name (exact or partial match)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.writing):
+        return "_Writing not configured._"
+    try:
+        from research.manuscript import ManuscriptManager
+        mgr = ManuscriptManager(cfg.research.writing.manuscripts_dir, cfg.research.writing.templates_dir)
+        manuscript = mgr.get_manuscript(name)
+        if not manuscript:
+            return f"Manuscript '{name}' not found."
+        d = manuscript.to_dict()
+        lines = [f"# {d['title']}\n"]
+        lines.append(f"**Status**: {d['status']} · **Progress**: {d['progress']}%")
+        if d["target"]:
+            lines.append(f"**Target**: {d['target']}")
+        if d["next_action"]:
+            lines.append(f"**Next**: {d['next_action']}")
+        if d["authors"]:
+            lines.append(f"**Authors**: {', '.join(d['authors'])}")
+        lines.append(f"**Format**: {d['format_type']} · **Words**: {d['word_count']:,}")
+        if d["main_file"]:
+            lines.append(f"**Main file**: `{d['main_file']}`")
+        if d["last_modified"]:
+            lines.append(f"**Modified**: {d['last_modified'][:10]}")
+        lines.append(f"\n**Path**: `{d['path']}`")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Manuscript show error: {e}"
+
+
+@mcp.tool()
+def manuscript_stats() -> str:
+    """Get aggregate statistics across all manuscripts."""
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.writing):
+        return "_Writing not configured. Add `research.writing.manuscripts_dir` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.manuscript import ManuscriptManager
+        mgr = ManuscriptManager(cfg.research.writing.manuscripts_dir, cfg.research.writing.templates_dir)
+        if not mgr.exists():
+            return f"_Manuscripts directory not found: {cfg.research.writing.manuscripts_dir}_"
+        stats = mgr.get_statistics()
+        lines = ["# Manuscript Statistics\n"]
+        lines.append(f"**Total manuscripts**: {stats['total']}")
+        lines.append(f"**Total words**: {stats['total_words']:,}")
+        if stats["by_status"]:
+            lines.append("\n**By status**:")
+            for status, count in sorted(stats["by_status"].items(), key=lambda x: -x[1]):
+                lines.append(f"  - {status}: {count}")
+        if stats["by_format"]:
+            lines.append("\n**By format**:")
+            for fmt, count in sorted(stats["by_format"].items(), key=lambda x: -x[1]):
+                lines.append(f"  - {fmt}: {count}")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Manuscript stats error: {e}"
+
+
+@mcp.tool()
+def bib_check(manuscript_name: str) -> str:
+    """Check bibliography consistency for a manuscript (missing/unused keys).
+
+    Args:
+        manuscript_name: Manuscript directory name (exact or partial match)
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.writing):
+        return "_Writing not configured. Add `research.writing.manuscripts_dir` to `~/.config/obs/config.yaml`._"
+    try:
+        from research.bibliography import BibliographyManager
+        from research.manuscript import ManuscriptManager
+        mgr = ManuscriptManager(cfg.research.writing.manuscripts_dir, cfg.research.writing.templates_dir)
+        manuscript = mgr.get_manuscript(manuscript_name)
+        if not manuscript:
+            return f"Manuscript '{manuscript_name}' not found."
+        zotero_db = cfg.research.zotero.database if (cfg.research and cfg.research.zotero) else None
+        bib_mgr = BibliographyManager(zotero_db)
+        from pathlib import Path
+        result = bib_mgr.check_citations(Path(manuscript.path))
+        lines = [f"# Bibliography Check: {manuscript.name}\n"]
+        lines.append(f"**Cited keys**: {result['cited_count']} · **In .bib files**: {result['bibliography_count']}")
+        if result["all_good"]:
+            lines.append("\n✅ All cited keys found in bibliography.")
+        else:
+            lines.append(f"\n❌ **{len(result['missing'])} missing** (cited but not in .bib):")
+            for key in result["missing"][:20]:
+                lines.append(f"  - `{key}`")
+        if result["unused"]:
+            lines.append(f"\n⚠️  **{len(result['unused'])} unused** (in .bib but not cited):")
+            for key in result["unused"][:20]:
+                lines.append(f"  - `{key}`")
+        return "\n".join(lines)
+    except ImportError:
+        return "_Research backend not available._"
+    except Exception as e:
+        return f"Bibliography check error: {e}"
 
 
 # ---------------------------------------------------------------------------

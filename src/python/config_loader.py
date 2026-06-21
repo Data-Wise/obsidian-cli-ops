@@ -40,9 +40,23 @@ class ZoteroConfig:
 
 
 @dataclass
+class TeachingConfig:
+    courses_dir: Path
+    materials_dir: Optional[Path] = None
+
+
+@dataclass
+class WritingConfig:
+    manuscripts_dir: Path
+    templates_dir: Optional[Path] = None
+
+
+@dataclass
 class ResearchConfig:
     zotero: Optional[ZoteroConfig] = None
     pdf_directories: list[Path] = field(default_factory=list)
+    teaching: Optional[TeachingConfig] = None
+    writing: Optional[WritingConfig] = None
 
 
 @dataclass
@@ -181,7 +195,8 @@ def _load_legacy_nexus() -> Optional[ObsConfig]:
     templates_raw = v.get("templates")
     templates = _expand(templates_raw) if templates_raw else root / DEFAULT_TEMPLATES_SUBPATH
 
-    research = _parse_research(doc)  # nexus stores zotero/pdf at top level
+    # nexus stores zotero/pdf at top level; teaching/writing under their own keys
+    research = _parse_research(doc)
 
     return ObsConfig(
         root=root,
@@ -218,8 +233,10 @@ def _parse_research(doc: Optional[dict]) -> Optional[ResearchConfig]:
         return None
     z_raw = doc.get("zotero") or {}
     pdf_raw = (doc.get("pdf") or {}).get("directories") or []
+    t_raw = doc.get("teaching") or {}
+    w_raw = doc.get("writing") or {}
 
-    if not z_raw and not pdf_raw:
+    if not z_raw and not pdf_raw and not t_raw and not w_raw:
         return None
 
     zotero = None
@@ -229,8 +246,22 @@ def _parse_research(doc: Optional[dict]) -> Optional[ResearchConfig]:
             storage=_expand(z_raw.get("storage", "~/Zotero/storage")),
         )
 
+    teaching = None
+    if t_raw.get("courses_dir"):
+        teaching = TeachingConfig(
+            courses_dir=_expand(t_raw["courses_dir"]),
+            materials_dir=_expand(t_raw["materials_dir"]) if t_raw.get("materials_dir") else None,
+        )
+
+    writing = None
+    if w_raw.get("manuscripts_dir"):
+        writing = WritingConfig(
+            manuscripts_dir=_expand(w_raw["manuscripts_dir"]),
+            templates_dir=_expand(w_raw["templates_dir"]) if w_raw.get("templates_dir") else None,
+        )
+
     pdf_dirs = [_expand(d) for d in pdf_raw]
-    return ResearchConfig(zotero=zotero, pdf_directories=pdf_dirs)
+    return ResearchConfig(zotero=zotero, pdf_directories=pdf_dirs, teaching=teaching, writing=writing)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -253,6 +284,14 @@ def cmd_show() -> int:
         if cfg.research.pdf_directories:
             for d in cfg.research.pdf_directories:
                 print(f"research.pdf.directory:   {d}")
+        if cfg.research.teaching:
+            print(f"research.teaching.courses_dir:   {cfg.research.teaching.courses_dir}")
+            if cfg.research.teaching.materials_dir:
+                print(f"research.teaching.materials_dir: {cfg.research.teaching.materials_dir}")
+        if cfg.research.writing:
+            print(f"research.writing.manuscripts_dir: {cfg.research.writing.manuscripts_dir}")
+            if cfg.research.writing.templates_dir:
+                print(f"research.writing.templates_dir:  {cfg.research.writing.templates_dir}")
     print(f"plugins.registry: {cfg.registry}")
     return 0
 
@@ -370,6 +409,16 @@ def _to_yaml(cfg: ObsConfig) -> str:
             lines.append("    directories:")
             for d in cfg.research.pdf_directories:
                 lines.append(f'      - "{d}"')
+        if cfg.research.teaching:
+            lines.append("  teaching:")
+            lines.append(f'    courses_dir: "{cfg.research.teaching.courses_dir}"')
+            if cfg.research.teaching.materials_dir:
+                lines.append(f'    materials_dir: "{cfg.research.teaching.materials_dir}"')
+        if cfg.research.writing:
+            lines.append("  writing:")
+            lines.append(f'    manuscripts_dir: "{cfg.research.writing.manuscripts_dir}"')
+            if cfg.research.writing.templates_dir:
+                lines.append(f'    templates_dir: "{cfg.research.writing.templates_dir}"')
     if cfg.registry != DEFAULT_REGISTRY:
         lines.append("")
         lines.append("plugins:")
