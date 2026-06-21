@@ -6,15 +6,16 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (24):
+Tools (26):
   Vault:    list_vaults, get_vault_stats, discover_vaults
-  Search:   search_notes, find_similar_notes
+  Search:   search_notes, find_similar_notes, unified_search
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
   Health:   get_vault_health
   Notes:    read_note, write_note, create_note, list_notes, append_to_note,
             rename_note, delete_note, get_note_links, rescan_vault
   AI:       run_obs_ai
   Temporal: get_bridge_status, get_trends, get_stale_notes, get_daily_digest
+  Config:   diagnose
 
 Venv resolution (priority order):
   1. $OBS_PYTHON env var
@@ -1092,6 +1093,131 @@ def diagnose(vault_id: str = "", layers: str = "") -> str:
         return _json.dumps([r.to_dict() for r in results], indent=2)
     except Exception as e:
         return _json.dumps({"error": f"diagnose failed: {e}"})
+
+
+# ---------------------------------------------------------------------------
+# UNIFIED SEARCH — cross-source fan-out (Phase 2 of nexus-cli absorption)
+# ---------------------------------------------------------------------------
+
+@mcp.tool()
+def unified_search(query: str, limit: int = 20) -> str:
+    """
+    Search across all configured knowledge sources simultaneously.
+
+    Fans out to: Obsidian vault notes (always), Zotero library (if configured),
+    PDF directories (if configured). Results are grouped by source and ranked
+    by relevance within each group.
+
+    Args:
+        query: Search term or phrase.
+        limit: Max total results across all sources (default 20).
+
+    Each source receives a proportional share of the limit:
+      - Vault: 50% (always active)
+      - Zotero: 25% (requires research.zotero config)
+      - PDF: 25% (requires research.pdf.directories config)
+
+    When a source is not configured, its allocation is redistributed to the vault.
+    Phase 4 will activate Zotero and PDF backends; until then those sections
+    report "not configured" rather than failing.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).parent))
+    import config_loader as _cl
+
+    cfg = _cl.load()
+    sections: list[str] = []
+    total_found = 0
+
+    # --- Vault (always active) ---
+    has_zotero = cfg and cfg.research and cfg.research.zotero
+    has_pdf = cfg and cfg.research and cfg.research.pdf_directories
+    active_backends = 1 + (1 if has_zotero else 0) + (1 if has_pdf else 0)
+    vault_limit = max(limit - (limit // 4) * (active_backends - 1), limit // 2)
+
+    try:
+        vault_results = vault_manager.search_notes(query)[:vault_limit]
+        if vault_results:
+            total_found += len(vault_results)
+            lines = [f"## Vault Notes ({len(vault_results)} results)\n"]
+            for i, note in enumerate(vault_results, 1):
+                lines += [
+                    f"{i}. **{note['title']}**",
+                    f"   Vault: {note.get('vault_name', 'Unknown')} | ID: `{note['id']}`",
+                ]
+                if note.get("snippet"):
+                    lines.append(f"   _{note['snippet']}_")
+                lines.append("")
+            sections.append("\n".join(lines))
+        else:
+            sections.append(f"## Vault Notes\n\nNo notes matching '{query}'.\n")
+    except Exception as e:
+        sections.append(f"## Vault Notes\n\nSearch error: {e}\n")
+
+    # --- Zotero (Phase 4 backend) ---
+    zotero_limit = limit // 4
+    if has_zotero:
+        try:
+            from research.zotero import ZoteroClient
+            zc = ZoteroClient(
+                db_path=cfg.research.zotero.database,
+                storage_path=cfg.research.zotero.storage,
+            )
+            items = zc.search(query, limit=zotero_limit)
+            if items:
+                total_found += len(items)
+                lines = [f"## Zotero Library ({len(items)} results)\n"]
+                for i, item in enumerate(items, 1):
+                    authors = ", ".join(item.authors[:2]) + (" et al." if len(item.authors) > 2 else "")
+                    lines += [
+                        f"{i}. **{item.title}**",
+                        f"   {authors} ({item.date[:4] if item.date else 'n.d.'}) | Key: `{item.key}`",
+                    ]
+                    if item.abstract:
+                        lines.append(f"   _{item.abstract[:120]}..._")
+                    lines.append("")
+                sections.append("\n".join(lines))
+            else:
+                sections.append(f"## Zotero Library\n\nNo items matching '{query}'.\n")
+        except ImportError:
+            sections.append("## Zotero Library\n\n_Backend not yet installed (Phase 4)._\n")
+        except Exception as e:
+            sections.append(f"## Zotero Library\n\nSearch error: {e}\n")
+    else:
+        sections.append("## Zotero Library\n\n_Not configured. Add `research.zotero` to `~/.config/obs/config.yaml`._\n")
+
+    # --- PDF (Phase 4 backend) ---
+    pdf_limit = limit // 4
+    if has_pdf:
+        try:
+            from research.pdf import PDFExtractor
+            extractor = PDFExtractor(directories=[Path(d) for d in cfg.research.pdf_directories])
+            if extractor.available():
+                results = extractor.search(query, limit=pdf_limit)
+                if results:
+                    total_found += len(results)
+                    lines = [f"## PDF Documents ({len(results)} results)\n"]
+                    for i, r in enumerate(results, 1):
+                        lines += [
+                            f"{i}. **{r.document.title or r.document.filename}**",
+                            f"   {r.document.path}",
+                            f"   _{r.context}_",
+                            "",
+                        ]
+                    sections.append("\n".join(lines))
+                else:
+                    sections.append(f"## PDF Documents\n\nNo PDFs matching '{query}'.\n")
+            else:
+                sections.append("## PDF Documents\n\n_`pdftotext` not installed. Run: `brew install poppler`_\n")
+        except ImportError:
+            sections.append("## PDF Documents\n\n_Backend not yet installed (Phase 4)._\n")
+        except Exception as e:
+            sections.append(f"## PDF Documents\n\nSearch error: {e}\n")
+    else:
+        sections.append("## PDF Documents\n\n_Not configured. Add `research.pdf.directories` to `~/.config/obs/config.yaml`._\n")
+
+    header = f"# Unified Search: '{query}' — {total_found} result(s) across {active_backends} source(s)\n"
+    return header + "\n".join(sections)
 
 
 # ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 """
-Unit tests for mcp_server.py — all 24 MCP tools + 4 resources.
+Unit tests for mcp_server.py — all 26 MCP tools + 4 resources.
 
 Strategy
 --------
@@ -613,3 +613,43 @@ class TestResources:
         _, _, note_ids = obs_vault
         result = mcp_mod.note_resource(note_ids["Alpha Note"])
         assert "Alpha" in result
+
+
+# ---------------------------------------------------------------------------
+# unified_search
+# ---------------------------------------------------------------------------
+
+class TestUnifiedSearch:
+    def test_returns_vault_results(self, mcp_mod, obs_vault):
+        """vault section appears and contains a hit when notes exist."""
+        result = mcp_mod.unified_search("Alpha")
+        assert "Vault Notes" in result
+        assert "Alpha" in result
+
+    def test_no_vault_hit(self, mcp_mod, obs_vault):
+        """missing query still produces vault section, no crash."""
+        result = mcp_mod.unified_search("xyzzy_no_such_note_42")
+        assert "Vault Notes" in result
+        assert isinstance(result, str)
+
+    def test_unconfigured_zotero_note(self, mcp_mod, monkeypatch):
+        """zotero section says 'not configured' when config has no research block."""
+        import config_loader as cl
+        monkeypatch.setattr(cl, "load", lambda: None)
+        result = mcp_mod.unified_search("test")
+        assert "Zotero Library" in result
+        assert "Not configured" in result or "not configured" in result
+
+    def test_unconfigured_pdf_note(self, mcp_mod, monkeypatch):
+        """pdf section says 'not configured' when config has no pdf block."""
+        import config_loader as cl
+        monkeypatch.setattr(cl, "load", lambda: None)
+        result = mcp_mod.unified_search("test")
+        assert "PDF Documents" in result
+        assert "Not configured" in result or "not configured" in result
+
+    def test_header_contains_query(self, mcp_mod, obs_vault):
+        """output header names the query."""
+        result = mcp_mod.unified_search("Beta", limit=5)
+        assert "Beta" in result
+        assert "Unified Search" in result
