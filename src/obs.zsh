@@ -713,6 +713,16 @@ obs_doctor() {
     $OBS_PYTHON "${cmd[@]}"
 }
 
+obs_config() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" config "$@"
+}
+
+obs_research() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" research "$@"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -783,6 +793,12 @@ obs() {
             ;;
         "doctor")
             obs_doctor "$@"
+            ;;
+        "config")
+            obs_config "$@"
+            ;;
+        "research")
+            obs_research "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

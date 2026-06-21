@@ -1,5 +1,5 @@
 """
-Unit tests for mcp_server.py — all 24 MCP tools + 4 resources.
+Unit tests for mcp_server.py — all 26 MCP tools + 4 resources.
 
 Strategy
 --------
@@ -613,3 +613,251 @@ class TestResources:
         _, _, note_ids = obs_vault
         result = mcp_mod.note_resource(note_ids["Alpha Note"])
         assert "Alpha" in result
+
+
+# ---------------------------------------------------------------------------
+# unified_search
+# ---------------------------------------------------------------------------
+
+class TestUnifiedSearch:
+    def test_returns_vault_results(self, mcp_mod, obs_vault):
+        """vault section appears and contains a hit when notes exist."""
+        result = mcp_mod.unified_search("Alpha")
+        assert "Vault Notes" in result
+        assert "Alpha" in result
+
+    def test_no_vault_hit(self, mcp_mod, obs_vault):
+        """missing query still produces vault section, no crash."""
+        result = mcp_mod.unified_search("xyzzy_no_such_note_42")
+        assert "Vault Notes" in result
+        assert isinstance(result, str)
+
+    def test_unconfigured_zotero_note(self, mcp_mod, monkeypatch):
+        """zotero section says 'not configured' when config has no research block."""
+        import config_loader as cl
+        monkeypatch.setattr(cl, "load", lambda: None)
+        result = mcp_mod.unified_search("test")
+        assert "Zotero Library" in result
+        assert "Not configured" in result or "not configured" in result
+
+    def test_unconfigured_pdf_note(self, mcp_mod, monkeypatch):
+        """pdf section says 'not configured' when config has no pdf block."""
+        import config_loader as cl
+        monkeypatch.setattr(cl, "load", lambda: None)
+        result = mcp_mod.unified_search("test")
+        assert "PDF Documents" in result
+        assert "Not configured" in result or "not configured" in result
+
+    def test_header_contains_query(self, mcp_mod, obs_vault):
+        """output header names the query."""
+        result = mcp_mod.unified_search("Beta", limit=5)
+        assert "Beta" in result
+        assert "Unified Search" in result
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 — Research Domain Tools
+# ---------------------------------------------------------------------------
+
+class TestPhase4NoConfig:
+    """All Phase 4 tools return a helpful 'not configured' string when config is absent."""
+
+    def _patch_cfg(self, mcp_mod, monkeypatch):
+        """Make _load_cfg return None for all tools in this class."""
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: None)
+
+    def test_zotero_search_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.zotero_search("test")
+        assert "not configured" in result.lower() or "not config" in result.lower()
+
+    def test_zotero_get_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.zotero_get("ABC12345")
+        assert "not configured" in result.lower()
+
+    def test_zotero_cite_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.zotero_cite("ABC12345")
+        assert "not configured" in result.lower()
+
+    def test_zotero_recent_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.zotero_recent()
+        assert "not configured" in result.lower()
+
+    def test_pdf_search_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.pdf_search("test")
+        assert "not configured" in result.lower()
+
+    def test_course_list_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.course_list()
+        assert "not configured" in result.lower()
+
+    def test_course_show_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.course_show("my-course")
+        assert "not configured" in result.lower()
+
+    def test_course_lectures_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.course_lectures("my-course")
+        assert "not configured" in result.lower()
+
+    def test_manuscript_list_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.manuscript_list()
+        assert "not configured" in result.lower()
+
+    def test_manuscript_show_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.manuscript_show("my-paper")
+        assert "not configured" in result.lower()
+
+    def test_manuscript_stats_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.manuscript_stats()
+        assert "not configured" in result.lower()
+
+    def test_bib_check_no_config(self, mcp_mod, monkeypatch):
+        self._patch_cfg(mcp_mod, monkeypatch)
+        result = mcp_mod.bib_check("my-paper")
+        assert "not configured" in result.lower()
+
+
+class TestPhase4WithConfig:
+    """Phase 4 tools with synthetic on-disk fixtures and minimal config stubs."""
+
+    @pytest.fixture
+    def teaching_dir(self, tmp_path):
+        """Synthetic courses directory with one course."""
+        courses = tmp_path / "courses"
+        courses.mkdir()
+        course = courses / "stats101"
+        course.mkdir()
+        (course / ".STATUS").write_text(
+            "status: active\npriority: P1\nprogress: 40\nnext: prepare week 5\nweek: 4\n"
+        )
+        (course / "_quarto.yml").write_text(
+            "project:\n  type: book\nbook:\n  title: Introduction to Statistics\n"
+        )
+        lectures = course / "lectures"
+        lectures.mkdir()
+        (lectures / "week-01.qmd").write_text('---\ntitle: "Week 1: Intro"\n---\n\nContent.')
+        (lectures / "week-02.qmd").write_text('---\ntitle: "Week 2: Probability"\n---\n\nContent.')
+        return courses
+
+    @pytest.fixture
+    def writing_dir(self, tmp_path):
+        """Synthetic manuscripts directory with one manuscript."""
+        manuscripts = tmp_path / "manuscripts"
+        manuscripts.mkdir()
+        paper = manuscripts / "mediation-paper"
+        paper.mkdir()
+        (paper / ".STATUS").write_text(
+            "status: active\npriority: P1\nprogress: 65\nnext: finish results\ntarget: JASA\n"
+        )
+        (paper / "_quarto.yml").write_text(
+            "project:\n  type: manuscript\ntitle: Causal Mediation Analysis\n"
+            "author:\n  - name: D. Tofighi\n"
+        )
+        bib = paper / "refs.bib"
+        bib.write_text(
+            "@article{smith2020,\n  title = {Test Article},\n  author = {Smith, John},\n"
+            "  year = {2020},\n  journal = {JASA},\n}\n"
+            "@article{jones2021,\n  title = {Another Article},\n  author = {Jones, Jane},\n"
+            "  year = {2021},\n  journal = {Biometrika},\n}\n"
+        )
+        main = paper / "index.qmd"
+        main.write_text(
+            "---\ntitle: Causal Mediation\n---\n\nSome text [@smith2020] and more text.\n"
+        )
+        return manuscripts
+
+    @pytest.fixture
+    def teaching_cfg(self, teaching_dir):
+        """ObsConfig stub with teaching configured."""
+        import config_loader as cl
+        teaching = cl.TeachingConfig(courses_dir=teaching_dir)
+        research = cl.ResearchConfig(teaching=teaching)
+        return cl.ObsConfig(root=teaching_dir.parent, research=research)
+
+    @pytest.fixture
+    def writing_cfg(self, writing_dir):
+        """ObsConfig stub with writing configured."""
+        import config_loader as cl
+        writing = cl.WritingConfig(manuscripts_dir=writing_dir)
+        research = cl.ResearchConfig(writing=writing)
+        return cl.ObsConfig(root=writing_dir.parent, research=research)
+
+    def test_course_list_returns_table(self, mcp_mod, monkeypatch, teaching_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: teaching_cfg)
+        result = mcp_mod.course_list()
+        assert "stats101" in result
+        assert "active" in result.lower()
+
+    def test_course_show_details(self, mcp_mod, monkeypatch, teaching_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: teaching_cfg)
+        result = mcp_mod.course_show("stats101")
+        assert "Introduction to Statistics" in result or "stats101" in result
+        assert "40" in result  # progress
+
+    def test_course_lectures_lists_qmds(self, mcp_mod, monkeypatch, teaching_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: teaching_cfg)
+        result = mcp_mod.course_lectures("stats101")
+        assert "week-01" in result or "Week 1" in result
+
+    def test_course_show_not_found(self, mcp_mod, monkeypatch, teaching_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: teaching_cfg)
+        result = mcp_mod.course_show("nonexistent-course")
+        assert "not found" in result.lower()
+
+    def test_manuscript_list_returns_table(self, mcp_mod, monkeypatch, writing_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: writing_cfg)
+        result = mcp_mod.manuscript_list()
+        assert "mediation-paper" in result or "Causal Mediation" in result
+
+    def test_manuscript_show_details(self, mcp_mod, monkeypatch, writing_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: writing_cfg)
+        result = mcp_mod.manuscript_show("mediation-paper")
+        assert "65" in result  # progress
+        assert "active" in result.lower()
+
+    def test_manuscript_stats_counts(self, mcp_mod, monkeypatch, writing_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: writing_cfg)
+        result = mcp_mod.manuscript_stats()
+        assert "Total manuscripts" in result
+        assert "1" in result
+
+    def test_manuscript_show_not_found(self, mcp_mod, monkeypatch, writing_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: writing_cfg)
+        result = mcp_mod.manuscript_show("nonexistent-paper")
+        assert "not found" in result.lower()
+
+    def test_bib_check_detects_unused(self, mcp_mod, monkeypatch, writing_cfg):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: writing_cfg)
+        result = mcp_mod.bib_check("mediation-paper")
+        # jones2021 is in .bib but not cited in index.qmd
+        assert "jones2021" in result or "unused" in result.lower()
+
+    def test_bib_check_missing_key(self, mcp_mod, monkeypatch, writing_dir, writing_cfg):
+        # Add a citation to a key that's not in refs.bib
+        paper = writing_dir / "mediation-paper"
+        (paper / "index.qmd").write_text(
+            "---\ntitle: x\n---\nText [@smith2020] and [@ghost2099].\n"
+        )
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: writing_cfg)
+        result = mcp_mod.bib_check("mediation-paper")
+        assert "ghost2099" in result or "missing" in result.lower()
+
+    def test_pdf_search_no_poppler(self, mcp_mod, monkeypatch, writing_cfg):
+        """When pdftotext is absent, pdf_search returns install hint."""
+        import config_loader as cl
+        research = cl.ResearchConfig(pdf_directories=[writing_dir if False else writing_cfg.root])
+        cfg = cl.ObsConfig(root=writing_cfg.root, research=research)
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: cfg)
+        with patch("research.pdf.shutil.which", return_value=None):
+            result = mcp_mod.pdf_search("causal")
+        assert "pdftotext" in result or "not installed" in result.lower() or "not configured" in result.lower()
