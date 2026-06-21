@@ -25,6 +25,7 @@ from core.vault_manager import VaultManager
 from core.graph_analyzer import GraphAnalyzer
 from core.exceptions import VaultNotFoundError, ScanError, AnalysisError
 from utils import format_relative_time
+import config_loader
 
 # Rich console for formatted output
 console = Console()
@@ -845,6 +846,15 @@ def main():
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
+    config_parser = subparsers.add_parser('config', help='Manage obs unified config (~/.config/obs/config.yaml)')
+    config_sub = config_parser.add_subparsers(dest='config_command')
+    config_sub.add_parser('show', help='Print current config and its source')
+    config_sub.add_parser('validate', help='Validate config and report errors')
+    config_migrate = config_sub.add_parser('migrate', help='Convert legacy obs/nexus config to unified YAML')
+    config_migrate.add_argument('--dry-run', action='store_true', help='Print migration result without writing')
+    config_sub.add_parser('init', help='Interactive wizard to create a fresh config')
+    config_sub.add_parser('edit', help='Open config file in $EDITOR')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -1515,6 +1525,21 @@ def main():
                 _print_doctor_results(results)
             has_fail = any(r.status == 'fail' for r in results)
             sys.exit(1 if has_fail else 0)
+
+        elif args.command == 'config':
+            sub = getattr(args, 'config_command', None)
+            if sub == 'show':
+                sys.exit(config_loader.cmd_show())
+            elif sub == 'validate':
+                sys.exit(config_loader.cmd_validate())
+            elif sub == 'migrate':
+                sys.exit(config_loader.cmd_migrate(dry_run=getattr(args, 'dry_run', False)))
+            elif sub == 'init':
+                sys.exit(config_loader.cmd_init())
+            elif sub == 'edit':
+                sys.exit(config_loader.cmd_edit())
+            else:
+                config_parser.print_help()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")
