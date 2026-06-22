@@ -125,6 +125,18 @@ nexus MCP = **TS/Bun** (`mcp-servers/nexus`, ~15 `nexus_*` tools, key `nexus`); 
 
 ## 7. Revised migration plan
 
+> [!important] Phase-numbering reconciliation (2026-06-22) — `.STATUS` is canonical
+> Execution diverged from the planned phase order below. **For live phase status, [`.STATUS`](.STATUS) is the single source of truth**; the phases here are the *planned engineering breakdown*, not the tracking labels. Mapping of what actually shipped:
+>
+> | Shipped | Planned phase here | `.STATUS` label |
+> |---|---|---|
+> | `obs config` (config_loader) | §5.2 config-schema sub-spec | "Phase 1" |
+> | `obs research` (Zotero/PDF/course/manuscript/bib) + MCP research tools | **Phase 4** (nexus absorption) | "Phase 1" |
+> | reference-docs sweep (PRs #38/#39/#41/#42/#43) | — | "Phase 4 docs" |
+> | nexus deprecation → tap retire → repo archive → obs v4.0.0 | **Phase 5** | "Phase 5" |
+>
+> Planned **Phases 1–3** (vault/graph parity, structure validation, MCP cross-language port) are deferred / partially folded in. When citing a phase, name the doc — `.STATUS`'s pragmatic numbering wins for "where are we now."
+
 - **Phase 0 — Decision & contract (this doc, ratified).** Deliverables: §6 signed; §5.1–5.5 sub-specs written; §4 TCO recorded; baseline re-confirmed. **Exit criteria:** every D1–D10 has a decision; unified config schema + tool-name map exist as artifacts.
 - **Phase 1 — Vault/graph parity.** Add the net-new vault CLI commands (wrapping existing obs MCP note-CRUD where possible); port graph-export formats into obs's graph module; merge test suites (budget the real ~1,000-test reconciliation + mypy-gate + coverage-threshold decision).
 - **Phase 2 — Structure validation.** Port `vault_spec` PARA engine under the D5 `doctor` UX; teach it the D6 canonical convention; tests.
