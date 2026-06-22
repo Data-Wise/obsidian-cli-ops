@@ -47,7 +47,7 @@ and add the `obsidian-ops` entry inside `"mcpServers"`:
       "command": "/bin/zsh",
       "args": [
         "-c",
-        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/3.3.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
+        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/3.5.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
       ],
       "env": {}
     }
@@ -260,8 +260,8 @@ The Claude integration is being built in three phases:
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| **A — Claude Desktop MCP** | ✅ v3.3.0 | 20 tools, venv-aware, note CRUD |
-| **B — Cowork Plugin** | 🔜 v3.4.0 | `.plugin` bundle with skills + MCP for Cowork |
+| **A — Claude Desktop MCP** | ✅ since v3.3.0 | 25 tools, venv-aware, note CRUD |
+| **B — Cowork Plugin** | 🔜 TBD | `.plugin` bundle with skills + MCP for Cowork |
 | **C — Claude Code Plugin** | 🔜 future | `bin/` wrapper, hooks, marketplace distribution |
 
 See `PROPOSAL-claude-integration-2026-06-15.md` for full proposal and open questions.
