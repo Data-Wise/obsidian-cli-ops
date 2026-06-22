@@ -121,15 +121,16 @@ obs version                     # Show version
 **Current Status:** v3.5.0 Stable
 
 ### Active Planning Files
-- **[TODOS.md](TODOS.md)** - Current work items and immediate next steps ⭐ What to work on now
+- **[.STATUS](.STATUS)** - Current state, next steps, and metrics ⭐ What to work on now
+- **[SPEC-merge-nexus-cli-v2-2026-06-21.md](SPEC-merge-nexus-cli-v2-2026-06-21.md)** - Active plan (nexus-cli absorption)
 - **[IDEAS.md](IDEAS.md)** - Future features and brainstorming 💡 What could be built
+- _Archived (historical):_ [docs/planning/TODOS.md](docs/planning/TODOS.md), [docs/planning/IMPLEMENTATION-ROADMAP.md](docs/planning/IMPLEMENTATION-ROADMAP.md)
 
 ### For Contributors
 - **[CLAUDE.md](CLAUDE.md)** - Developer guide and architecture quick reference
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center with current status
-- **[.STATUS](.STATUS)** - Project metrics and progress tracking
 
-**Want to contribute?** Start with [TODOS.md](TODOS.md) to see what needs doing!
+**Want to contribute?** Start with [.STATUS](.STATUS) to see current state and next steps!
 
 ## 📖 Documentation
 

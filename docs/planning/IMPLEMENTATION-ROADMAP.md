@@ -1,5 +1,8 @@
 # 🗺️ Implementation Roadmap: Refocusing obs
 
+> [!warning] ARCHIVED (2026-06-22) — historical, superseded
+> This Dec-2025 roadmap (Proposal D / TUI-removal era) is fully delivered and superseded. For **live state** see [`.STATUS`](../../.STATUS); for the **active plan** see [`SPEC-merge-nexus-cli-v2-2026-06-21.md`](../../SPEC-merge-nexus-cli-v2-2026-06-21.md). Kept for history only.
+
 > **Based on:** PROPOSAL-REFOCUS-2025-12-20.md (Proposal D - Hybrid)
 > **Date:** 2025-12-20
 > **Goal:** Transform obs from generic vault manager → focused AI-powered Obsidian tool
