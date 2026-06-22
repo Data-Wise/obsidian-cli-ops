@@ -1,10 +1,10 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-3.3.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-3.5.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-304%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-400%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
@@ -151,7 +151,7 @@ obs version                     # Show version
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.3.0)** - v3.3.0 release notes
+- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v3.5.0)** - v3.5.0 release notes
 
 ## 🧪 Test Coverage
 
