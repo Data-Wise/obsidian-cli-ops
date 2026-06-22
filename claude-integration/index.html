@@ -1102,15 +1102,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#all-20-mcp-tools" class="md-nav__link">
+  <a href="#all-25-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        All 20 MCP Tools
+        All 25 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="All 20 MCP Tools">
+    <nav class="md-nav" aria-label="All 25 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1173,6 +1173,39 @@
     <span class="md-ellipsis">
       
         AI Passthrough Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bridge-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporal-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporal Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostics-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostics Tool
       
     </span>
   </a>
@@ -1780,15 +1813,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#all-20-mcp-tools" class="md-nav__link">
+  <a href="#all-25-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        All 20 MCP Tools
+        All 25 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="All 20 MCP Tools">
+    <nav class="md-nav" aria-label="All 25 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1851,6 +1884,39 @@
     <span class="md-ellipsis">
       
         AI Passthrough Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bridge-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporal-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporal Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostics-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostics Tool
       
     </span>
   </a>
@@ -2056,7 +2122,7 @@
 - <strong>How:</strong> Add one JSON block to <code>claude_desktop_config.json</code>, restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 3.3.0</p>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 3.5.0</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -2067,7 +2133,7 @@
 <li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
 <li><strong>"Run a quality check on all notes"</strong> — <code>obs ai quality</code> via AI passthrough</li>
 </ul>
-<p>The MCP server exposes <strong>20 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
+<p>The MCP server exposes <strong>25 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2106,7 +2172,7 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <p>Claude should call <code>list_vaults()</code> and return your vault list. If nothing happens, see
 <a href="#troubleshooting">Troubleshooting</a> below.</p>
 <hr />
-<h2 id="all-20-mcp-tools">All 20 MCP Tools<a class="headerlink" href="#all-20-mcp-tools" title="Permanent link">&para;</a></h2>
+<h2 id="all-25-mcp-tools">All 25 MCP Tools<a class="headerlink" href="#all-25-mcp-tools" title="Permanent link">&para;</a></h2>
 <h3 id="vault-tools">Vault Tools<a class="headerlink" href="#vault-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2281,6 +2347,67 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 </table>
 <p><strong><code>command</code> values:</strong> <code>similar</code>, <code>analyze</code>, <code>duplicates</code>, <code>suggest-links</code>, <code>gaps</code>,
 <code>summarize</code>, <code>refactor</code>, <code>merge-suggest</code>, <code>tag-suggest</code>, <code>quality</code></p>
+<h3 id="bridge-tool">Bridge Tool<a class="headerlink" href="#bridge-tool" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_bridge_status</code></td>
+<td>—</td>
+<td>Check whether the Obsidian official CLI is installed and the app is running</td>
+</tr>
+</tbody>
+</table>
+<h3 id="temporal-tools">Temporal Tools<a class="headerlink" href="#temporal-tools" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_trends</code></td>
+<td><code>vault_id</code>, <code>days=90</code></td>
+<td>Weekly activity trends (notes created/modified per week)</td>
+</tr>
+<tr>
+<td><code>get_stale_notes</code></td>
+<td><code>vault_id</code>, <code>limit=20</code></td>
+<td>Most stale high-importance notes</td>
+</tr>
+<tr>
+<td><code>get_daily_digest</code></td>
+<td><code>vault_id</code>, <code>days=90</code>, <code>limit=5</code></td>
+<td>Combined digest: bridge status + trends + top stale notes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="diagnostics-tool">Diagnostics Tool<a class="headerlink" href="#diagnostics-tool" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>diagnose</code></td>
+<td><code>vault_id</code>, <code>layers</code></td>
+<td>Self-diagnostic checks; returns a structured health report</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="mcp-resources">MCP Resources<a class="headerlink" href="#mcp-resources" title="Permanent link">&para;</a></h2>
 <p>Resources provide structured data that Claude can read directly:</p>

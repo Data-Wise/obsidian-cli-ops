@@ -1734,8 +1734,8 @@
 
 
 <h1 id="testing-overview">Testing Overview<a class="headerlink" href="#testing-overview" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 3.3.0
-<strong>Total Tests:</strong> 353 (230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest)</p>
+<p><strong>Version:</strong> 3.5.0
+<strong>Total Tests:</strong> 498 (307 unit pytest + 90 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes unreleased Phase 1 (config + research) tests on <code>main</code></p>
 <h2 id="test-coverage">Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">&para;</a></h2>
 <h3 id="unit-tests-pytest">Unit Tests (pytest)<a class="headerlink" href="#unit-tests-pytest" title="Permanent link">&para;</a></h3>
 <table>
@@ -1894,8 +1894,8 @@
 </thead>
 <tbody>
 <tr>
-<td>MCP Server — all 20 tools + 4 resources</td>
-<td>52</td>
+<td>MCP Server — all 25 tools + 4 resources</td>
+<td>90</td>
 <td>pytest</td>
 <td><code>test_mcp_server.py</code></td>
 </tr>
@@ -1907,7 +1907,7 @@
 </tr>
 </tbody>
 </table>
-<p>Covers all 20 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.</p>
+<p>Covers all 25 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.</p>
 <h3 id="e2e-tests-pytest-gated">E2E Tests (pytest, gated)<a class="headerlink" href="#e2e-tests-pytest-gated" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

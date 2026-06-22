@@ -1753,7 +1753,7 @@
     end
 
     subgraph MCP["MCP Integration Layer (v3.3.0)"]
-        M[mcp_server.py\n956 lines\n20 tools · 4 resources]
+        M[mcp_server.py\n25 tools · 4 resources]
     end
 
     subgraph Core["Application Layer (Core)"]
@@ -1815,7 +1815,7 @@
     M --&gt;|"direct Python\nimport"| GA[GraphAnalyzer]
     M --&gt; RES["4 MCP Resources\nvault://{id}/stats\nnote://{id}\nobsidian://overview\n..."]</code></pre>
 <ul>
-<li><strong>20 MCP tools</strong> in 6 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1)</li>
+<li><strong>25 MCP tools</strong> in 9 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1), Bridge (1), Temporal (3), Diagnostics (1)</li>
 <li><strong>FastMCP</strong> (<code>from mcp.server.fastmcp import FastMCP</code>) — stdio transport, clean exit when no client</li>
 <li>Note write tools include built-in safety: <code>delete_note</code> defaults <code>confirm=False</code> (dry-run), <code>write_note</code> defaults <code>create_backup=True</code></li>
 </ul>
