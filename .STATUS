@@ -1,27 +1,27 @@
 priority: P1
-status: 🔄 Phase 4 docs PR open — feature/phase4-docs → main (PR #38)
-progress: 70
-updated: 2026-06-21
+status: ✅ Docs current on main (PRs #38/#39/#41/#42 merged) — ready for Phase 5
+progress: 75
+updated: 2026-06-22
 version: 3.5.0 (next: 3.6.0 — Phase 1 unreleased)
 next: |
-  1. Merge PR #38 (docs: Phase 1 reference update)
-  2. Phase 5: nexus-cli v0.7.0 final deprecated release → PyPI
-  3. Retire nexus-cli Homebrew formula in data-wise/tap
-  4. Archive nexus-cli GitHub repo (Data-Wise/nexus-cli)
-  5. obs Homebrew formula resource-block regen (new Python deps)
-  6. obs v4.0.0 major release
+  1. Phase 5: nexus-cli v0.7.0 final deprecated release → PyPI
+  2. Retire nexus-cli Homebrew formula in data-wise/tap
+  3. Archive nexus-cli GitHub repo (Data-Wise/nexus-cli)
+  4. obs Homebrew formula resource-block regen (new Python deps)
+  5. obs v4.0.0 major release
 worktree: (none — feature/phase1-config-loader worktree closed after PR #37 merged)
 verified: |
   PR #37 merged 2026-06-21: feature/phase1-config-loader → main (squash commit 80cb505).
   Phase 1 adds: obs config (5 subcommands) + obs research (11 subcommands) + 27 new tests.
   Phase 4 docs committed on feature/phase4-docs (659271a): refcard, cli-reference, migration, changelog updated.
+  Doc-currency sweep 2026-06-22: PR #38 (Phase 1 reference) + #39 (CLAUDE.md/README → v3.5.0) + #41 (command-count reconcile, 35=19 shipped+16 Phase 1) + #42 (mkdocs site → v3.5.0/25 MCP tools) all merged to main. Verified counts: 429 pytest, 69 Jest, 25 released MCP tools (38 on branch).
 target: v3.6.0 - nexus-cli absorption (Phase 1 config complete)
 
 ## 🎯 Current State
 
 **Phase**: nexus-cli absorption (RFC v2 = Option A full absorption) — Phase 1 config loader committed
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 341 pytest + 59 Jest = 400 total (on main)
+**Tests**: 429 pytest + 69 Jest = 498 total (on main, incl. unreleased Phase 1)
 **Commands**: 25 total (24 obs + 1 MCP-only: diagnose)
 **MCP Tools**: 25 (includes diagnose from v3.5.0)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
