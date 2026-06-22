@@ -3,9 +3,7 @@
 **Version:** 3.5.0
 **Last Updated:** 2026-06-21
 
-Complete reference for all `obs` commands — 35 commands covering vault management, graph analysis, AI features, config management, and research domain (nexus-cli absorbed).
-
-> **Note:** This is the legacy docs directory. The live MkDocs site at `docs_mkdocs/` is authoritative. See [CLI Reference](../docs_mkdocs/cli-reference.md) for the full reference including research and config commands added in Phase 1.
+> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 35 commands (19 shipped + 16 Phase 1, unreleased) including the `obs config` and `obs research` domains.
 
 ---
 
