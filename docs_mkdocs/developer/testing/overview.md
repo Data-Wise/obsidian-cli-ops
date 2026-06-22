@@ -1,7 +1,7 @@
 # Testing Overview
 
-**Version:** 3.3.0
-**Total Tests:** 353 (230 unit pytest + 52 MCP unit pytest + 32 E2E pytest + 69 Jest)
+**Version:** 3.5.0
+**Total Tests:** 498 (307 unit pytest + 90 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes unreleased Phase 1 (config + research) tests on `main`
 
 ## Test Coverage
 
@@ -36,10 +36,10 @@
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
-| MCP Server — all 20 tools + 4 resources | 52 | pytest | `test_mcp_server.py` |
+| MCP Server — all 25 tools + 4 resources | 90 | pytest | `test_mcp_server.py` |
 | **MCP Subtotal** | **52** | **pytest** | |
 
-Covers all 20 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.
+Covers all 25 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.
 
 ### E2E Tests (pytest, gated)
 
