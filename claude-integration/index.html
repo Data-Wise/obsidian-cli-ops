@@ -2152,7 +2152,7 @@ and add the <code>obsidian-ops</code> entry inside <code>"mcpServers"</code>:</p
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/bin/zsh&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot; \&quot;/opt/homebrew/Cellar/obsidian-cli-ops/3.3.0/libexec/venv/bin/python\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot; \&quot;/opt/homebrew/Cellar/obsidian-cli-ops/3.5.0/libexec/venv/bin/python\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="p">],</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">}</span>
@@ -2521,12 +2521,12 @@ calling any write tool — review before confirming.</p>
 <tbody>
 <tr>
 <td><strong>A — Claude Desktop MCP</strong></td>
-<td>✅ v3.3.0</td>
-<td>20 tools, venv-aware, note CRUD</td>
+<td>✅ since v3.3.0</td>
+<td>25 tools, venv-aware, note CRUD</td>
 </tr>
 <tr>
 <td><strong>B — Cowork Plugin</strong></td>
-<td>🔜 v3.4.0</td>
+<td>🔜 TBD</td>
 <td><code>.plugin</code> bundle with skills + MCP for Cowork</td>
 </tr>
 <tr>
