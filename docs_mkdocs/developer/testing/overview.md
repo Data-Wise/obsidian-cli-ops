@@ -1,7 +1,7 @@
 # Testing Overview
 
 **Version:** 4.0.0
-**Total Tests:** 555 (341 unit pytest + 113 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes the nexus-cli absorption (config + research) shipped in v4.0.0
+**Total Tests:** 556 (342 unit pytest + 113 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes the nexus-cli absorption (config + research) shipped in v4.0.0
 
 ## Test Coverage
 
@@ -30,12 +30,12 @@
 | Embedding Cache | 6 | pytest | `test_embedding_cache.py` |
 | Vault Manager | 6 | pytest | `test_vault_manager.py` |
 | Version Consistency | 6 | pytest | `test_version_consistency.py` |
-| Doc Count Gate | 4 | pytest | `test_doc_counts.py` |
+| Doc Count Gate | 5 | pytest | `test_doc_counts.py` |
 | DB Metrics | 1 | pytest | `test_db_metrics.py` |
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
 | Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
 | Search API | 1 | pytest | `test_search_api.py` |
-| **Unit Subtotal** | **341** | **pytest** | |
+| **Unit Subtotal** | **342** | **pytest** | |
 
 ### MCP Unit Tests (pytest)
 

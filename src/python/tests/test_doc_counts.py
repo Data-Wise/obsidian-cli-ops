@@ -20,6 +20,55 @@ class TestDocCounts:
         assert c["mcp_resources"] >= 0
         assert c["ai_providers"] > 0
         assert c["mcp_tools"] >= c["mcp_resources"]
+        assert c["unit_tests"] > 0, "no unit test functions counted"
+        assert c["e2e_tests"] >= 0
+
+    def test_static_test_count_assumption_holds(self):
+        """Sentinel: gated test files must not parametrize / dynamically generate.
+
+        ``unit_tests``/``e2e_tests`` are derived by statically counting
+        ``def test_`` — which equals pytest's collected count ONLY without
+        parametrize. If this fails, a gated file gained parametrize: upgrade the
+        deriver in ``core.doc_counts`` (e.g. to a collection-based count) or add
+        the file to ``_STATIC_COUNT_EXCLUDE``.
+
+        Detection is AST-based, not textual — so this file naming "parametrize"
+        in its own prose/strings never flags itself (only real decorators and a
+        real ``pytest_generate_tests`` def count).
+        """
+        import ast
+
+        from core.doc_counts import _STATIC_COUNT_EXCLUDE, _TESTS_DIR
+
+        def _uses_dynamic_generation(path) -> bool:
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if (
+                    isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    and node.name == "pytest_generate_tests"
+                ):
+                    return True
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    for dec in node.decorator_list:
+                        target = dec.func if isinstance(dec, ast.Call) else dec
+                        attr = getattr(target, "attr", None) or getattr(
+                            target, "id", None
+                        )
+                        if attr == "parametrize":
+                            return True
+            return False
+
+        gated = [
+            p
+            for p in _TESTS_DIR.glob("test_*.py")
+            if p.name not in _STATIC_COUNT_EXCLUDE
+        ]
+        gated += list((_TESTS_DIR / "e2e").glob("test_*.py"))
+        offenders = [p.name for p in gated if _uses_dynamic_generation(p)]
+        assert not offenders, (
+            "static test-count deriver invalidated by parametrize in: "
+            f"{offenders} — upgrade core.doc_counts test counting or exclude them."
+        )
 
     def test_docs_match_source(self):
         """THE GATE: every documented count matches the source of truth.

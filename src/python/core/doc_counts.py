@@ -11,7 +11,16 @@ project's three-layer rule):
   - ``tests/test_doc_counts.py``    — the CI gate (drift cannot merge)
 
 Anchored patterns only — every regex requires the word "tools"/"resources"/
-"providers" adjacent to the number, so a bare "25" elsewhere never false-positives.
+"providers"/"unit"/"E2E" adjacent to the number, so a bare "25" elsewhere never
+false-positives.
+
+Test counts (``unit_tests``, ``e2e_tests``) are derived by *statically* counting
+``def test_`` definitions — which equals pytest's collected count ONLY while
+those files use no ``@pytest.mark.parametrize`` / dynamic generation. The unit
+and E2E suites satisfy that; ``tests/test_doc_counts.py`` enforces it with a
+sentinel. The MCP suite (``test_mcp_server.py``) DOES parametrize, so its count
+is deliberately NOT gated here — the ``mcp_tools`` count already covers the
+meaningful MCP number, and a static count would undershoot the collected total.
 """
 
 from __future__ import annotations
@@ -24,6 +33,25 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 _MCP_SERVER = PROJECT_ROOT / "src" / "python" / "mcp_server.py"
 _AI_PROVIDERS = PROJECT_ROOT / "src" / "python" / "ai" / "providers"
+_TESTS_DIR = PROJECT_ROOT / "src" / "python" / "tests"
+
+# Files whose ``def test_`` count is gated statically. ``test_mcp_server.py`` is
+# excluded — it parametrizes, so static counting would diverge from collection.
+_STATIC_COUNT_EXCLUDE = ("test_mcp_server.py",)
+
+_TEST_DEF = re.compile(r"^[ \t]*def test_", re.MULTILINE)
+
+
+def _count_test_functions(path: Path) -> int:
+    """Count ``def test_`` definitions in a file (0 if it does not exist).
+
+    Equals pytest's collected count only when the file uses no parametrize /
+    dynamic generation — guaranteed for gated files by the sentinel in
+    ``tests/test_doc_counts.py``.
+    """
+    if not path.exists():
+        return 0
+    return len(_TEST_DEF.findall(path.read_text(encoding="utf-8")))
 
 
 # ---------------------------------------------------------------------------
@@ -42,10 +70,23 @@ def source_counts() -> dict[str, int]:
             for p in _AI_PROVIDERS.glob("*.py")
             if p.stem not in ("__init__", "base")
         )
+    unit_tests = 0
+    if _TESTS_DIR.is_dir():
+        unit_tests = sum(
+            _count_test_functions(p)
+            for p in _TESTS_DIR.glob("test_*.py")
+            if p.name not in _STATIC_COUNT_EXCLUDE
+        )
+    e2e_dir = _TESTS_DIR / "e2e"
+    e2e_tests = 0
+    if e2e_dir.is_dir():
+        e2e_tests = sum(_count_test_functions(p) for p in e2e_dir.glob("test_*.py"))
     return {
         "mcp_tools": mcp_tools,
         "mcp_resources": mcp_resources,
         "ai_providers": ai_providers,
+        "unit_tests": unit_tests,
+        "e2e_tests": e2e_tests,
     }
 
 
@@ -101,6 +142,17 @@ _PATTERNS: dict[str, tuple[str, ...]] = {
         r"\*\*AI Providers:\*\*\s*(\d+)",
         r"\*\*AI Providers\*\*:?\s*(\d+)",
         r"(\d+) AI [Pp]roviders",
+    ),
+    # Test counts — anchored on the "unit"/"E2E" label so bare "454 pytest"
+    # totals (which include/exclude E2E by context) are never matched.
+    "unit_tests": (
+        r"(\d+)\s+unit pytest",
+        r"(\d+)\s+unit tests",
+        r"(\d+)\s+unit \+ \d+ MCP",
+        r"\*\*Unit Subtotal\*\*\s*\|\s*\*\*(\d+)\*\*",
+    ),
+    "e2e_tests": (
+        r"(\d+)\s+E2E",
     ),
 }
 
