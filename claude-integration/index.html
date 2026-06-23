@@ -2122,7 +2122,7 @@
 - <strong>How:</strong> Add one JSON block to <code>claude_desktop_config.json</code>, restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 3.5.0</p>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.0.0</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -2152,7 +2152,7 @@ and add the <code>obsidian-ops</code> entry inside <code>"mcpServers"</code>:</p
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/bin/zsh&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot; \&quot;/opt/homebrew/Cellar/obsidian-cli-ops/3.5.0/libexec/venv/bin/python\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot; \&quot;/opt/homebrew/Cellar/obsidian-cli-ops/4.0.0/libexec/venv/bin/python\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="p">],</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">}</span>
