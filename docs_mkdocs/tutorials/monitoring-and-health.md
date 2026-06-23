@@ -15,7 +15,7 @@ Three MCP tools expose time-based vault intelligence. Use them from Claude Deskt
 | MCP Tool | What it shows |
 |----------|--------------|
 | `get_trends` | Note creation velocity, link growth over time |
-| `get_stale_notes` | Notes not modified in N days |
+| `get_stale_notes` | Top stale notes ranked by staleness score (pagerank × age) |
 | `get_daily_digest` | Today's snapshot: new notes, edits, pending links |
 
 These complement the static health tools (`obs health`, `obs analyze`) with a time dimension.
@@ -46,12 +46,19 @@ Run this weekly and compare numbers over time.
 
 From Claude Desktop, after connecting the MCP server:
 
-> *"Show me notes in Research that haven't been modified in 90 days"*
+> *"Show me my most stale notes in Research"*
 
 ```
-Claude calls: get_stale_notes("Research", days_threshold=90)
-Returns: list of notes with last_modified date, word count, incoming link count
+Claude calls: get_stale_notes("Research", limit=20)
+Returns:
+  has_graph_metrics: true
+  notes:
+    - {title: "Collider Bias", days_since_modified: 187, pagerank: 0.021, staleness_score: 0.011}
+    - {title: "Old Draft Notes", days_since_modified: 312, pagerank: 0.003, staleness_score: 0.003}
+    - ...
 ```
+
+`staleness_score = pagerank × (days_since_modified / 365)` — a high score means an important note (high PageRank) that hasn't been touched in a long time. When `has_graph_metrics` is false, results are sorted by `days_since_modified` only.
 
 Stale notes to prioritize:
 - High incoming links + no recent edits → hub notes that may need updating
@@ -67,11 +74,15 @@ Stale notes to prioritize:
 ```
 Claude calls: get_trends("Research", days=30)
 Returns:
-  - notes_added: 12
-  - notes_modified: 34
-  - links_created: 87
-  - avg_notes_per_day: 0.4
-  - busiest_day: 2026-06-15 (4 notes)
+  total_notes: 847
+  lookback_days: 30
+  velocity_notes_per_week: 2.8
+  insufficient_data: false
+  buckets:
+    - {week: "2026-05-26", notes_created: 3, notes_modified: 8}
+    - {week: "2026-06-02", notes_created: 1, notes_modified: 12}
+    - {week: "2026-06-09", notes_created: 5, notes_modified: 9}
+    - {week: "2026-06-16", notes_created: 3, notes_modified: 5}
 ```
 
 Use this to understand your vault's growth patterns and whether you're linking as you write.
@@ -116,8 +127,8 @@ for s in scores[:5]:
 obs health Research --json | python3 -c "
 import json, sys
 h = json.load(sys.stdin)
-print(f\"Freshness score: {h['freshness']}/100\")
-print(f\"Structural score: {h['structure']}/100\")
+print(f\"Freshness score: {h['freshness']['score']}/100\")
+print(f\"Structural score: {h['structure']['score']}/100\")
 "
 
 # 3. Re-scan so metrics are fresh
@@ -139,7 +150,7 @@ obs ai gaps Research            # any new knowledge gaps?
 From Claude Desktop, all of the above becomes:
 > *"Run my weekly vault review for Research — health, trends, quality scores, and gaps"*
 
-Claude chains `get_vault_health` → `get_trends` → `run_obs_ai("quality")` → `run_obs_ai("gaps")` and summarizes in one response.
+Claude chains `get_vault_health` → `get_trends` → `run_obs_ai("quality", "Research")` → `run_obs_ai("gaps", "Research")` and summarizes in one response.
 
 ---
 
