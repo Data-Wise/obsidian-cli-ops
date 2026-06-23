@@ -4,6 +4,25 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **`insert_to_note` MCP tool** — heading-aware insertion (#40): insert content
+  `after_heading`, `before_heading`, `replace_section`, or append as `as_table_row`.
+  Uses markdown-it-py AST so headings in fenced code blocks are correctly ignored.
+- **`obs scan` verb** — explicit `obs scan <path>` command to rescan a vault without
+  running graph analysis; accepts `--name`, `--analyze`, `--check` (#52).
+- **Staleness warnings** — `obs analyze`, `obs search`, `obs health` now warn to stderr
+  when the vault index is older than 24 h (configurable via `config.yaml`) (#52).
+
+### Fixed
+
+- Vault scan no longer crashes on dotfiles (e.g. `.md`) — `_extract_title()` now
+  handles the zero-stem edge case with a hash fallback (#51).
+
+---
+
 ## v4.0.0 (2026-06-22) — nexus-cli absorption + MCP vault-resolution fix
 
 Major release. Absorbs `nexus-cli` into `obs` (RFC v2 D1=Option A): config unification +

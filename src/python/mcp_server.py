@@ -6,13 +6,13 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (38):
+Tools (39):
   Vault:    list_vaults, get_vault_stats, discover_vaults
   Search:   search_notes, find_similar_notes, unified_search
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
   Health:   get_vault_health
   Notes:    read_note, write_note, create_note, list_notes, append_to_note,
-            rename_note, delete_note, get_note_links, rescan_vault
+            insert_to_note, rename_note, delete_note, get_note_links, rescan_vault
   AI:       run_obs_ai
   Temporal: get_bridge_status, get_trends, get_stale_notes, get_daily_digest
   Config:   diagnose
@@ -784,6 +784,111 @@ def append_to_note(note_id: str, content: str, separator: str = "\n\n") -> str:
         return f"❌ Append timed out: {e}"
     except Exception as e:
         return f"Error appending to note: {e}"
+
+
+@mcp.tool()
+def insert_to_note(
+    note_id: str,
+    content: str,
+    after_heading: Optional[str] = None,
+    before_heading: Optional[str] = None,
+    as_table_row: bool = False,
+    replace_section: Optional[str] = None,
+) -> str:
+    """
+    Insert content into a note at a heading-relative position.
+
+    Exactly one of after_heading, before_heading, or replace_section must be
+    set, or none (EOF append, equivalent to append_to_note).
+
+    Args:
+        note_id: Note ID from search_notes() or list_notes().
+        content: Markdown content to insert.
+        after_heading: Heading text (case-insensitive) — insert after this heading.
+        before_heading: Heading text (case-insensitive) — insert before this heading.
+        as_table_row: When True and after_heading is set, appends content as a
+                      table row to the table found under that heading.
+        replace_section: Heading text — replaces all content between this heading
+                         and the next same-level heading with content.
+    """
+    from core.note_inserter import (
+        insert_after_heading,
+        insert_before_heading,
+        append_table_row,
+        replace_section as _replace_section,
+    )
+
+    modes_set = sum([
+        after_heading is not None,
+        before_heading is not None,
+        replace_section is not None,
+    ])
+    if modes_set > 1:
+        return "❌ Only one of after_heading, before_heading, replace_section may be set."
+    if as_table_row and after_heading is None:
+        return "❌ as_table_row requires after_heading to locate the table."
+
+    try:
+        note = db.get_note(note_id)
+        if not note:
+            return f"Note not found: {note_id}"
+
+        vault = db.get_vault(note["vault_id"])
+        if not vault:
+            return f"Vault not found for note {note_id}"
+
+        note_path = Path(vault["path"]) / note["path"]
+        if not note_path.exists():
+            return f"Note file not found on disk: {note_path}"
+
+        if _is_dataless(note_path):
+            return (
+                f"❌ Note is an iCloud placeholder (not downloaded): {note_path}\n"
+                "In Finder, right-click the file → Download Now before inserting."
+            )
+
+        def _do_insert():
+            text = note_path.read_text(encoding="utf-8")
+            if after_heading is not None and as_table_row:
+                new_text = append_table_row(text, after_heading, content)
+            elif after_heading is not None:
+                new_text = insert_after_heading(text, after_heading, content)
+            elif before_heading is not None:
+                new_text = insert_before_heading(text, before_heading, content)
+            elif replace_section is not None:
+                new_text = _replace_section(text, replace_section, content)
+            else:
+                new_text = text.rstrip() + "\n\n" + content
+            note_path.write_text(new_text, encoding="utf-8")
+            return new_text
+
+        new_text = _fs_op(_do_insert)
+        added_words = len(content.split())
+        mode_desc = (
+            f"after heading '{after_heading}'"
+            if after_heading and not as_table_row
+            else f"as table row under '{after_heading}'"
+            if as_table_row
+            else f"before heading '{before_heading}'"
+            if before_heading
+            else f"replacing section '{replace_section}'"
+            if replace_section
+            else "at EOF"
+        )
+        return (
+            f"✅ **Inserted into**: {note['title']}\n"
+            f"- Mode: {mode_desc}\n"
+            f"- Path: {note_path}\n"
+            f"- Added: {added_words} words\n"
+            f"- Total: {len(new_text.split())} words\n\n"
+            f"⚠️  Run analyze_vault('{note['vault_id']}') to update graph metrics."
+        )
+    except ValueError as e:
+        return f"❌ {e}"
+    except TimeoutError as e:
+        return f"❌ Insert timed out: {e}"
+    except Exception as e:
+        return f"Error inserting into note: {e}"
 
 
 @mcp.tool()

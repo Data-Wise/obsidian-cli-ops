@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **38 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **39 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -115,6 +115,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 | `write_note` | `note_id`, `content`, `create_backup=True` | Overwrite note (backup created by default) |
 | `create_note` | `vault_id`, `title`, `content`, `folder`, `tags` | Create a new note |
 | `append_to_note` | `note_id`, `content`, `separator` | Append text to an existing note |
+| `insert_to_note` | `note_id`, `content`, `after_heading`, `before_heading`, `as_table_row`, `replace_section` | Insert at a heading-relative position |
 | `rename_note` | `note_id`, `new_title` | Rename note (warns about wikilink breakage) |
 | `delete_note` | `note_id`, `confirm=False` | Delete note — `confirm=True` required; default is **dry-run** |
 | `get_note_links` | `note_id` | Incoming + outgoing links |
