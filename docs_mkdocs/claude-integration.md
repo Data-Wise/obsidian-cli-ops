@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **25 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **38 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -260,7 +260,7 @@ The Claude integration is being built in three phases:
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| **A — Claude Desktop MCP** | ✅ since v3.3.0 | 25 tools, venv-aware, note CRUD |
+| **A — Claude Desktop MCP** | ✅ since v3.3.0 | 38 tools, venv-aware, note CRUD |
 | **B — Cowork Plugin** | 🔜 TBD | `.plugin` bundle with skills + MCP for Cowork |
 | **C — Claude Code Plugin** | 🔜 future | `bin/` wrapper, hooks, marketplace distribution |
 

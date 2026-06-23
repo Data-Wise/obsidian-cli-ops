@@ -20,7 +20,7 @@ target: v4.1.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
 **Tests**: 459 pytest + 69 Jest = 528 total (dev = main superset post-reconcile)
 **Commands**: 25 total (24 obs + 1 MCP-only: diagnose)
-**MCP Tools**: 25 (includes diagnose from v3.5.0)
+**MCP Tools**: 38 (25 core + 13 research; incl diagnose)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
