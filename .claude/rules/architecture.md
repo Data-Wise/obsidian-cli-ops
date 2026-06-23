@@ -1,7 +1,7 @@
 ---
 paths:
   - "src/python/core/**"
-  - "src/python/tui/**"
+  - "src/python/ai/**"
   - "src/python/obs_cli.py"
   - "src/python/db_manager.py"
   - "src/python/vault_scanner.py"
@@ -12,19 +12,19 @@ paths:
 
 ## Three-Layer Design
 
-Obsidian CLI Ops follows a clean three-layer architecture that separates presentation, business logic, and data access. This design enables multiple interfaces (CLI, TUI, GUI) to share the same core logic without duplication.
+Obsidian CLI Ops follows a clean three-layer architecture that separates presentation, business logic, and data access. This design enables multiple interfaces (CLI, GUI) to share the same core logic without duplication.
 
 ```
 ┌─────────────────────────────────────────────────┐
 │         PRESENTATION LAYER                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │   CLI    │  │   TUI    │  │   GUI    │     │
-│  │(obs_cli) │  │(Textual) │  │ (Future) │     │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘     │
-└───────┼─────────────┼─────────────┼───────────┘
-        │             │             │
-        └─────────────┼─────────────┘
-                      │
+│  ┌──────────┐  ┌──────────┐                    │
+│  │   CLI    │  │   GUI    │                    │
+│  │(obs_cli) │  │ (Future) │                    │
+│  └────┬─────┘  └────┬─────┘                    │
+└───────┼─────────────┼─────────────────────────┘
+        │             │
+        └──────┬──────┘
+               │
 ┌─────────────────────▼─────────────────────────┐
 │         APPLICATION LAYER (CORE)              │
 │  ┌──────────────────────────────────────┐    │
@@ -59,11 +59,10 @@ Obsidian CLI Ops follows a clean three-layer architecture that separates present
 
 ## Layer 1: Presentation (Interfaces)
 
-**Location:** `src/obs.zsh`, `src/python/obs_cli.py`, `src/python/tui/`
+**Location:** `src/obs.zsh`, `src/python/obs_cli.py`
 
 - **ZSH CLI** (`src/obs.zsh`): Shell integration, v1.x commands, wrapper for Python CLI
-- **Python CLI** (`src/python/obs_cli.py`): Argparse-based CLI for v2.0 commands
-- **TUI** (`src/python/tui/`): Textual-based interactive interface
+- **Python CLI** (`src/python/obs_cli.py`): Argparse-based CLI for v2.0+ commands
 - **GUI** (planned): Future graphical interface
 
 **Responsibilities:**
@@ -145,56 +144,12 @@ Obsidian CLI Ops follows a clean three-layer architecture that separates present
 
 ## Benefits of Three-Layer Architecture
 
-1. **Code Reusability**: CLI and TUI share 100% of business logic
+1. **Code Reusability**: CLI and future GUI share 100% of business logic
 2. **Easy Testing**: Core layer can be tested independently
 3. **Flexible Interfaces**: Add GUI without changing business logic
 4. **Clear Separation**: Each layer has single responsibility
 5. **Type Safety**: Domain models provide type checking
 6. **Maintainability**: Changes in one layer don't affect others
-
-## How CLI and TUI Share Core Logic
-
-The three-layer architecture enables CLI and TUI to share 100% of business logic:
-
-```python
-# Core layer (interface-agnostic business logic)
-from core.vault_manager import VaultManager
-
-vault_manager = VaultManager()
-result = vault_manager.scan_vault("/path/to/vault")
-```
-
-```python
-# CLI implementation (formats result as text)
-def scan_command(args):
-    vault_manager = VaultManager()
-    result = vault_manager.scan_vault(args.path)
-
-    # CLI-specific formatting
-    print(f"✓ Scanned {result.notes_scanned} notes")
-    print(f"✓ Found {result.links_found} links")
-    print(f"✓ Took {result.duration_seconds:.2f}s")
-```
-
-```python
-# TUI implementation (displays result in widgets)
-class VaultBrowserScreen(Screen):
-    def on_scan_clicked(self):
-        vault_manager = VaultManager()
-        result = vault_manager.scan_vault(self.vault_path)
-
-        # TUI-specific display
-        self.update_status_label(
-            f"Scanned {result.notes_scanned} notes in {result.duration_seconds:.2f}s"
-        )
-        self.refresh_vault_list()
-```
-
-**Key points:**
-- Same `vault_manager.scan_vault()` call in both
-- Same `result` object with structured data
-- Different presentation: CLI prints text, TUI updates widgets
-- Zero business logic duplication
 
 ## Module Structure
 
@@ -209,29 +164,19 @@ src/python/
 │   ├── models.py              # Domain models (237 lines)
 │   └── exceptions.py          # Custom exceptions
 │
-├── tui/                       # PRESENTATION LAYER - TUI (1,701 lines)
+├── obs_cli.py                 # PRESENTATION LAYER - CLI (985 lines)
+│
+├── db_manager.py              # DATA LAYER - Database
+├── vault_scanner.py           # DATA LAYER - File scanning
+├── graph_builder.py           # DATA LAYER - Graph construction
+│
+├── ai/                        # AI LAYER (multi-provider, ~3,241 lines)
 │   ├── __init__.py
-│   ├── app.py                 # Main TUI application (282 lines)
-│   ├── screens/
-│   │   ├── __init__.py
-│   │   ├── vaults.py          # Vault browser (267 lines)
-│   │   ├── notes.py           # Note explorer (378 lines)
-│   │   ├── graph.py           # Graph visualizer (378 lines)
-│   │   └── stats.py           # Statistics dashboard (420 lines)
-│   └── widgets/
-│       └── __init__.py
-│
-├── obs_cli.py                 # PRESENTATION LAYER - CLI (318 lines)
-│
-├── db_manager.py              # DATA LAYER - Database (469 lines)
-├── vault_scanner.py           # DATA LAYER - File scanning (373 lines)
-├── graph_builder.py           # DATA LAYER - Graph construction (307 lines)
-│
-├── ai_client.py               # AI client base & factory (440 lines)
-├── ai_client_ollama.py        # Ollama integration (450 lines)
-├── ai_client_hf.py            # HuggingFace integration (340 lines)
-├── setup_wizard.py            # Interactive AI setup (837 lines)
-├── similarity_analyzer.py     # Note similarity analysis (470 lines)
+│   ├── models.py              # Shared AI result models
+│   ├── features.py            # AI features: similar, analyze, gaps, etc.
+│   ├── features_vault.py      # AI vault features: duplicates, summarize, refactor
+│   ├── features_refactor.py   # AI refactor pipeline
+│   └── providers/             # 5 providers: gemini-api, anthropic-api, ollama, gemini-cli, claude-cli
 │
 ├── requirements.txt           # Python dependencies
 └── README.md                  # Python module documentation

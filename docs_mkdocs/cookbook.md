@@ -526,6 +526,25 @@ Claude calls `create_note("Research", "Collider Bias Insight 2026-06-15", conten
 
 Claude looks up the daily note via `search_notes` or `list_notes`, then calls `append_to_note`.
 
+### Insert at a specific heading (surgical edit)
+
+> *"Add this row to the Results table in my sensitivity-analysis note: | OLS | 0.45 | 0.02 |"*
+
+Claude calls `insert_to_note(note_id, content="| OLS | 0.45 | 0.02 |", after_heading="Results", as_table_row=True)`.
+Only the table is touched — the rest of the note is unchanged.
+
+> *"Replace the Abstract section of my paper draft with this revised version: [...]"*
+
+Claude calls `insert_to_note(note_id, content="...", replace_section="Abstract")`.
+Everything between `## Abstract` and the next same-level heading is replaced.
+
+> *"Insert a Limitations section just before References in my collider-bias note"*
+
+Claude calls `insert_to_note(note_id, content="## Limitations\n\n...", before_heading="References")`.
+
+!!! tip "When to use which write tool"
+    `append_to_note` → end of file, no structure needed. `write_note` → full replacement with auto-backup. `insert_to_note` → heading-aware surgical edit (table row, section swap, before/after).
+
 ### AI analysis via Claude
 
 > *"Find knowledge gaps in MyVault and suggest three new notes I should create"*
@@ -553,6 +572,90 @@ similarity scores and merge rationale.
 ??? info "Setup"
     See [Claude Integration](claude-integration.md) for the 5-minute setup. Requires
     `obs` installed via Homebrew and Claude Desktop.
+
+---
+
+## Research Workflow
+
+**Prerequisites:** Complete [Research Setup](tutorials/research-setup.md) to configure Zotero, PDF directories, and manuscripts.
+
+### Search Zotero from the terminal
+
+```bash
+# Keyword search across all Zotero items
+obs research zotero search "causal mediation" --limit 10
+
+# Filter by item type
+obs research zotero search "sensitivity analysis" --type journalArticle
+
+# Filter by tag
+obs research zotero search "" --tag "to-read"
+
+# Get a specific item by Zotero key
+obs research zotero get A1B2C3D4
+
+# See what you added recently
+obs research zotero recent --limit 5
+```
+
+### Find PDFs by content
+
+```bash
+# Full-text search across all configured PDF directories
+obs research pdf search "instrumental variable" --limit 5
+
+# Output as JSON for scripting
+obs --json research pdf search "heterogeneous effects" | python3 -c "
+import json, sys
+for r in json.load(sys.stdin):
+    print(f\"{r['title']}: {r['path']}\")
+"
+```
+
+### Track manuscript status
+
+```bash
+# Overview of all manuscripts
+obs research manuscript stats
+
+# List all manuscripts (add --archived to include archived ones)
+obs research manuscript list
+
+# Deep-dive on one manuscript
+obs research manuscript show collider-bias
+
+# Check citations are complete before submitting
+obs research bib check collider-bias
+```
+
+### Cross-tool research pipeline
+
+Combine Zotero search, PDF discovery, and vault search for a complete literature review:
+
+```bash
+# 1. Find recent Zotero items on your topic
+obs research zotero search "measurement error" --limit 10
+
+# 2. Find PDFs you haven't linked to Obsidian yet
+obs --json research pdf search "measurement error" | python3 -c "
+import json, sys
+results = json.load(sys.stdin)
+print(f'Found {len(results)} relevant PDFs')
+for r in results[:3]:
+    print(f'  {r[\"title\"]}')
+"
+
+# 3. Check your vault for existing notes
+obs search "measurement error" --limit 10
+
+# 4. Check manuscript citation completeness
+obs research bib check me-mediator   # catches missing refs before submission
+```
+
+!!! tip "Vault + Zotero unified search via Claude"
+    From Claude Desktop, ask: *"Search my vault and Zotero for papers on collider bias"*.
+    Claude calls `unified_search("collider bias", limit=20)` and
+    summarizes results from both sources in one response.
 
 ---
 

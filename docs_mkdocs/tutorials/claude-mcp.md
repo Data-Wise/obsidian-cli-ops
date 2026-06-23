@@ -10,7 +10,7 @@ Connect `obs` to Claude Desktop and use natural language to search, analyze, and
 
 ## Step 1: What Is the MCP Integration?
 
-MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. `obs` ships an MCP server (`mcp_server.py`) that exposes **25 tools** covering your full vault workflow:
+MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. `obs` ships an MCP server (`mcp_server.py`) that exposes **39 tools** covering your full vault workflow:
 
 ```mermaid
 flowchart LR
@@ -225,6 +225,45 @@ Claude calls: read_note(note_id)          # get current content
              # .bak backup is created automatically
 ```
 
+**Insert content at a heading (surgical edit):**
+> *"Add a new result to the 'Results' table in my sensitivity-analysis note: | Method B | 0.82 | 0.03 |"*
+
+```
+Claude calls: insert_to_note(
+    note_id,
+    content="| Method B | 0.82 | 0.03 |",
+    after_heading="Results",
+    as_table_row=True
+)
+# Appends the row to the existing Markdown table without touching the rest of the note
+```
+
+> *"Insert a 'Limitations' section just before the 'References' heading in my collider-bias note"*
+
+```
+Claude calls: insert_to_note(
+    note_id,
+    content="## Limitations\n\nTo be filled in.",
+    before_heading="References"
+)
+```
+
+> *"Replace the 'Abstract' section of my paper note with this new text: [...]"*
+
+```
+Claude calls: insert_to_note(
+    note_id,
+    content="This paper examines...",
+    replace_section="Abstract"
+)
+# Replaces everything between '## Abstract' and the next same-level heading
+```
+
+!!! tip "insert_to_note vs write_note vs append_to_note"
+    - **`append_to_note`** — adds to end of file, no structure awareness
+    - **`write_note`** — full replacement (always creates `.bak` backup first)
+    - **`insert_to_note`** — surgical heading-aware edit; leaves the rest of the note intact
+
 **Rename a note:**
 > *"Rename 'collider-bias' to 'Collider Bias - Regression Discontinuity'"*
 
@@ -330,7 +369,7 @@ done
 | Goal | Tutorial / Doc |
 |------|----------------|
 | Full tool reference | [Claude Integration](../claude-integration.md) |
-| All 25 MCP tools | [CLI Reference — MCP section](../cli-reference.md#claude-mcp-integration) |
+| All 39 MCP tools | [CLI Reference — MCP section](../cli-reference.md#claude-mcp-integration) |
 | Cowork plugin (Phase 2) | [Proposal](https://github.com/Data-Wise/obsidian-cli-ops/blob/dev/PROPOSAL-claude-integration-2026-06-15.md) |
 | Developer API details | [API Reference](../developer/api-reference.md) |
 

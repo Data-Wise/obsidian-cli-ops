@@ -7,8 +7,9 @@ other presentation layer.
 """
 
 import sys
+from dataclasses import dataclass
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional, Callable, Coroutine, Dict
 import time
 
@@ -19,6 +20,14 @@ from db_manager import DatabaseManager
 from vault_scanner import VaultScanner
 from core.models import Vault, Note, ScanResult, VaultStats, HealthScore, VaultHealth
 from core.exceptions import VaultNotFoundError, ScanError
+
+
+@dataclass
+class StalenessResult:
+    """Result of a vault index staleness check."""
+    is_stale: bool
+    age_hours: float
+    last_scanned: Optional[str]
 
 
 class VaultManager:
@@ -502,3 +511,31 @@ class VaultManager:
 
         self.db.delete_vault(vault_id)
         return True
+
+    def check_index_staleness(self, vault_id: str, threshold_hours: float = 24.0) -> StalenessResult:
+        """
+        Check whether a vault's index is stale relative to a threshold.
+
+        Args:
+            vault_id: Exact vault ID
+            threshold_hours: Hours after which the index is considered stale (default: 24)
+
+        Returns:
+            StalenessResult with is_stale, age_hours, and last_scanned timestamp
+        """
+        try:
+            vault = self.db.get_vault_by_name_or_id(vault_id)
+        except ValueError:
+            vault = None
+        if not vault or not vault.get("last_scanned"):
+            return StalenessResult(is_stale=True, age_hours=float("inf"), last_scanned=None)
+
+        last = datetime.fromisoformat(vault["last_scanned"])
+        if last.tzinfo is None:
+            last = last.replace(tzinfo=timezone.utc)
+        age = (datetime.now(timezone.utc) - last).total_seconds() / 3600
+        return StalenessResult(
+            is_stale=age > threshold_hours,
+            age_hours=age,
+            last_scanned=vault["last_scanned"],
+        )

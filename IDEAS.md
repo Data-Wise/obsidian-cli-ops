@@ -2,32 +2,42 @@
 
 > **Brainstorming space for enhancements, improvements, and new features**
 >
-> **Last Updated:** 2026-06-04
+> **Last Updated:** 2026-06-23
 >
-> **Current Release:** v3.2.0 (Released 2026-03-09)
+> **Current Release:** v4.0.1 (Released 2026-06-23) — `insert_to_note` MCP tool (#40), dotfile/scan/staleness fixes (#51, #52), release-check harness + unit-test floor gate, doc audit. Built on v4.0.0 (nexus-cli absorption, 2026-06-22).
 >
-> **Strategic Direction:** Proposal A - Pure Obsidian Knowledge Manager
+> **Strategic Direction:** "Brain + Hands" — obs analyzes/suggests (graph + AI + temporal), official Obsidian CLI executes (CRUD, move, create)
 > **Install:** `brew install data-wise/tap/obsidian-cli-ops`
 
 ---
 
-## 🎯 v3.3.0 — In Progress (Bridge + Temporal)
+## ✅ v4.0.0 — Shipped (2026-06-22)
 
-> **Decided 2026-06-04.** Spec: `docs/specs/SPEC-v3.3.0-bridge-temporal-2026-06-04.md`
-> **Context:** Obsidian shipped an official CLI (1.12.4, 2026-02-27, now ~115 commands) that owns vault *primitives* (search, tags, backlinks, orphans, deadends, note CRUD, daily notes, tasks, properties) — but does **no** graph/AI/temporal work and **requires the app running**. v3.3.0 stops competing on primitives and instead (A) consumes the official CLI as obs's "hands" and (B) mines history obs already stores.
+- ✅ nexus-cli absorption Phase 1: `obs config` (5 subcommands) + `obs research` (11 subcommands — bibliography, courses, manuscript, pdf, zotero)
+- ✅ MCP vault-resolution fix: 9 tools now route through `_resolve_vault()` (name → ID → prefix); `rescan_vault` now does a real in-process scan
+- ✅ `obs doctor` crash fixed (`last_scan` → `last_scanned`); new `mcp-tool-resolvers` AST check
+- ✅ Release-check harness (PR #50): `core/doc_counts.py` + `validate-counts.sh` + `obs doctor --layer docs` + `verify-caveats.sh` + `post-install-check.sh` + `post-release-sweep.sh`
+- ✅ `obs ai tag-suggest --apply` IS real (write path at `features_vault.py:354 _apply_tag_to_frontmatter()`) — stale "inert" claim corrected
 
-### Theme A — Integration Bridge ("brain + hands")
+---
+
+## 🎯 v4.1.0 — Vault CRUD Bridge (In Planning)
+
+> **Decided 2026-06-22.** Spec: `docs/specs/SPEC-next-overhaul-2026-06-22.md` (§1 resolved → delegate, not FS-direct build)
+> **Context:** Official Obsidian CLI (~115 commands) owns vault primitives (CRUD, search, tags, backlinks, orphans, daily notes). v4.1 routes vault CRUD to it as obs's "hands" — `obs` keeps the analysis/intelligence moat.
+
+### Theme A — Integration Bridge (delegate to official CLI)
 
 - [ ] **`obs bridge status`** — detect official `obsidian` CLI + running app, report capabilities/version
 - [ ] **`obs apply <plan-file> [--execute]`** — execute approved refactor/tag/link plans via the official CLI; dry-run default, interactive confirm
-- [ ] **`obs ai tag-suggest --apply`** — make the inert `--apply` real via the bridge write path
+- [ ] **Vault CRUD delegation** — `read / write / daily / template / backlinks / recent / orphans` routed to official CLI. **Trade-off documented**: offline regression (CRUD requires Obsidian app running via IPC)
 - [ ] **Read-side enrichment** — alias resolution + accurate backlinks from official CLI when app running; silent fallback to file scan (fixes `graph_builder.py:57` alias TODO)
 
-### Theme B — Temporal Analytics (offline, no new deps)
+### Shipped in prior releases (Themes B — Temporal Analytics)
 
-- [ ] **`obs trends <vault>`** — knowledge-growth curve, note/link velocity, activity heatmap (`scan_history` + timestamps)
-- [ ] **`obs stale <vault>`** — staleness ranked by **importance** (PageRank × age), not plain date
-- [ ] **`obs ai daily-digest <vault>`** — daily health digest (new orphans, decayed hubs, stale-but-important, new duplicates)
+- ✅ **`obs trends <vault>`** — knowledge-growth curve, note/link velocity, activity heatmap
+- ✅ **`obs stale <vault>`** — staleness ranked by PageRank × age
+- ✅ **`obs ai daily-digest <vault>`** — daily health digest (orphans, decayed hubs, stale-but-important)
 
 **Build order:** bridge `status` → `trends`+`stale` → `apply`+real `--apply` → `daily-digest` → read-side enrichment.
 
@@ -716,3 +726,19 @@ Web API ───┘
 ---
 
 **Remember:** Ideas are cheap, execution is everything. Focus on completing current work (see [.STATUS](.STATUS)) before starting new features! 🚀
+
+---
+
+## 📥 Cowork-Surfaced Improvements — 2026-06-22
+
+> From live obsidian-ops MCP/CLI testing during the scoop-tripwire build. Consolidated: **Discussion #55** + `docs/planning/improvement-suggestions-2026-06-22.md` (**PR #56**).
+
+| # | Type | Summary |
+|---|------|---------|
+| #51 | bug | Empty-title note aborts scan (`NOT NULL notes.title`) and is dropped from the index |
+| #52 | feat | First-class `obs scan/rescan <vault>` + stale-index warning on analyze/search/health |
+| #40 | feat | Heading/table-aware `append_to_note` (under-heading + table-row), not just EOF |
+| #54 | feat | AI enrichment on scan: auto-title untitled notes + tag/link suggest (opt-in, dry-run-first; reuse `_apply_tag_to_frontmatter`) |
+| #53 | feat | Expose running MCP server version + restart-needed diagnostics |
+
+**Priority:** #51 → #52 → #40 → #54 → #53.

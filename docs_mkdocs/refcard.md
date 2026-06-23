@@ -20,8 +20,19 @@
 | `obs search <query> --json` | Machine-readable JSON output |
 | `obs stats [vault]` | Show vault or global statistics |
 | `obs discover <path>` | Find Obsidian vaults in a directory |
+| `obs scan <path>` | Scan and register a vault |
 | `obs analyze <vault>` | Analyze vault graph metrics |
 | `obs health <vault>` | Vault health dashboard (scores + recommendations) |
+
+## Monitoring & Diagnostics
+
+| Command | Description |
+|---------|-------------|
+| `obs bridge status` | Obsidian CLI bridge status |
+| `obs trends <vault>` | Weekly activity trends |
+| `obs stale <vault>` | Find stale high-importance notes |
+| `obs daily-digest <vault>` | Bridge + trends + stale summary |
+| `obs doctor` | Self-diagnostic checks |
 
 ## AI Commands
 
@@ -176,6 +187,7 @@ Ask Claude natural-language questions about your vaults. Requires one-time Claud
 | `write_note(note_id, content)` | Overwrite note (auto-backup) |
 | `create_note(vault_id, title, content)` | Create new note |
 | `append_to_note(note_id, content)` | Append to note |
+| `insert_to_note(note_id, content, after_heading=...)` | Insert at heading position |
 | `rename_note(note_id, new_title)` | Rename note |
 | `delete_note(note_id, confirm=True)` | Delete note (dry-run by default) |
 | `run_obs_ai(command, target)` | All `obs ai` subcommands |
@@ -222,4 +234,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 4.0.0 | **Commands:** 35 (19 core + 16 nexus-cli absorption) | **MCP Tools:** 25 | **AI Providers:** 5
+**Version:** 4.0.1 | **Commands:** 35 (19 core + 16 nexus-cli absorption) | **MCP Tools:** 39 | **AI Providers:** 5

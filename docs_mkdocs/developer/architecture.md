@@ -1,6 +1,6 @@
 # Architecture
 
-**Version:** 4.0.0
+**Version:** 4.0.1
 
 Obsidian CLI Ops follows a clean **four-layer architecture**: Presentation, Application (Core), AI Features, and Data — plus an MCP Integration layer added in v3.3.0.
 
@@ -16,7 +16,7 @@ flowchart TD
     end
 
     subgraph MCP["MCP Integration Layer (v3.3.0)"]
-        M[mcp_server.py\n25 tools · 4 resources]
+        M[mcp_server.py\n39 tools · 4 resources]
     end
 
     subgraph Core["Application Layer (Core)"]
@@ -89,7 +89,7 @@ flowchart LR
     M --> RES["4 MCP Resources\nvault://{id}/stats\nnote://{id}\nobsidian://overview\n..."]
 ```
 
-- **25 MCP tools** in 9 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1), Bridge (1), Temporal (3), Diagnostics (1)
+- **39 MCP tools** in 10 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1), Bridge (1), Temporal (3), Diagnostics (1), Research (13)
 - **FastMCP** (`from mcp.server.fastmcp import FastMCP`) — stdio transport, clean exit when no client
 - Note write tools include built-in safety: `delete_note` defaults `confirm=False` (dry-run), `write_note` defaults `create_backup=True`
 
@@ -103,11 +103,14 @@ flowchart TD
     GA -->|read metrics| DB
     DM[Domain Models] -->|"Vault, Note, ScanResult\nGraphMetrics, VaultStats"| VM
     DM --> GA
+    NI[note_inserter.py\nHeading-aware insertion] -->|read/write .md| FS[Vault Files]
+    MCP[mcp_server.py] -->|lazy import| NI
 ```
 
 - **VaultManager** — vault discovery, scanning, database registration, stats
 - **GraphAnalyzer** — graph metrics, hub detection, orphan detection, clustering
 - **Domain Models** — typed dataclasses with `from_dict()`, `to_dict()`, `from_json()`
+- **note_inserter** (`core/note_inserter.py`) — heading-aware Markdown insertion using markdown-it-py AST; four operations: `insert_after_heading`, `insert_before_heading`, `append_table_row`, `replace_section`. Called lazily by `insert_to_note` MCP tool to avoid circular imports.
 
 ### AI Features Layer
 
@@ -194,6 +197,30 @@ sequenceDiagram
     M-->>C: tool response
 ```
 
+### MCP Tool Call (heading-aware insert via Claude)
+
+```mermaid
+sequenceDiagram
+    participant C as Claude Desktop
+    participant M as mcp_server.py
+    participant NI as note_inserter.py
+    participant FS as .md File
+
+    C->>M: insert_to_note(note_id, content, after_heading="Results", as_table_row=True)
+    M->>M: _resolve_vault() → db.get_vault(vault_id)
+    M->>FS: read note file (direct Python)
+    FS-->>M: markdown text
+    M->>NI: append_table_row(text, heading="Results", row=content)
+    NI->>NI: markdown-it-py parse → find heading line
+    NI->>NI: locate last table row under heading
+    NI-->>M: modified markdown text
+    M->>FS: _fs_op(write modified text)
+    FS-->>M: success
+    M-->>C: "✅ Row appended to table under 'Results'"
+```
+
+Note: `note_inserter` is imported lazily inside the tool function (`from core.note_inserter import ...`) to avoid circular imports at module load time.
+
 ### AI Suggest-Links
 
 ```mermaid
@@ -234,6 +261,7 @@ sequenceDiagram
 | **Null Object** | `ObsidianBridge` returns empty results when Obsidian CLI unavailable |
 | **Strategy** | `AIRouter` selects among 5 interchangeable provider strategies |
 | **Adapter** | Each AI provider adapts a different API to the common `AIProvider` interface |
+| **AST-walk** | `note_inserter` uses markdown-it-py token stream to locate headings — immune to headings inside fenced code blocks |
 
 ---
 
@@ -246,6 +274,7 @@ src/python/
     graph_analyzer.py        # Graph operations (~350 lines)
     models.py                # Domain models (~310 lines)
     exceptions.py            # Custom exceptions
+    note_inserter.py         # Heading-aware Markdown insertion (markdown-it-py AST)
 
   ai/                        # AI FEATURES LAYER
     features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
@@ -270,7 +299,7 @@ schema/vault_db.sql          # Database schema
 
 ## Testing
 
-- **304 pytest tests** covering core, AI, vault features, data layer, and MCP server
+- **450+ pytest tests** covering core, AI, vault features, data layer, and MCP server (+32 E2E gated behind `E2E=1`)
 - **69 Jest tests** for ZSH wrapper + dependency-bootstrapping validation
 - Core layer tested independently with mocked dependencies
 - AI providers mocked for deterministic tests

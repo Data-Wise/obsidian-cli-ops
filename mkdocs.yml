@@ -77,6 +77,8 @@ nav:
       - Graph Analysis: tutorials/graph-analysis.md
       - AI Features: tutorials/ai-features.md
       - Claude / MCP Integration: tutorials/claude-mcp.md
+      - Research Setup: tutorials/research-setup.md
+      - Monitoring & Health: tutorials/monitoring-and-health.md
       - Cookbook: cookbook.md
   - Reference:
       - Quick Reference: refcard.md

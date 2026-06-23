@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.0.0
+**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.0.1
 
 ---
 
@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **25 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **39 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -74,7 +74,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 
 ---
 
-## All 25 MCP Tools
+## All 39 MCP Tools
 
 ### Vault Tools
 
@@ -115,6 +115,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 | `write_note` | `note_id`, `content`, `create_backup=True` | Overwrite note (backup created by default) |
 | `create_note` | `vault_id`, `title`, `content`, `folder`, `tags` | Create a new note |
 | `append_to_note` | `note_id`, `content`, `separator` | Append text to an existing note |
+| `insert_to_note` | `note_id`, `content`, `after_heading`, `before_heading`, `as_table_row`, `replace_section` | Insert at a heading-relative position |
 | `rename_note` | `note_id`, `new_title` | Rename note (warns about wikilink breakage) |
 | `delete_note` | `note_id`, `confirm=False` | Delete note — `confirm=True` required; default is **dry-run** |
 | `get_note_links` | `note_id` | Incoming + outgoing links |
@@ -143,11 +144,67 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 | `get_stale_notes` | `vault_id`, `limit=20` | Most stale high-importance notes |
 | `get_daily_digest` | `vault_id`, `days=90`, `limit=5` | Combined digest: bridge status + trends + top stale notes |
 
+### Temporal Workflows
+
+Track vault evolution over time — velocity, stale notes, and daily snapshots.
+
+**Daily digest:**
+> *"Give me a morning digest of my Research vault"*
+
+```
+Claude calls: get_daily_digest("Research")
+Returns: notes created/modified today, new orphans, pending-link notes
+```
+
+**Stale note hunt:**
+> *"Find Research notes that need attention"*
+
+```
+Claude calls: get_stale_notes("Research", limit=20)
+Returns: notes ranked by staleness_score (pagerank × age), with days_since_modified
+```
+
+**Growth trends:**
+> *"How fast is my Research vault growing? Show me the last 30 days"*
+
+```
+Claude calls: get_trends("Research", days=30)
+Returns:
+  total_notes: 847
+  velocity_notes_per_week: 2.8
+  buckets: [{week: "2026-06-16", notes_created: 3, notes_modified: 5}, ...]
+```
+
+See the [Monitoring & Health tutorial](tutorials/monitoring-and-health.md) for a complete workflow.
+
 ### Diagnostics Tool
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
 | `diagnose` | `vault_id`, `layers` | Self-diagnostic checks; returns a structured health report |
+
+### Research Tools
+
+These 13 tools provide access to Zotero, PDFs, courses, and manuscripts **when the MCP server runs on the same machine as your data**.
+
+| Tool | Arguments | Description |
+|------|-----------|-------------|
+| `unified_search` | `query`, `limit=20` | Unified search across vault + Zotero + PDFs |
+| `zotero_search` | `query`, `limit=20`, `item_type=""`, `tag=""` | Search Zotero library by title/author/year |
+| `zotero_get` | `key`, `format="apa"` | Get full Zotero item details |
+| `zotero_cite` | `key`, `format="apa"` | Format a citation in APA/MLA/Chicago |
+| `zotero_recent` | `limit=10` | Most recently modified Zotero items |
+| `pdf_search` | `query`, `limit=10` | Full-text search across PDFs |
+| `course_list` | — | List all Quarto-based courses |
+| `course_show` | `name` | Details for a specific course |
+| `course_lectures` | `name` | Lectures in a course |
+| `manuscript_list` | `include_archived=False` | List manuscripts (pass `True` to include archived) |
+| `manuscript_show` | `name` | Details for a manuscript |
+| `manuscript_stats` | — | Aggregate word counts + status breakdown |
+| `bib_check` | `manuscript_name` | Check citation completeness |
+
+!!! note "Research tools require local data"
+    All 13 research MCP tools are accessible from Claude Desktop. They require that the Zotero SQLite, PDF directories, and Quarto projects exist on the same machine as the MCP server. `unified_search` works universally without any local-path configuration. For terminal usage, see the [Research Setup tutorial](tutorials/research-setup.md).
 
 ---
 
@@ -260,7 +317,7 @@ The Claude integration is being built in three phases:
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| **A — Claude Desktop MCP** | ✅ since v3.3.0 | 25 tools, venv-aware, note CRUD |
+| **A — Claude Desktop MCP** | ✅ since v3.3.0 | 38 tools, venv-aware, note CRUD |
 | **B — Cowork Plugin** | 🔜 TBD | `.plugin` bundle with skills + MCP for Cowork |
 | **C — Claude Code Plugin** | 🔜 future | `bin/` wrapper, hooks, marketplace distribution |
 

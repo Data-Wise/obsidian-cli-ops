@@ -1,7 +1,7 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-4.0.1-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/tests-400%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
@@ -10,7 +10,7 @@
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 4.0.0
+**Current Version**: 4.0.1
 
 ## 🚀 Quick Start
 
@@ -118,7 +118,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v4.0.0 Stable
+**Current Status:** v4.0.1 Stable
 
 ### Active Planning Files
 - **[.STATUS](.STATUS)** - Current state, next steps, and metrics ⭐ What to work on now
@@ -152,11 +152,11 @@ obs version                     # Show version
 ### Planning & Releases
 - **[Project Hub](docs/planning/project-hub.md)** - ADHD-friendly control center
 - **[Project Plan](docs/planning/project-plan.md)** - Complete v2.0 roadmap
-- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.0.0)** - v4.0.0 release notes
+- **[Latest Release](https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.0.1)** - v4.0.1 release notes
 
 ## 🧪 Test Coverage
 
-- **235 pytest + 69 Jest** tests passing (2 Jest network-gated, run in CI)
+- **450+ pytest + 69 Jest** tests passing (2 Jest network-gated, run in CI; +32 E2E gated behind `E2E=1`)
 - CI: GitHub Actions on push/PR to `main` and `dev`
 - Python coverage reporting via `pytest-cov`
 

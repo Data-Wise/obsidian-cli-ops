@@ -21,7 +21,7 @@ from rich.panel import Panel
 from rich import box
 
 from db_manager import DatabaseManager
-from core.vault_manager import VaultManager
+from core.vault_manager import VaultManager, StalenessResult
 from core.graph_analyzer import GraphAnalyzer
 from core.exceptions import VaultNotFoundError, ScanError, AnalysisError
 from utils import format_relative_time
@@ -39,6 +39,23 @@ class ObsCLI:
         self.db = DatabaseManager()
         self.vault_manager = VaultManager(self.db)
         self.graph_analyzer = GraphAnalyzer(self.db)
+
+    def _warn_if_stale(self, vault_id: str, threshold_hours: float = 24.0) -> None:
+        """Print a warning to stderr if the vault index is older than threshold_hours."""
+        try:
+            result: StalenessResult = self.vault_manager.check_index_staleness(vault_id, threshold_hours)
+            if result.is_stale:
+                if result.last_scanned is None:
+                    console.print("[yellow]⚠ Index not yet scanned. Run 'obs scan <path>' first.[/]", file=sys.stderr)
+                else:
+                    age = result.age_hours
+                    unit = f"{age:.0f}h" if age < 48 else f"{age / 24:.0f}d"
+                    console.print(
+                        f"[yellow]⚠ Index is {unit} old — consider running 'obs scan' to refresh.[/]",
+                        file=sys.stderr,
+                    )
+        except Exception:
+            pass  # Never let a staleness check break the main command
 
     def discover(self, root_path: str, scan: bool = False, verbose: bool = False):
         """
@@ -842,7 +859,7 @@ def main():
     doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
     doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
     doctor_parser.add_argument('--layer', action='append', dest='layers',
-                               choices=['python', 'database', 'vault', 'mcp', 'icloud'],
+                               choices=['python', 'database', 'vault', 'mcp', 'docs', 'icloud'],
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
@@ -932,9 +949,11 @@ def main():
                 if not vault:
                     print(json.dumps({"error": f"Vault not found: {args.vault}"}), file=sys.stderr)
                     sys.exit(1)
+                cli._warn_if_stale(vault['id'])
                 result = cli.graph_analyzer.analyze_vault(vault['id'])
                 print(json.dumps(result, indent=2, default=str))
             else:
+                cli._warn_if_stale(args.vault)
                 cli.analyze(args.vault, verbose=args.verbose)
 
         elif args.command == 'stats':
@@ -1005,6 +1024,7 @@ def main():
                         console.print(f"[red]❌ Vault not found: {args.vault}[/]")
                     sys.exit(1)
                 vault_id = vault['id']
+                cli._warn_if_stale(vault_id)
 
             results = cli.db.search_notes(query, vault_id=vault_id, limit=args.limit)
 
@@ -1047,6 +1067,7 @@ def main():
                 console.print(f"[dim]  Tip: Run 'obs discover <path>' to find new vaults[/]")
                 sys.exit(1)
 
+            cli._warn_if_stale(vault['id'])
             health = cli.vault_manager.get_vault_health(args.vault)
 
             if getattr(args, 'json_output', False):

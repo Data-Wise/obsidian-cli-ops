@@ -54,20 +54,7 @@ export_parser.add_argument('vault_id', help='Vault ID')
 export_parser.add_argument('--format', choices=['json', 'csv', 'html'], default='json')
 ```
 
-### Step 4: Add TUI interface (optional)
-
-```python
-# src/python/tui/screens/vaults.py
-def on_export_clicked(self):
-    """Handle export button click."""
-    result = self.vault_manager.export_vault(self.selected_vault_id, "json")
-
-    # TUI-specific display
-    self.notify(f"Exported {result.notes_exported} notes")
-    self.refresh()
-```
-
-### Step 5: Add ZSH wrapper
+### Step 4: Add ZSH wrapper
 
 ```zsh
 # src/obs.zsh
@@ -115,6 +102,27 @@ grep the old version across the whole repo first (`grep -rn "<old>" --include='*
   `.TH` date field is ISO `YYYY-MM-DD`, mandoc-clean, and intentionally unguarded
   — it is decoupled from the version and may go stale without breaking anything.)
 - `README.md` / `CLAUDE.md` (version badges and references)
+
+### Release-check harness (gate order)
+
+`scripts/` carries validators that prevent the drift classes v4.0.0 shipped
+(25→38 MCP-tool undercount; stale Homebrew caveats). Run them in this order:
+
+1. **Pre-tag** — `scripts/validate-counts.sh` (counts in docs == source of truth;
+   `--fix` to auto-correct). Also enforced in CI by `tests/test_doc_counts.py` and
+   surfaced anytime via `obs doctor --layer docs`, so count drift cannot merge.
+2. Release → GitHub release → `homebrew-release.yml` auto-bumps the tap (url+sha256).
+3. **After the formula bump** — `scripts/verify-caveats.sh` (the tap caveats name the
+   current tool count + `obs config`/`obs research` + the `obsidian-ops` MCP key).
+4. **After `brew install/upgrade`** — `scripts/post-install-check.sh [version]`
+   (obs version, `obs doctor` clean = db-init worked, installed tool count == source).
+   The canonical gate is `brew reinstall --build-from-source` (audit-green ≠ installs clean).
+5. **Post-release** — `scripts/post-release-sweep.sh [--fix]` (Tier-2: counts, stray
+   version strings, changelog currency).
+
+Design: `core/doc_counts.py` is the single source of truth for counts; the shell
+scripts + doctor check + pytest are thin consumers (no duplication). Spec:
+`docs/specs/SPEC-release-check-harness-2026-06-22.md`.
 
 ### MCP server dep changes (separate from version bump)
 

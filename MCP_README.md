@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.0.0 | **Tools:** 25 | **Protocol:** FastMCP (stdio)
+**Version:** 4.0.1 | **Tools:** 39 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -58,7 +58,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 
 ---
 
-## Available Tools (25)
+## Available Tools (39)
 
 > **`vault_id` accepts a vault name, full ID, or unambiguous ID prefix.** You don't
 > need the exact hash ID — `get_vault_stats("ResearchVault")` works the same as
@@ -114,6 +114,46 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 |------|-------------|
 | `run_obs_ai(command, target, options)` | Bridge to `obs ai` subcommands: `similar`, `analyze`, `duplicates`, `suggest-links`, `gaps`, `summarize`, `refactor`, `merge-suggest`, `tag-suggest`, `quality` |
 
+### Bridge Tools
+
+| Tool | Description |
+|------|-------------|
+| `get_bridge_status()` | Whether the official Obsidian CLI is installed + app running, with current capabilities |
+
+### Temporal Tools
+
+| Tool | Description |
+|------|-------------|
+| `get_trends(vault_id, days)` | Weekly activity trends (notes created/modified per week); `days` lookback (default 90) |
+| `get_stale_notes(vault_id, limit)` | Most stale high-importance notes (pagerank × age) |
+| `get_daily_digest(vault_id, days, limit)` | Combined morning briefing: bridge status + trends + top stale notes |
+
+### Diagnostics Tools
+
+| Tool | Description |
+|------|-------------|
+| `diagnose(vault_id, layers)` | Self-diagnostic across 5 layers: `python`, `database`, `vault`, `mcp`, `icloud` |
+
+### Research Tools
+
+> Require `research.*` config in `~/.config/obs/config.yaml` (from the nexus-cli absorption); report "not configured" when absent.
+
+| Tool | Description |
+|------|-------------|
+| `unified_search(query, limit)` | Cross-source fan-out search: vault + Zotero + PDF, grouped by source |
+| `zotero_search(query, limit, item_type, tag)` | Search Zotero library by title, author, or abstract |
+| `zotero_get(key, format)` | Get a Zotero item by key (`format`: `apa`, `bibtex`, `full`) |
+| `zotero_recent(limit)` | List recently modified Zotero items |
+| `zotero_cite(key, format)` | Citation string for a Zotero item (`format`: `apa`, `bibtex`) |
+| `pdf_search(query, limit)` | Search PDF documents in configured directories (filename + content) |
+| `course_list()` | List teaching courses with status and progress |
+| `course_show(name)` | Details for a specific course (exact or partial name) |
+| `course_lectures(name)` | List lectures for a course |
+| `manuscript_list(include_archived)` | List research manuscripts with status, progress, word count |
+| `manuscript_show(name)` | Details for a specific manuscript |
+| `manuscript_stats()` | Aggregate statistics across all manuscripts |
+| `bib_check(manuscript_name)` | Bibliography consistency check (missing/unused citation keys) |
+
 ### MCP Resources
 
 | Resource URI | Description |
@@ -151,7 +191,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 25 tools)
+     mcp_server.py   (FastMCP, 39 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓
