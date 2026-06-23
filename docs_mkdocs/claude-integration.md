@@ -74,7 +74,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 
 ---
 
-## All 25 MCP Tools
+## All 39 MCP Tools
 
 ### Vault Tools
 
@@ -144,11 +144,67 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 | `get_stale_notes` | `vault_id`, `limit=20` | Most stale high-importance notes |
 | `get_daily_digest` | `vault_id`, `days=90`, `limit=5` | Combined digest: bridge status + trends + top stale notes |
 
+### Temporal Workflows
+
+Track vault evolution over time — velocity, stale notes, and daily snapshots.
+
+**Daily digest:**
+> *"Give me a morning digest of my Research vault"*
+
+```
+Claude calls: get_daily_digest("Research")
+Returns: notes created/modified today, new orphans, pending-link notes
+```
+
+**Stale note hunt:**
+> *"Find Research notes that need attention"*
+
+```
+Claude calls: get_stale_notes("Research", limit=20)
+Returns: notes ranked by staleness_score (pagerank × age), with days_since_modified
+```
+
+**Growth trends:**
+> *"How fast is my Research vault growing? Show me the last 30 days"*
+
+```
+Claude calls: get_trends("Research", days=30)
+Returns:
+  total_notes: 847
+  velocity_notes_per_week: 2.8
+  buckets: [{week: "2026-06-16", notes_created: 3, notes_modified: 5}, ...]
+```
+
+See the [Monitoring & Health tutorial](tutorials/monitoring-and-health.md) for a complete workflow.
+
 ### Diagnostics Tool
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
 | `diagnose` | `vault_id`, `layers` | Self-diagnostic checks; returns a structured health report |
+
+### Research Tools
+
+These 13 tools provide access to Zotero, PDFs, courses, and manuscripts **when the MCP server runs on the same machine as your data**.
+
+| Tool | Arguments | Description |
+|------|-----------|-------------|
+| `unified_search` | `query`, `vault_id`, `limit`, `include_zotero`, `include_pdf` | Unified search across vault + Zotero + PDFs |
+| `zotero_search` | `query`, `limit` | Search Zotero library by title/author/year |
+| `zotero_get` | `item_key` | Get full Zotero item details |
+| `zotero_recent` | `limit` | Most recently modified Zotero items |
+| `zotero_cite` | `item_key`, `style` | Format a citation in APA/MLA/Chicago |
+| `pdf_search` | `query`, `directories`, `limit` | Full-text search across PDFs |
+| `course_list` | `courses_dir` | List all Quarto-based courses |
+| `course_show` | `course_id`, `courses_dir` | Details for a specific course |
+| `course_lectures` | `course_id`, `courses_dir` | Lectures in a course |
+| `manuscript_list` | `manuscripts_dir`, `status` | List manuscripts (filter by status) |
+| `manuscript_show` | `manuscript_id`, `manuscripts_dir` | Details for a manuscript |
+| `manuscript_stats` | `manuscripts_dir` | Aggregate word counts + status breakdown |
+| `bib_check` | `manuscript_id`, `manuscripts_dir` | Check citation completeness |
+
+!!! note "Research commands are CLI-only"
+    `unified_search` is the only MCP-accessible research tool that works universally. The individual research tools (`zotero_search`, `pdf_search`, `course_list`, etc.) require local file access — they read Zotero's SQLite database, local PDFs, and Quarto project files on the **same machine** running the MCP server. For terminal usage, see the [Research Setup tutorial](tutorials/research-setup.md).
 
 ---
 
