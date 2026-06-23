@@ -320,3 +320,18 @@ Data (db_manager, scanner, ai/, schema)
 - **TODOS.md** — Current work items
 - **docs/planning/project-hub.md** — ADHD-friendly control center
 - **docs/developer/ai-providers.md** — AI architecture reference
+
+---
+
+## 📥 Cowork Capture — 2026-06-22 (improvement backlog from live MCP/CLI testing)
+
+Surfaced in a Cowork session while wiring the `arxiv-causal-mediation-brief` scoop-tripwire against the obsidian-ops MCP. Filed as issues; consolidated in **Discussion #55** + `docs/planning/improvement-suggestions-2026-06-22.md` (**PR #56**, ready for review).
+
+- **#51** (bug) empty-title note → `NOT NULL constraint failed: notes.title`, dropped from index. Repro: forced rescan of Documents indexed 3454 but skipped ≥1 untitled note.
+- **#52** (feat) no first-class `obs scan/rescan` verb; `obs analyze` silently ran on a 3-day-stale index (a real scan moved 3365→3454 notes).
+- **#40** (feat) `append_to_note` is EOF-only; rows cannot target `## Hits`/a table → blocks the tripwire vault writes.
+- **#54** (feat) AI-assisted enrichment on scan (auto-title untitled notes; suggest tags from controlled vocab + links; opt-in, dry-run-first). Can reuse the existing `_apply_tag_to_frontmatter()` write path.
+- **#53** (feat) expose running MCP server version / restart-needed (v4.0.0 CLI + stale in-process server failed `rescan_vault` with the old asyncio error, no signal).
+
+**Suggested order:** #51 → #52 → #40 → #54 → #53.
+**Also:** Homebrew-tap auto-bump still parked (APP_ID/APP_PRIVATE_KEY); `Knowledge_Base` vault index still stale (Documents rescanned 2026-06-22).

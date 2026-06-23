@@ -726,3 +726,19 @@ Web API ───┘
 ---
 
 **Remember:** Ideas are cheap, execution is everything. Focus on completing current work (see [.STATUS](.STATUS)) before starting new features! 🚀
+
+---
+
+## 📥 Cowork-Surfaced Improvements — 2026-06-22
+
+> From live obsidian-ops MCP/CLI testing during the scoop-tripwire build. Consolidated: **Discussion #55** + `docs/planning/improvement-suggestions-2026-06-22.md` (**PR #56**).
+
+| # | Type | Summary |
+|---|------|---------|
+| #51 | bug | Empty-title note aborts scan (`NOT NULL notes.title`) and is dropped from the index |
+| #52 | feat | First-class `obs scan/rescan <vault>` + stale-index warning on analyze/search/health |
+| #40 | feat | Heading/table-aware `append_to_note` (under-heading + table-row), not just EOF |
+| #54 | feat | AI enrichment on scan: auto-title untitled notes + tag/link suggest (opt-in, dry-run-first; reuse `_apply_tag_to_frontmatter`) |
+| #53 | feat | Expose running MCP server version + restart-needed diagnostics |
+
+**Priority:** #51 → #52 → #40 → #54 → #53.
