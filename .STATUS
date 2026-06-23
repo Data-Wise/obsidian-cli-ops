@@ -4,9 +4,9 @@ progress: 100
 updated: 2026-06-22
 version: 3.5.0 (prev: v3.4.2)
 next: |
-  1. 🔀 Decide the nexus-cli merge (RFC #35): absorb nexus-cli's vault+graph+doctor+tutorials into obs; pick Tier-2 option (A absorb non-vault / B sibling-depends-on-obs [recommended] / C spin-out). Spec: SPEC-merge-nexus-cli-2026-06-19.md.
-  2. Plan next feature (see BRAINSTORM-v3.4.0-bridge-temporal-2026-06-19.md + IDEAS.md)
-  3. Consider worktree cleanup: delete feature/obs-doctor worktree if still present
+  1. 🚀 Ship v4.0.0 (keystone) — research-absorption + nexus retirement; closes the live broken promise (installable obs lacks `obs research`). Authoritative roadmap: docs/specs/SPEC-next-overhaul-2026-06-22.md (APPROVED; 5.1 resolved → delegate).
+  2. v4.1 — 5.1 vault CRUD via official-CLI bridge (delegate); v4.2 — 5.3 PARA validator (`obs doctor structure`).
+  (nexus-cli merge decided + Phase 1–4 landed on main; MCP vault-resolution fix on dev+main; feature worktrees cleaned up 2026-06-22.)
 verified: |
   v3.5.0 released 2026-06-19: PR #36 (dev→main) squash-merged. Homebrew tap auto-updated.
   dev synced post-release (295573a). feature/obs-doctor merged and closed (PR #33).
@@ -26,7 +26,7 @@ target: v3.6.0 - TBD
 
 ---
 
-## 🔧 Unreleased (branch `feature/mcp-vault-resolution`, off dev) — MCP vault-resolution correctness + doctor guard
+## 🔧 Unreleased (merged to dev #46 + main #47; targets v4.0.0) — MCP vault-resolution correctness + doctor guard
 
 - **Bug A (exact-ID-only resolver):** 9 MCP tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()` → a vault **name** or prefix silently returned "Vault not found" (or a misleading empty result). Now route through a `_resolve_vault()` helper wrapping `db.get_vault_by_name_or_id()` (name → exact ID → unambiguous prefix); canonical `id` reassigned before downstream calls.
 - **Bug B (`rescan_vault` no-op):** shelled to the read-only `obs stats` subcommand — reported success while never scanning. Now does a real in-process `vault_manager.scan_vault(path, name)`.
