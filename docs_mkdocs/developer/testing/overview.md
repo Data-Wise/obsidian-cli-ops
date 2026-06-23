@@ -1,6 +1,6 @@
 # Testing Overview
 
-**Version:** 4.0.0
+**Version:** 4.0.1
 **Total Tests:** 550+ — 340+ unit pytest, 113 MCP unit pytest, 32 E2E pytest, 69 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see `core/doc_counts.py`).
 
 ## Test Coverage

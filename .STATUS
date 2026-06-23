@@ -1,10 +1,10 @@
 priority: P1
-status: ✅ v4.0.0 SHIPPED 2026-06-22 + post-ship fixes on dev (#51 dotfile fix, #52 obs scan verb + staleness warnings, #40 insert_to_note MCP tool); dev ahead of main, release pending
+status: 🚀 v4.0.1 RELEASING 2026-06-23 (dev→main, 20 commits): #40 insert_to_note MCP tool, #51 dotfile fix, #52 obs scan + staleness, release-check harness (PR #50) + unit-test floor gate, craft:site:audit doc fixes. Was v4.0.0 (shipped 2026-06-22).
 progress: 100
 updated: 2026-06-23
-version: 4.0.0
+version: 4.0.1
 next: |
-  1. Release dev→main as v4.0.1 (patch) — ships #51 dotfile fix, #52 obs scan, #40 insert_to_note. MCP tools: 39.
+  1. Verify v4.0.1 on main: CI green, Deploy Docs, homebrew-release.yml (tap @ 4.0.1, url+sha only — no dep changes).
   2. v4.1 — vault CRUD via official-CLI bridge (delegate). v4.2 — PARA validator.
   (feature/insert-note worktree removed 2026-06-23 after PR #57 merged.)
 verified: |
@@ -17,7 +17,7 @@ target: v4.1.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
 
 ## 🎯 Current State
 
-**Phase**: v4.0.0 on main; dev has 3 post-ship fixes (PR #55/#57 merged) → v4.0.1 release pending
+**Phase**: v4.0.1 releasing dev→main (20 commits ahead); was v4.0.0 on main since 2026-06-22
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
 **Tests**: 471 pytest + 69 Jest = 540 total (453 + 18 note_inserter tests; PR #50 harness gate in test_doc_counts.py)
 **Commands**: 25 total (24 obs + 1 MCP-only: diagnose)

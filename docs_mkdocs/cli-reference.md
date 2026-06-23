@@ -7,7 +7,7 @@
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 4.0.0
+**Version:** 4.0.1
 
 ---
 

@@ -2,9 +2,9 @@
 
 > **Brainstorming space for enhancements, improvements, and new features**
 >
-> **Last Updated:** 2026-06-22
+> **Last Updated:** 2026-06-23
 >
-> **Current Release:** v4.0.0 (Released 2026-06-22) — nexus-cli absorption (Phase 1) + MCP vault-resolution fix + release-check harness
+> **Current Release:** v4.0.1 (Released 2026-06-23) — `insert_to_note` MCP tool (#40), dotfile/scan/staleness fixes (#51, #52), release-check harness + unit-test floor gate, doc audit. Built on v4.0.0 (nexus-cli absorption, 2026-06-22).
 >
 > **Strategic Direction:** "Brain + Hands" — obs analyzes/suggests (graph + AI + temporal), official Obsidian CLI executes (CRUD, move, create)
 > **Install:** `brew install data-wise/tap/obsidian-cli-ops`
