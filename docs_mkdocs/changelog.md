@@ -4,6 +4,23 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## [Unreleased]
+
+MCP tool correctness: vault resolution + a real rescan, plus a doctor guard so this
+class of bug is caught automatically.
+
+### Fixed
+
+- **MCP vault tools now accept a vault name or ID prefix, not only an exact ID.** Nine tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()`, so passing a vault **name** silently returned "Vault not found" — or a misleading empty result (e.g. `get_orphaned_notes` reporting "✅ No orphaned notes!"). They now use the 3-tier `get_vault_by_name_or_id()` resolution (name → exact ID → unambiguous prefix).
+- **`rescan_vault` now actually re-scans the vault.** It previously shelled out to the read-only `obs stats` subcommand — reporting success while never updating the database. It now performs a real in-process `scan_vault(path, name)`.
+- **`obs doctor` no longer crashes on real vaults.** The vault layer read a non-existent `last_scan` column (schema column is `last_scanned`), raising `IndexError` whenever any vault was registered. A unit test using a hand-rolled fake schema had masked the bug.
+
+### Added
+
+- **`obs doctor` `mcp-tool-resolvers` check** (mcp layer) — statically AST-scans `mcp_server.py` and fails if any MCP tool resolves a vault with exact-ID-only `db.get_vault()` instead of name/ID/prefix resolution. Guards against the resolver bug class regressing.
+
+---
+
 ## v3.5.0 (2026-06-19)
 
 Self-diagnostics release: `obs doctor` command and `diagnose` MCP tool.

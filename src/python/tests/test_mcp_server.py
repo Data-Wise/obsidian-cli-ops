@@ -24,7 +24,7 @@ import os
 import sys
 import types
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 import pytest
 
@@ -167,6 +167,32 @@ def mcp_mod(real_db, obs_vault):
     mod.vault_manager = VaultManager(real_db)
     mod.graph_analyzer = GraphAnalyzer(real_db)
     return mod
+
+
+@pytest.fixture
+def named_vault(mcp_mod, tmp_path):
+    """A vault registered with a human-readable NAME distinct from its ID hash —
+    mirrors a real `obs discover`/`scan` (name = directory basename). The shared
+    obs_vault fixture registers name == id, so it can't exercise name resolution.
+
+    Returns (vault_name, vault_id, vault_dir).
+    """
+    from vault_scanner import VaultScanner
+
+    vault_dir = tmp_path / "ResearchVault"
+    vault_dir.mkdir()
+    (vault_dir / ".obsidian").mkdir()
+    (vault_dir / ".obsidian" / "app.json").write_text("{}")
+    (vault_dir / "Alpha.md").write_text("# Alpha\n\n[[Beta]]\n\n#research")
+    (vault_dir / "Beta.md").write_text("# Beta\n\n[[Alpha]]")
+    (vault_dir / "Lonely.md").write_text("# Lonely\n\nNo links here.")
+
+    name = "ResearchVault"
+    # 2nd positional arg is vault_name → stored name is "ResearchVault", id = hash(path)
+    asyncio.run(VaultScanner(mcp_mod.db).scan_vault(str(vault_dir), name))
+    vault = mcp_mod.db.get_vault_by_name_or_id(name)
+    assert vault is not None and vault["name"] == name and vault["id"] != name
+    return name, vault["id"], vault_dir
 
 
 # ---------------------------------------------------------------------------
@@ -479,11 +505,89 @@ class TestRescanTool:
         vault_id, _, _ = obs_vault
         result = mcp_mod.rescan_vault(vault_id)
         assert isinstance(result, str)
-        assert any(kw in result.lower() for kw in ["scan", "note", "✅", "rescan"])
+        assert "rescanned" in result.lower()
+        assert "notes scanned" in result.lower()
 
     def test_rescan_vault_unknown(self, mcp_mod):
         result = mcp_mod.rescan_vault("ghost-vault-xyz")
         assert any(kw in result.lower() for kw in ["not found", "error"])
+
+    def test_rescan_by_name(self, mcp_mod, named_vault):
+        """Bug A guard: rescan resolves a vault NAME, not just an exact ID."""
+        name, _, _ = named_vault
+        result = mcp_mod.rescan_vault(name)
+        assert "not found" not in result.lower()
+        assert "rescanned" in result.lower()
+
+    def test_rescan_actually_scans_not_stats(self, mcp_mod, obs_vault):
+        """Bug B guard: rescan must call vault_manager.scan_vault(path, name),
+        NOT shell out to the read-only `obs stats` subcommand."""
+        vault_id, vault_dir, _ = obs_vault
+        fake = MagicMock(vault_name=vault_dir.name, notes_scanned=5,
+                         links_found=4, duration_seconds=0.1)
+        scan_mock = AsyncMock(return_value=fake)
+        with patch.object(mcp_mod.vault_manager, "scan_vault", scan_mock), \
+                patch.object(mcp_mod, "_obs") as obs_mock:
+            result = mcp_mod.rescan_vault(vault_id)
+        scan_mock.assert_awaited_once()
+        path_arg, name_arg = scan_mock.await_args[0][:2]
+        assert str(path_arg) == str(vault_dir)
+        obs_mock.assert_not_called()        # never the `stats` no-op path
+        assert "notes scanned: 5" in result.lower()
+
+
+# ---------------------------------------------------------------------------
+# Vault resolution — Bug A regression: name / prefix must resolve, not just ID
+# ---------------------------------------------------------------------------
+
+class TestVaultResolution:
+    """Every vault-taking tool must accept a vault NAME or ID PREFIX, not only
+    an exact ID. Under the old db.get_vault() these silently returned
+    "Vault not found" (or a misleading empty/healthy result)."""
+
+    READ_TOOLS = [
+        "get_vault_stats", "get_hub_notes", "get_orphaned_notes",
+        "get_broken_links", "analyze_vault", "list_notes",
+    ]
+
+    @pytest.mark.parametrize("tool_name", READ_TOOLS)
+    def test_resolve_by_name(self, mcp_mod, named_vault, tool_name):
+        name, _, _ = named_vault
+        result = getattr(mcp_mod, tool_name)(name)
+        assert isinstance(result, str)
+        assert "not found" not in result.lower()
+
+    @pytest.mark.parametrize("tool_name", READ_TOOLS)
+    def test_resolve_by_id_prefix(self, mcp_mod, named_vault, tool_name):
+        _, vault_id, _ = named_vault
+        result = getattr(mcp_mod, tool_name)(vault_id[:8])
+        assert isinstance(result, str)
+        assert "not found" not in result.lower()
+
+    @pytest.mark.parametrize("tool_name", READ_TOOLS)
+    def test_unknown_vault_still_reports_not_found(self, mcp_mod, tool_name):
+        result = getattr(mcp_mod, tool_name)("definitely-not-a-vault")
+        assert isinstance(result, str)
+        assert any(kw in result.lower() for kw in ["not found", "error"])
+
+    def test_create_note_by_name(self, mcp_mod, named_vault):
+        name, _, _ = named_vault
+        result = mcp_mod.create_note(name, "Resolved By Name", "body")
+        assert "not found" not in result.lower()
+        assert "created" in result.lower()
+
+    def test_diagnose_resolves_name_to_canonical_id(self, mcp_mod, named_vault):
+        """diagnose must pass the canonical id (not the raw name) to run_checks,
+        whose vault layer does exact-match SQL."""
+        name, vault_id, _ = named_vault
+        with patch("core.doctor.run_checks", return_value=[]) as rc:
+            mcp_mod.diagnose(vault_id=name)
+        rc.assert_called_once()
+        assert rc.call_args.kwargs.get("vault_id") == vault_id
+
+    def test_diagnose_unknown_vault(self, mcp_mod):
+        result = mcp_mod.diagnose(vault_id="no-such-vault")
+        assert "not found" in result.lower() or "error" in result.lower()
 
 
 # ---------------------------------------------------------------------------

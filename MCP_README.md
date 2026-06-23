@@ -58,7 +58,11 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 
 ---
 
-## Available Tools (18)
+## Available Tools (25)
+
+> **`vault_id` accepts a vault name, full ID, or unambiguous ID prefix.** You don't
+> need the exact hash ID — `get_vault_stats("ResearchVault")` works the same as
+> `get_vault_stats("a1b2c3…")`. An ambiguous prefix returns a disambiguation message.
 
 ### Vault Tools
 
@@ -192,6 +196,11 @@ Or reinstall: `brew reinstall obsidian-cli-ops`
 
 Run `obs` in Terminal to verify vaults are registered.
 If not: `obs discover ~/Documents --scan`
+
+`vault_id` resolves by vault **name**, full **ID**, or unambiguous **ID prefix**, so a
+plain name like `"ResearchVault"` works. A "Vault not found" then means no vault by that
+name/ID exists; an "Ambiguous vault" message means an ID prefix matched more than one —
+pass a longer prefix or the name.
 
 ---
 
