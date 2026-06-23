@@ -106,6 +106,33 @@ obs stats --vault abc        # Prefix lookup
 
 ---
 
+### obs scan
+
+Scan a vault directory and register (or update) it in the database.
+
+```bash
+obs scan <path> [--name <name>] [--analyze]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `path` | Vault directory path to scan |
+| `--name` | Custom name for the vault (defaults to directory name) |
+| `--analyze` | Run graph analysis immediately after scanning |
+
+**Examples:**
+
+```bash
+obs scan ~/Documents/MyVault              # Scan and register a vault
+obs scan ~/Notes --name "Personal Notes"  # Scan with a custom name
+obs scan ~/Vault --analyze                # Scan and run analysis in one step
+```
+
+!!! tip "Staleness warnings"
+    `obs analyze`, `obs search`, and `obs health` emit a warning when the index is stale (older than 24 hours). Run `obs scan <path>` to refresh.
+
+---
+
 ### obs health
 
 Vault health dashboard with scores and recommendations.
@@ -461,6 +488,7 @@ obs research bib check <name>
 | `obs` | List registered vaults |
 | `obs search <query>` | Search notes by title |
 | `obs discover <path>` | Find vaults in directory |
+| `obs scan <path>` | Scan and register a vault |
 | `obs stats` | Show statistics |
 | `obs health <vault>` | Vault health dashboard |
 | `obs analyze <vault>` | Graph analysis |
