@@ -526,6 +526,25 @@ Claude calls `create_note("Research", "Collider Bias Insight 2026-06-15", conten
 
 Claude looks up the daily note via `search_notes` or `list_notes`, then calls `append_to_note`.
 
+### Insert at a specific heading (surgical edit)
+
+> *"Add this row to the Results table in my sensitivity-analysis note: | OLS | 0.45 | 0.02 |"*
+
+Claude calls `insert_to_note(note_id, content="| OLS | 0.45 | 0.02 |", after_heading="Results", as_table_row=True)`.
+Only the table is touched — the rest of the note is unchanged.
+
+> *"Replace the Abstract section of my paper draft with this revised version: [...]"*
+
+Claude calls `insert_to_note(note_id, content="...", replace_section="Abstract")`.
+Everything between `## Abstract` and the next same-level heading is replaced.
+
+> *"Insert a Limitations section just before References in my collider-bias note"*
+
+Claude calls `insert_to_note(note_id, content="## Limitations\n\n...", before_heading="References")`.
+
+!!! tip "When to use which write tool"
+    `append_to_note` → end of file, no structure needed. `write_note` → full replacement with auto-backup. `insert_to_note` → heading-aware surgical edit (table row, section swap, before/after).
+
 ### AI analysis via Claude
 
 > *"Find knowledge gaps in MyVault and suggest three new notes I should create"*
