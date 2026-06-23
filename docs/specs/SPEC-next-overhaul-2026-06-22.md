@@ -87,12 +87,14 @@ The user selected **all four directions**; they collapse into a sequence, not fo
 
 ## 4. Acceptance criteria (v4.0.0 slice)
 
-- [ ] Version bumped across the ~18 files; `tests/obs.test.js` + `__tests__/cli.test.js` + `man/man1/obs.1` `.TH` updated and green.
-- [ ] `brew install data-wise/tap/obsidian-cli-ops` → `obs research --help` works (the gap closes).
-- [ ] CHANGELOG explicitly scopes v4.0.0 = research+config+MCP+retirement; states 5.1/5.3 deferred to v4.1/v4.2.
-- [ ] `.STATUS` + `IDEAS.md` corrected (retirement done; `--apply` not inert; re-stamped).
-- [ ] `ci.yml` gains `--cov-fail-under` (value TBD by current real %).
-- [ ] Tap formula auto-bumped by `homebrew-release.yml`; `brew audit --strict` clean; `brew reinstall --build-from-source` db-init clean (the release gate).
+> ✅ **SHIPPED** — keystone delivered in **v4.0.0** (2026-06-22, PR #49) and hardened in **v4.0.1** (2026-06-23, PR #58). One item deferred (cov gate, see below).
+
+- [x] Version bumped across the ~18 files; `tests/obs.test.js` + `__tests__/cli.test.js` + `man/man1/obs.1` `.TH` updated and green. *(v4.0.0; re-verified v4.0.1)*
+- [x] `brew install data-wise/tap/obsidian-cli-ops` → `obs research --help` works (the gap closes). *(v4.0.0)*
+- [x] CHANGELOG explicitly scopes v4.0.0 = research+config+MCP+retirement; states 5.1/5.3 deferred to v4.1/v4.2. *(`docs_mkdocs/changelog.md`; v4.0.1 section added)*
+- [x] `.STATUS` + `IDEAS.md` corrected (retirement done; `--apply` not inert; re-stamped). *(re-stamped to v4.0.1)*
+- [ ] `ci.yml` gains `--cov-fail-under` (value TBD by current real %). **← only open item; tracked in `.STATUS` next.**
+- [x] Tap formula auto-bumped by `homebrew-release.yml`; `brew audit --strict` clean; `brew reinstall --build-from-source` db-init clean (the release gate). *(v4.0.0 + v4.0.1; v4.0.1 sha256 verified == tarball)*
 
 ## 5. Risks
 
@@ -102,12 +104,12 @@ The user selected **all four directions**; they collapse into a sequence, not fo
 
 ## 6. Documentation & Discoverability
 
-- [ ] CHANGELOG `[Unreleased]`→v4.0.0 section + count bumps (commands/MCP tools/tests).
-- [ ] mkdocs: `obs research` + `obs config` reference pages already exist (PR #38) — flip any "unreleased/Phase 1" annotations to "shipped in v4.0.0".
-- [ ] README badge + headline counts → v4.0.0; refresh the released-vs-branch convention (branch == released after this cut).
-- [ ] Migration note for MCP clients: `nexus` key retired → `obsidian-ops`.
-- [ ] `validate-counts` / docs-staleness clean post-bump.
-- [ ] N/A: no new tutorial needed for the bump (research pages exist); add one only if 5.1 ships new CLI verbs.
+- [x] CHANGELOG `[Unreleased]`→v4.0.0 section + count bumps (commands/MCP tools/tests). *(+ v4.0.1 section, 2026-06-23)*
+- [x] mkdocs: `obs research` + `obs config` reference pages already exist (PR #38) — flip any "unreleased/Phase 1" annotations to "shipped in v4.0.0".
+- [x] README badge + headline counts → v4.0.x; released-vs-branch convention refreshed (branch == released after the cut).
+- [x] Migration note for MCP clients: `nexus` key retired → `obsidian-ops`.
+- [x] `validate-counts` / docs-staleness clean post-bump. *(now CI-gated via `core/doc_counts.py` + floor gate, PR #50)*
+- [x] N/A: no new tutorial needed for the bump (research pages exist); add one only if 5.1 ships new CLI verbs.
 
 ---
 

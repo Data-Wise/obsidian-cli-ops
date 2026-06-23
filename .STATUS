@@ -1,13 +1,14 @@
 priority: P1
-status: 🚀 v4.0.1 RELEASING 2026-06-23 (dev→main, 20 commits): #40 insert_to_note MCP tool, #51 dotfile fix, #52 obs scan + staleness, release-check harness (PR #50) + unit-test floor gate, craft:site:audit doc fixes. Was v4.0.0 (shipped 2026-06-22).
+status: ✅ v4.0.1 SHIPPED 2026-06-23 (dev→main, PR #58, merge dd3e9b0): #40 insert_to_note MCP tool, #51 dotfile fix, #52 obs scan + staleness, release-check harness (PR #50) + unit-test floor gate, craft:site:audit doc fixes. main CI green, Deploy Docs success, tap @ 4.0.1 (sha verified). dev==main+1 (changelog).
 progress: 100
 updated: 2026-06-23
 version: 4.0.1
 next: |
-  1. Verify v4.0.1 on main: CI green, Deploy Docs, homebrew-release.yml (tap @ 4.0.1, url+sha only — no dep changes).
-  2. v4.1 — vault CRUD via official-CLI bridge (delegate). v4.2 — PARA validator.
-  (feature/insert-note worktree removed 2026-06-23 after PR #57 merged.)
+  1. v4.1 — 5.1 vault CRUD via official-CLI bridge (delegate; offline-CRUD regression must be stated in the v4.1 changelog). SPEC-next-overhaul §1/§5.
+  2. v4.2 — 5.3 PARA validator.
+  3. Optional: ci.yml --cov-fail-under floor (measure real % first) — last open v4.0.0-slice acceptance item.
 verified: |
+  v4.0.1 SHIPPED 2026-06-23 (PR #58, dev→main, merge dd3e9b0): main CI green on merged SHA, Deploy Docs success, homebrew-release.yml success (formula @ v4.0.1, sha256 dd12abf == tarball — verified). dev fast-forwarded to merge commit then +1 (changelog). post-release-sweep clean. Tests: 454 pytest / 1 skip (non-e2e), 67 jest / 2 skip. Ships #40 insert_to_note, #51/#52, harness #50 + unit-test floor gate, audit doc fixes.
   v4.0.0 SHIPPED 2026-06-22 (PR #49, dev→main, merge commit b8c827d): main CI green, Deploy Docs success, homebrew-release.yml success (formula @ v4.0.0, sha256 8e2834f), live site shows v4.0.0.
   Ships: Phase 1 absorption (obs config + obs research, 27 tests) + MCP vault-resolution/doctor fix. nexus-cli retired; MCP `nexus` key → `obsidian-ops`.
   Pre-release: dev↔main reconciled (merge origin/main into dev) + 61 Phase-1 docstrings backfilled.

@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-4.0.1-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-400%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-450%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
