@@ -176,6 +176,7 @@ Ask Claude natural-language questions about your vaults. Requires one-time Claud
 | `write_note(note_id, content)` | Overwrite note (auto-backup) |
 | `create_note(vault_id, title, content)` | Create new note |
 | `append_to_note(note_id, content)` | Append to note |
+| `insert_to_note(note_id, content, after_heading=...)` | Insert at heading position |
 | `rename_note(note_id, new_title)` | Rename note |
 | `delete_note(note_id, confirm=True)` | Delete note (dry-run by default) |
 | `run_obs_ai(command, target)` | All `obs ai` subcommands |
@@ -222,4 +223,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 4.0.0 | **Commands:** 35 (19 core + 16 nexus-cli absorption) | **MCP Tools:** 38 | **AI Providers:** 5
+**Version:** 4.0.0 | **Commands:** 35 (19 core + 16 nexus-cli absorption) | **MCP Tools:** 39 | **AI Providers:** 5
