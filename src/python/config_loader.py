@@ -35,24 +35,32 @@ DEFAULT_TEMPLATES_SUBPATH = "_SYSTEM/templates"
 
 @dataclass
 class ZoteroConfig:
+    """Zotero `research.zotero` config section (database + storage paths)."""
+
     database: Path
     storage: Path
 
 
 @dataclass
 class TeachingConfig:
+    """Teaching `research.teaching` config section (courses + materials dirs)."""
+
     courses_dir: Path
     materials_dir: Optional[Path] = None
 
 
 @dataclass
 class WritingConfig:
+    """Writing `research.writing` config section (manuscripts + templates dirs)."""
+
     manuscripts_dir: Path
     templates_dir: Optional[Path] = None
 
 
 @dataclass
 class ResearchConfig:
+    """`research` config section (zotero, pdf dirs, teaching, writing)."""
+
     zotero: Optional[ZoteroConfig] = None
     pdf_directories: list[Path] = field(default_factory=list)
     teaching: Optional[TeachingConfig] = None
@@ -61,6 +69,8 @@ class ResearchConfig:
 
 @dataclass
 class ObsConfig:
+    """Top-level obs config (vault, research, plugins sections + source tag)."""
+
     # vault section
     root: Path
     active: list[str] = field(default_factory=list)
@@ -74,6 +84,7 @@ class ObsConfig:
 
     @property
     def templates_resolved(self) -> Path:
+        """Return the explicit templates path, or the default under vault root."""
         if self.templates:
             return self.templates
         return self.root / DEFAULT_TEMPLATES_SUBPATH
@@ -269,6 +280,7 @@ def _parse_research(doc: Optional[dict]) -> Optional[ResearchConfig]:
 # ──────────────────────────────────────────────────────────────────────────────
 
 def cmd_show() -> int:
+    """Print the resolved config; return exit code (1 if none found)."""
     cfg = load()
     if cfg is None:
         print("[obs] No config found. Run `obs config init`.")
@@ -297,6 +309,7 @@ def cmd_show() -> int:
 
 
 def cmd_validate() -> int:
+    """Validate the config; return exit code (1 if missing or invalid)."""
     cfg = load()
     if cfg is None:
         print("INVALID: no config found")
@@ -374,6 +387,7 @@ def cmd_init() -> int:
 
 
 def cmd_edit() -> int:
+    """Open the unified config in $EDITOR; return 1 if it does not exist."""
     unified = _UNIFIED_PATH.expanduser()
     if not unified.exists():
         print(f"[obs] {unified} does not exist. Run `obs config init` first.")

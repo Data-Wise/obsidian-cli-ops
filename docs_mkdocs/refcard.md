@@ -222,4 +222,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.5.0 | **Commands:** 35 (19 shipped + 16 Phase 1, unreleased) | **MCP Tools:** 25 | **AI Providers:** 5
+**Version:** 4.0.0 | **Commands:** 35 (19 core + 16 nexus-cli absorption) | **MCP Tools:** 25 | **AI Providers:** 5

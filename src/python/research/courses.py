@@ -12,6 +12,8 @@ import yaml
 
 @dataclass
 class CourseStatus:
+    """Parsed fields from a course's ``.STATUS`` file."""
+
     status: str = "unknown"
     priority: str = "--"
     progress: int = 0
@@ -22,6 +24,14 @@ class CourseStatus:
 
     @classmethod
     def from_file(cls, path: Path) -> CourseStatus:
+        """Parse a ``.STATUS`` file into a ``CourseStatus``.
+
+        Args:
+            path: Path to the ``.STATUS`` file.
+
+        Returns:
+            A populated instance, or defaults if the file is missing.
+        """
         if not path.exists():
             return cls()
         content = path.read_text()
@@ -53,6 +63,8 @@ class CourseStatus:
 
 @dataclass
 class QuartoConfig:
+    """Title, author, and formats parsed from a ``_quarto.yml`` file."""
+
     title: str = ""
     subtitle: str = ""
     author: str = ""
@@ -60,6 +72,14 @@ class QuartoConfig:
 
     @classmethod
     def from_file(cls, path: Path) -> QuartoConfig:
+        """Parse a ``_quarto.yml`` file into a ``QuartoConfig``.
+
+        Args:
+            path: Path to the ``_quarto.yml`` file.
+
+        Returns:
+            A populated instance, or defaults if the file is missing or unreadable.
+        """
         if not path.exists():
             return cls()
         try:
@@ -85,6 +105,8 @@ class QuartoConfig:
 
 @dataclass
 class Course:
+    """A teaching course with its status and material counts."""
+
     name: str
     path: str
     title: str = ""
@@ -97,6 +119,7 @@ class Course:
     assignment_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the course as a JSON-serializable dict."""
         return {
             "name": self.name,
             "path": self.path,
@@ -113,6 +136,8 @@ class Course:
 
 @dataclass
 class Lecture:
+    """A single lecture (``.qmd`` file) belonging to a course."""
+
     name: str
     path: str
     course: str
@@ -121,6 +146,7 @@ class Lecture:
     format: str = "qmd"
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the lecture as a JSON-serializable dict."""
         return {
             "name": self.name,
             "path": self.path,
@@ -139,9 +165,16 @@ class CourseManager:
         self.materials_dir = Path(materials_dir).expanduser() if materials_dir else None
 
     def exists(self) -> bool:
+        """Return whether the configured courses directory exists."""
         return self.courses_dir.exists()
 
     def list_courses(self) -> list[Course]:
+        """Load every course in the courses directory, sorted by name.
+
+        Returns:
+            A list of ``Course`` objects, or an empty list if the directory
+            is missing. Hidden directories (dot-prefixed) are skipped.
+        """
         if not self.exists():
             return []
         courses = []
@@ -154,6 +187,15 @@ class CourseManager:
         return courses
 
     def get_course(self, name: str) -> Course | None:
+        """Load a single course by directory name (case-insensitive fallback).
+
+        Args:
+            name: Course directory name; matched exactly first, then
+                case-insensitively.
+
+        Returns:
+            The matching ``Course``, or ``None`` if no course matches.
+        """
         course_path = self.courses_dir / name
         if not course_path.exists():
             for p in self.courses_dir.iterdir():
@@ -198,6 +240,16 @@ class CourseManager:
         return count
 
     def list_lectures(self, course_name: str) -> list[Lecture]:
+        """List the lectures for a course, scanning known ``.qmd`` locations.
+
+        Args:
+            course_name: Name of the course to scan.
+
+        Returns:
+            A list of ``Lecture`` objects gathered from the ``lectures/``,
+            ``slides/``, ``weeks/`` subdirectories and root ``week-*`` files,
+            or an empty list if the course is not found.
+        """
         course = self.get_course(course_name)
         if not course:
             return []

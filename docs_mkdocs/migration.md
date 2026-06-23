@@ -1,6 +1,6 @@
 # Migration Guide
 
-## nexus-cli → obs (v3.6.0+)
+## nexus-cli → obs (v4.0.0+)
 
 > **TL;DR** (30 seconds)
 > - **What:** nexus-cli was fully absorbed into `obs` as of 2026-06-21. All research, PDF, course, manuscript, and bibliography commands now live under `obs research …`

@@ -1,13 +1,13 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 35 `obs` commands (19 shipped + 16 Phase 1, unreleased) + 25 MCP tools for Claude
+> - **What:** Full reference for all 35 `obs` commands (19 core + 16 from the nexus-cli absorption, shipped in v4.0.0) + 25 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 3.5.0
+**Version:** 4.0.0
 
 ---
 
@@ -327,8 +327,8 @@ obs version
 
 ## :gear: Config Management
 
-!!! info "Phase 1 — not yet released"
-    `obs config` ships in **v3.6.0** (nexus-cli absorption). It is committed but not in the current `v3.5.0` release; `brew install` users won't have it until v3.6.0.
+!!! info "Shipped in v4.0.0"
+    `obs config` ships in **v4.0.0** (nexus-cli absorption) — available to `brew install` users.
 
 Unified configuration at `~/.config/obs/config.yaml` — shared between `obs` and previously nexus-cli.
 
@@ -380,8 +380,8 @@ obs config edit
 
 ## :microscope: Research Domain
 
-!!! info "Phase 1 — not yet released"
-    `obs research` ships in **v3.6.0** (nexus-cli absorption). It is committed but not in the current `v3.5.0` release; `brew install` users won't have it until v3.6.0.
+!!! info "Shipped in v4.0.0"
+    `obs research` ships in **v4.0.0** (nexus-cli absorption) — available to `brew install` users.
 
 Research commands absorbed from nexus-cli. Requires configured paths in `obs config`.
 

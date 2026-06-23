@@ -12,6 +12,8 @@ from typing import Any
 
 @dataclass
 class PDFDocument:
+    """Text and metadata extracted from a single PDF file."""
+
     path: str
     filename: str
     title: str = ""
@@ -20,6 +22,7 @@ class PDFDocument:
     size_bytes: int = 0
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the document as a dict, with the full text reduced to a 500-char preview."""
         return {
             "path": self.path,
             "filename": self.filename,
@@ -32,6 +35,8 @@ class PDFDocument:
 
 @dataclass
 class PDFSearchResult:
+    """A single match found while searching PDFs by filename or content."""
+
     path: str
     filename: str
     page: int
@@ -39,6 +44,7 @@ class PDFSearchResult:
     match_text: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the search result as a dict of its fields."""
         return {
             "path": self.path,
             "filename": self.filename,
@@ -56,9 +62,11 @@ class PDFExtractor:
         self._pdftotext_path = shutil.which("pdftotext")
 
     def available(self) -> bool:
+        """Return True if the ``pdftotext`` binary was found on PATH."""
         return self._pdftotext_path is not None
 
     def pdf_count(self) -> int:
+        """Return the total number of ``.pdf`` files found recursively in the configured directories."""
         count = 0
         for directory in self.directories:
             if directory.exists():
@@ -66,6 +74,24 @@ class PDFExtractor:
         return count
 
     def extract(self, pdf_path: Path, pages: str | None = None, layout: bool = False) -> PDFDocument:
+        """Extract text and metadata from a PDF by shelling out to ``pdftotext``.
+
+        Args:
+            pdf_path: Path to the PDF file to extract.
+            pages: Optional page selection, either a single page (``"3"``) or a
+                range (``"1-5"``); ``None`` extracts the whole document.
+            layout: If True, use ``pdftotext -layout`` to preserve the visual
+                layout; otherwise use ``-raw``.
+
+        Returns:
+            A ``PDFDocument`` with cleaned text, an inferred title, the page
+            count (via ``pdfinfo`` when available), and the file size. Extraction
+            failures or timeouts are captured as placeholder text rather than raised.
+
+        Raises:
+            FileNotFoundError: If ``pdf_path`` does not exist.
+            RuntimeError: If the ``pdftotext`` binary is not installed.
+        """
         pdf_path = Path(pdf_path).expanduser()
         if not pdf_path.exists():
             raise FileNotFoundError(f"PDF not found: {pdf_path}")
@@ -159,6 +185,23 @@ class PDFExtractor:
         directories: list[Path] | None = None,
         search_depth: int = 5,
     ) -> list[PDFSearchResult]:
+        """Search PDFs by filename and content, returning scored, ranked matches.
+
+        Filenames are matched against ``query`` (a case-insensitive regex). When
+        ``pdftotext`` is available, the first ``search_depth`` pages of up to 50
+        PDFs are also content-searched; content matches are scored by match count,
+        early position, and title overlap, and are ranked above filename matches.
+
+        Args:
+            query: Regular expression to search for (case-insensitive).
+            limit: Maximum number of results to return.
+            directories: Directories to search; falls back to the instance's
+                configured directories when omitted.
+            search_depth: Number of leading pages to extract per PDF for content search.
+
+        Returns:
+            Up to ``limit`` ``PDFSearchResult`` objects, sorted by descending score.
+        """
         search_dirs = directories or self.directories
         pattern = re.compile(query, re.IGNORECASE)
 

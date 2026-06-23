@@ -1,27 +1,24 @@
 priority: P1
-status: ✅ Docs current on main (PRs #38/#39/#41/#42 merged) — ready for Phase 5
-progress: 75
+status: 🚀 v4.0.0 release in progress — nexus-cli absorption (Phase 1) + MCP vault-resolution fix; version bumped, dev→main PR pending
+progress: 95
 updated: 2026-06-22
-version: 3.5.0 (next: 3.6.0 — Phase 1 unreleased)
+version: 4.0.0
 next: |
-  1. Phase 5: nexus-cli v0.7.0 final deprecated release → PyPI
-  2. Retire nexus-cli Homebrew formula in data-wise/tap
-  3. Archive nexus-cli GitHub repo (Data-Wise/nexus-cli)
-  4. obs Homebrew formula resource-block regen (new Python deps)
-  5. obs v4.0.0 major release
-worktree: (none — feature/phase1-config-loader worktree closed after PR #37 merged)
+  1. v4.1 — 5.1 vault CRUD via official-CLI bridge (delegate, per SPEC-next-overhaul). v4.2 — 5.3 PARA validator (`obs doctor structure`).
+  2. Post-v4 roadmap (IDEAS.md): graph-native discovery (shortest-path, community detection), bridge batch ops (`obs apply`).
+  (v4.0.0 = nexus-cli absorption + MCP fix; dev↔main reconciled + worktrees cleaned 2026-06-22.)
 verified: |
-  PR #37 merged 2026-06-21: feature/phase1-config-loader → main (squash commit 80cb505).
-  Phase 1 adds: obs config (5 subcommands) + obs research (11 subcommands) + 27 new tests.
-  Phase 4 docs committed on feature/phase4-docs (659271a): refcard, cli-reference, migration, changelog updated.
-  Doc-currency sweep 2026-06-22: PR #38 (Phase 1 reference) + #39 (CLAUDE.md/README → v3.5.0) + #41 (command-count reconcile, 35=19 shipped+16 Phase 1) + #42 (mkdocs site → v3.5.0/25 MCP tools) all merged to main. Verified counts: 429 pytest, 69 Jest, 25 released MCP tools (38 on branch).
-target: v3.6.0 - nexus-cli absorption (Phase 1 config complete)
+  Phase 1 (PR #37, squash 80cb505): obs config (5 subcommands) + obs research (11 subcommands) + 27 tests — landed on main.
+  Doc-currency sweep (PRs #38/#39/#41/#42) → main at v3.5.0 / 25 released MCP tools.
+  MCP vault-resolution fix: PR #46 (dev) + #47 (main); dev↔main reconciled via `merge origin/main` into dev 2026-06-22.
+  v3.5.0 released 2026-06-19 (PR #36, dev→main squash); Homebrew tap auto-updated.
+target: v4.1.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
 
 ## 🎯 Current State
 
-**Phase**: nexus-cli absorption (RFC v2 = Option A full absorption) — Phase 1 config loader committed
+**Phase**: dev reconciled with main — v4.0.0 release pending (research absorption + MCP fix)
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 459 pytest + 69 Jest = 528 total (on main, incl. unreleased Phase 1 + MCP vault-resolution fix)
+**Tests**: 459 pytest + 69 Jest = 528 total (dev = main superset post-reconcile)
 **Commands**: 25 total (24 obs + 1 MCP-only: diagnose)
 **MCP Tools**: 25 (includes diagnose from v3.5.0)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
@@ -31,17 +28,13 @@ target: v3.6.0 - nexus-cli absorption (Phase 1 config complete)
 
 ---
 
-## 🔧 Unreleased (branch `feature/mcp-vault-resolution-main`) — MCP vault-resolution correctness + doctor guard
+## ✅ v4.0.0 (2026-06-22) — nexus-cli absorption (Phase 1) + MCP vault-resolution correctness + doctor guard
 
-Ported from the dev-targeted fix (PR #46) so the released branch gets it too. Research
-tools (`unified_search`/`zotero_*`/`pdf_*`/`course_*`/`manuscript_*`) take no `vault_id`
-and were unaffected — the bug was in the core vault tools.
-
-- **Bug A (exact-ID-only resolver):** 9 MCP core tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()` → a vault **name** or prefix silently returned "Vault not found" (or a misleading empty result). Now route through `_resolve_vault()` → `db.get_vault_by_name_or_id()`.
-- **Bug B (`rescan_vault` no-op):** shelled to read-only `obs stats`; now does a real in-process `scan_vault(path, name)`.
-- **Pre-existing doctor crash fixed:** `core/doctor.py` read a non-existent `last_scan` column (schema is `last_scanned`) → `IndexError` on any real vault.
-- **New doctor check `mcp-tool-resolvers`:** AST-scans `mcp_server.py`, fails on exact-ID-only `db.get_vault(<param>)` in any `@mcp.tool`.
-- **Tests:** 314 unit + 113 MCP unit. Full suite green: 426 passed, 33 skipped.
+- **Bug A (exact-ID-only resolver):** 9 MCP tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()` → a vault **name** or prefix silently returned "Vault not found" (or a misleading empty result). Now route through a `_resolve_vault()` helper wrapping `db.get_vault_by_name_or_id()` (name → exact ID → unambiguous prefix); canonical `id` reassigned before downstream calls. Research tools (`unified_search`/`zotero_*`/`pdf_*`/`course_*`/`manuscript_*`) take no `vault_id` and were unaffected.
+- **Bug B (`rescan_vault` no-op):** shelled to the read-only `obs stats` subcommand — reported success while never scanning. Now does a real in-process `vault_manager.scan_vault(path, name)`.
+- **Pre-existing doctor crash fixed:** `core/doctor.py` read a non-existent `last_scan` column (schema is `last_scanned`) → `obs doctor` `IndexError` on any real vault. A fake-schema unit test had masked it.
+- **New doctor check `mcp-tool-resolvers`** (mcp layer): AST-scans `mcp_server.py`, fails if any `@mcp.tool` uses exact-ID-only `db.get_vault(<param>)`. Catches the bug class automatically.
+- **Tests:** 314 unit + 113 MCP unit (research-inclusive; + TestVaultResolution name/prefix coverage, rescan Bug-B guard, 7 doctor AST-guard tests). Full suite green: 426 passed, 33 skipped.
 
 ---
 

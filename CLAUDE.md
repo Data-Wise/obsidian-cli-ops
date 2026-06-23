@@ -6,12 +6,12 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 3.5.0
+**Current Version**: 4.0.0
 **Status**: Stable release
 **Priority**: P1
 
-> [!important] nexus-cli absorption — Phase 1 landed (unreleased, targets v3.6.0)
-> `obs` is the **survivor** of a merge with `nexus-cli` (RFC v2: `SPEC-merge-nexus-cli-v2-2026-06-21.md`, full Option-A absorption). **Phase 1 is committed** (PR #37, `80cb505`): `obs config` (5 subcommands, `config_loader.py`) + `obs research` (11 subcommands — `research/` package: bibliography, courses, manuscript, pdf, zotero) + 27 new tests, all behind a **layered-AI** model (deterministic core default; AI opt-in). These commands are unreleased on `main` until v3.6.0. Phase 4 docs (refcard/cli-reference/migration/changelog) are on `feature/phase4-docs` (PR #38). Non-vault domains stay scoped per RFC.
+> [!important] nexus-cli absorption — Phase 1 shipped in v4.0.0
+> `obs` is the **survivor** of a merge with `nexus-cli` (RFC v2: `SPEC-merge-nexus-cli-v2-2026-06-21.md`, full Option-A absorption). **Phase 1 shipped in v4.0.0** (PR #37, `80cb505`): `obs config` (5 subcommands, `config_loader.py`) + `obs research` (11 subcommands — `research/` package: bibliography, courses, manuscript, pdf, zotero) + 27 new tests, all behind a **layered-AI** model (deterministic core default; AI opt-in). The MCP `nexus` client key is retired in favor of `obsidian-ops`. Non-vault domains stay scoped per RFC.
 
 ### Core Features
 

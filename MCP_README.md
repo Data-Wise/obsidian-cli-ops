@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 3.5.0 | **Tools:** 25 | **Protocol:** FastMCP (stdio)
+**Version:** 4.0.0 | **Tools:** 25 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -151,7 +151,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 20 tools)
+     mcp_server.py   (FastMCP, 25 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓
