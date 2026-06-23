@@ -24,6 +24,7 @@ class ZoteroItem:
     collections: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
+        """Return the item as a plain dict (abstract truncated to 200 chars)."""
         return {
             "item_id": self.item_id,
             "key": self.key,
@@ -39,6 +40,11 @@ class ZoteroItem:
         }
 
     def citation_apa(self) -> str:
+        """Format the item as an APA-style citation string.
+
+        Collapses 6+ authors to "First et al.", joins 2-5 with ", & ",
+        and uses "n.d." when no date is present.
+        """
         if not self.authors:
             author_str = "Unknown"
         elif len(self.authors) == 1:
@@ -53,6 +59,12 @@ class ZoteroItem:
         return f"{author_str} ({year}). {self.title}."
 
     def citation_bibtex(self) -> str:
+        """Format the item as a BibTeX entry.
+
+        Derives the cite key from the first author's surname plus year,
+        maps the Zotero item type to a BibTeX entry type (defaulting to
+        "misc"), and emits only the fields that are populated.
+        """
         if self.authors:
             first_author = self.authors[0].split()[-1].lower()
         else:
@@ -95,6 +107,7 @@ class ZoteroClient:
         self.storage_path = Path(storage_path).expanduser() if storage_path else None
 
     def exists(self) -> bool:
+        """Return True if the Zotero database file exists on disk."""
         return self.db_path.exists()
 
     def _connect(self) -> sqlite3.Connection:
@@ -103,6 +116,10 @@ class ZoteroClient:
         return conn
 
     def count(self) -> int:
+        """Return the number of library items, excluding attachments, annotations, and notes.
+
+        Returns 0 if the database does not exist.
+        """
         if not self.exists():
             return 0
         conn = self._connect()
@@ -185,6 +202,19 @@ class ZoteroClient:
         item_type: str | None = None,
         tag: str | None = None,
     ) -> list[ZoteroItem]:
+        """Search the library by matching the query against title/field values and author names.
+
+        Args:
+            query: Substring matched (LIKE) against item field values and
+                creator first/last names.
+            limit: Maximum number of items to return.
+            item_type: Optional exact item-type name to filter by.
+            tag: Optional tag name (LIKE-matched) to further restrict results.
+
+        Returns:
+            Matching items ordered by most recently modified, or an empty
+            list if the database does not exist.
+        """
         if not self.exists():
             return []
         conn = self._connect()
@@ -218,6 +248,7 @@ class ZoteroClient:
             conn.close()
 
     def get(self, key: str) -> ZoteroItem | None:
+        """Return the item with the given Zotero key, or None if not found or no database."""
         if not self.exists():
             return None
         conn = self._connect()
@@ -233,6 +264,11 @@ class ZoteroClient:
             conn.close()
 
     def recent(self, limit: int = 20) -> list[ZoteroItem]:
+        """Return up to ``limit`` most recently modified items.
+
+        Excludes attachments, annotations, and notes; returns an empty list
+        if the database does not exist.
+        """
         if not self.exists():
             return []
         conn = self._connect()
@@ -249,6 +285,11 @@ class ZoteroClient:
             conn.close()
 
     def by_tag(self, tag: str, limit: int = 50) -> list[ZoteroItem]:
+        """Return items whose tags LIKE-match ``tag``, ordered by most recently modified.
+
+        Excludes attachments, annotations, and notes; returns an empty list
+        if the database does not exist.
+        """
         if not self.exists():
             return []
         conn = self._connect()
@@ -267,6 +308,10 @@ class ZoteroClient:
             conn.close()
 
     def tags(self, limit: int = 100) -> list[tuple[str, int]]:
+        """Return up to ``limit`` ``(tag_name, item_count)`` pairs ordered by descending count.
+
+        Returns an empty list if the database does not exist.
+        """
         if not self.exists():
             return []
         conn = self._connect()
@@ -282,6 +327,12 @@ class ZoteroClient:
             conn.close()
 
     def get_attachment_path(self, key: str) -> Path | None:
+        """Resolve the filesystem path of the attachment for the item with ``key``.
+
+        Stored "storage:" paths are joined under the configured storage
+        directory; other paths are returned as-is. Returns None if the
+        database or storage path is unset, or no attachment is found.
+        """
         if not self.exists() or not self.storage_path:
             return None
         conn = self._connect()

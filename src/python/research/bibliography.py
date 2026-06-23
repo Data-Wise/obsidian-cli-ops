@@ -10,6 +10,8 @@ from typing import Any
 
 @dataclass
 class BibEntry:
+    """A single bibliography entry parsed from a BibTeX file."""
+
     key: str
     entry_type: str
     title: str
@@ -21,6 +23,7 @@ class BibEntry:
     abstract: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the entry as a dict, truncating the abstract to 200 chars."""
         return {
             "key": self.key,
             "entry_type": self.entry_type,
@@ -34,6 +37,7 @@ class BibEntry:
         }
 
     def format_apa(self) -> str:
+        """Render a short APA-style citation string (authors, year, title)."""
         if not self.authors:
             author_str = "Unknown"
         elif len(self.authors) == 1:
@@ -48,7 +52,17 @@ class BibEntry:
 
 
 class BibFileParser:
+    """Parse BibTeX files into BibEntry objects."""
+
     def parse_file(self, path: Path) -> list[BibEntry]:
+        """Parse a ``.bib`` file, returning an empty list if it is missing or unreadable.
+
+        Args:
+            path: Path to a BibTeX file.
+
+        Returns:
+            The parsed entries, or ``[]`` on a missing file or any read/parse error.
+        """
         path = Path(path).expanduser()
         if not path.exists():
             return []
@@ -116,12 +130,28 @@ class BibliographyManager:
         self._parser = BibFileParser()
 
     def find_bib_files(self, manuscript_path: Path) -> list[Path]:
+        """Return all ``.bib`` files under a manuscript path, sorted.
+
+        Args:
+            manuscript_path: Directory to search recursively.
+
+        Returns:
+            Sorted list of ``.bib`` paths, or ``[]`` if the path does not exist.
+        """
         manuscript_path = Path(manuscript_path).expanduser()
         if not manuscript_path.exists():
             return []
         return sorted(manuscript_path.rglob("*.bib"))
 
     def get_manuscript_bibliography(self, manuscript_path: Path) -> list[BibEntry]:
+        """Collect entries from every ``.bib`` file under a manuscript, deduplicated by key.
+
+        Args:
+            manuscript_path: Manuscript directory to search.
+
+        Returns:
+            Unique BibEntry objects, keeping the first occurrence of each key.
+        """
         all_entries: list[BibEntry] = []
         for bib_file in self.find_bib_files(manuscript_path):
             all_entries.extend(self._parser.parse_file(bib_file))
@@ -134,6 +164,17 @@ class BibliographyManager:
         return unique
 
     def find_cited_keys(self, content: str) -> list[str]:
+        """Extract citation keys from source text.
+
+        Recognizes LaTeX ``\\cite``/``\\citep``/``\\citet`` commands and Pandoc-style
+        ``@key`` references, ignoring crossref prefixes (fig, tbl, eq, sec, lst).
+
+        Args:
+            content: Manuscript source text (e.g. ``.qmd`` or ``.tex``).
+
+        Returns:
+            Sorted, de-duplicated list of citation keys.
+        """
         keys: set[str] = set()
         for match in re.compile(r"\\cite[pt]?\{([^}]+)\}").finditer(content):
             for key in match.group(1).split(","):
@@ -145,6 +186,19 @@ class BibliographyManager:
         return sorted(keys)
 
     def check_citations(self, manuscript_path: Path) -> dict[str, Any]:
+        """Cross-check cited keys against the bibliography for a manuscript.
+
+        Scans ``.qmd`` and ``.tex`` source files for citations and compares them to
+        the keys available in the manuscript's ``.bib`` files.
+
+        Args:
+            manuscript_path: Manuscript directory to check.
+
+        Returns:
+            A dict with ``cited_count``, ``bibliography_count``, ``missing`` (cited but
+            absent from the bibliography), ``unused`` (in the bibliography but never
+            cited), and ``all_good`` (True when nothing is missing).
+        """
         manuscript_path = Path(manuscript_path).expanduser()
         bib_entries = self.get_manuscript_bibliography(manuscript_path)
         bib_keys = {e.key for e in bib_entries}

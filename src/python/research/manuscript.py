@@ -13,6 +13,8 @@ import yaml
 
 @dataclass
 class ManuscriptStatus:
+    """Status metadata for a manuscript, parsed from its ``.STATUS`` file."""
+
     status: str = "unknown"
     priority: str = "--"
     progress: int = 0
@@ -22,6 +24,15 @@ class ManuscriptStatus:
 
     @classmethod
     def from_file(cls, path: Path) -> ManuscriptStatus:
+        """Parse a ``.STATUS`` file into a ``ManuscriptStatus``.
+
+        Args:
+            path: Path to the ``.STATUS`` file.
+
+        Returns:
+            A populated ``ManuscriptStatus``, or one with default values if
+            the file does not exist.
+        """
         if not path.exists():
             return cls()
         content = path.read_text()
@@ -48,6 +59,8 @@ class ManuscriptStatus:
 
 @dataclass
 class QuartoManuscript:
+    """Manuscript metadata parsed from a Quarto ``_quarto.yml`` config."""
+
     title: str = ""
     authors: list[str] = field(default_factory=list)
     article_file: str = "index.qmd"
@@ -55,6 +68,15 @@ class QuartoManuscript:
 
     @classmethod
     def from_file(cls, path: Path) -> QuartoManuscript | None:
+        """Parse a Quarto ``_quarto.yml`` file into a ``QuartoManuscript``.
+
+        Args:
+            path: Path to the ``_quarto.yml`` config file.
+
+        Returns:
+            A populated ``QuartoManuscript``, or ``None`` if the file does not
+            exist or cannot be parsed as YAML.
+        """
         if not path.exists():
             return None
         try:
@@ -82,6 +104,8 @@ class QuartoManuscript:
 
 @dataclass
 class Manuscript:
+    """A single research manuscript with its status, format, and metadata."""
+
     name: str
     path: str
     title: str = ""
@@ -96,6 +120,11 @@ class Manuscript:
     last_modified: datetime | None = None
 
     def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-serializable dict of the manuscript's fields.
+
+        ``title`` falls back to ``name`` when empty, and ``last_modified`` is
+        rendered as an ISO-8601 string (or ``None``).
+        """
         return {
             "name": self.name,
             "path": self.path,
@@ -120,9 +149,24 @@ class ManuscriptManager:
         self.templates_dir = Path(templates_dir).expanduser() if templates_dir else None
 
     def exists(self) -> bool:
+        """Return whether the configured manuscripts directory exists."""
         return self.manuscripts_dir.exists()
 
     def list_manuscripts(self, include_archived: bool = False) -> list[Manuscript]:
+        """List manuscripts found in the manuscripts directory.
+
+        Each immediate subdirectory (excluding dotfiles) is loaded as a
+        manuscript. Results are sorted with active/draft/revision items first,
+        then by descending progress and name.
+
+        Args:
+            include_archived: If ``False`` (default), manuscripts whose status
+                contains "archive" or "complete" are omitted.
+
+        Returns:
+            The matching manuscripts, or an empty list if the directory does
+            not exist.
+        """
         if not self.exists():
             return []
         manuscripts = []
@@ -144,6 +188,17 @@ class ManuscriptManager:
         return manuscripts
 
     def get_manuscript(self, name: str) -> Manuscript | None:
+        """Load a single manuscript by directory name.
+
+        Falls back to a case-insensitive exact or substring match against
+        existing manuscript directories when there is no exact match.
+
+        Args:
+            name: Manuscript directory name (or partial name) to look up.
+
+        Returns:
+            The matching ``Manuscript``, or ``None`` if no match is found.
+        """
         ms_path = self.manuscripts_dir / name
         if not ms_path.exists():
             for p in self.manuscripts_dir.iterdir():
@@ -239,12 +294,26 @@ class ManuscriptManager:
             return 0
 
     def get_active(self) -> list[Manuscript]:
+        """Return non-archived manuscripts in an active working state.
+
+        Includes manuscripts whose status is active, draft, revision, or under
+        review.
+        """
         return [
             m for m in self.list_manuscripts(include_archived=False)
             if m.status.lower() in ("active", "draft", "revision", "under review")
         ]
 
     def search(self, query: str) -> list[Manuscript]:
+        """Search all manuscripts (including archived) by name or title.
+
+        Args:
+            query: Regular-expression pattern matched case-insensitively
+                against each manuscript's name and title.
+
+        Returns:
+            Manuscripts whose name or title matches the pattern.
+        """
         pattern = re.compile(query, re.IGNORECASE)
         return [
             m for m in self.list_manuscripts(include_archived=True)
@@ -252,6 +321,12 @@ class ManuscriptManager:
         ]
 
     def get_statistics(self) -> dict[str, Any]:
+        """Compute aggregate statistics across all manuscripts.
+
+        Returns:
+            A dict with ``total`` count, ``by_status`` and ``by_format``
+            breakdown counts, and ``total_words`` summed across manuscripts.
+        """
         all_manuscripts = self.list_manuscripts(include_archived=True)
         stats: dict[str, Any] = {"total": len(all_manuscripts), "by_status": {}, "by_format": {}, "total_words": 0}
         for m in all_manuscripts:
