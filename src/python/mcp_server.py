@@ -38,6 +38,7 @@ import os
 import sys
 import subprocess
 import stat
+import asyncio
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -133,6 +134,25 @@ def _vault_path(vault_id: str) -> Optional[Path]:
     return Path(row["path"]) if row else None
 
 
+def _resolve_vault(vault_id: str):
+    """Resolve a user-supplied vault identifier to a vault row.
+
+    Accepts a vault **name**, full **ID**, or unambiguous **ID prefix** — the
+    same 3-tier lookup the CLI uses (db.get_vault_by_name_or_id). MCP tools must
+    route through this, never db.get_vault() (exact-ID-only), so that callers
+    passing a vault name don't silently get "Vault not found".
+
+    Returns (vault_dict, None) on success, or (None, error_message) on failure.
+    """
+    try:
+        vault = db.get_vault_by_name_or_id(vault_id)
+    except ValueError as e:  # ambiguous ID prefix
+        return None, f"Ambiguous vault '{vault_id}': {e}"
+    if not vault:
+        return None, f"Vault not found: {vault_id}"
+    return vault, None
+
+
 # iCloud / FS utilities — shared with core/doctor.py via fs_utils
 from fs_utils import is_icloud_path as _is_icloud_path, is_dataless as _is_dataless, fs_op as _fs_op, FS_WRITE_TIMEOUT as _FS_WRITE_TIMEOUT
 
@@ -176,15 +196,17 @@ def get_vault_stats(vault_id: Optional[str] = None) -> str:
     Get statistics for a specific vault or the entire obs database.
 
     Args:
-        vault_id: Vault ID from list_vaults(), or omit for global stats.
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID
+                  prefix), or omit for global stats.
 
     Returns notes, links, tags, orphan count, broken link count.
     """
     try:
         if vault_id:
-            vault = db.get_vault(vault_id)
-            if not vault:
-                return f"Vault not found: {vault_id}"
+            vault, err = _resolve_vault(vault_id)
+            if err:
+                return err
+            vault_id = vault["id"]  # canonical id for downstream db queries
             notes = db.list_notes(vault_id)
             orphans = db.get_orphaned_notes(vault_id)
             broken = db.get_broken_links(vault_id)
@@ -320,13 +342,16 @@ def get_hub_notes(vault_id: str, limit: int = 10) -> str:
     Get the most connected (hub) notes in a vault by total link degree.
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
         limit: Max notes to return (default 10).
 
     Hub notes are high-PageRank nodes — good candidates for index/MOC pages.
     """
     try:
-        hubs = graph_analyzer.get_hub_notes(vault_id, limit=limit)
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        hubs = graph_analyzer.get_hub_notes(vault["id"], limit=limit)
         if not hubs:
             return "No hub notes found. The vault may need more internal linking."
 
@@ -351,13 +376,16 @@ def get_orphaned_notes(vault_id: str, limit: int = 20) -> str:
     Get notes with no incoming or outgoing links (isolated notes).
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
         limit: Max notes to return (default 20).
 
     Orphaned notes are candidates for deletion, merging, or linking.
     """
     try:
-        orphans = db.get_orphaned_notes(vault_id)
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        orphans = db.get_orphaned_notes(vault["id"])
         if not orphans:
             return "✅ No orphaned notes! Your vault is well-connected."
 
@@ -385,12 +413,15 @@ def get_broken_links(vault_id: str) -> str:
     Get notes that contain broken wikilinks (links to non-existent notes).
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
 
     Returns notes with broken link counts. Fix by updating or removing links.
     """
     try:
-        broken = db.get_broken_links(vault_id)
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        broken = db.get_broken_links(vault["id"])
         if not broken:
             return "✅ No broken links found!"
 
@@ -413,13 +444,16 @@ def analyze_vault(vault_id: str) -> str:
     Run full graph analysis on a vault (link resolution, PageRank, clustering).
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
 
     This is the equivalent of `obs analyze <vault>`. Updates graph_metrics
     in the database and returns a summary. May take 5–30s for large vaults.
     """
     try:
-        result = graph_analyzer.analyze_vault(vault_id)
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        result = graph_analyzer.analyze_vault(vault["id"])
         return (
             f"🔬 **Graph Analysis: {result['vault_name']}**\n\n"
             f"- Notes: {result['total_notes']}\n"
@@ -500,16 +534,20 @@ def list_notes(vault_id: str, limit: int = 50, offset: int = 0) -> str:
     List notes in a vault with their IDs and paths.
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
         limit: Max notes to return (default 50).
         offset: Pagination offset (default 0).
 
     Use note IDs returned here with read_note() and write_note().
     """
     try:
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        vault_id = vault["id"]  # canonical id for downstream db queries
         notes = db.list_notes(vault_id, limit=limit, offset=offset)
         if not notes:
-            return f"No notes found in vault {vault_id}. Try scanning it first."
+            return f"No notes found in vault {vault['name']}. Try scanning it first."
 
         lines = [f"📝 **{len(notes)} Notes** (offset={offset})\n"]
         for n in notes:
@@ -632,7 +670,7 @@ def create_note(
     Create a new markdown note in a vault.
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
         title: Note title (used as filename, spaces → hyphens).
         content: Markdown content for the note.
         subfolder: Optional subfolder within the vault (e.g. 'research/causal').
@@ -642,9 +680,9 @@ def create_note(
     After creation, run analyze_vault() to index the note in graph analysis.
     """
     try:
-        vault = db.get_vault(vault_id)
-        if not vault:
-            return f"Vault not found: {vault_id}"
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
 
         vault_root = Path(vault["path"])
         safe_title = title.replace(" ", "-").replace("/", "-").strip("-")
@@ -911,17 +949,28 @@ def rescan_vault(vault_id: str) -> str:
     Rescan a vault to sync the obs database with current filesystem state.
 
     Args:
-        vault_id: Vault ID from list_vaults().
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
 
     Run this after write_note(), create_note(), rename_note(), or delete_note()
-    to bring graph metrics and search indexes up to date. Equivalent to
-    `obs stats <vault>` which triggers a scan. May take 5–60s for large vaults.
+    to bring graph metrics and search indexes up to date. Re-scans the vault on
+    disk and updates the obs database. May take 5–60s for large vaults.
     """
     try:
-        vault = db.get_vault(vault_id)
-        if not vault:
-            return f"Vault not found: {vault_id}"
-        return _obs(["stats", vault["name"]], timeout=120)
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        # Real scan: vault_manager.scan_vault re-reads the filesystem and updates
+        # the DB. (The old code shelled to `obs stats`, which is READ-ONLY and
+        # never rescanned — it reported success while changing nothing.)
+        result = asyncio.run(
+            vault_manager.scan_vault(vault["path"], vault["name"])
+        )
+        return (
+            f"🔄 **Rescanned {result.vault_name}**\n"
+            f"- Notes scanned: {result.notes_scanned}\n"
+            f"- Links found: {result.links_found}\n"
+            f"- Duration: {result.duration_seconds:.1f}s"
+        )
     except Exception as e:
         return f"Error rescanning vault: {e}"
 
@@ -1079,7 +1128,8 @@ def diagnose(vault_id: str = "", layers: str = "") -> str:
     icloud (macOS iCloud write latency and offload detection).
 
     Args:
-        vault_id: Optional vault ID or name to scope vault-layer checks. Empty = all vaults.
+        vault_id: Optional vault name or ID (accepts name, full ID, or unambiguous
+                  ID prefix) to scope vault-layer checks. Empty = all vaults.
         layers:   Comma-separated subset of layers to run. Empty = all layers.
                   Valid values: python, database, vault, mcp, icloud.
 
@@ -1093,6 +1143,12 @@ def diagnose(vault_id: str = "", layers: str = "") -> str:
     try:
         from core.doctor import run_checks
         _vault_id = vault_id.strip() or None
+        if _vault_id:
+            # Resolve name/prefix → canonical id so run_checks (exact-match) sees it.
+            vault, err = _resolve_vault(_vault_id)
+            if err:
+                return _json.dumps({"error": err})
+            _vault_id = vault["id"]
         _layers_list = [l.strip() for l in layers.split(",") if l.strip()] if layers.strip() else None
         results = run_checks(vault_id=_vault_id, layers=_layers_list)
         return _json.dumps([r.to_dict() for r in results], indent=2)
