@@ -1,6 +1,6 @@
 priority: P1
-status: 🚀 v4.0.0 release in progress — nexus-cli absorption (Phase 1) + MCP vault-resolution fix; version bumped, dev→main PR pending
-progress: 95
+status: ✅ v4.0.0 SHIPPED 2026-06-22 — nexus-cli absorption (Phase 1) + MCP vault-resolution fix; main CI green, docs deployed, Homebrew tap @ 4.0.0
+progress: 100
 updated: 2026-06-22
 version: 4.0.0
 next: |
@@ -8,10 +8,10 @@ next: |
   2. Post-v4 roadmap (IDEAS.md): graph-native discovery (shortest-path, community detection), bridge batch ops (`obs apply`).
   (v4.0.0 = nexus-cli absorption + MCP fix; dev↔main reconciled + worktrees cleaned 2026-06-22.)
 verified: |
-  Phase 1 (PR #37, squash 80cb505): obs config (5 subcommands) + obs research (11 subcommands) + 27 tests — landed on main.
-  Doc-currency sweep (PRs #38/#39/#41/#42) → main at v3.5.0 / 25 released MCP tools.
-  MCP vault-resolution fix: PR #46 (dev) + #47 (main); dev↔main reconciled via `merge origin/main` into dev 2026-06-22.
-  v3.5.0 released 2026-06-19 (PR #36, dev→main squash); Homebrew tap auto-updated.
+  v4.0.0 SHIPPED 2026-06-22 (PR #49, dev→main, merge commit b8c827d): main CI green, Deploy Docs success, homebrew-release.yml success (formula @ v4.0.0, sha256 8e2834f), live site shows v4.0.0.
+  Ships: Phase 1 absorption (obs config + obs research, 27 tests) + MCP vault-resolution/doctor fix. nexus-cli retired; MCP `nexus` key → `obsidian-ops`.
+  Pre-release: dev↔main reconciled (merge origin/main into dev) + 61 Phase-1 docstrings backfilled.
+  Tests: 426 pytest passed / 33 skipped, 67 jest passed / 2 skipped.
 target: v4.1.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
 
 ## 🎯 Current State
