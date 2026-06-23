@@ -842,7 +842,7 @@ def main():
     doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
     doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
     doctor_parser.add_argument('--layer', action='append', dest='layers',
-                               choices=['python', 'database', 'vault', 'mcp', 'icloud'],
+                               choices=['python', 'database', 'vault', 'mcp', 'docs', 'icloud'],
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
