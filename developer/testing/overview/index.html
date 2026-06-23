@@ -766,6 +766,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../tutorials/research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../cookbook/" class="md-nav__link">
         
   
@@ -1734,8 +1790,8 @@
 
 
 <h1 id="testing-overview">Testing Overview<a class="headerlink" href="#testing-overview" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 4.0.0
-<strong>Total Tests:</strong> 528 (314 unit pytest + 113 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes the nexus-cli absorption (config + research) shipped in v4.0.0</p>
+<p><strong>Version:</strong> 4.0.1
+<strong>Total Tests:</strong> 550+ — 340+ unit pytest, 113 MCP unit pytest, 32 E2E pytest, 69 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see <code>core/doc_counts.py</code>).</p>
 <h2 id="test-coverage">Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">&para;</a></h2>
 <h3 id="unit-tests-pytest">Unit Tests (pytest)<a class="headerlink" href="#unit-tests-pytest" title="Permanent link">&para;</a></h3>
 <table>
@@ -1748,6 +1804,24 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Doctor / Diagnostics</td>
+<td>35</td>
+<td>pytest</td>
+<td><code>test_doctor.py</code></td>
+</tr>
+<tr>
+<td>AI Models</td>
+<td>32</td>
+<td>pytest</td>
+<td><code>test_ai_models.py</code></td>
+</tr>
+<tr>
+<td>Config Loader</td>
+<td>27</td>
+<td>pytest</td>
+<td><code>test_config_loader.py</code></td>
+</tr>
 <tr>
 <td>AI Providers</td>
 <td>26</td>
@@ -1767,10 +1841,10 @@
 <td><code>test_ai_refactor.py</code></td>
 </tr>
 <tr>
-<td>AI Models</td>
-<td>33</td>
+<td>Note Inserter</td>
+<td>18</td>
 <td>pytest</td>
-<td><code>test_ai_models.py</code></td>
+<td><code>test_note_inserter.py</code></td>
 </tr>
 <tr>
 <td>Obsidian Bridge</td>
@@ -1779,94 +1853,10 @@
 <td><code>test_obsidian_bridge.py</code></td>
 </tr>
 <tr>
-<td>Vault Fixtures</td>
-<td>15</td>
+<td>Temporal / Monitoring</td>
+<td>17</td>
 <td>pytest</td>
-<td><code>test_vault_fixtures.py</code></td>
-</tr>
-<tr>
-<td>AI Features</td>
-<td>15</td>
-<td>pytest</td>
-<td><code>test_ai_features.py</code></td>
-</tr>
-<tr>
-<td>JSON Output</td>
-<td>13</td>
-<td>pytest</td>
-<td><code>test_json_output.py</code></td>
-</tr>
-<tr>
-<td>CLI Edge Cases</td>
-<td>11</td>
-<td>pytest</td>
-<td><code>test_cli_edge_cases.py</code></td>
-</tr>
-<tr>
-<td>Vault Scanner</td>
-<td>8</td>
-<td>pytest</td>
-<td><code>test_vault_scanner.py</code></td>
-</tr>
-<tr>
-<td>Vault Lookup</td>
-<td>7</td>
-<td>pytest</td>
-<td><code>test_vault_lookup.py</code></td>
-</tr>
-<tr>
-<td>Version Consistency</td>
-<td>6</td>
-<td>pytest</td>
-<td><code>test_version_consistency.py</code></td>
-</tr>
-<tr>
-<td>Vault Manager</td>
-<td>6</td>
-<td>pytest</td>
-<td><code>test_vault_manager.py</code></td>
-</tr>
-<tr>
-<td>Embedding Cache</td>
-<td>6</td>
-<td>pytest</td>
-<td><code>test_embedding_cache.py</code></td>
-</tr>
-<tr>
-<td>CLI Rich Output</td>
-<td>6</td>
-<td>pytest</td>
-<td><code>test_cli_rich.py</code></td>
-</tr>
-<tr>
-<td>CLI Polish</td>
-<td>6</td>
-<td>pytest</td>
-<td><code>test_cli_polish.py</code></td>
-</tr>
-<tr>
-<td>Search API</td>
-<td>1</td>
-<td>pytest</td>
-<td><code>test_search_api.py</code></td>
-</tr>
-<tr>
-<td>Graph Metrics Join</td>
-<td>1</td>
-<td>pytest</td>
-<td><code>test_graph_metrics_join.py</code></td>
-</tr>
-<tr>
-<td>DB Pagination</td>
-<td>1</td>
-<td>pytest</td>
-<td><code>test_db_pagination.py</code></td>
-</tr>
-<tr>
-<td>DB Metrics</td>
-<td>1</td>
-<td>pytest</td>
-<td><code>test_db_metrics.py</code></td>
+<td><code>test_temporal.py</code></td>
 </tr>
 <tr>
 <td>Vault Features</td>
@@ -1875,8 +1865,104 @@
 <td><code>test_features_vault.py</code></td>
 </tr>
 <tr>
+<td>AI Features</td>
+<td>15</td>
+<td>pytest</td>
+<td><code>test_ai_features.py</code></td>
+</tr>
+<tr>
+<td>Vault Fixtures</td>
+<td>15</td>
+<td>pytest</td>
+<td><code>test_vault_fixtures.py</code></td>
+</tr>
+<tr>
+<td>JSON Output</td>
+<td>13</td>
+<td>pytest</td>
+<td><code>test_json_output.py</code></td>
+</tr>
+<tr>
+<td>Vault Scanner</td>
+<td>13</td>
+<td>pytest</td>
+<td><code>test_vault_scanner.py</code></td>
+</tr>
+<tr>
+<td>CLI Edge Cases</td>
+<td>11</td>
+<td>pytest</td>
+<td><code>test_cli_edge_cases.py</code></td>
+</tr>
+<tr>
+<td>Vault Lookup</td>
+<td>7</td>
+<td>pytest</td>
+<td><code>test_vault_lookup.py</code></td>
+</tr>
+<tr>
+<td>CLI Polish</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_cli_polish.py</code></td>
+</tr>
+<tr>
+<td>CLI Rich Output</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_cli_rich.py</code></td>
+</tr>
+<tr>
+<td>Embedding Cache</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_embedding_cache.py</code></td>
+</tr>
+<tr>
+<td>Vault Manager</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_vault_manager.py</code></td>
+</tr>
+<tr>
+<td>Version Consistency</td>
+<td>6</td>
+<td>pytest</td>
+<td><code>test_version_consistency.py</code></td>
+</tr>
+<tr>
+<td>Doc Count Gate</td>
+<td>5</td>
+<td>pytest</td>
+<td><code>test_doc_counts.py</code></td>
+</tr>
+<tr>
+<td>DB Metrics</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_db_metrics.py</code></td>
+</tr>
+<tr>
+<td>DB Pagination</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_db_pagination.py</code></td>
+</tr>
+<tr>
+<td>Graph Metrics Join</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_graph_metrics_join.py</code></td>
+</tr>
+<tr>
+<td>Search API</td>
+<td>1</td>
+<td>pytest</td>
+<td><code>test_search_api.py</code></td>
+</tr>
+<tr>
 <td><strong>Unit Subtotal</strong></td>
-<td><strong>230</strong></td>
+<td><strong>342</strong></td>
 <td><strong>pytest</strong></td>
 <td></td>
 </tr>
@@ -1894,20 +1980,20 @@
 </thead>
 <tbody>
 <tr>
-<td>MCP Server — all 25 tools + 4 resources</td>
-<td>90</td>
+<td>MCP Server — all 39 tools + 4 resources</td>
+<td>113</td>
 <td>pytest</td>
 <td><code>test_mcp_server.py</code></td>
 </tr>
 <tr>
 <td><strong>MCP Subtotal</strong></td>
-<td><strong>52</strong></td>
+<td><strong>113</strong></td>
 <td><strong>pytest</strong></td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<p>Covers all 25 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.</p>
+<p>Covers all 39 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.</p>
 <h3 id="e2e-tests-pytest-gated">E2E Tests (pytest, gated)<a class="headerlink" href="#e2e-tests-pytest-gated" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

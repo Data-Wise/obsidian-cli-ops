@@ -766,6 +766,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorials/research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../cookbook/" class="md-nav__link">
         
   
@@ -1262,6 +1318,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mcp-tool-call-heading-aware-insert-via-claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Tool Call (heading-aware insert via Claude)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ai-suggest-links" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1673,6 +1740,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mcp-tool-call-heading-aware-insert-via-claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Tool Call (heading-aware insert via Claude)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ai-suggest-links" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1742,7 +1820,7 @@
 
 
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 4.0.0</p>
+<p><strong>Version:</strong> 4.0.1</p>
 <p>Obsidian CLI Ops follows a clean <strong>four-layer architecture</strong>: Presentation, Application (Core), AI Features, and Data — plus an MCP Integration layer added in v3.3.0.</p>
 <hr />
 <h2 id="high-level-overview">High-Level Overview<a class="headerlink" href="#high-level-overview" title="Permanent link">&para;</a></h2>
@@ -1753,7 +1831,7 @@
     end
 
     subgraph MCP["MCP Integration Layer (v3.3.0)"]
-        M[mcp_server.py\n25 tools · 4 resources]
+        M[mcp_server.py\n39 tools · 4 resources]
     end
 
     subgraph Core["Application Layer (Core)"]
@@ -1815,7 +1893,7 @@
     M --&gt;|"direct Python\nimport"| GA[GraphAnalyzer]
     M --&gt; RES["4 MCP Resources\nvault://{id}/stats\nnote://{id}\nobsidian://overview\n..."]</code></pre>
 <ul>
-<li><strong>25 MCP tools</strong> in 9 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1), Bridge (1), Temporal (3), Diagnostics (1)</li>
+<li><strong>39 MCP tools</strong> in 10 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1), Bridge (1), Temporal (3), Diagnostics (1), Research (13)</li>
 <li><strong>FastMCP</strong> (<code>from mcp.server.fastmcp import FastMCP</code>) — stdio transport, clean exit when no client</li>
 <li>Note write tools include built-in safety: <code>delete_note</code> defaults <code>confirm=False</code> (dry-run), <code>write_note</code> defaults <code>create_backup=True</code></li>
 </ul>
@@ -1826,11 +1904,14 @@
     GA[GraphAnalyzer] --&gt;|PageRank, centrality| GB[GraphBuilder]
     GA --&gt;|read metrics| DB
     DM[Domain Models] --&gt;|"Vault, Note, ScanResult\nGraphMetrics, VaultStats"| VM
-    DM --&gt; GA</code></pre>
+    DM --&gt; GA
+    NI[note_inserter.py\nHeading-aware insertion] --&gt;|read/write .md| FS[Vault Files]
+    MCP[mcp_server.py] --&gt;|lazy import| NI</code></pre>
 <ul>
 <li><strong>VaultManager</strong> — vault discovery, scanning, database registration, stats</li>
 <li><strong>GraphAnalyzer</strong> — graph metrics, hub detection, orphan detection, clustering</li>
 <li><strong>Domain Models</strong> — typed dataclasses with <code>from_dict()</code>, <code>to_dict()</code>, <code>from_json()</code></li>
+<li><strong>note_inserter</strong> (<code>core/note_inserter.py</code>) — heading-aware Markdown insertion using markdown-it-py AST; four operations: <code>insert_after_heading</code>, <code>insert_before_heading</code>, <code>append_table_row</code>, <code>replace_section</code>. Called lazily by <code>insert_to_note</code> MCP tool to avoid circular imports.</li>
 </ul>
 <h3 id="ai-features-layer">AI Features Layer<a class="headerlink" href="#ai-features-layer" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
@@ -1900,6 +1981,25 @@
     VM--&gt;&gt;P: NoteCreateResult
     P--&gt;&gt;M: JSON result
     M--&gt;&gt;C: tool response</code></pre>
+<h3 id="mcp-tool-call-heading-aware-insert-via-claude">MCP Tool Call (heading-aware insert via Claude)<a class="headerlink" href="#mcp-tool-call-heading-aware-insert-via-claude" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant C as Claude Desktop
+    participant M as mcp_server.py
+    participant NI as note_inserter.py
+    participant FS as .md File
+
+    C-&gt;&gt;M: insert_to_note(note_id, content, after_heading="Results", as_table_row=True)
+    M-&gt;&gt;M: _resolve_vault() → db.get_vault(vault_id)
+    M-&gt;&gt;FS: read note file (direct Python)
+    FS--&gt;&gt;M: markdown text
+    M-&gt;&gt;NI: append_table_row(text, heading="Results", row=content)
+    NI-&gt;&gt;NI: markdown-it-py parse → find heading line
+    NI-&gt;&gt;NI: locate last table row under heading
+    NI--&gt;&gt;M: modified markdown text
+    M-&gt;&gt;FS: _fs_op(write modified text)
+    FS--&gt;&gt;M: success
+    M--&gt;&gt;C: "✅ Row appended to table under 'Results'"</code></pre>
+<p>Note: <code>note_inserter</code> is imported lazily inside the tool function (<code>from core.note_inserter import ...</code>) to avoid circular imports at module load time.</p>
 <h3 id="ai-suggest-links">AI Suggest-Links<a class="headerlink" href="#ai-suggest-links" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>sequenceDiagram
     participant P as obs_cli.py
@@ -1961,6 +2061,10 @@
 <td><strong>Adapter</strong></td>
 <td>Each AI provider adapts a different API to the common <code>AIProvider</code> interface</td>
 </tr>
+<tr>
+<td><strong>AST-walk</strong></td>
+<td><code>note_inserter</code> uses markdown-it-py token stream to locate headings — immune to headings inside fenced code blocks</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -1971,29 +2075,30 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    graph_analyzer.py        # Graph operations (~350 lines)
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    models.py                # Domain models (~310 lines)
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    exceptions.py            # Custom exceptions
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  ai/                        # AI FEATURES LAYER
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    features_vault.py        # Vault AI: merge-suggest, tag-suggest, quality (v3.2.0)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    features_refactor.py     # Refactor pipeline (extracted v3.2.0)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    router.py                # Smart provider selection + fallback chain
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    models.py                # AI dataclasses: AnalysisResult, SimilarNote, MergeCandidate, TagSuggestion, NoteQuality...
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    obsidian_bridge.py       # Null Object bridge to Obsidian CLI
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    providers/               # 5 provider implementations
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  mcp_server.py              # MCP INTEGRATION LAYER (v3.3.0, 956 lines)
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  obs_cli.py                 # PRESENTATION LAYER (985 lines)
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  db_manager.py              # DATA LAYER: SQLite CRUD
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  vault_scanner.py           # DATA LAYER: .md file parsing
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  graph_builder.py           # DATA LAYER: NetworkX graph construction
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>src/obs.zsh                  # PRESENTATION LAYER: ZSH dispatcher (501 lines)
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>schema/vault_db.sql          # Database schema
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    note_inserter.py         # Heading-aware Markdown insertion (markdown-it-py AST)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  ai/                        # AI FEATURES LAYER
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    features_vault.py        # Vault AI: merge-suggest, tag-suggest, quality (v3.2.0)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    features_refactor.py     # Refactor pipeline (extracted v3.2.0)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    router.py                # Smart provider selection + fallback chain
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    models.py                # AI dataclasses: AnalysisResult, SimilarNote, MergeCandidate, TagSuggestion, NoteQuality...
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    obsidian_bridge.py       # Null Object bridge to Obsidian CLI
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    providers/               # 5 provider implementations
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  mcp_server.py              # MCP INTEGRATION LAYER (v3.3.0, 956 lines)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  obs_cli.py                 # PRESENTATION LAYER (985 lines)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  db_manager.py              # DATA LAYER: SQLite CRUD
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  vault_scanner.py           # DATA LAYER: .md file parsing
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  graph_builder.py           # DATA LAYER: NetworkX graph construction
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>src/obs.zsh                  # PRESENTATION LAYER: ZSH dispatcher (501 lines)
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>schema/vault_db.sql          # Database schema
 </code></pre></div>
 <hr />
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>304 pytest tests</strong> covering core, AI, vault features, data layer, and MCP server</li>
+<li><strong>450+ pytest tests</strong> covering core, AI, vault features, data layer, and MCP server (+32 E2E gated behind <code>E2E=1</code>)</li>
 <li><strong>69 Jest tests</strong> for ZSH wrapper + dependency-bootstrapping validation</li>
 <li>Core layer tested independently with mocked dependencies</li>
 <li>AI providers mocked for deterministic tests</li>

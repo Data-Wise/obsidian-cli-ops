@@ -12,9 +12,13 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/releases/v1.1.0/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/research-setup/">
       
       
+        <link rel="prev" href="../claude-mcp/">
+      
+      
+        <link rel="next" href="../monitoring-and-health/">
       
       
         
@@ -25,7 +29,7 @@
     
     
       
-        <title>Release Notes v1.1.0 - Obsidian CLI Ops</title>
+        <title>Research Setup - Obsidian CLI Ops</title>
       
     
     
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-notes-v110" class="md-skip">
+        <a href="#research-domain-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release Notes v1.1.0
+              Research Setup
             
           </span>
         </div>
@@ -262,11 +266,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../tutorials/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -565,26 +571,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -602,7 +613,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -620,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -648,7 +659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -676,7 +687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/graph-analysis/" class="md-nav__link">
+      <a href="../graph-analysis/" class="md-nav__link">
         
   
   
@@ -704,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/ai-features/" class="md-nav__link">
+      <a href="../ai-features/" class="md-nav__link">
         
   
   
@@ -732,7 +743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/claude-mcp/" class="md-nav__link">
+      <a href="../claude-mcp/" class="md-nav__link">
         
   
   
@@ -757,10 +768,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tutorials/research-setup/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -776,6 +814,114 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-the-research-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is the Research Domain?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-the-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Config File
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-configure-zotero-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Zotero (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-configure-pdf-directories-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Configure PDF Directories (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-configure-courses-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure Courses (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-configure-manuscripts-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Configure Manuscripts (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-check-bibliography-completeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Check Bibliography Completeness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -788,7 +934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/monitoring-and-health/" class="md-nav__link">
+      <a href="../monitoring-and-health/" class="md-nav__link">
         
   
   
@@ -1385,10 +1531,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#10-new-features-added" class="md-nav__link">
+  <a href="#what-is-the-research-domain" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎉 10 New Features Added
+        What Is the Research Domain?
       
     </span>
   </a>
@@ -1396,176 +1542,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
+  <a href="#step-1-create-the-config-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✨ New Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="✨ New Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-obs-list-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. obs list Command
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-obs-r-dev-unlink-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. obs r-dev unlink Command
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-obs-r-dev-status-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. obs r-dev status Command
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-obs-version-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. obs version Command
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-verbose-v-flag" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. --verbose / -v Flag
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-no_color-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. NO_COLOR Support
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-shell-completion-zsh-bash" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Shell Completion (Zsh &amp; Bash)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-example-project_mapjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. Example project_map.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9-updated-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        9. Updated Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#10-jest-unit-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        10. Jest Unit Tests
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-improvements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔧 Technical Improvements
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔧 Technical Improvements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration-loading-refactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Loading Refactor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Quality
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files-addedmodified" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📦 Files Added/Modified
+        Step 1: Create the Config File
       
     </span>
   </a>
@@ -1573,10 +1553,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
+  <a href="#step-2-configure-zotero-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Test Results
+        Step 2: Configure Zotero (optional)
       
     </span>
   </a>
@@ -1584,10 +1564,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#step-3-configure-pdf-directories-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎯 Next Steps
+        Step 3: Configure PDF Directories (optional)
       
     </span>
   </a>
@@ -1595,10 +1575,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#acknowledgments" class="md-nav__link">
+  <a href="#step-4-configure-courses-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🙏 Acknowledgments
+        Step 4: Configure Courses (optional)
       
     </span>
   </a>
@@ -1606,10 +1586,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
+  <a href="#step-5-configure-manuscripts-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📚 Resources
+        Step 5: Configure Manuscripts (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-check-bibliography-completeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Check Bibliography Completeness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
       
     </span>
   </a>
@@ -1636,231 +1638,180 @@
   
 
 
-<h1 id="release-notes-v110">Release Notes v1.1.0<a class="headerlink" href="#release-notes-v110" title="Permanent link">&para;</a></h1>
-<h2 id="10-new-features-added">🎉 10 New Features Added<a class="headerlink" href="#10-new-features-added" title="Permanent link">&para;</a></h2>
-<p>This release adds significant improvements to the <code>obs</code> CLI tool, including 5 new commands, better debugging support, shell completion, and comprehensive documentation updates.</p>
+<h1 id="research-domain-setup">Research Domain Setup<a class="headerlink" href="#research-domain-setup" title="Permanent link">&para;</a></h1>
+<p>Connect <code>obs</code> to your research stack — Zotero, PDFs, courses, and manuscripts — for a unified terminal workflow.</p>
+<p><strong>Time:</strong> ~15 minutes | <strong>Level:</strong> 🔵 Intermediate | <strong>Steps:</strong> 6</p>
+<p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a>. Have Zotero desktop installed if using Zotero integration.</p>
 <hr />
-<h2 id="new-features">✨ New Features<a class="headerlink" href="#new-features" title="Permanent link">&para;</a></h2>
-<h3 id="1-obs-list-command">1. <code>obs list</code> Command<a class="headerlink" href="#1-obs-list-command" title="Permanent link">&para;</a></h3>
-<p>Show all configured vaults and R project mappings at a glance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>list
-</code></pre></div>
-<p><strong>Output:</strong>
-- Root vault location
-- Sub-vaults with ✓ (exists) or ✗ (missing) status
-- Count of R project mappings
-- Project name → Obsidian folder mappings</p>
-<h3 id="2-obs-r-dev-unlink-command">2. <code>obs r-dev unlink</code> Command<a class="headerlink" href="#2-obs-r-dev-unlink-command" title="Permanent link">&para;</a></h3>
-<p>Remove R project mappings when you're done.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/RMediation
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs<span class="w"> </span>r-dev<span class="w"> </span>unlink
-</code></pre></div>
-<p><strong>Features:</strong>
-- Validates project exists before unlinking
-- Graceful handling when no mapping exists
-- Confirms successful unlinking</p>
-<h3 id="3-obs-r-dev-status-command">3. <code>obs r-dev status</code> Command<a class="headerlink" href="#3-obs-r-dev-status-command" title="Permanent link">&para;</a></h3>
-<p>Check if current R project is linked to an Obsidian folder.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/RMediation
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>r-dev<span class="w"> </span>status
-</code></pre></div>
-<p><strong>Shows:</strong>
-- R project root path
-- Mapping status (✓ Linked or ✗ Not linked)
-- Obsidian folder path
-- Whether the folder exists
-- Helpful hints for linking if not linked</p>
-<h3 id="4-obs-version-command">4. <code>obs version</code> Command<a class="headerlink" href="#4-obs-version-command" title="Permanent link">&para;</a></h3>
-<p>Display version and project information.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>version
-</code></pre></div>
-<p><strong>Output:</strong>
-- Version number
-- Project description
-- GitHub repository URL
-- Documentation URL</p>
-<h3 id="5-verbose-v-flag">5. <code>--verbose</code> / <code>-v</code> Flag<a class="headerlink" href="#5-verbose-v-flag" title="Permanent link">&para;</a></h3>
-<p>Enable detailed debug logging for all commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>--verbose<span class="w"> </span>r-dev<span class="w"> </span>log<span class="w"> </span>plot.png
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs<span class="w"> </span>-v<span class="w"> </span>list
-</code></pre></div>
-<p><strong>Shows:</strong>
-- Directory traversal when finding R projects
-- Configuration file loading
-- Mapping lookups
-- Internal operations</p>
-<h3 id="6-no_color-support">6. NO_COLOR Support<a class="headerlink" href="#6-no_color-support" title="Permanent link">&para;</a></h3>
-<p>Respects the <code>NO_COLOR</code> environment variable standard.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">NO_COLOR</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>obs<span class="w"> </span>check
-</code></pre></div>
-<p><strong>Features:</strong>
-- Automatically disables colors when <code>NO_COLOR</code> is set
-- Also disables colors when output is not a TTY (pipes, files)
-- Follows the <a href="https://no-color.org/">NO_COLOR standard</a></p>
-<h3 id="7-shell-completion-zsh-bash">7. Shell Completion (Zsh &amp; Bash)<a class="headerlink" href="#7-shell-completion-zsh-bash" title="Permanent link">&para;</a></h3>
-<p>Tab completion for all commands, subcommands, and flags.</p>
-<p><strong>Installation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Zsh</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cp<span class="w"> </span>completions/_obs<span class="w"> </span>~/.zsh/completions/
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Bash</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">source</span><span class="w"> </span>completions/obs.bash
-</code></pre></div></p>
-<p><strong>Features:</strong>
-- Main commands: <code>check</code>, <code>list</code>, <code>version</code>, <code>sync</code>, <code>install</code>, etc.
-- R-Dev subcommands: <code>link</code>, <code>unlink</code>, <code>status</code>, <code>log</code>, <code>context</code>, <code>draft</code>
-- Global flags: <code>--verbose</code>, <code>-v</code>
-- File completion for <code>log</code> and <code>draft</code> commands
-- Flag completion for <code>sync --force</code> and <code>install --all</code></p>
-<h3 id="8-example-project_mapjson">8. Example project_map.json<a class="headerlink" href="#8-example-project_mapjson" title="Permanent link">&para;</a></h3>
-<p>Added example configuration file showing proper JSON structure.</p>
-<p><strong>Location:</strong> <code>config/example.project_map.json</code></p>
-<p><strong>Shows:</strong>
-- 3 example R project → Obsidian folder mappings
-- Proper path format (absolute → relative)
-- Real-world examples from typical project structure</p>
-<h3 id="9-updated-documentation">9. Updated Documentation<a class="headerlink" href="#9-updated-documentation" title="Permanent link">&para;</a></h3>
-<p>Comprehensive documentation updates covering all new features.</p>
-<p><strong>Updated pages:</strong>
-- <code>docs_mkdocs/usage.md</code> - Global flags section, all core commands documented
-- <code>docs_mkdocs/r-dev.md</code> - Added unlink, status, tips section</p>
-<p><strong>New content:</strong>
-- Global flags (--verbose)
-- All new commands
-- Usage examples
-- Tips for debugging</p>
-<h3 id="10-jest-unit-tests">10. Jest Unit Tests<a class="headerlink" href="#10-jest-unit-tests" title="Permanent link">&para;</a></h3>
-<p>Comprehensive test suite with 22 passing tests.</p>
-<p><strong>Test coverage:</strong>
-- Help and basic commands (5 tests)
-- Dependency checking (1 test)
-- Error handling (2 tests)
-- Verbose mode (2 tests)
-- R-Dev integration (2 tests)
-- Configuration files (4 tests)
-- Script structure (3 tests)</p>
-<hr />
-<h2 id="technical-improvements">🔧 Technical Improvements<a class="headerlink" href="#technical-improvements" title="Permanent link">&para;</a></h2>
-<h3 id="configuration-loading-refactor">Configuration Loading Refactor<a class="headerlink" href="#configuration-loading-refactor" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>help</code> and <code>check</code> commands no longer require config file</li>
-<li>Better error messages showing command name in "Unknown command" errors</li>
-<li>Graceful handling of empty arguments</li>
-<li>Improved shift count handling</li>
-</ul>
-<h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Added <code>_log_verbose()</code> helper function</li>
-<li>Improved <code>_get_r_root()</code> with verbose logging</li>
-<li>Enhanced <code>_get_mapped_path()</code> with verbose logging</li>
-<li>Better separation of concerns (config loading vs command execution)</li>
-</ul>
-<hr />
-<h2 id="files-addedmodified">📦 Files Added/Modified<a class="headerlink" href="#files-addedmodified" title="Permanent link">&para;</a></h2>
+<h2 id="what-is-the-research-domain">What Is the Research Domain?<a class="headerlink" href="#what-is-the-research-domain" title="Permanent link">&para;</a></h2>
+<p>The <code>obs research</code> commands, added in v4.0.0 (nexus-cli absorption), give <code>obs</code> a window into your research materials:</p>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>Type</th>
-<th>Lines</th>
-<th>Description</th>
+<th>Subcommand</th>
+<th>What it accesses</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>src/obs.zsh</code></td>
-<td>Modified</td>
-<td>+150</td>
-<td>4 new commands, verbose support, NO_COLOR</td>
+<td><code>obs research zotero</code></td>
+<td>Zotero local SQLite database (offline, no API key)</td>
 </tr>
 <tr>
-<td><code>completions/_obs</code></td>
-<td>New</td>
-<td>94</td>
-<td>Zsh completion script</td>
+<td><code>obs research pdf</code></td>
+<td>Full-text search across PDF directories</td>
 </tr>
 <tr>
-<td><code>completions/obs.bash</code></td>
-<td>New</td>
-<td>70</td>
-<td>Bash completion script</td>
+<td><code>obs research course</code></td>
+<td>Quarto-based course projects</td>
 </tr>
 <tr>
-<td><code>completions/README.md</code></td>
-<td>New</td>
-<td>100</td>
-<td>Completion installation guide</td>
+<td><code>obs research manuscript</code></td>
+<td>Quarto manuscript projects</td>
 </tr>
 <tr>
-<td><code>config/example.project_map.json</code></td>
-<td>New</td>
-<td>5</td>
-<td>Example project mappings</td>
-</tr>
-<tr>
-<td><code>tests/obs.test.js</code></td>
-<td>New</td>
-<td>200</td>
-<td>Jest unit tests</td>
-</tr>
-<tr>
-<td><code>docs_mkdocs/usage.md</code></td>
-<td>Modified</td>
-<td>+40</td>
-<td>Global flags, new commands</td>
-</tr>
-<tr>
-<td><code>docs_mkdocs/r-dev.md</code></td>
-<td>Modified</td>
-<td>+25</td>
-<td>Unlink, status, tips</td>
-</tr>
-<tr>
-<td><code>package.json</code></td>
-<td>Modified</td>
-<td>1</td>
-<td>Version bump to 1.1.0</td>
-</tr>
-<tr>
-<td><code>PROJECT_HUB.md</code></td>
-<td>Modified</td>
-<td>+20</td>
-<td>Updated with all new features</td>
+<td><code>obs research bib</code></td>
+<td>Citation completeness in manuscripts</td>
 </tr>
 </tbody>
 </table>
+<p>The <code>obs research</code> CLI subcommands run terminal-only and read files directly. The 13 research MCP tools in the MCP server ARE accessible from Claude Desktop, but they require that the Zotero SQLite, PDF directories, and Quarto projects exist on the same machine as the MCP server. <code>unified_search</code> works universally without any local-path configuration. See the <a href="../../claude-integration/">Claude Integration guide</a> for details.</p>
 <hr />
-<h2 id="test-results">📊 Test Results<a class="headerlink" href="#test-results" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Jest Tests:        22 passed
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Shell Tests:        4 passed
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Total:            26 tests ✅
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Test Suites:       2 passed
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Coverage:         Core commands, r-dev module, error handling
+<h2 id="step-1-create-the-config-file">Step 1: Create the Config File<a class="headerlink" href="#step-1-create-the-config-file" title="Permanent link">&para;</a></h2>
+<p><code>obs research</code> reads from <code>~/.config/obs/config.yaml</code>. Create one if you haven't already:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>config<span class="w"> </span>show<span class="w">   </span><span class="c1"># shows current config or &quot;no config file found&quot;</span>
+</code></pre></div>
+<p>If no config exists:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>config<span class="w"> </span>init<span class="w">   </span><span class="c1"># creates ~/.config/obs/config.yaml with defaults</span>
 </code></pre></div>
 <hr />
-<h2 id="next-steps">🎯 Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<p>Based on the updated PROJECT_HUB.md, here are the next quick wins:</p>
-<ol>
-<li><strong><code>obs config</code> command</strong> - Manage configuration interactively</li>
-<li><strong><code>obs r-dev list</code></strong> - Show all R project mappings in a table</li>
-<li><strong>Plugin update checker</strong> - <code>obs install --update</code> to update plugins</li>
-<li><strong><code>obs init</code></strong> - Interactive setup wizard for first-time users</li>
-<li><strong>Test coverage</strong> - Add tests for new commands (status, version)</li>
-</ol>
+<h2 id="step-2-configure-zotero-optional">Step 2: Configure Zotero (optional)<a class="headerlink" href="#step-2-configure-zotero-optional" title="Permanent link">&para;</a></h2>
+<p>Zotero stores its database locally at <code>~/Zotero/zotero.sqlite</code>. Point <code>obs</code> at it by editing the config file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Open ~/.config/obs/config.yaml in $EDITOR</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<p>Add or update the <code>research.zotero</code> section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">research</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">zotero</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/Zotero/zotero.sqlite</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/Zotero/storage</span>
+</code></pre></div>
+<p>Verify:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>config<span class="w"> </span>show
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># research.zotero.database: /Users/you/Zotero/zotero.sqlite</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># research.zotero.storage:  /Users/you/Zotero/storage</span>
+</code></pre></div>
+<p>Test the connection:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+<p>Expected: a table of your 5 most recently modified Zotero items with key, title, authors, and year.</p>
+<div class="admonition warning">
+<p class="admonition-title">Zotero must not be open during heavy reads</p>
+<p>Zotero locks its SQLite database when running. For read-only commands like <code>obs research zotero search</code>, this is usually fine — but if you see a lock error, quit Zotero first.</p>
+</div>
 <hr />
-<h2 id="acknowledgments">🙏 Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permanent link">&para;</a></h2>
-<p>All features implemented and tested successfully with:
-- 26 passing tests (22 Jest + 4 Shell)
-- Zero breaking changes
-- Full backward compatibility
-- Comprehensive documentation</p>
+<h2 id="step-3-configure-pdf-directories-optional">Step 3: Configure PDF Directories (optional)<a class="headerlink" href="#step-3-configure-pdf-directories-optional" title="Permanent link">&para;</a></h2>
+<p>Point <code>obs</code> at directories containing research PDFs by editing the config file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<p>Add or update the <code>research.pdf_directories</code> section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">research</span><span class="p">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">pdf_directories</span><span class="p">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/Documents/papers</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/Downloads</span>
+</code></pre></div>
+<p>Test:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal inference&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+<p>Expected: matching PDF files with title, path, and matching text snippet. Returns <code>0 results</code> if no PDFs are found — check your paths with <code>obs config show</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">PDF search requires pdfminer.six</p>
+<p><code>obs research pdf search</code> uses <code>pdfminer.six</code> for text extraction. It's included in the <code>obs</code> venv. If you see an import error, run <code>./install.sh</code> to reprovision the venv.</p>
+</div>
 <hr />
-<h2 id="resources">📚 Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Documentation:</strong> https://data-wise.github.io/obsidian-cli-ops/</li>
-<li><strong>Repository:</strong> https://github.com/Data-Wise/obsidian-cli-ops</li>
-<li><strong>Project Hub:</strong> See the GitHub repository for full feature list and roadmap</li>
-</ul>
+<h2 id="step-4-configure-courses-optional">Step 4: Configure Courses (optional)<a class="headerlink" href="#step-4-configure-courses-optional" title="Permanent link">&para;</a></h2>
+<p><code>obs</code> discovers Quarto-based course projects from a courses directory. Edit the config file to set it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<p>Add or update the <code>research.teaching</code> section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">research</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">teaching</span><span class="p">:</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nt">courses_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/projects/courses</span>
+</code></pre></div>
+<p>Your courses directory should contain subdirectories, each a Quarto project with a <code>_quarto.yml</code> file and lecture <code>.qmd</code> files.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>list<span class="w">        </span><span class="c1"># list all courses</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>show<span class="w"> </span>stats<span class="w">  </span><span class="c1"># show details for the &quot;stats&quot; course</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>lectures<span class="w"> </span>stats<span class="w">  </span><span class="c1"># list lectures in the &quot;stats&quot; course</span>
+</code></pre></div>
+<p>Expected output for <code>course list</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>│  Course      Lectures  Assignments  Status                 │
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>├────────────────────────────────────────────────────────────┤
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>│  stats       12        3            active                  │
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>│  causal      8         2            active                  │
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>└────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="step-5-configure-manuscripts-optional">Step 5: Configure Manuscripts (optional)<a class="headerlink" href="#step-5-configure-manuscripts-optional" title="Permanent link">&para;</a></h2>
+<p><code>obs</code> reads Quarto manuscript projects from a manuscripts directory. Edit the config file to set it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<p>Add or update the <code>research.writing</code> section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">research</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">writing</span><span class="p">:</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">manuscripts_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/projects/manuscripts</span>
+</code></pre></div>
+<p>Each manuscript should be a directory containing <code>_quarto.yml</code> and a <code>.STATUS</code> file (optional but recommended for status tracking).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list<span class="w">             </span><span class="c1"># all manuscripts</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list<span class="w"> </span>--archived<span class="w">  </span><span class="c1"># include archived manuscripts</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>collider<span class="w">    </span><span class="c1"># details for &quot;collider&quot; manuscript</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats<span class="w">            </span><span class="c1"># aggregate word counts, status breakdown</span>
+</code></pre></div>
+<p>Expected for <code>manuscript stats</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Manuscripts: 4 total
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Total word count: 42,831
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Active word count: 31,204
+</code></pre></div>
+<hr />
+<h2 id="step-6-check-bibliography-completeness">Step 6: Check Bibliography Completeness<a class="headerlink" href="#step-6-check-bibliography-completeness" title="Permanent link">&para;</a></h2>
+<p>Once manuscripts are configured, verify citation completeness:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>collider
+</code></pre></div>
+<p>This reads the <code>.bib</code> file(s) referenced in the manuscript's <code>_quarto.yml</code> and checks:
+- All <code>@cite{key}</code> references in <code>.qmd</code> files resolve to a <code>.bib</code> entry
+- No orphaned <code>.bib</code> entries (cited in bib but not in text)</p>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>✅ collider: 23 citations, all resolved
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>   Orphaned entries: 0
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Combine research + vault for a full picture</p>
+<p>Use <code>obs research zotero search</code> to find papers, then <code>obs search</code> to find your vault notes about them. The MCP <code>unified_search</code> tool does both at once from Claude Desktop.</p>
+</div>
+<hr />
+<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Resource</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search vault + Zotero together from Claude</td>
+<td><a href="../../claude-integration/">Claude Integration</a> — <code>unified_search</code></td>
+</tr>
+<tr>
+<td>Monitor vault health over time</td>
+<td><a href="../monitoring-and-health/">Monitoring Tutorial</a></td>
+</tr>
+<tr>
+<td>Full research command reference</td>
+<td><a href="../../cli-reference/">CLI Reference</a></td>
+</tr>
+</tbody>
+</table>
 
 
 

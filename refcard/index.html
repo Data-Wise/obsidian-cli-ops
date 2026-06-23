@@ -766,6 +766,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../cookbook/" class="md-nav__link">
         
   
@@ -922,6 +978,17 @@
     <span class="md-ellipsis">
       
         Core Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring &amp; Diagnostics
       
     </span>
   </a>
@@ -1530,6 +1597,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#monitoring-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring &amp; Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1717,12 +1795,47 @@
 <td>Find Obsidian vaults in a directory</td>
 </tr>
 <tr>
+<td><code>obs scan &lt;path&gt;</code></td>
+<td>Scan and register a vault</td>
+</tr>
+<tr>
 <td><code>obs analyze &lt;vault&gt;</code></td>
 <td>Analyze vault graph metrics</td>
 </tr>
 <tr>
 <td><code>obs health &lt;vault&gt;</code></td>
 <td>Vault health dashboard (scores + recommendations)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring-diagnostics">Monitoring &amp; Diagnostics<a class="headerlink" href="#monitoring-diagnostics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs bridge status</code></td>
+<td>Obsidian CLI bridge status</td>
+</tr>
+<tr>
+<td><code>obs trends &lt;vault&gt;</code></td>
+<td>Weekly activity trends</td>
+</tr>
+<tr>
+<td><code>obs stale &lt;vault&gt;</code></td>
+<td>Find stale high-importance notes</td>
+</tr>
+<tr>
+<td><code>obs daily-digest &lt;vault&gt;</code></td>
+<td>Bridge + trends + stale summary</td>
+</tr>
+<tr>
+<td><code>obs doctor</code></td>
+<td>Self-diagnostic checks</td>
 </tr>
 </tbody>
 </table>
@@ -2065,6 +2178,10 @@
 <td>Append to note</td>
 </tr>
 <tr>
+<td><code>insert_to_note(note_id, content, after_heading=...)</code></td>
+<td>Insert at heading position</td>
+</tr>
+<tr>
 <td><code>rename_note(note_id, new_title)</code></td>
 <td>Rename note</td>
 </tr>
@@ -2160,7 +2277,7 @@
 </details>
 <p>See the <a href="https://help.obsidian.md/cli">official docs</a> for the full command list.</p>
 <hr />
-<p><strong>Version:</strong> 4.0.0 | <strong>Commands:</strong> 35 (19 core + 16 nexus-cli absorption) | <strong>MCP Tools:</strong> 25 | <strong>AI Providers:</strong> 5</p>
+<p><strong>Version:</strong> 4.0.1 | <strong>Commands:</strong> 35 (19 core + 16 nexus-cli absorption) | <strong>MCP Tools:</strong> 39 | <strong>AI Providers:</strong> 5</p>
 
 
 

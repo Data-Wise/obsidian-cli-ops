@@ -18,7 +18,7 @@
         <link rel="prev" href="../ai-features/">
       
       
-        <link rel="next" href="../../cookbook/">
+        <link rel="next" href="../research-setup/">
       
       
         
@@ -978,6 +978,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../cookbook/" class="md-nav__link">
         
   
@@ -1732,7 +1788,7 @@
 <p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> and have Claude Desktop installed.</p>
 <hr />
 <h2 id="step-1-what-is-the-mcp-integration">Step 1: What Is the MCP Integration?<a class="headerlink" href="#step-1-what-is-the-mcp-integration" title="Permanent link">&para;</a></h2>
-<p>MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. <code>obs</code> ships an MCP server (<code>mcp_server.py</code>) that exposes <strong>25 tools</strong> covering your full vault workflow:</p>
+<p>MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. <code>obs</code> ships an MCP server (<code>mcp_server.py</code>) that exposes <strong>39 tools</strong> covering your full vault workflow:</p>
 <pre class="mermaid"><code>flowchart LR
     A([You, in Claude chat]) --&gt;|"natural language"| B[Claude Desktop]
     B --&gt;|"MCP stdio"| C[obs mcp_server.py]
@@ -1899,22 +1955,61 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>             then: write_note(note_id, new_content, create_backup=True)
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>             # .bak backup is created automatically
 </code></pre></div>
+<p><strong>Insert content at a heading (surgical edit):</strong></p>
+<blockquote>
+<p><em>"Add a new result to the 'Results' table in my sensitivity-analysis note: | Method B | 0.82 | 0.03 |"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Claude calls: insert_to_note(
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    note_id,
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    content=&quot;| Method B | 0.82 | 0.03 |&quot;,
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    after_heading=&quot;Results&quot;,
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    as_table_row=True
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a># Appends the row to the existing Markdown table without touching the rest of the note
+</code></pre></div>
+<blockquote>
+<p><em>"Insert a 'Limitations' section just before the 'References' heading in my collider-bias note"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Claude calls: insert_to_note(
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    note_id,
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    content=&quot;## Limitations\n\nTo be filled in.&quot;,
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    before_heading=&quot;References&quot;
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>)
+</code></pre></div>
+<blockquote>
+<p><em>"Replace the 'Abstract' section of my paper note with this new text: [...]"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Claude calls: insert_to_note(
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    note_id,
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    content=&quot;This paper examines...&quot;,
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    replace_section=&quot;Abstract&quot;
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>)
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a># Replaces everything between &#39;## Abstract&#39; and the next same-level heading
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">insert_to_note vs write_note vs append_to_note</p>
+<ul>
+<li><strong><code>append_to_note</code></strong> — adds to end of file, no structure awareness</li>
+<li><strong><code>write_note</code></strong> — full replacement (always creates <code>.bak</code> backup first)</li>
+<li><strong><code>insert_to_note</code></strong> — surgical heading-aware edit; leaves the rest of the note intact</li>
+</ul>
+</div>
 <p><strong>Rename a note:</strong></p>
 <blockquote>
 <p><em>"Rename 'collider-bias' to 'Collider Bias - Regression Discontinuity'"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Claude calls: rename_note(note_id, &quot;Collider Bias - Regression Discontinuity&quot;)
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Returns: warning if other notes link to the old name (wikilinks will break)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Claude calls: rename_note(note_id, &quot;Collider Bias - Regression Discontinuity&quot;)
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Returns: warning if other notes link to the old name (wikilinks will break)
 </code></pre></div>
 <p><strong>Delete a note (dry-run first):</strong></p>
 <blockquote>
 <p><em>"Delete the note 'scratch-pad-old'"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Claude calls: delete_note(note_id, confirm=False)   # dry-run by default
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Returns: &quot;Would delete: scratch-pad-old.md (234 words, 0 incoming links)&quot;
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Claude asks: &quot;Confirm deletion?&quot;
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>You: &quot;Yes&quot;
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Claude calls: delete_note(note_id, confirm=True)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Claude calls: delete_note(note_id, confirm=False)   # dry-run by default
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Returns: &quot;Would delete: scratch-pad-old.md (234 words, 0 incoming links)&quot;
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Claude asks: &quot;Confirm deletion?&quot;
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>You: &quot;Yes&quot;
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Claude calls: delete_note(note_id, confirm=True)
 </code></pre></div>
 <hr />
 <h2 id="step-9-ai-features-via-mcp">Step 9: AI Features via MCP<a class="headerlink" href="#step-9-ai-features-via-mcp" title="Permanent link">&para;</a></h2>
@@ -1923,36 +2018,36 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"What topics are missing from my Research vault?"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Claude calls: run_obs_ai(&quot;gaps&quot;, &quot;Research&quot;)
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Returns: stub notes, orphaned topics, suggested new notes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Claude calls: run_obs_ai(&quot;gaps&quot;, &quot;Research&quot;)
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Returns: stub notes, orphaned topics, suggested new notes
 </code></pre></div>
 <p><strong>Quality scoring:</strong></p>
 <blockquote>
 <p><em>"Score all notes in Research and show me the 5 worst"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Claude calls: run_obs_ai(&quot;quality&quot;, &quot;Research&quot;)
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Returns: notes ranked by weighted score (completeness/connectivity/metadata/freshness)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Claude calls: run_obs_ai(&quot;quality&quot;, &quot;Research&quot;)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Returns: notes ranked by weighted score (completeness/connectivity/metadata/freshness)
 </code></pre></div>
 <p><strong>Merge candidates:</strong></p>
 <blockquote>
 <p><em>"Find notes in Research that overlap so much they might be merged"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Claude calls: run_obs_ai(&quot;merge-suggest&quot;, &quot;Research&quot;)
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Returns: note pairs with cosine similarity &gt; 0.8, shared links/tags
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Claude calls: run_obs_ai(&quot;merge-suggest&quot;, &quot;Research&quot;)
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Returns: note pairs with cosine similarity &gt; 0.8, shared links/tags
 </code></pre></div>
 <p><strong>Tag suggestions:</strong></p>
 <blockquote>
 <p><em>"Suggest tags for all untagged notes in Research"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Claude calls: run_obs_ai(&quot;tag-suggest&quot;, &quot;Research&quot;)
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Returns: tag suggestions per note with confidence scores
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Claude calls: run_obs_ai(&quot;tag-suggest&quot;, &quot;Research&quot;)
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Returns: tag suggestions per note with confidence scores
 </code></pre></div>
 <p><strong>Vault reorganization:</strong></p>
 <blockquote>
 <p><em>"Give me a reorganization plan for Research"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Claude calls: run_obs_ai(&quot;refactor&quot;, &quot;Research&quot;)
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Returns: categorized suggestions: move, archive, merge-folder, connect, create-folder
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Claude calls: run_obs_ai(&quot;refactor&quot;, &quot;Research&quot;)
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Returns: categorized suggestions: move, archive, merge-folder, connect, create-folder
 </code></pre></div>
 <hr />
 <h2 id="step-10-advanced-patterns">Step 10: Advanced Patterns<a class="headerlink" href="#step-10-advanced-patterns" title="Permanent link">&para;</a></h2>
@@ -1966,17 +2061,17 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"I just added 10 new notes. Please rescan my Research vault."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Claude calls: rescan_vault(&quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Claude calls: rescan_vault(&quot;Research&quot;)
 </code></pre></div>
 <h3 id="export-as-script-pattern">Export-as-script pattern<a class="headerlink" href="#export-as-script-pattern" title="Permanent link">&para;</a></h3>
 <p>Ask Claude to generate a shell script from its analysis:</p>
 <blockquote>
 <p><em>"Based on the orphaned notes you found, generate an obs command I can run to analyze each one"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Claude generates:</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">for</span><span class="w"> </span>id<span class="w"> </span><span class="k">in</span><span class="w"> </span>note-abc123<span class="w"> </span>note-def456<span class="w"> </span>note-ghi789<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">    </span>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span><span class="nv">$id</span>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Claude generates:</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="k">for</span><span class="w"> </span>id<span class="w"> </span><span class="k">in</span><span class="w"> </span>note-abc123<span class="w"> </span>note-def456<span class="w"> </span>note-ghi789<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span><span class="nv">$id</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="k">done</span>
 </code></pre></div>
 <hr />
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
@@ -1993,7 +2088,7 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <td><a href="../../claude-integration/">Claude Integration</a></td>
 </tr>
 <tr>
-<td>All 25 MCP tools</td>
+<td>All 39 MCP tools</td>
 <td><a href="../../cli-reference/#claude-mcp-integration">CLI Reference — MCP section</a></td>
 </tr>
 <tr>

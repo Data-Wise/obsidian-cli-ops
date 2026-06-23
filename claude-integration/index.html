@@ -766,6 +766,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../cookbook/" class="md-nav__link">
         
   
@@ -1102,15 +1158,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#all-25-mcp-tools" class="md-nav__link">
+  <a href="#all-39-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        All 25 MCP Tools
+        All 39 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="All 25 MCP Tools">
+    <nav class="md-nav" aria-label="All 39 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1202,10 +1258,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#temporal-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporal Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#diagnostics-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
         Diagnostics Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Tools
       
     </span>
   </a>
@@ -1813,15 +1891,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#all-25-mcp-tools" class="md-nav__link">
+  <a href="#all-39-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        All 25 MCP Tools
+        All 39 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="All 25 MCP Tools">
+    <nav class="md-nav" aria-label="All 39 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1913,10 +1991,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#temporal-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporal Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#diagnostics-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
         Diagnostics Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Tools
       
     </span>
   </a>
@@ -2122,7 +2222,7 @@
 - <strong>How:</strong> Add one JSON block to <code>claude_desktop_config.json</code>, restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.0.0</p>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.0.1</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -2133,7 +2233,7 @@
 <li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
 <li><strong>"Run a quality check on all notes"</strong> — <code>obs ai quality</code> via AI passthrough</li>
 </ul>
-<p>The MCP server exposes <strong>25 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
+<p>The MCP server exposes <strong>39 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2172,7 +2272,7 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <p>Claude should call <code>list_vaults()</code> and return your vault list. If nothing happens, see
 <a href="#troubleshooting">Troubleshooting</a> below.</p>
 <hr />
-<h2 id="all-25-mcp-tools">All 25 MCP Tools<a class="headerlink" href="#all-25-mcp-tools" title="Permanent link">&para;</a></h2>
+<h2 id="all-39-mcp-tools">All 39 MCP Tools<a class="headerlink" href="#all-39-mcp-tools" title="Permanent link">&para;</a></h2>
 <h3 id="vault-tools">Vault Tools<a class="headerlink" href="#vault-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2307,6 +2407,11 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <td>Append text to an existing note</td>
 </tr>
 <tr>
+<td><code>insert_to_note</code></td>
+<td><code>note_id</code>, <code>content</code>, <code>after_heading</code>, <code>before_heading</code>, <code>as_table_row</code>, <code>replace_section</code></td>
+<td>Insert at a heading-relative position</td>
+</tr>
+<tr>
 <td><code>rename_note</code></td>
 <td><code>note_id</code>, <code>new_title</code></td>
 <td>Rename note (warns about wikilink breakage)</td>
@@ -2391,6 +2496,33 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="temporal-workflows">Temporal Workflows<a class="headerlink" href="#temporal-workflows" title="Permanent link">&para;</a></h3>
+<p>Track vault evolution over time — velocity, stale notes, and daily snapshots.</p>
+<p><strong>Daily digest:</strong></p>
+<blockquote>
+<p><em>"Give me a morning digest of my Research vault"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Claude calls: get_daily_digest(&quot;Research&quot;)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Returns: notes created/modified today, new orphans, pending-link notes
+</code></pre></div>
+<p><strong>Stale note hunt:</strong></p>
+<blockquote>
+<p><em>"Find Research notes that need attention"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Claude calls: get_stale_notes(&quot;Research&quot;, limit=20)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Returns: notes ranked by staleness_score (pagerank × age), with days_since_modified
+</code></pre></div>
+<p><strong>Growth trends:</strong></p>
+<blockquote>
+<p><em>"How fast is my Research vault growing? Show me the last 30 days"</em></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Claude calls: get_trends(&quot;Research&quot;, days=30)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Returns:
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  total_notes: 847
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  velocity_notes_per_week: 2.8
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  buckets: [{week: &quot;2026-06-16&quot;, notes_created: 3, notes_modified: 5}, ...]
+</code></pre></div>
+<p>See the <a href="../tutorials/monitoring-and-health/">Monitoring &amp; Health tutorial</a> for a complete workflow.</p>
 <h3 id="diagnostics-tool">Diagnostics Tool<a class="headerlink" href="#diagnostics-tool" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2408,6 +2540,88 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="research-tools">Research Tools<a class="headerlink" href="#research-tools" title="Permanent link">&para;</a></h3>
+<p>These 13 tools provide access to Zotero, PDFs, courses, and manuscripts <strong>when the MCP server runs on the same machine as your data</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unified_search</code></td>
+<td><code>query</code>, <code>limit=20</code></td>
+<td>Unified search across vault + Zotero + PDFs</td>
+</tr>
+<tr>
+<td><code>zotero_search</code></td>
+<td><code>query</code>, <code>limit=20</code>, <code>item_type=""</code>, <code>tag=""</code></td>
+<td>Search Zotero library by title/author/year</td>
+</tr>
+<tr>
+<td><code>zotero_get</code></td>
+<td><code>key</code>, <code>format="apa"</code></td>
+<td>Get full Zotero item details</td>
+</tr>
+<tr>
+<td><code>zotero_cite</code></td>
+<td><code>key</code>, <code>format="apa"</code></td>
+<td>Format a citation in APA/MLA/Chicago</td>
+</tr>
+<tr>
+<td><code>zotero_recent</code></td>
+<td><code>limit=10</code></td>
+<td>Most recently modified Zotero items</td>
+</tr>
+<tr>
+<td><code>pdf_search</code></td>
+<td><code>query</code>, <code>limit=10</code></td>
+<td>Full-text search across PDFs</td>
+</tr>
+<tr>
+<td><code>course_list</code></td>
+<td>—</td>
+<td>List all Quarto-based courses</td>
+</tr>
+<tr>
+<td><code>course_show</code></td>
+<td><code>name</code></td>
+<td>Details for a specific course</td>
+</tr>
+<tr>
+<td><code>course_lectures</code></td>
+<td><code>name</code></td>
+<td>Lectures in a course</td>
+</tr>
+<tr>
+<td><code>manuscript_list</code></td>
+<td><code>include_archived=False</code></td>
+<td>List manuscripts (pass <code>True</code> to include archived)</td>
+</tr>
+<tr>
+<td><code>manuscript_show</code></td>
+<td><code>name</code></td>
+<td>Details for a manuscript</td>
+</tr>
+<tr>
+<td><code>manuscript_stats</code></td>
+<td>—</td>
+<td>Aggregate word counts + status breakdown</td>
+</tr>
+<tr>
+<td><code>bib_check</code></td>
+<td><code>manuscript_name</code></td>
+<td>Check citation completeness</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Research tools require local data</p>
+<p>All 13 research MCP tools are accessible from Claude Desktop. They require that the Zotero SQLite, PDF directories, and Quarto projects exist on the same machine as the MCP server. <code>unified_search</code> works universally without any local-path configuration. For terminal usage, see the <a href="../tutorials/research-setup/">Research Setup tutorial</a>.</p>
+</div>
 <hr />
 <h2 id="mcp-resources">MCP Resources<a class="headerlink" href="#mcp-resources" title="Permanent link">&para;</a></h2>
 <p>Resources provide structured data that Claude can read directly:</p>
@@ -2489,23 +2703,23 @@ calling any write tool — review before confirming.</p>
 </ol>
 <h3 id="modulenotfounderror-mcp"><code>ModuleNotFoundError: mcp</code><a class="headerlink" href="#modulenotfounderror-mcp" title="Permanent link">&para;</a></h3>
 <p>The launcher resolved to a Python outside the obs venv. Force the correct interpreter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3
 </code></pre></div>
 <p>Or reinstall: <code>brew reinstall obsidian-cli-ops</code></p>
 <h3 id="tools-return-vault-not-found">Tools return "vault not found"<a class="headerlink" href="#tools-return-vault-not-found" title="Permanent link">&para;</a></h3>
 <p>The vault isn't registered in the obs database. Fix with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w">  </span><span class="c1"># verify vault appears</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w">  </span><span class="c1"># verify vault appears</span>
 </code></pre></div>
 <h3 id="test-the-server-directly">Test the server directly<a class="headerlink" href="#test-the-server-directly" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Should exit 0 with no output (no client connected = normal)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Interactive inspector (requires npx)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>npx<span class="w"> </span>@modelcontextprotocol/inspector<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Should exit 0 with no output (no client connected = normal)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Interactive inspector (requires npx)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>npx<span class="w"> </span>@modelcontextprotocol/inspector<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
 </code></pre></div>
 <hr />
 <h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
@@ -2522,7 +2736,7 @@ calling any write tool — review before confirming.</p>
 <tr>
 <td><strong>A — Claude Desktop MCP</strong></td>
 <td>✅ since v3.3.0</td>
-<td>25 tools, venv-aware, note CRUD</td>
+<td>38 tools, venv-aware, note CRUD</td>
 </tr>
 <tr>
 <td><strong>B — Cowork Plugin</strong></td>

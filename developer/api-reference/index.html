@@ -766,6 +766,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorials/research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../cookbook/" class="md-nav__link">
         
   
@@ -1998,11 +2054,11 @@
 
 
 <h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
-<p><strong>Version:</strong> 4.0.0</p>
+<p><strong>Version:</strong> 4.0.1</p>
 <p>Reference documentation for the MCP tool API, Python CLI API, AI provider interface, and domain models.</p>
 <hr />
 <h2 id="mcp-server-api-v330">MCP Server API (v3.3.0)<a class="headerlink" href="#mcp-server-api-v330" title="Permanent link">&para;</a></h2>
-<p>The MCP server (<code>src/python/mcp_server.py</code>) exposes 25 tools and 4 resources over stdio to Claude Desktop, Claude Code, and Cowork.</p>
+<p>The MCP server (<code>src/python/mcp_server.py</code>) exposes 39 tools and 4 resources over stdio to Claude Desktop, Claude Code, and Cowork.</p>
 <h3 id="connection-flow">Connection Flow<a class="headerlink" href="#connection-flow" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart LR
     C([Claude Host]) --&gt;|"stdio (JSON-RPC 2.0)"| M[mcp_server.py\nFastMCP]
@@ -2324,7 +2380,49 @@
         +delete_note(note_id, confirm) → DeleteResult
         +get_note_tags(note_id) → List[str]
         +set_note_tags(note_id, tags) → Note
+        +get_bridge_status() → dict
+        +get_trends(vault_identifier: str, lookback_days: int) → dict
+        +get_stale_notes(vault_identifier: str, limit: int) → List[Note]
+        +get_daily_digest(vault_identifier: str, lookback_days: int, stale_limit: int) → dict
+        +check_index_staleness(vault_id: str, threshold_hours: float) → StalenessResult
     }</code></pre>
+<p><strong>Monitoring &amp; Temporal methods (v4.0.0)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Default params</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_bridge_status()</code></td>
+<td><code>dict</code> — bridge installed, app running, CLI version</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>get_trends(vault_identifier, lookback_days=90)</code></td>
+<td><code>dict</code> — weekly activity buckets</td>
+<td><code>lookback_days=90</code></td>
+</tr>
+<tr>
+<td><code>get_stale_notes(vault_identifier, limit=50)</code></td>
+<td><code>List[Note]</code> — high-PageRank notes not recently modified</td>
+<td><code>limit=50</code></td>
+</tr>
+<tr>
+<td><code>get_daily_digest(vault_identifier, lookback_days=90, stale_limit=5)</code></td>
+<td><code>dict</code> — bridge + trends + stale notes combined</td>
+<td><code>lookback_days=90</code>, <code>stale_limit=5</code></td>
+</tr>
+<tr>
+<td><code>check_index_staleness(vault_id, threshold_hours=24.0)</code></td>
+<td><code>StalenessResult</code> — whether vault index needs refresh</td>
+<td><code>threshold_hours=24.0</code></td>
+</tr>
+</tbody>
+</table>
 <h3 id="graphanalyzer">GraphAnalyzer<a class="headerlink" href="#graphanalyzer" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>classDiagram
     class GraphAnalyzer {
@@ -2567,7 +2665,7 @@
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../architecture/">Architecture</a> — layer diagrams and data flows</li>
-<li><a href="../../claude-integration/">Claude Integration</a> — MCP setup guide with all 25 tools</li>
+<li><a href="../../claude-integration/">Claude Integration</a> — MCP setup guide with all 39 tools</li>
 <li><a href="../testing/overview/">Testing Overview</a> — test strategy and coverage</li>
 </ul>
 
