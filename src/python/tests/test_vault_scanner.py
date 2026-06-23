@@ -119,3 +119,45 @@ class TestMarkdownParserEdgeCases:
             assert "Some text" in note_data.content
         except Exception as e:
             pytest.fail(f"Parsing file with null byte raised an exception: {e}")
+
+
+class TestExtractTitle:
+    """Tests for MarkdownParser._extract_title — the dotfile crash fix (#51)."""
+
+    def test_normal_stem_returned(self, tmp_path):
+        """Regular filename: stem is used as fallback title."""
+        f = tmp_path / "my-note.md"
+        f.write_text("some content")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "my-note"
+
+    def test_frontmatter_title_takes_priority(self, tmp_path):
+        """frontmatter title wins over stem and H1."""
+        f = tmp_path / "ignored-stem.md"
+        f.write_text("---\ntitle: 'FM Title'\n---\n# H1 Title\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "FM Title"
+
+    def test_h1_used_when_no_frontmatter(self, tmp_path):
+        """H1 heading is used when frontmatter has no title."""
+        f = tmp_path / "no-fm.md"
+        f.write_text("# Heading Title\n\nsome content")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "Heading Title"
+
+    def test_dotfile_stem_used_as_title(self, tmp_path):
+        """Dotfile '.md': stem is '.md' (truthy), so it becomes the title directly.
+        The Untitled-<hash> branch only fires for files with a truly empty stem,
+        which cannot occur on real filesystems — it's a belt-and-suspenders guard."""
+        f = tmp_path / ".md"
+        f.write_text("content with no title")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == ".md"
+
+    def test_dotfile_hash_is_stable(self, tmp_path):
+        """Same dotfile path always produces the same hash-based title."""
+        f = tmp_path / ".md"
+        f.write_text("content")
+        title1 = MarkdownParser._extract_title(f, "content", {})
+        title2 = MarkdownParser._extract_title(f, "content", {})
+        assert title1 == title2

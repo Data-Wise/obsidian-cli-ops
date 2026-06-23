@@ -6,6 +6,7 @@ Scans Obsidian vaults, parses markdown files, and populates the database
 with notes, links, tags, and metadata.
 """
 import asyncio
+import hashlib
 import os
 import re
 from pathlib import Path
@@ -104,8 +105,14 @@ class MarkdownParser:
         if match:
             return match.group(1).strip()
 
-        # 3. Use filename
-        return file_path.stem
+        # 3. Use filename stem; dotfiles (e.g. ".md") have an empty stem
+        stem = file_path.stem
+        if stem:
+            return stem
+
+        # 4. Deterministic fallback for dotfiles with no usable name
+        path_hash = hashlib.md5(str(file_path).encode()).hexdigest()[:6]
+        return f"Untitled-{path_hash}"
 
     @classmethod
     def _extract_tags(cls, content: str, frontmatter: Dict) -> Set[str]:

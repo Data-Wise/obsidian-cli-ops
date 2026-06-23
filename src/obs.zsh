@@ -269,6 +269,37 @@ obs_discover() {
     $OBS_PYTHON "${cmd[@]}"
 }
 
+obs_scan() {
+    local python_cli=$(_get_python_cli) || return 1
+    local path=$1
+
+    if [[ -z "$path" ]]; then
+        _log "ERROR" "Vault path required"
+        echo "Usage: obs scan <path> [--name <name>] [--analyze]"
+        return 1
+    fi
+
+    _log_verbose "Scanning vault at: $path"
+
+    local cmd=("$python_cli" "scan" "$path")
+
+    # Optional vault name
+    if [[ "$2" == "--name" && -n "$3" ]]; then
+        cmd+=(--name "$3")
+    fi
+
+    # Optional post-scan analysis
+    if [[ "$*" == *"--analyze"* ]]; then
+        cmd+=(--analyze)
+    fi
+
+    if [[ "$VERBOSE" == "true" ]]; then
+        cmd+=(--verbose)
+    fi
+
+    $OBS_PYTHON "${cmd[@]}"
+}
+
 obs_analyze() {
     local python_cli=$(_get_python_cli) || return 1
     local vault=$1
@@ -760,6 +791,9 @@ obs() {
             ;;
         "discover")
             obs_discover "$@"
+            ;;
+        "scan")
+            obs_scan "$@"
             ;;
         "analyze")
             obs_analyze "$@"
