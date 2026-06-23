@@ -52,6 +52,7 @@ def run_checks(vault_id: Optional[str] = None, layers: Optional[list[str]] = Non
         "database": _check_database,
         "vault": lambda: _check_vaults(vault_id),
         "mcp": _check_mcp,
+        "docs": _check_doc_counts,
         "icloud": _check_icloud,
     }
     selected = layers if layers else list(all_layers.keys())
@@ -499,7 +500,36 @@ def _check_mcp_tool_resolvers(server_path: Path) -> DoctorResult:
 
 
 # ---------------------------------------------------------------------------
-# Layer 5 — iCloud write path
+# Layer 5 — documentation count consistency
+# ---------------------------------------------------------------------------
+
+def _check_doc_counts() -> list[DoctorResult]:
+    """Flag docs whose stated MCP-tool / resource / provider counts disagree
+    with the source of truth in mcp_server.py. Catches the v4.0.0 "25 vs 38"
+    drift class. Shares logic with scripts/validate-counts.sh + the CI test."""
+    try:
+        from core.doc_counts import source_counts, find_mismatches
+    except ImportError:
+        return [DoctorResult("doc-counts", "docs", "Doc count consistency", "skip",
+                             "skipped: core.doc_counts unavailable")]
+    counts = source_counts()
+    mismatches = find_mismatches(counts)
+    summary = (f"tools={counts['mcp_tools']} resources={counts['mcp_resources']} "
+               f"providers={counts['ai_providers']}")
+    if not mismatches:
+        return [DoctorResult("doc-counts", "docs", "Doc count consistency", "pass",
+                             f"docs aligned with source ({summary})")]
+    files = sorted({m.file for m in mismatches})
+    head = "; ".join(f"{m.file}:{m.line} says {m.stated} (want {m.expected})"
+                     for m in mismatches[:3])
+    more = f" (+{len(mismatches) - 3} more)" if len(mismatches) > 3 else ""
+    return [DoctorResult("doc-counts", "docs", "Doc count consistency", "warn",
+                         f"{len(mismatches)} stale count(s) in {len(files)} file(s): {head}{more}",
+                         "scripts/validate-counts.sh --fix")]
+
+
+# ---------------------------------------------------------------------------
+# Layer 6 — iCloud write path
 # ---------------------------------------------------------------------------
 
 def _check_icloud() -> list[DoctorResult]:
