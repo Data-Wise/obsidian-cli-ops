@@ -7,6 +7,7 @@ circuit gracefully when the DB is unavailable).
 """
 from __future__ import annotations
 
+import ast
 import json
 import os
 import platform
@@ -283,8 +284,8 @@ def _check_vaults(vault_id: Optional[str] = None) -> list[DoctorResult]:
                                         f"{prefix}: iCloud materialized", "skip",
                                         "iCloud checks not applicable on Linux"))
 
-        # vault-stale
-        last_scan = vault["last_scan"]
+        # vault-stale  (schema column is `last_scanned`, not `last_scan`)
+        last_scan = vault["last_scanned"]
         warn_days = int(os.environ.get("OBS_DOCTOR_WARN_DAYS", "7"))
         fail_days = int(os.environ.get("OBS_DOCTOR_FAIL_DAYS", "30"))
         if not last_scan:
@@ -430,7 +431,71 @@ def _check_mcp() -> list[DoctorResult]:
                                     f"mcp_server.py not found at {candidate}",
                                     "Reinstall: brew reinstall obsidian-cli-ops"))
 
+    # mcp-tool-resolvers — static guard against the exact-ID-only resolver bug
+    results.append(_check_mcp_tool_resolvers(candidate))
+
     return results
+
+
+def _find_bad_vault_resolvers(source: str) -> list[str]:
+    """Return "<tool>(<arg>)" for each @mcp.tool function that calls
+    db.get_vault(<its own vault param>) — the exact-ID-only anti-pattern that
+    silently fails when a caller passes a vault NAME or prefix.
+
+    Correct tools route through db.get_vault_by_name_or_id() (3-tier lookup),
+    typically via the _resolve_vault() helper. Lookups keyed off a note's
+    canonical id (db.get_vault(note["vault_id"])) use a Subscript, not a bare
+    parameter Name, so they are correctly ignored.
+    """
+    tree = ast.parse(source)
+    offenders: list[str] = []
+
+    def is_mcp_tool(fn: ast.FunctionDef) -> bool:
+        for dec in fn.decorator_list:
+            # matches both @mcp.tool and @mcp.tool(...)
+            target = dec.func if isinstance(dec, ast.Call) else dec
+            if isinstance(target, ast.Attribute) and target.attr == "tool" \
+                    and isinstance(target.value, ast.Name) and target.value.id == "mcp":
+                return True
+        return False
+
+    for fn in ast.walk(tree):
+        if not isinstance(fn, ast.FunctionDef) or not is_mcp_tool(fn):
+            continue
+        params = {a.arg for a in fn.args.args} | {a.arg for a in fn.args.kwonlyargs}
+        for node in ast.walk(fn):
+            if not isinstance(node, ast.Call):
+                continue
+            f = node.func
+            if isinstance(f, ast.Attribute) and f.attr == "get_vault" \
+                    and isinstance(f.value, ast.Name) and f.value.id == "db" \
+                    and node.args and isinstance(node.args[0], ast.Name) \
+                    and node.args[0].id in params:
+                offenders.append(f"{fn.name}({node.args[0].id})")
+    return offenders
+
+
+def _check_mcp_tool_resolvers(server_path: Path) -> DoctorResult:
+    """Flag MCP tools that resolve vaults with the exact-ID-only db.get_vault()."""
+    label = "MCP tool vault resolvers"
+    if not server_path.exists():
+        return DoctorResult("mcp-tool-resolvers", "mcp", label, "skip",
+                            "skipped: mcp_server.py not found")
+    try:
+        offenders = _find_bad_vault_resolvers(server_path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError) as e:
+        return DoctorResult("mcp-tool-resolvers", "mcp", label, "error",
+                            f"Cannot analyze mcp_server.py: {e}")
+    if offenders:
+        return DoctorResult(
+            "mcp-tool-resolvers", "mcp", label, "fail",
+            f"{len(offenders)} tool(s) use exact-ID-only db.get_vault(): "
+            + ", ".join(offenders),
+            "Resolve via _resolve_vault()/db.get_vault_by_name_or_id() so vault "
+            "names and ID prefixes work, not just exact IDs.",
+        )
+    return DoctorResult("mcp-tool-resolvers", "mcp", label, "pass",
+                        "all vault-taking tools use name/ID/prefix resolution")
 
 
 # ---------------------------------------------------------------------------
