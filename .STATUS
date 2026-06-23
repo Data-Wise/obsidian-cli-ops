@@ -12,13 +12,14 @@ verified: |
   Ships: Phase 1 absorption (obs config + obs research, 27 tests) + MCP vault-resolution/doctor fix. nexus-cli retired; MCP `nexus` key → `obsidian-ops`.
   Pre-release: dev↔main reconciled (merge origin/main into dev) + 61 Phase-1 docstrings backfilled.
   Tests: 426 pytest passed / 33 skipped, 67 jest passed / 2 skipped.
+  Release-check harness on dev (PR #50, commit 8b7f852, 2026-06-23): core/doc_counts.py + validate-counts.sh + obs doctor --layer docs + verify-caveats.sh + post-install-check.sh + post-release-sweep.sh. craft issue #200 filed to generalize verify-caveats/post-install-check patterns. feature/release-harness worktree removed.
 target: v4.1.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
 
 ## 🎯 Current State
 
-**Phase**: dev reconciled with main — v4.0.0 release pending (research absorption + MCP fix)
+**Phase**: v4.0.0 SHIPPED 2026-06-22; release-check harness on dev (PR #50); planning v4.1.0
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 459 pytest + 69 Jest = 528 total (dev = main superset post-reconcile)
+**Tests**: 463 pytest + 69 Jest = 532 total (includes PR #50 harness gate in test_doc_counts.py)
 **Commands**: 25 total (24 obs + 1 MCP-only: diagnose)
 **MCP Tools**: 38 (25 core + 13 research; incl diagnose)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
@@ -115,11 +116,15 @@ Cross-repo handoff from flow-cli (which dropped its `obs.1` — it doesn't own t
 
 ---
 
-## 🔜 Next: v3.3.0 (bridge + temporal)
+## 🔜 Next: v4.1.0 — Vault CRUD Bridge (official Obsidian CLI delegate)
 
-Spec `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` is **reviewed** (0 open questions). Theme A (consume official Obsidian CLI as "hands") + Theme B (temporal analytics: trends, stale, daily-digest). Ready to implement in a worktree.
+Spec: `docs/specs/SPEC-next-overhaul-2026-06-22.md` (§1 resolved → **delegate**, not build-FS-direct).
 
-**🚧 WIP / running (2026-06-04):** `SPEC-obs-man-page-2026-06-04.md` — flow-cli dropped its `obs.1` (doesn't own the binary); author the man page here + backfill the 3 undocumented `obs ai` commands (`merge-suggest`, `tag-suggest`, `quality`) into `obs help --all`.
+Route vault CRUD (`read / write / daily / template / backlinks / recent / orphans`) through the official Obsidian CLI as obs's "hands". Thin bridge enhancement (~S effort). Trade-off documented: offline regression (CRUD requires Obsidian app running via IPC). Amends ratified D3.
+
+**After v4.1 → v4.2:** `obs doctor structure` (PARA validator, §5.3). Spec: `docs/specs/SPEC-obs-doctor-v3.5.0-2026-06-19.md`. Blocked on rewriting nexus's stale `vault-spec.yaml` to per-vault-configurable `NN_snake_case` format first.
+
+**Post-v4 roadmap** (IDEAS.md): graph-native discovery (shortest-path, community detection, bridge-node detection); batch ops `obs apply <plan>` (batch-tag, batch-link via bridge write-path).
 
 ---
 
@@ -199,8 +204,10 @@ Spec `SPEC-v3.3.0-bridge-temporal-2026-06-04.md` is **reviewed** (0 open questio
 
 ## 🎯 Next Actions
 
-- Merge deploy-docs CI fix to main (on dev, commit 0ec54df)
-- Plan v3.3.0 features (see IDEAS.md)
+- **v4.1.0 planning**: design the thin bridge to official Obsidian CLI — `obs bridge status` + `obs apply` wiring. See `SPEC-next-overhaul-2026-06-22.md` §1 (delegate decision locked).
+- **Update IDEAS.md**: stamp to v4.0.0; fix stale "inert `--apply`" claim (write path exists at `features_vault.py:354`); add post-v4 graph-native discovery items.
+- **Release-check harness** (shipped PR #50): run `scripts/validate-counts.sh` pre-tag + `scripts/verify-caveats.sh` post-formula-bump as part of release runbook.
+- **Coverage gate** (`--cov-fail-under=70`): add to `ci.yml` to lock the currently-measured-but-unenforced 70% floor before it silently regresses.
 
 ---
 
