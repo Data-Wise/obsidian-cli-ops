@@ -1,13 +1,13 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 18 `obs` commands + 20 MCP tools for Claude
+> - **What:** Full reference for all 35 `obs` commands (19 shipped + 16 Phase 1, unreleased) + 25 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 3.3.0
+**Version:** 3.5.0
 
 ---
 
@@ -325,6 +325,135 @@ obs version
 
 ---
 
+## :gear: Config Management
+
+!!! info "Phase 1 — not yet released"
+    `obs config` ships in **v3.6.0** (nexus-cli absorption). It is committed but not in the current `v3.5.0` release; `brew install` users won't have it until v3.6.0.
+
+Unified configuration at `~/.config/obs/config.yaml` — shared between `obs` and previously nexus-cli.
+
+### obs config show
+
+Print the current config and which file it was loaded from.
+
+```bash
+obs config show
+```
+
+### obs config validate
+
+Validate the config file and report any errors.
+
+```bash
+obs config validate
+```
+
+### obs config migrate
+
+Convert a legacy `obs` or `nexus-cli` config to the unified YAML format.
+
+```bash
+obs config migrate [--target-dir DIR]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `--target-dir` | Write unified config here (default: `~/.config/obs/`) |
+
+### obs config init
+
+Interactive wizard to create a fresh config from scratch.
+
+```bash
+obs config init
+```
+
+### obs config edit
+
+Open the config file in `$EDITOR`.
+
+```bash
+obs config edit
+```
+
+---
+
+## :microscope: Research Domain
+
+!!! info "Phase 1 — not yet released"
+    `obs research` ships in **v3.6.0** (nexus-cli absorption). It is committed but not in the current `v3.5.0` release; `brew install` users won't have it until v3.6.0.
+
+Research commands absorbed from nexus-cli. Requires configured paths in `obs config`.
+
+### obs research zotero search
+
+Search the local Zotero SQLite database.
+
+```bash
+obs research zotero search <query> [--limit N] [--type TYPE] [--tag TAG]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `query` | required | Search string |
+| `--limit` | `20` | Maximum results |
+| `--type` | | Filter by Zotero item type (e.g. `journalArticle`) |
+| `--tag` | | Filter by Zotero tag |
+
+### obs research zotero get
+
+Fetch a Zotero item by its library key.
+
+```bash
+obs research zotero get <key> [--format FORMAT]
+```
+
+### obs research zotero recent
+
+List recently modified Zotero items.
+
+```bash
+obs research zotero recent [--limit N]
+```
+
+### obs research pdf search
+
+Search full-text content of indexed PDFs.
+
+```bash
+obs research pdf search <query> [--limit N]
+```
+
+### obs research course list / show / lectures
+
+Course management commands.
+
+```bash
+obs research course list                      # List all courses
+obs research course show <name>               # Show course details
+obs research course lectures <name>           # List lectures for a course
+```
+
+### obs research manuscript list / show / stats
+
+Manuscript tracking commands.
+
+```bash
+obs research manuscript list [--archived]     # List manuscripts
+obs research manuscript show <name>           # Show manuscript details
+obs research manuscript stats                 # Aggregate statistics
+```
+
+### obs research bib check
+
+Check citations in a manuscript's bibliography file.
+
+```bash
+obs research bib check <name>
+```
+
+---
+
 ## :zap: Quick Reference
 
 | Command | Purpose |
@@ -349,12 +478,28 @@ obs version
 | `obs ai merge-suggest <vault>` | Find merge candidates |
 | `obs ai tag-suggest <target>` | Suggest tags |
 | `obs ai quality <target>` | Score note quality |
+| `obs config show` | Print current config |
+| `obs config validate` | Validate config |
+| `obs config migrate` | Migrate legacy config |
+| `obs config init` | Create fresh config |
+| `obs config edit` | Edit config in `$EDITOR` |
+| `obs research zotero search <q>` | Search Zotero library |
+| `obs research zotero get <key>` | Get Zotero item by key |
+| `obs research zotero recent` | Recent Zotero items |
+| `obs research pdf search <q>` | Search PDF content |
+| `obs research course list` | List all courses |
+| `obs research course show <name>` | Show course details |
+| `obs research course lectures <name>` | List course lectures |
+| `obs research manuscript list` | List manuscripts |
+| `obs research manuscript show <name>` | Show manuscript details |
+| `obs research manuscript stats` | Manuscript statistics |
+| `obs research bib check <name>` | Check citations |
 
 ---
 
 ## :robot_face: Claude / MCP Integration
 
-`obs` exposes **20 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
+`obs` exposes **25 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
 Claude Code, and Cowork. Once configured (see [Claude Integration](claude-integration.md)),
 you can ask Claude natural-language questions about your vaults.
 
@@ -383,7 +528,7 @@ you can ask Claude natural-language questions about your vaults.
 "Run a quality check on MyVault"
 ```
 
-See [Claude Integration](claude-integration.md) for full setup instructions and all 20 tools.
+See [Claude Integration](claude-integration.md) for full setup instructions and all 25 tools.
 
 ---
 

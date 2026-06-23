@@ -16,7 +16,7 @@ flowchart TD
     end
 
     subgraph MCP["MCP Integration Layer (v3.3.0)"]
-        M[mcp_server.py\n956 lines\n20 tools · 4 resources]
+        M[mcp_server.py\n25 tools · 4 resources]
     end
 
     subgraph Core["Application Layer (Core)"]
@@ -89,7 +89,7 @@ flowchart LR
     M --> RES["4 MCP Resources\nvault://{id}/stats\nnote://{id}\nobsidian://overview\n..."]
 ```
 
-- **20 MCP tools** in 6 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1)
+- **25 MCP tools** in 9 groups: Vault (3), Search (2), Graph (4), Health (1), Notes (9), AI (1), Bridge (1), Temporal (3), Diagnostics (1)
 - **FastMCP** (`from mcp.server.fastmcp import FastMCP`) — stdio transport, clean exit when no client
 - Note write tools include built-in safety: `delete_note` defaults `confirm=False` (dry-run), `write_note` defaults `create_backup=True`
 

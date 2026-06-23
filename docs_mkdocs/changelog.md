@@ -4,14 +4,33 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
-## [Unreleased]
+## Unreleased (Phase 1 — nexus-cli absorption)
 
-MCP tool correctness: vault resolution + a real rescan, plus a doctor guard so this
-class of bug is caught automatically.
+Config unification and research domain commands, completing the nexus-cli merger (RFC v2 D1=Option A).
 
-### Fixed
+### Added
 
-- **MCP vault tools now accept a vault name or ID prefix, not only an exact ID.** Nine tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()`, so passing a vault **name** silently returned "Vault not found" — or a misleading empty result (e.g. `get_orphaned_notes` reporting "✅ No orphaned notes!"). They now use the 3-tier `get_vault_by_name_or_id()` resolution (name → exact ID → unambiguous prefix).
+- **`obs config`** — unified config management at `~/.config/obs/config.yaml`:
+  - `obs config show` — print current config and source file
+  - `obs config validate` — validate config and report errors
+  - `obs config migrate` — convert legacy obs/nexus-cli config to unified YAML
+  - `obs config init` — interactive wizard to create a fresh config
+  - `obs config edit` — open config in `$EDITOR`
+- **`obs research`** — research domain absorbed from nexus-cli (11 subcommands):
+  - `obs research zotero search/get/recent` — Zotero library operations
+  - `obs research pdf search` — full-text PDF search
+  - `obs research course list/show/lectures` — course management
+  - `obs research manuscript list/show/stats` — manuscript tracking
+  - `obs research bib check` — bibliography citation check
+- **Migration guide**: `migration.md` now includes nexus-cli → obs command mapping
+
+### Changed
+
+- `obs config migrate` absorbs nexus-cli config (`~/.config/nexus/config.yaml`) into the unified config file
+
+### Fixed (MCP vault resolution + doctor)
+
+- **MCP vault tools now accept a vault name or ID prefix, not only an exact ID.** Nine tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()`, so passing a vault **name** silently returned "Vault not found" — or a misleading empty result (e.g. `get_orphaned_notes` reporting "✅ No orphaned notes!"). They now use 3-tier `get_vault_by_name_or_id()` resolution (name → exact ID → unambiguous prefix). The research tools (`unified_search`, `zotero_*`, `pdf_*`, `course_*`, `manuscript_*`) operate on non-vault sources and were unaffected.
 - **`rescan_vault` now actually re-scans the vault.** It previously shelled out to the read-only `obs stats` subcommand — reporting success while never updating the database. It now performs a real in-process `scan_vault(path, name)`.
 - **`obs doctor` no longer crashes on real vaults.** The vault layer read a non-existent `last_scan` column (schema column is `last_scanned`), raising `IndexError` whenever any vault was registered. A unit test using a hand-rolled fake schema had masked the bug.
 

@@ -1,9 +1,9 @@
 # CLI Command Reference
 
-**Version:** 3.0.0-beta.2
-**Last Updated:** 2026-03-04
+**Version:** 3.5.0
+**Last Updated:** 2026-06-21
 
-Complete reference for all `obs` commands — 15 commands covering vault management, graph analysis, and AI features.
+> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 35 commands (19 shipped + 16 Phase 1, unreleased) including the `obs config` and `obs research` domains.
 
 ---
 

@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 3.3.0
+**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 3.5.0
 
 ---
 
@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **20 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **25 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -47,7 +47,7 @@ and add the `obsidian-ops` entry inside `"mcpServers"`:
       "command": "/bin/zsh",
       "args": [
         "-c",
-        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/3.3.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
+        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/3.5.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
       ],
       "env": {}
     }
@@ -74,7 +74,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 
 ---
 
-## All 20 MCP Tools
+## All 25 MCP Tools
 
 ### Vault Tools
 
@@ -128,6 +128,26 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 
 **`command` values:** `similar`, `analyze`, `duplicates`, `suggest-links`, `gaps`,
 `summarize`, `refactor`, `merge-suggest`, `tag-suggest`, `quality`
+
+### Bridge Tool
+
+| Tool | Arguments | Description |
+|------|-----------|-------------|
+| `get_bridge_status` | — | Check whether the Obsidian official CLI is installed and the app is running |
+
+### Temporal Tools
+
+| Tool | Arguments | Description |
+|------|-----------|-------------|
+| `get_trends` | `vault_id`, `days=90` | Weekly activity trends (notes created/modified per week) |
+| `get_stale_notes` | `vault_id`, `limit=20` | Most stale high-importance notes |
+| `get_daily_digest` | `vault_id`, `days=90`, `limit=5` | Combined digest: bridge status + trends + top stale notes |
+
+### Diagnostics Tool
+
+| Tool | Arguments | Description |
+|------|-----------|-------------|
+| `diagnose` | `vault_id`, `layers` | Self-diagnostic checks; returns a structured health report |
 
 ---
 
@@ -240,8 +260,8 @@ The Claude integration is being built in three phases:
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| **A — Claude Desktop MCP** | ✅ v3.3.0 | 20 tools, venv-aware, note CRUD |
-| **B — Cowork Plugin** | 🔜 v3.4.0 | `.plugin` bundle with skills + MCP for Cowork |
+| **A — Claude Desktop MCP** | ✅ since v3.3.0 | 25 tools, venv-aware, note CRUD |
+| **B — Cowork Plugin** | 🔜 TBD | `.plugin` bundle with skills + MCP for Cowork |
 | **C — Claude Code Plugin** | 🔜 future | `bin/` wrapper, hooks, marketplace distribution |
 
 See `PROPOSAL-claude-integration-2026-06-15.md` for full proposal and open questions.

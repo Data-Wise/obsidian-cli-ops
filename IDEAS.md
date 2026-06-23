@@ -263,7 +263,7 @@ src/python/ai/
 
 **Estimated Effort:** 8-12 hours (after v3.3.0 bridge ships)
 
-**See:** IMPLEMENTATION-ROADMAP.md and PROPOSAL-REFOCUS-2025-12-20.md for complete details
+**See:** [docs/planning/IMPLEMENTATION-ROADMAP.md](docs/planning/IMPLEMENTATION-ROADMAP.md) (archived) and PROPOSAL-REFOCUS-2025-12-20.md for complete details
 
 ---
 
@@ -708,11 +708,11 @@ Web API ───┘
 
 ## 🔗 Related Files
 
-- **[TODOS.md](TODOS.md)** - Current active work items
-- **[.STATUS](.STATUS)** - Project status and metrics
+- **[.STATUS](.STATUS)** - Current state, next steps, and metrics (live)
+- **[docs/planning/TODOS.md](docs/planning/TODOS.md)** - ⚠️ archived (historical, pre-v3.1)
 - **[CLAUDE.md](CLAUDE.md)** - Developer guide
 - **[docs/planning/project-hub.md](docs/planning/project-hub.md)** - Control center
 
 ---
 
-**Remember:** Ideas are cheap, execution is everything. Focus on completing current work (see TODOS.md) before starting new features! 🚀
+**Remember:** Ideas are cheap, execution is everything. Focus on completing current work (see [.STATUS](.STATUS)) before starting new features! 🚀

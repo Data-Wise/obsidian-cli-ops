@@ -1,5 +1,8 @@
 # Current TODOs
 
+> [!warning] ARCHIVED (2026-06-22) — historical snapshot, not current
+> This file stopped being maintained after **v3.0.0** (last real update 2026-03-05) and predates v3.1–v3.5 and the nexus-cli absorption. For **live state and next steps** see [`.STATUS`](../../.STATUS); for the **active plan** see [`SPEC-merge-nexus-cli-v2-2026-06-21.md`](../../SPEC-merge-nexus-cli-v2-2026-06-21.md). Kept for history only.
+
 > **Active work items and immediate next steps**
 >
 > **Last Updated:** 2026-03-05
@@ -210,10 +213,10 @@
 
 ## 🔗 Related Files
 
-- **[IDEAS.md](IDEAS.md)** - Future features and brainstorming
-- **[.STATUS](.STATUS)** - Project metrics and status
-- **[CLAUDE.md](CLAUDE.md)** - Developer guide
-- **[docs/planning/project-hub.md](docs/planning/project-hub.md)** - ADHD-friendly control center
+- **[IDEAS.md](../../IDEAS.md)** - Future features and brainstorming
+- **[.STATUS](../../.STATUS)** - Project metrics and status
+- **[CLAUDE.md](../../CLAUDE.md)** - Developer guide
+- **[project-hub.md](project-hub.md)** - ADHD-friendly control center
 
 ---
 

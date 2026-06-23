@@ -4,12 +4,14 @@
 
 ---
 
-## 📋 Active Planning Files (Root Directory)
+## 📋 Active Planning Files
 
 **Use these for day-to-day planning:**
 
-- **[TODOS.md](../../TODOS.md)** - Current work items and immediate next steps
+- **[.STATUS](../../.STATUS)** - Current state, next steps, and metrics (live)
+- **[SPEC-merge-nexus-cli-v2-2026-06-21.md](../../SPEC-merge-nexus-cli-v2-2026-06-21.md)** - Active plan (nexus-cli absorption)
 - **[IDEAS.md](../../IDEAS.md)** - Future features and brainstorming
+- **[TODOS.md](TODOS.md)** - ⚠️ archived (historical, pre-v3.1)
 
 ---
 
@@ -39,7 +41,7 @@ The following files are kept for historical reference and detailed context:
 
 | What You Want To Do | Use This File |
 |---------------------|---------------|
-| See what to work on next | [TODOS.md](../../TODOS.md) |
+| See what to work on next | [.STATUS](../../.STATUS) |
 | Add a feature idea | [IDEAS.md](../../IDEAS.md) |
 | Check overall progress | [Project Hub](project-hub.md) |
 | Understand a completed phase | [Phase docs](phases/) |
@@ -84,4 +86,4 @@ The following files are kept for historical reference and detailed context:
 
 ---
 
-[← Back to Documentation Index](../README.md) | [View TODOs](../../TODOS.md) | [View Ideas](../../IDEAS.md)
+[← Back to Documentation Index](../README.md) | [View TODOs](TODOS.md) | [View Ideas](../../IDEAS.md)

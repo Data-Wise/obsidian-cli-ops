@@ -10,8 +10,8 @@ Developer guide for Claude Code when working with this repository.
 **Status**: Stable release
 **Priority**: P1
 
-> [!important] Pending merge (RFC 2026-06-19)
-> `obs` is the proposed **survivor** of a merge with `nexus-cli`. RFC **#35** (`SPEC-merge-nexus-cli-2026-06-19.md`) scopes absorbing nexus-cli's vault ops, graph export, `doctor` (PARA/convention validator), and tutorials into `obs` under a **layered-AI** model (deterministic core default; AI opt-in). The merged `doctor` should enforce the live vault convention: **`NN_snake_case` top-level + `snake_case` subfolders**. Non-vault domains (Zotero/PDF/teaching/writing) stay out of `obs` (option B).
+> [!important] nexus-cli absorption — Phase 1 landed (unreleased, targets v3.6.0)
+> `obs` is the **survivor** of a merge with `nexus-cli` (RFC v2: `SPEC-merge-nexus-cli-v2-2026-06-21.md`, full Option-A absorption). **Phase 1 is committed** (PR #37, `80cb505`): `obs config` (5 subcommands, `config_loader.py`) + `obs research` (11 subcommands — `research/` package: bibliography, courses, manuscript, pdf, zotero) + 27 new tests, all behind a **layered-AI** model (deterministic core default; AI opt-in). These commands are unreleased on `main` until v3.6.0. Phase 4 docs (refcard/cli-reference/migration/changelog) are on `feature/phase4-docs` (PR #38). Non-vault domains stay scoped per RFC.
 
 ### Core Features
 
@@ -31,7 +31,7 @@ Developer guide for Claude Code when working with this repository.
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
 - **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
-- **Pytest**: Testing harness (287 unit + 85 MCP unit + 32 E2E = 404 pytest tests)
+- **Pytest**: Testing harness (314 unit + 113 MCP unit + 32 E2E = 459 pytest tests)
 
 ## Architecture
 
@@ -103,8 +103,8 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python unit tests (287 unit + 85 MCP)
-pytest src/python/tests/test_mcp_server.py # Run MCP unit tests (85 tests)
+pytest src/python/tests/        # Run Python unit tests (314 unit + 113 MCP)
+pytest src/python/tests/test_mcp_server.py # Run MCP unit tests (113 tests)
 E2E=1 pytest src/python/tests/e2e/ -v  # Run E2E tests (32 tests, gated)
 python3 src/python/obs_cli.py --help  # Python CLI help
 mkdocs serve                    # Serve docs locally
@@ -113,8 +113,8 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # 287 unit tests passing
-pytest src/python/tests/test_mcp_server.py # 85 MCP unit tests
+pytest src/python/tests/        # 314 unit tests passing
+pytest src/python/tests/test_mcp_server.py # 113 MCP unit tests
 E2E=1 pytest src/python/tests/e2e/ -v  # 32 E2E tests (requires real env)
 npx jest                        # 69 Jest tests passing
 obs --verbose <command>         # Run any command with verbose output
@@ -140,7 +140,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `core/` - Business logic (1,128 lines)
   - `obs_cli.py` - CLI interface (985 lines)
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
-  - `tests/` - Test suite (287 unit + 85 MCP unit + 32 E2E pytest tests)
+  - `tests/` - Test suite (314 unit + 113 MCP unit + 32 E2E pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
 
 ### Documentation

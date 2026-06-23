@@ -41,6 +41,32 @@
 | `obs ai tag-suggest <target>` | Suggest tags for untagged notes (vault or single note) |
 | `obs ai quality <target>` | Score notes on quality (completeness, connectivity, metadata, freshness) |
 
+## Config Commands
+
+| Command | Description |
+|---------|-------------|
+| `obs config show` | Print current config and its source file |
+| `obs config validate` | Validate config and report errors |
+| `obs config migrate` | Convert legacy obs/nexus config to unified YAML |
+| `obs config init` | Interactive wizard to create a fresh config |
+| `obs config edit` | Open config file in `$EDITOR` |
+
+## Research Commands
+
+| Command | Description |
+|---------|-------------|
+| `obs research zotero search <query>` | Search Zotero library (`--limit N`, `--type T`, `--tag T`) |
+| `obs research zotero get <key>` | Get a Zotero item by key (`--format F`) |
+| `obs research zotero recent` | List recently modified Zotero items (`--limit N`) |
+| `obs research pdf search <query>` | Search PDF content (`--limit N`) |
+| `obs research course list` | List all courses |
+| `obs research course show <name>` | Show course details |
+| `obs research course lectures <name>` | List lectures for a course |
+| `obs research manuscript list` | List all manuscripts (`--archived`) |
+| `obs research manuscript show <name>` | Show manuscript details |
+| `obs research manuscript stats` | Show manuscript statistics |
+| `obs research bib check <name>` | Check citations in a manuscript |
+
 ## Utilities
 
 | Command | Description |
@@ -196,4 +222,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 3.5.0 | **Commands:** 19 | **MCP Tools:** 25 | **AI Providers:** 5
+**Version:** 3.5.0 | **Commands:** 35 (19 shipped + 16 Phase 1, unreleased) | **MCP Tools:** 25 | **AI Providers:** 5
