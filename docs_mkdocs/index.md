@@ -1,6 +1,6 @@
 # obs -- Your Vault's Command Line
 
-[![Version](https://img.shields.io/badge/version-3.5.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
 [![Tests](https://img.shields.io/badge/tests-400%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
@@ -27,7 +27,7 @@ Claude / MCP integration so you can query your vaults in natural language.
 !!! tip "Graph Analysis"
     PageRank, centrality, clustering, orphan/hub detection. Understand your vault's structure at a glance with the health dashboard.
 
-!!! tip "Claude Integration (v3.5.0)"
+!!! tip "Claude Integration (v4.0.0)"
     25 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
 
 ---

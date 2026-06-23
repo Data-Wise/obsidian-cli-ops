@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 3.5.0
+**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.0.0
 
 ---
 
@@ -47,7 +47,7 @@ and add the `obsidian-ops` entry inside `"mcpServers"`:
       "command": "/bin/zsh",
       "args": [
         "-c",
-        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/3.5.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
+        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/4.0.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
       ],
       "env": {}
     }

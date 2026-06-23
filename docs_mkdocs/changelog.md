@@ -4,9 +4,11 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
-## Unreleased (Phase 1 — nexus-cli absorption)
+## v4.0.0 (2026-06-22) — nexus-cli absorption + MCP vault-resolution fix
 
-Config unification and research domain commands, completing the nexus-cli merger (RFC v2 D1=Option A).
+Major release. Absorbs `nexus-cli` into `obs` (RFC v2 D1=Option A): config unification +
+research domain commands, plus the MCP vault-resolution/doctor fix. The `nexus-cli` sibling
+is retired and the MCP `nexus` client key is replaced by `obsidian-ops`.
 
 ### Added
 

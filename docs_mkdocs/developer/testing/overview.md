@@ -1,7 +1,7 @@
 # Testing Overview
 
-**Version:** 3.5.0
-**Total Tests:** 498 (307 unit pytest + 90 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes unreleased Phase 1 (config + research) tests on `main`
+**Version:** 4.0.0
+**Total Tests:** 528 (314 unit pytest + 113 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes the nexus-cli absorption (config + research) shipped in v4.0.0
 
 ## Test Coverage
 
