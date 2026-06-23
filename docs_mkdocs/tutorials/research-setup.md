@@ -20,7 +20,7 @@ The `obs research` commands, added in v4.0.0 (nexus-cli absorption), give `obs` 
 | `obs research manuscript` | Quarto manuscript projects |
 | `obs research bib` | Citation completeness in manuscripts |
 
-These commands are **CLI-only** — they do not go through the MCP server. Use them from your terminal; for vault+research unified search from Claude Desktop, see `unified_search` in the [Claude Integration guide](../claude-integration.md).
+The `obs research` CLI subcommands run terminal-only and read files directly. The 13 research MCP tools in the MCP server ARE accessible from Claude Desktop, but they require that the Zotero SQLite, PDF directories, and Quarto projects exist on the same machine as the MCP server. `unified_search` works universally without any local-path configuration. See the [Claude Integration guide](../claude-integration.md) for details.
 
 ---
 
@@ -42,11 +42,20 @@ obs config init   # creates ~/.config/obs/config.yaml with defaults
 
 ## Step 2: Configure Zotero (optional)
 
-Zotero stores its database locally at `~/Zotero/zotero.sqlite`. Point `obs` at it:
+Zotero stores its database locally at `~/Zotero/zotero.sqlite`. Point `obs` at it by editing the config file:
 
 ```bash
-obs config set research.zotero.database ~/Zotero/zotero.sqlite
-obs config set research.zotero.storage ~/Zotero/storage
+# Open ~/.config/obs/config.yaml in $EDITOR
+obs config edit
+```
+
+Add or update the `research.zotero` section:
+
+```yaml
+research:
+  zotero:
+    database: ~/Zotero/zotero.sqlite
+    storage: ~/Zotero/storage
 ```
 
 Verify:
@@ -72,13 +81,13 @@ Expected: a table of your 5 most recently modified Zotero items with key, title,
 
 ## Step 3: Configure PDF Directories (optional)
 
-Point `obs` at directories containing research PDFs:
+Point `obs` at directories containing research PDFs by editing the config file:
 
 ```bash
-obs config set research.pdf_directories '["~/Documents/papers", "~/Downloads"]'
+obs config edit
 ```
 
-Or edit `~/.config/obs/config.yaml` directly:
+Add or update the `research.pdf_directories` section:
 
 ```yaml
 research:
@@ -102,10 +111,18 @@ Expected: matching PDF files with title, path, and matching text snippet. Return
 
 ## Step 4: Configure Courses (optional)
 
-`obs` discovers Quarto-based course projects from a courses directory:
+`obs` discovers Quarto-based course projects from a courses directory. Edit the config file to set it:
 
 ```bash
-obs config set research.teaching.courses_dir ~/projects/courses
+obs config edit
+```
+
+Add or update the `research.teaching` section:
+
+```yaml
+research:
+  teaching:
+    courses_dir: ~/projects/courses
 ```
 
 Your courses directory should contain subdirectories, each a Quarto project with a `_quarto.yml` file and lecture `.qmd` files.
@@ -131,27 +148,35 @@ Expected output for `course list`:
 
 ## Step 5: Configure Manuscripts (optional)
 
-`obs` reads Quarto manuscript projects from a manuscripts directory:
+`obs` reads Quarto manuscript projects from a manuscripts directory. Edit the config file to set it:
 
 ```bash
-obs config set research.writing.manuscripts_dir ~/projects/manuscripts
+obs config edit
+```
+
+Add or update the `research.writing` section:
+
+```yaml
+research:
+  writing:
+    manuscripts_dir: ~/projects/manuscripts
 ```
 
 Each manuscript should be a directory containing `_quarto.yml` and a `.STATUS` file (optional but recommended for status tracking).
 
 ```bash
-obs research manuscript list              # all manuscripts
-obs research manuscript list --status draft  # filter by status
-obs research manuscript show collider     # details for "collider" manuscript
-obs research manuscript stats             # aggregate word counts, status breakdown
+obs research manuscript list             # all manuscripts
+obs research manuscript list --archived  # include archived manuscripts
+obs research manuscript show collider    # details for "collider" manuscript
+obs research manuscript stats            # aggregate word counts, status breakdown
 ```
 
 Expected for `manuscript stats`:
 
 ```
-Manuscripts: 4 total (2 draft, 1 in-review, 1 published)
+Manuscripts: 4 total
 Total word count: 42,831
-Active word count: 31,204 (2 manuscripts)
+Active word count: 31,204
 ```
 
 ---
@@ -186,4 +211,4 @@ Expected output:
 |------|----------|
 | Search vault + Zotero together from Claude | [Claude Integration](../claude-integration.md) — `unified_search` |
 | Monitor vault health over time | [Monitoring Tutorial](monitoring-and-health.md) |
-| Full research command reference | [CLI Reference — Research section](../cli-reference.md#research-domain) |
+| Full research command reference | [CLI Reference](../cli-reference.md) |

@@ -189,22 +189,22 @@ These 13 tools provide access to Zotero, PDFs, courses, and manuscripts **when t
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
-| `unified_search` | `query`, `vault_id`, `limit`, `include_zotero`, `include_pdf` | Unified search across vault + Zotero + PDFs |
-| `zotero_search` | `query`, `limit` | Search Zotero library by title/author/year |
-| `zotero_get` | `item_key` | Get full Zotero item details |
-| `zotero_recent` | `limit` | Most recently modified Zotero items |
-| `zotero_cite` | `item_key`, `style` | Format a citation in APA/MLA/Chicago |
-| `pdf_search` | `query`, `directories`, `limit` | Full-text search across PDFs |
-| `course_list` | `courses_dir` | List all Quarto-based courses |
-| `course_show` | `course_id`, `courses_dir` | Details for a specific course |
-| `course_lectures` | `course_id`, `courses_dir` | Lectures in a course |
-| `manuscript_list` | `manuscripts_dir`, `status` | List manuscripts (filter by status) |
-| `manuscript_show` | `manuscript_id`, `manuscripts_dir` | Details for a manuscript |
-| `manuscript_stats` | `manuscripts_dir` | Aggregate word counts + status breakdown |
-| `bib_check` | `manuscript_id`, `manuscripts_dir` | Check citation completeness |
+| `unified_search` | `query`, `limit=20` | Unified search across vault + Zotero + PDFs |
+| `zotero_search` | `query`, `limit=20`, `item_type=""`, `tag=""` | Search Zotero library by title/author/year |
+| `zotero_get` | `key`, `format="apa"` | Get full Zotero item details |
+| `zotero_cite` | `key`, `format="apa"` | Format a citation in APA/MLA/Chicago |
+| `zotero_recent` | `limit=10` | Most recently modified Zotero items |
+| `pdf_search` | `query`, `limit=10` | Full-text search across PDFs |
+| `course_list` | — | List all Quarto-based courses |
+| `course_show` | `name` | Details for a specific course |
+| `course_lectures` | `name` | Lectures in a course |
+| `manuscript_list` | `include_archived=False` | List manuscripts (pass `True` to include archived) |
+| `manuscript_show` | `name` | Details for a manuscript |
+| `manuscript_stats` | — | Aggregate word counts + status breakdown |
+| `bib_check` | `manuscript_name` | Check citation completeness |
 
-!!! note "Research commands are CLI-only"
-    `unified_search` is the only MCP-accessible research tool that works universally. The individual research tools (`zotero_search`, `pdf_search`, `course_list`, etc.) require local file access — they read Zotero's SQLite database, local PDFs, and Quarto project files on the **same machine** running the MCP server. For terminal usage, see the [Research Setup tutorial](tutorials/research-setup.md).
+!!! note "Research tools require local data"
+    All 13 research MCP tools are accessible from Claude Desktop. They require that the Zotero SQLite, PDF directories, and Quarto projects exist on the same machine as the MCP server. `unified_search` works universally without any local-path configuration. For terminal usage, see the [Research Setup tutorial](tutorials/research-setup.md).
 
 ---
 

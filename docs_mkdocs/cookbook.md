@@ -605,7 +605,7 @@ obs research zotero recent --limit 5
 obs research pdf search "instrumental variable" --limit 5
 
 # Output as JSON for scripting
-obs research pdf search "heterogeneous effects" --json | python3 -c "
+obs --json research pdf search "heterogeneous effects" | python3 -c "
 import json, sys
 for r in json.load(sys.stdin):
     print(f\"{r['title']}: {r['path']}\")
@@ -618,8 +618,8 @@ for r in json.load(sys.stdin):
 # Overview of all manuscripts
 obs research manuscript stats
 
-# List drafts only
-obs research manuscript list --status draft
+# List all manuscripts (add --archived to include archived ones)
+obs research manuscript list
 
 # Deep-dive on one manuscript
 obs research manuscript show collider-bias
@@ -637,7 +637,7 @@ Combine Zotero search, PDF discovery, and vault search for a complete literature
 obs research zotero search "measurement error" --limit 10
 
 # 2. Find PDFs you haven't linked to Obsidian yet
-obs research pdf search "measurement error" --json | python3 -c "
+obs --json research pdf search "measurement error" | python3 -c "
 import json, sys
 results = json.load(sys.stdin)
 print(f'Found {len(results)} relevant PDFs')
@@ -654,7 +654,7 @@ obs research bib check me-mediator   # catches missing refs before submission
 
 !!! tip "Vault + Zotero unified search via Claude"
     From Claude Desktop, ask: *"Search my vault and Zotero for papers on collider bias"*.
-    Claude calls `unified_search("collider bias", include_vault=True, include_zotero=True)` and
+    Claude calls `unified_search("collider bias", limit=20)` and
     summarizes results from both sources in one response.
 
 ---
