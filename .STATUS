@@ -1,7 +1,7 @@
 priority: P1
 status: ✅ v3.5.0 released — obs doctor shipped, dev synced with main
 progress: 100
-updated: 2026-06-19
+updated: 2026-06-22
 version: 3.5.0 (prev: v3.4.2)
 next: |
   1. 🔀 Decide the nexus-cli merge (RFC #35): absorb nexus-cli's vault+graph+doctor+tutorials into obs; pick Tier-2 option (A absorb non-vault / B sibling-depends-on-obs [recommended] / C spin-out). Spec: SPEC-merge-nexus-cli-2026-06-19.md.
@@ -23,6 +23,16 @@ target: v3.6.0 - TBD
 **Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 **Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
+
+---
+
+## 🔧 Unreleased (branch `feature/mcp-vault-resolution`, off dev) — MCP vault-resolution correctness + doctor guard
+
+- **Bug A (exact-ID-only resolver):** 9 MCP tools (`get_vault_stats`, `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`, `list_notes`, `create_note`, `rescan_vault`, `diagnose`) resolved vaults with exact-ID-only `db.get_vault()` → a vault **name** or prefix silently returned "Vault not found" (or a misleading empty result). Now route through a `_resolve_vault()` helper wrapping `db.get_vault_by_name_or_id()` (name → exact ID → unambiguous prefix); canonical `id` reassigned before downstream calls.
+- **Bug B (`rescan_vault` no-op):** shelled to the read-only `obs stats` subcommand — reported success while never scanning. Now does a real in-process `vault_manager.scan_vault(path, name)`.
+- **Pre-existing doctor crash fixed:** `core/doctor.py` read a non-existent `last_scan` column (schema is `last_scanned`) → `obs doctor` `IndexError` on any real vault. A fake-schema unit test had masked it.
+- **New doctor check `mcp-tool-resolvers`** (mcp layer): AST-scans `mcp_server.py`, fails if any `@mcp.tool` uses exact-ID-only `db.get_vault(<param>)`. Catches the bug class automatically.
+- **Tests:** 287 unit + 85 MCP unit (+ TestVaultResolution name/prefix coverage, rescan Bug-B guard, 7 doctor AST-guard tests). Full suite green: 371 passed, 33 skipped.
 
 ---
 
