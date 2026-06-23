@@ -22,6 +22,9 @@ class TestDocCounts:
         assert c["mcp_tools"] >= c["mcp_resources"]
         assert c["unit_tests"] > 0, "no unit test functions counted"
         assert c["e2e_tests"] >= 0
+        # Gated floor = unit count rounded down to the nearest 10.
+        assert c["unit_tests_floor"] == (c["unit_tests"] // 10) * 10
+        assert c["unit_tests_floor"] <= c["unit_tests"]
 
     def test_static_test_count_assumption_holds(self):
         """Sentinel: gated test files must not parametrize / dynamically generate.

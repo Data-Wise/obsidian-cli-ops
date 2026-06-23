@@ -14,13 +14,17 @@ Anchored patterns only — every regex requires the word "tools"/"resources"/
 "providers"/"unit"/"E2E" adjacent to the number, so a bare "25" elsewhere never
 false-positives.
 
-Test counts (``unit_tests``, ``e2e_tests``) are derived by *statically* counting
-``def test_`` definitions — which equals pytest's collected count ONLY while
-those files use no ``@pytest.mark.parametrize`` / dynamic generation. The unit
-and E2E suites satisfy that; ``tests/test_doc_counts.py`` enforces it with a
-sentinel. The MCP suite (``test_mcp_server.py``) DOES parametrize, so its count
-is deliberately NOT gated here — the ``mcp_tools`` count already covers the
-meaningful MCP number, and a static count would undershoot the collected total.
+The unit-test count is gated as a **round-down-to-10 floor** (``unit_tests_floor``
+= ``(unit // 10) * 10``), surfaced in docs as "340+ unit". This keeps the exact
+``!=`` machinery while making the friction low: adding tests inside a decade
+(342→349) never trips CI, yet a gross under/over-claim ("314+" when reality is
+340) still fails. ``unit_tests`` itself is derived by statically counting
+``def test_`` defs — exact only while the counted files use no
+``@pytest.mark.parametrize`` / dynamic generation, which ``test_doc_counts.py``
+enforces with an AST sentinel. ``test_mcp_server.py`` (which parametrizes) and
+the E2E suite are excluded from the floor gate; the exact MCP/E2E/total numbers
+live in ``testing/overview.md`` as an ungated inventory, and ``mcp_tools`` covers
+the meaningful MCP number.
 """
 
 from __future__ import annotations
@@ -87,6 +91,9 @@ def source_counts() -> dict[str, int]:
         "ai_providers": ai_providers,
         "unit_tests": unit_tests,
         "e2e_tests": e2e_tests,
+        # Gated value: round down to 10 so "340+" tolerates additions within a
+        # decade but still catches gross drift. See module docstring.
+        "unit_tests_floor": (unit_tests // 10) * 10,
     }
 
 
@@ -143,16 +150,10 @@ _PATTERNS: dict[str, tuple[str, ...]] = {
         r"\*\*AI Providers\*\*:?\s*(\d+)",
         r"(\d+) AI [Pp]roviders",
     ),
-    # Test counts — anchored on the "unit"/"E2E" label so bare "454 pytest"
-    # totals (which include/exclude E2E by context) are never matched.
-    "unit_tests": (
-        r"(\d+)\s+unit pytest",
-        r"(\d+)\s+unit tests",
-        r"(\d+)\s+unit \+ \d+ MCP",
-        r"\*\*Unit Subtotal\*\*\s*\|\s*\*\*(\d+)\*\*",
-    ),
-    "e2e_tests": (
-        r"(\d+)\s+E2E",
+    # Unit-test FLOOR — anchored on "N+ unit" so bare totals ("454 pytest"),
+    # exact inventory cells ("342"), and "113 MCP unit" never match.
+    "unit_tests_floor": (
+        r"(\d+)\+\s+unit",
     ),
 }
 
