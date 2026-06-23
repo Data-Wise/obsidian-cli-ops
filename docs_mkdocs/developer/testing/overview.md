@@ -1,7 +1,7 @@
 # Testing Overview
 
 **Version:** 4.0.0
-**Total Tests:** 528 (314 unit pytest + 113 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes the nexus-cli absorption (config + research) shipped in v4.0.0
+**Total Tests:** 555 (341 unit pytest + 113 MCP unit pytest + 32 E2E pytest + 69 Jest) — includes the nexus-cli absorption (config + research) shipped in v4.0.0
 
 ## Test Coverage
 
@@ -9,28 +9,33 @@
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
+| Doctor / Diagnostics | 35 | pytest | `test_doctor.py` |
+| AI Models | 32 | pytest | `test_ai_models.py` |
+| Config Loader | 27 | pytest | `test_config_loader.py` |
 | AI Providers | 26 | pytest | `test_ai_providers.py` |
 | Vault Health | 21 | pytest | `test_vault_health.py` |
 | AI Refactor | 20 | pytest | `test_ai_refactor.py` |
-| AI Models | 33 | pytest | `test_ai_models.py` |
+| Note Inserter | 18 | pytest | `test_note_inserter.py` |
 | Obsidian Bridge | 17 | pytest | `test_obsidian_bridge.py` |
-| Vault Fixtures | 15 | pytest | `test_vault_fixtures.py` |
-| AI Features | 15 | pytest | `test_ai_features.py` |
-| JSON Output | 13 | pytest | `test_json_output.py` |
-| CLI Edge Cases | 11 | pytest | `test_cli_edge_cases.py` |
-| Vault Scanner | 8 | pytest | `test_vault_scanner.py` |
-| Vault Lookup | 7 | pytest | `test_vault_lookup.py` |
-| Version Consistency | 6 | pytest | `test_version_consistency.py` |
-| Vault Manager | 6 | pytest | `test_vault_manager.py` |
-| Embedding Cache | 6 | pytest | `test_embedding_cache.py` |
-| CLI Rich Output | 6 | pytest | `test_cli_rich.py` |
-| CLI Polish | 6 | pytest | `test_cli_polish.py` |
-| Search API | 1 | pytest | `test_search_api.py` |
-| Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
-| DB Pagination | 1 | pytest | `test_db_pagination.py` |
-| DB Metrics | 1 | pytest | `test_db_metrics.py` |
+| Temporal / Monitoring | 17 | pytest | `test_temporal.py` |
 | Vault Features | 16 | pytest | `test_features_vault.py` |
-| **Unit Subtotal** | **230** | **pytest** | |
+| AI Features | 15 | pytest | `test_ai_features.py` |
+| Vault Fixtures | 15 | pytest | `test_vault_fixtures.py` |
+| JSON Output | 13 | pytest | `test_json_output.py` |
+| Vault Scanner | 13 | pytest | `test_vault_scanner.py` |
+| CLI Edge Cases | 11 | pytest | `test_cli_edge_cases.py` |
+| Vault Lookup | 7 | pytest | `test_vault_lookup.py` |
+| CLI Polish | 6 | pytest | `test_cli_polish.py` |
+| CLI Rich Output | 6 | pytest | `test_cli_rich.py` |
+| Embedding Cache | 6 | pytest | `test_embedding_cache.py` |
+| Vault Manager | 6 | pytest | `test_vault_manager.py` |
+| Version Consistency | 6 | pytest | `test_version_consistency.py` |
+| Doc Count Gate | 4 | pytest | `test_doc_counts.py` |
+| DB Metrics | 1 | pytest | `test_db_metrics.py` |
+| DB Pagination | 1 | pytest | `test_db_pagination.py` |
+| Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
+| Search API | 1 | pytest | `test_search_api.py` |
+| **Unit Subtotal** | **341** | **pytest** | |
 
 ### MCP Unit Tests (pytest)
 

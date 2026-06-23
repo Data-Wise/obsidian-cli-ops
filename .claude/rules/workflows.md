@@ -54,20 +54,7 @@ export_parser.add_argument('vault_id', help='Vault ID')
 export_parser.add_argument('--format', choices=['json', 'csv', 'html'], default='json')
 ```
 
-### Step 4: Add TUI interface (optional)
-
-```python
-# src/python/tui/screens/vaults.py
-def on_export_clicked(self):
-    """Handle export button click."""
-    result = self.vault_manager.export_vault(self.selected_vault_id, "json")
-
-    # TUI-specific display
-    self.notify(f"Exported {result.notes_exported} notes")
-    self.refresh()
-```
-
-### Step 5: Add ZSH wrapper
+### Step 4: Add ZSH wrapper
 
 ```zsh
 # src/obs.zsh

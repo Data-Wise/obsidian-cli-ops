@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 35 `obs` commands (19 core + 16 from the nexus-cli absorption, shipped in v4.0.0) + 39 MCP tools for Claude
+> - **What:** Full reference for all 40 `obs` commands (24 core + 16 from the nexus-cli absorption, shipped in v4.0.0) + 39 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
@@ -147,6 +147,122 @@ obs health <vault>
 - **Link Integrity** -- broken link count
 - **Structure** -- tag coverage, hub balance
 - **Freshness** -- stale note detection
+
+---
+
+## :stethoscope: Monitoring & Diagnostics
+
+### obs bridge status
+
+Show Obsidian CLI bridge status — whether the native Obsidian CLI (v1.12.4+) is installed and the app is running.
+
+```bash
+obs bridge status
+```
+
+No arguments. Reports the bridge state and the native CLI version if detected.
+
+---
+
+### obs trends
+
+Show weekly activity trends for a vault — note creation, edit, and link activity bucketed by week.
+
+```bash
+obs trends <vault> [--days N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `vault` | required | Vault name or ID |
+| `--days` | `90` | Lookback window in days |
+| `--json` | | Machine-readable output |
+
+**Examples:**
+
+```bash
+obs trends Research              # 90-day trend for Research vault
+obs trends Research --days 30    # Last 30 days only
+obs trends Research --json       # JSON output for scripting
+```
+
+---
+
+### obs stale
+
+Find high-importance notes (by PageRank) that haven't been updated recently — the notes most worth revisiting.
+
+```bash
+obs stale <vault> [--limit N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `vault` | required | Vault name or ID |
+| `--limit` | `20` | Maximum notes to return |
+| `--json` | | Machine-readable output |
+
+**Examples:**
+
+```bash
+obs stale Research               # Top 20 stale hub notes
+obs stale Research --limit 10    # Cap at 10 results
+```
+
+!!! tip "Complementary to `obs health`"
+    `obs stale` drills into the Freshness dimension of the health dashboard, surfacing the most-linked notes that need attention.
+
+---
+
+### obs daily-digest
+
+Combined summary of bridge status, vault trends, and stale notes — a single morning check-in command.
+
+```bash
+obs daily-digest <vault> [--days N] [--limit N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `vault` | required | Vault name or ID |
+| `--days` | `90` | Trend lookback window in days |
+| `--limit` | `5` | Max stale notes to show |
+| `--json` | | Machine-readable output |
+
+**Example:**
+
+```bash
+obs daily-digest Research               # Morning digest for Research vault
+obs daily-digest Research --limit 3     # Fewer stale notes in output
+```
+
+---
+
+### obs doctor
+
+Run self-diagnostic checks on the `obs` installation — database integrity, Python dependencies, MCP server config, and doc count accuracy.
+
+```bash
+obs doctor [--vault NAME] [--layer LAYER] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--vault` | all vaults | Limit vault-level checks to this vault name or ID |
+| `--layer` | all layers | Run only the specified diagnostic layer (`db`, `deps`, `mcp`, `docs`) |
+| `--json` | | Machine-readable output |
+
+**Examples:**
+
+```bash
+obs doctor                           # Full diagnostic
+obs doctor --vault Research          # Vault-scoped checks only
+obs doctor --layer docs              # Check doc count accuracy only
+obs doctor --layer db --json         # DB checks as JSON
+```
+
+!!! info "Doc count gate"
+    `obs doctor --layer docs` is part of the release harness — it catches count drift between source code and documentation before any release lands.
 
 ---
 
@@ -491,6 +607,11 @@ obs research bib check <name>
 | `obs scan <path>` | Scan and register a vault |
 | `obs stats` | Show statistics |
 | `obs health <vault>` | Vault health dashboard |
+| `obs bridge status` | Obsidian CLI bridge status |
+| `obs trends <vault>` | Weekly activity trends |
+| `obs stale <vault>` | Find stale high-importance notes |
+| `obs daily-digest <vault>` | Bridge + trends + stale summary |
+| `obs doctor` | Self-diagnostic checks |
 | `obs analyze <vault>` | Graph analysis |
 | `obs db init` | Initialize database |
 | `obs ai status` | Provider status |

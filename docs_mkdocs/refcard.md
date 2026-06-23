@@ -20,8 +20,19 @@
 | `obs search <query> --json` | Machine-readable JSON output |
 | `obs stats [vault]` | Show vault or global statistics |
 | `obs discover <path>` | Find Obsidian vaults in a directory |
+| `obs scan <path>` | Scan and register a vault |
 | `obs analyze <vault>` | Analyze vault graph metrics |
 | `obs health <vault>` | Vault health dashboard (scores + recommendations) |
+
+## Monitoring & Diagnostics
+
+| Command | Description |
+|---------|-------------|
+| `obs bridge status` | Obsidian CLI bridge status |
+| `obs trends <vault>` | Weekly activity trends |
+| `obs stale <vault>` | Find stale high-importance notes |
+| `obs daily-digest <vault>` | Bridge + trends + stale summary |
+| `obs doctor` | Self-diagnostic checks |
 
 ## AI Commands
 

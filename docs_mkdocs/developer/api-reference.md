@@ -210,8 +210,23 @@ classDiagram
         +delete_note(note_id, confirm) → DeleteResult
         +get_note_tags(note_id) → List[str]
         +set_note_tags(note_id, tags) → Note
+        +get_bridge_status() → dict
+        +get_trends(vault_identifier: str, lookback_days: int) → dict
+        +get_stale_notes(vault_identifier: str, limit: int) → List[Note]
+        +get_daily_digest(vault_identifier: str, lookback_days: int, stale_limit: int) → dict
+        +check_index_staleness(vault_id: str, threshold_hours: float) → StalenessResult
     }
 ```
+
+**Monitoring & Temporal methods (v4.0.0)**
+
+| Method | Returns | Default params |
+|--------|---------|----------------|
+| `get_bridge_status()` | `dict` — bridge installed, app running, CLI version | — |
+| `get_trends(vault_identifier, lookback_days=90)` | `dict` — weekly activity buckets | `lookback_days=90` |
+| `get_stale_notes(vault_identifier, limit=50)` | `List[Note]` — high-PageRank notes not recently modified | `limit=50` |
+| `get_daily_digest(vault_identifier, lookback_days=90, stale_limit=5)` | `dict` — bridge + trends + stale notes combined | `lookback_days=90`, `stale_limit=5` |
+| `check_index_staleness(vault_id, threshold_hours=24.0)` | `StalenessResult` — whether vault index needs refresh | `threshold_hours=24.0` |
 
 ### GraphAnalyzer
 
