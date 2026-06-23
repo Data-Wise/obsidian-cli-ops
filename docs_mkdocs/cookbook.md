@@ -575,6 +575,90 @@ similarity scores and merge rationale.
 
 ---
 
+## Research Workflow
+
+**Prerequisites:** Complete [Research Setup](tutorials/research-setup.md) to configure Zotero, PDF directories, and manuscripts.
+
+### Search Zotero from the terminal
+
+```bash
+# Keyword search across all Zotero items
+obs research zotero search "causal mediation" --limit 10
+
+# Filter by item type
+obs research zotero search "sensitivity analysis" --type journalArticle
+
+# Filter by tag
+obs research zotero search "" --tag "to-read"
+
+# Get a specific item by Zotero key
+obs research zotero get A1B2C3D4
+
+# See what you added recently
+obs research zotero recent --limit 5
+```
+
+### Find PDFs by content
+
+```bash
+# Full-text search across all configured PDF directories
+obs research pdf search "instrumental variable" --limit 5
+
+# Output as JSON for scripting
+obs research pdf search "heterogeneous effects" --json | python3 -c "
+import json, sys
+for r in json.load(sys.stdin):
+    print(f\"{r['title']}: {r['path']}\")
+"
+```
+
+### Track manuscript status
+
+```bash
+# Overview of all manuscripts
+obs research manuscript stats
+
+# List drafts only
+obs research manuscript list --status draft
+
+# Deep-dive on one manuscript
+obs research manuscript show collider-bias
+
+# Check citations are complete before submitting
+obs research bib check collider-bias
+```
+
+### Cross-tool research pipeline
+
+Combine Zotero search, PDF discovery, and vault search for a complete literature review:
+
+```bash
+# 1. Find recent Zotero items on your topic
+obs research zotero search "measurement error" --limit 10
+
+# 2. Find PDFs you haven't linked to Obsidian yet
+obs research pdf search "measurement error" --json | python3 -c "
+import json, sys
+results = json.load(sys.stdin)
+print(f'Found {len(results)} relevant PDFs')
+for r in results[:3]:
+    print(f'  {r[\"title\"]}')
+"
+
+# 3. Check your vault for existing notes
+obs search "measurement error" --limit 10
+
+# 4. Check manuscript citation completeness
+obs research bib check me-mediator   # catches missing refs before submission
+```
+
+!!! tip "Vault + Zotero unified search via Claude"
+    From Claude Desktop, ask: *"Search my vault and Zotero for papers on collider bias"*.
+    Claude calls `unified_search("collider bias", include_vault=True, include_zotero=True)` and
+    summarizes results from both sources in one response.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
