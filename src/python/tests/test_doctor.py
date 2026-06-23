@@ -17,7 +17,10 @@ from collections import namedtuple
 sys.path.insert(0, str(Path(__file__).parent.parent))
 sys.path.insert(0, str(Path(__file__).parent.parent / "core"))
 
-from core.doctor import DoctorResult, run_checks, _check_python, _check_database, _check_mcp, _check_icloud
+from core.doctor import (
+    DoctorResult, run_checks, _check_python, _check_database, _check_mcp,
+    _check_icloud, _find_bad_vault_resolvers, _check_mcp_tool_resolvers,
+)
 
 _VersionInfo = namedtuple("version_info", ["major", "minor", "micro", "releaselevel", "serial"])
 
@@ -168,7 +171,10 @@ class TestCheckVaults:
         conn.row_factory = sqlite3.Row
         conn.execute("CREATE TABLE schema_version (version INTEGER)")
         conn.execute("INSERT INTO schema_version VALUES (1)")
-        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scan TEXT)")
+        # Column is `last_scanned` to match schema/vault_db.sql — the prior
+        # `last_scan` here masked a real crash in _check_vaults (it read the
+        # wrong key, but this fake table agreed with the typo).
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
         conn.execute("INSERT INTO vaults VALUES ('v1', 'TestVault', ?, ?)",
                      (str(vault_path), last_scan))
         conn.execute("CREATE TABLE notes (id TEXT, vault_id TEXT, title TEXT)")
@@ -370,3 +376,64 @@ class TestRunChecks:
         results = run_checks(layers=["python", "nonexistent_layer"])
         ids = {r.id for r in results}
         assert "py-version" in ids
+
+
+# ---------------------------------------------------------------------------
+# MCP tool-resolver static guard (catches the exact-ID-only db.get_vault() bug)
+# ---------------------------------------------------------------------------
+
+_GOOD_TOOL = '''
+@mcp.tool()
+def good_tool(vault_id: str) -> str:
+    vault, err = _resolve_vault(vault_id)
+    return vault["id"]
+'''
+
+_BAD_TOOL = '''
+@mcp.tool()
+def bad_tool(vault_id: str) -> str:
+    vault = db.get_vault(vault_id)
+    return vault["id"]
+'''
+
+_NOTE_LOOKUP_OK = '''
+@mcp.tool()
+def read_note(note_id: str) -> str:
+    note = db.get_note(note_id)
+    vault = db.get_vault(note["vault_id"])
+    return vault["name"]
+'''
+
+
+class TestMcpToolResolvers:
+    def test_clean_when_good(self):
+        assert _find_bad_vault_resolvers(_GOOD_TOOL) == []
+
+    def test_flags_exact_id_only_resolver(self):
+        assert _find_bad_vault_resolvers(_BAD_TOOL) == ["bad_tool(vault_id)"]
+
+    def test_ignores_note_keyed_vault_lookup(self):
+        """db.get_vault(note["vault_id"]) is a Subscript, not a bare param — OK."""
+        assert _find_bad_vault_resolvers(_NOTE_LOOKUP_OK) == []
+
+    def test_real_mcp_server_is_clean(self):
+        """The shipped mcp_server.py must have zero exact-ID-only resolvers."""
+        server = Path(__file__).parent.parent / "mcp_server.py"
+        assert _find_bad_vault_resolvers(server.read_text(encoding="utf-8")) == []
+
+    def test_check_passes_on_real_server(self):
+        server = Path(__file__).parent.parent / "mcp_server.py"
+        result = _check_mcp_tool_resolvers(server)
+        assert result.id == "mcp-tool-resolvers"
+        assert result.status == "pass"
+
+    def test_check_fails_on_bad_stub(self, tmp_path):
+        bad = tmp_path / "mcp_server.py"
+        bad.write_text(_BAD_TOOL)
+        result = _check_mcp_tool_resolvers(bad)
+        assert result.status == "fail"
+        assert "bad_tool(vault_id)" in result.message
+
+    def test_check_skips_when_missing(self, tmp_path):
+        result = _check_mcp_tool_resolvers(tmp_path / "nope.py")
+        assert result.status == "skip"
