@@ -883,6 +883,12 @@ def main():
     research_parser = subparsers.add_parser('research', help='Research domain commands (Zotero, PDF, courses, manuscripts)')
     research_sub = research_parser.add_subparsers(dest='research_command')
 
+    # research board — atlas state -> vault dashboard (SPEC-obs)
+    board_parser = research_sub.add_parser('board', help='Render the research action board from atlas state')
+    board_parser.add_argument('--out', default=None, help='Vault file to update (marker-bounded); prints to stdout if omitted')
+    board_parser.add_argument('--kind', default=None, help='Filter to a kind (manuscript|program|package)')
+    board_parser.add_argument('--dry-run', action='store_true', help='With --out, show what would change without writing')
+
     # zotero subcommands
     zotero_parser = research_sub.add_parser('zotero', help='Zotero library commands')
     zotero_sub = zotero_parser.add_subparsers(dest='zotero_command')
@@ -1633,6 +1639,18 @@ def main():
             cfg = config_loader.load()
 
             sub = getattr(args, 'research_command', None)
+
+            if sub == 'board':
+                from research.research_board import load_projects, build_block, write_marked_block
+                projects = load_projects(kind=getattr(args, 'kind', None))
+                block = build_block(projects)
+                out = getattr(args, 'out', None)
+                if out:
+                    res = write_marked_block(out, block, dry_run=getattr(args, 'dry_run', False))
+                    print(f"{res['action']}: {res['path']} (changed={res['changed']})")
+                else:
+                    print(block)
+                sys.exit(0)
 
             if sub == 'zotero':
                 if cfg is None or cfg.research is None or cfg.research.zotero is None:
