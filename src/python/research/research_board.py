@@ -127,3 +127,11 @@ def load_projects(kind: str | None = None, atlas_bin: str = "atlas") -> list[dic
         cmd += ["--kind", kind]
     out = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
     return json.loads(out)
+
+
+def load_research_projects(atlas_bin: str = "atlas") -> list[dict]:
+    """Load research items (manuscripts + programs) from atlas — the default board scope."""
+    items: list[dict] = []
+    for k in ("manuscript", "program"):
+        items.extend(load_projects(kind=k, atlas_bin=atlas_bin))
+    return items
