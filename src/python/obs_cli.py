@@ -288,6 +288,79 @@ class ObsCLI:
             console.print(panel)
             console.print()
 
+    def delete_vault(self, vault_identifier: str, force: bool = False,
+                     as_json: bool = False):
+        """
+        Delete a vault from the obs database (filesystem is never touched).
+
+        Resolves the identifier (name / ID / unambiguous prefix), then — unless
+        ``force`` — prints a dry-run preview of what would be removed. The actual
+        delete cascades to the vault's notes, links, tags, graph metrics, and
+        embeddings via the schema's ON DELETE CASCADE foreign keys.
+
+        Args:
+            vault_identifier: Vault name, ID, or unambiguous ID prefix.
+            force: Actually delete. Default False prints a preview only.
+            as_json: Emit a machine-readable result instead of Rich output.
+        """
+        try:
+            vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        except ValueError as e:  # ambiguous prefix
+            if as_json:
+                print(json.dumps({"deleted": False, "error": str(e)}))
+            else:
+                console.print(f"[red]❌ {e}[/]")
+            sys.exit(1)
+        if not vault:
+            if as_json:
+                print(json.dumps({"deleted": False,
+                                  "error": f"Vault not found: {vault_identifier}"}))
+            else:
+                console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+                console.print("[dim]  Tip: Run 'obs' to list known vaults[/]")
+            sys.exit(1)
+
+        vault_id = vault['id']
+        note_count = len(self.db.list_notes(vault_id))
+
+        if not force:
+            if as_json:
+                print(json.dumps({
+                    "deleted": False, "dry_run": True,
+                    "vault_id": vault_id, "name": vault['name'],
+                    "path": vault['path'], "notes": note_count,
+                }))
+            else:
+                console.print()
+                console.print(Panel(
+                    f"[bold]Name:[/] {vault['name']}\n"
+                    f"[bold]ID:[/] {vault_id}\n"
+                    f"[bold]Path:[/] {vault['path']}\n"
+                    f"[bold]Notes that will be removed:[/] {note_count}\n\n"
+                    f"[dim]The vault folder on disk is NOT touched — only the obs "
+                    f"index.[/]\n"
+                    f"Re-run with [bold]--force[/] to delete.",
+                    title="⚠️  DRY RUN — nothing deleted",
+                    border_style="yellow", box=box.ROUNDED,
+                ))
+                console.print()
+            return
+
+        deleted = self.vault_manager.delete_vault(vault_id)
+        if as_json:
+            print(json.dumps({
+                "deleted": deleted, "vault_id": vault_id,
+                "name": vault['name'], "notes_removed": note_count,
+            }))
+        elif deleted:
+            console.print(
+                f"[green]🗑️  Deleted vault[/] [bold]{vault['name']}[/] "
+                f"({note_count} notes removed from the obs index)."
+            )
+        else:
+            console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+            sys.exit(1)
+
     def list_vaults(self):
         """List all vaults in database with Rich table."""
         vaults = self.vault_manager.list_vaults()
@@ -933,6 +1006,18 @@ def main():
     bib_sub = bib_parser.add_subparsers(dest='bib_command')
     bib_check = bib_sub.add_parser('check', help='Check citations in a manuscript')
     bib_check.add_argument('name', help='Manuscript name or directory name')
+
+    # Vault management commands
+    vault_parser = subparsers.add_parser('vault', help='Vault management commands')
+    vault_sub = vault_parser.add_subparsers(dest='vault_command')
+    vault_delete = vault_sub.add_parser(
+        'delete',
+        help='Delete a vault from the obs database (filesystem untouched)')
+    vault_delete.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
+    vault_delete.add_argument('-f', '--force', action='store_true',
+                              help='Actually delete (default is a dry-run preview)')
+    vault_delete.add_argument('--json', action='store_true', dest='json_output',
+                              help='Output result as JSON')
 
     args = parser.parse_args()
 
@@ -1837,6 +1922,17 @@ def main():
 
             else:
                 research_parser.print_help()
+
+        elif args.command == 'vault':
+            sub = getattr(args, 'vault_command', None)
+            if sub == 'delete':
+                cli.delete_vault(
+                    args.vault,
+                    force=getattr(args, 'force', False),
+                    as_json=getattr(args, 'json_output', False) or getattr(args, 'json', False),
+                )
+            else:
+                vault_parser.print_help()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")

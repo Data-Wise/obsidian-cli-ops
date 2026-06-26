@@ -233,6 +233,34 @@ class TestVaultTools:
         result = mcp_mod.discover_vaults("/no/such/path/e2e_xyz")
         assert isinstance(result, str)
 
+    # --- delete_vault: own throwaway vault so the shared fixture is untouched ---
+
+    def test_delete_vault_dry_run(self, mcp_mod, real_db):
+        vid = real_db.add_vault("DryRunVault", "/tmp/dryrun-vault")
+        real_db.add_note(vid, "n.md", "N", "body")
+        result = mcp_mod.delete_vault("DryRunVault", confirm=False)
+        assert "dry run" in result.lower() or "⚠️" in result
+        # Nothing removed.
+        assert real_db.get_vault(vid) is not None
+        real_db.delete_vault(vid)  # cleanup
+
+    def test_delete_vault_confirm_cascades(self, mcp_mod, real_db):
+        vid = real_db.add_vault("DeleteVault", "/tmp/delete-vault")
+        note_id = real_db.add_note(vid, "n.md", "N", "body")
+        result = mcp_mod.delete_vault("DeleteVault", confirm=True)
+        assert "removed" in result.lower() or "🗑️" in result
+        # Vault row and cascaded note are both gone.
+        assert real_db.get_vault(vid) is None
+        with real_db.get_connection() as conn:
+            assert conn.execute(
+                "SELECT 1 FROM notes WHERE id = ?", (note_id,)
+            ).fetchone() is None
+
+    def test_delete_vault_unknown(self, mcp_mod):
+        result = mcp_mod.delete_vault("vault-does-not-exist", confirm=True)
+        assert isinstance(result, str)
+        assert "not found" in result.lower()
+
 
 # ---------------------------------------------------------------------------
 # Search tools
