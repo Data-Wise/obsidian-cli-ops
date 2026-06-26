@@ -127,9 +127,19 @@ class DatabaseManager:
         vault_id = self._generate_id(path)
 
         with self.get_connection() as conn:
+            # Upsert in place — never INSERT OR REPLACE here. A REPLACE would
+            # DELETE the conflicting vault row and fire ON DELETE CASCADE,
+            # wiping every note (and its note_embeddings) for the vault at the
+            # START of every rescan. Upserting updates the row without deleting
+            # children, so the content-hash short-circuit can actually preserve
+            # the embedding cache. (N1/N2)
             conn.execute("""
-                INSERT OR REPLACE INTO vaults (id, name, path, metadata)
+                INSERT INTO vaults (id, name, path, metadata)
                 VALUES (?, ?, ?, ?)
+                ON CONFLICT(id) DO UPDATE SET
+                    name = excluded.name,
+                    path = excluded.path,
+                    metadata = excluded.metadata
             """, (vault_id, name, path, json.dumps(metadata or {})))
 
         return vault_id

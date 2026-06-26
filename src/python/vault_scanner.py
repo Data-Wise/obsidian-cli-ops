@@ -232,6 +232,7 @@ class VaultScanner:
             stats = {
                 'vault_id': vault_id,
                 'notes_scanned': 0, 'notes_added': 0, 'notes_updated': 0,
+                'notes_unchanged': 0,
                 'links_added': 0, 'tags_added': 0,
                 'notes_failed': 0, 'failed_paths': []
             }
@@ -245,7 +246,21 @@ class VaultScanner:
                     try:
                         note_data = self.parser.parse_file(md_file)
                         existing_note = self.db.get_note_by_path(vault_id, relative_path)
-                        
+
+                        # N1/N2: short-circuit unchanged notes. add_note uses
+                        # INSERT OR REPLACE, which fires ON DELETE CASCADE and
+                        # wipes this note's note_embeddings (+ links/tags) row.
+                        # If the content is byte-identical to what we already
+                        # indexed, skip add_note and the link/tag re-add entirely
+                        # so the embedding cache (and self-healed links/tags)
+                        # survive the rescan.
+                        if existing_note is not None:
+                            new_hash = self.db._hash_content(note_data.content)
+                            if new_hash == existing_note.get('content_hash'):
+                                stats['notes_unchanged'] += 1
+                                stats['notes_scanned'] += 1
+                                continue
+
                         metadata = note_data.frontmatter.copy()
                         metadata['created_at'] = note_data.created_at.isoformat()
                         metadata['modified_at'] = note_data.modified_at.isoformat()

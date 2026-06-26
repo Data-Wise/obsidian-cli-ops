@@ -122,6 +122,133 @@ class TestVaultScannerEdgeCases:
 
         asyncio.run(run_test())
 
+class TestVaultScannerContentHashShortCircuit:
+    """N1/N2: rescanning an UNCHANGED note must short-circuit on content_hash.
+
+    The bug: `add_note` uses INSERT OR REPLACE, which deletes the conflicting
+    row and fires ON DELETE CASCADE — wiping that note's `note_embeddings` row
+    on EVERY rescan, because the scan loop re-add_note()s every file
+    unconditionally. The fix compares the freshly-computed content_hash to the
+    stored hash on `existing_note`; if unchanged, it skips add_note + the
+    link/tag re-add entirely (counted as notes_unchanged).
+    """
+
+    def test_unchanged_note_preserves_embedding(self, scanner, tmp_path):
+        """(a) An unchanged note keeps its note_embeddings row across a rescan."""
+        scanner.db.ensure_embeddings_table()
+
+        vault_path = tmp_path / "EmbVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "note.md").write_text("# Note\n\nstable body #t [[other]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            note = scanner.db.get_note_by_path(vault_id, "note.md")
+
+            # Simulate an AI op having cached an embedding for this note.
+            scanner.db.save_embedding(
+                note['id'], "gemini-api", "text-embedding-004",
+                b"\x00\x01\x02\x03", 123.0
+            )
+            assert scanner.db.get_embedding(
+                note['id'], "gemini-api", "text-embedding-004"
+            ) is not None
+
+            # Rescan with no content change.
+            await scanner.scan_vault(str(vault_path))
+
+            # The embedding row must survive (not cascade-wiped by REPLACE).
+            assert scanner.db.get_embedding(
+                note['id'], "gemini-api", "text-embedding-004"
+            ) is not None
+
+        asyncio.run(run_test())
+
+    def test_unchanged_note_counted_as_notes_unchanged(self, scanner, tmp_path):
+        """(b) An unchanged note is counted in notes_unchanged, not notes_updated."""
+        vault_path = tmp_path / "UnchangedVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "a.md").write_text("# A\n\nbody")
+
+        async def run_test():
+            first = await scanner.scan_vault(str(vault_path))
+            assert first['notes_added'] == 1
+            assert first.get('notes_unchanged', 0) == 0
+
+            second = await scanner.scan_vault(str(vault_path))
+            assert second['notes_unchanged'] == 1
+            assert second['notes_updated'] == 0
+            assert second['notes_added'] == 0
+            assert second['notes_scanned'] == 1
+
+        asyncio.run(run_test())
+
+    def test_unchanged_note_leaves_links_and_tags_intact(self, scanner, tmp_path):
+        """(c) Links and tags survive a no-op rescan of an unchanged note."""
+        vault_path = tmp_path / "LinkTagVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "src.md").write_text("# Src\n\n#topic and [[target]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            note = scanner.db.get_note_by_path(vault_id, "src.md")
+
+            tags_before = scanner.db.get_note_tags(note['id'])
+            links_before = scanner.db.get_outgoing_links(note['id'])
+            assert "topic" in tags_before
+            assert len(links_before) == 1
+
+            await scanner.scan_vault(str(vault_path))
+
+            assert scanner.db.get_note_tags(note['id']) == tags_before
+            assert len(scanner.db.get_outgoing_links(note['id'])) == len(links_before)
+
+        asyncio.run(run_test())
+
+    def test_changed_note_still_replaces_and_updates(self, scanner, tmp_path):
+        """A CHANGED note must still REPLACE + re-add (preserves the self-heal)."""
+        scanner.db.ensure_embeddings_table()
+
+        vault_path = tmp_path / "ChangedVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        note_file = vault_path / "m.md"
+        note_file.write_text("# M\n\n#old [[oldtarget]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            note = scanner.db.get_note_by_path(vault_id, "m.md")
+            scanner.db.save_embedding(
+                note['id'], "gemini-api", "text-embedding-004",
+                b"\x00\x01", 1.0
+            )
+
+            # Edit the content: tag/link change.
+            note_file.write_text("# M\n\n#new [[newtarget]]")
+            second = await scanner.scan_vault(str(vault_path))
+
+            assert second['notes_updated'] == 1
+            assert second.get('notes_unchanged', 0) == 0
+
+            # Self-heal: old tag/link gone, new ones present.
+            tags = scanner.db.get_note_tags(note['id'])
+            assert "new" in tags
+            assert "old" not in tags
+
+            # REPLACE fired cascade — stale embedding is cleared for a changed note.
+            assert scanner.db.get_embedding(
+                note['id'], "gemini-api", "text-embedding-004"
+            ) is None
+
+        asyncio.run(run_test())
+
+
 class TestMarkdownParserEdgeCases:
     """Tests for edge cases in the MarkdownParser."""
 
