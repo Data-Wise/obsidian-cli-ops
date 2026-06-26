@@ -501,23 +501,55 @@ class TestNoteCRUD:
 # ---------------------------------------------------------------------------
 
 class TestRescanTool:
+    """#62 regression: rescan_vault must run INSIDE a live event loop.
+
+    FastMCP dispatches every @mcp.tool() call from within an already-running
+    asyncio loop. The original sync handler called asyncio.run(scan_vault(...))
+    there, raising `RuntimeError: asyncio.run() cannot be called from a running
+    event loop` (swallowed into an "Error rescanning vault: ..." string).
+
+    Calling the handler synchronously from pytest (no running loop) let
+    asyncio.run() succeed and HID the bug — the same false-confidence trap as
+    the v4.0.0 fake-schema doctor test. Every test below therefore drives the
+    handler through `_rescan` (await inside asyncio.run) to recreate FastMCP's
+    execution context.
+    """
+
+    @staticmethod
+    def _rescan(mcp_mod, vault_id):
+        """Invoke rescan_vault the way FastMCP does: awaited inside a running
+        event loop. Fails against the old sync+asyncio.run() handler; passes
+        once the handler is `async def` and awaits the coroutine."""
+        async def _call():
+            return await mcp_mod.rescan_vault(vault_id)
+        return asyncio.run(_call())
+
     def test_rescan_vault_known(self, mcp_mod, obs_vault):
         vault_id, _, _ = obs_vault
-        result = mcp_mod.rescan_vault(vault_id)
+        result = self._rescan(mcp_mod, vault_id)
         assert isinstance(result, str)
         assert "rescanned" in result.lower()
         assert "notes scanned" in result.lower()
 
     def test_rescan_vault_unknown(self, mcp_mod):
-        result = mcp_mod.rescan_vault("ghost-vault-xyz")
+        result = self._rescan(mcp_mod, "ghost-vault-xyz")
         assert any(kw in result.lower() for kw in ["not found", "error"])
 
     def test_rescan_by_name(self, mcp_mod, named_vault):
         """Bug A guard: rescan resolves a vault NAME, not just an exact ID."""
         name, _, _ = named_vault
-        result = mcp_mod.rescan_vault(name)
+        result = self._rescan(mcp_mod, name)
         assert "not found" not in result.lower()
         assert "rescanned" in result.lower()
+
+    def test_rescan_no_asyncio_run_crash(self, mcp_mod, obs_vault):
+        """#62 direct guard: the live-loop call must NOT degrade to the
+        'asyncio.run() cannot be called from a running event loop' error
+        string that the old sync handler returned on every MCP dispatch."""
+        vault_id, _, _ = obs_vault
+        result = self._rescan(mcp_mod, vault_id)
+        assert "running event loop" not in result.lower()
+        assert "error rescanning" not in result.lower()
 
     def test_rescan_actually_scans_not_stats(self, mcp_mod, obs_vault):
         """Bug B guard: rescan must call vault_manager.scan_vault(path, name),
@@ -528,7 +560,7 @@ class TestRescanTool:
         scan_mock = AsyncMock(return_value=fake)
         with patch.object(mcp_mod.vault_manager, "scan_vault", scan_mock), \
                 patch.object(mcp_mod, "_obs") as obs_mock:
-            result = mcp_mod.rescan_vault(vault_id)
+            result = self._rescan(mcp_mod, vault_id)
         scan_mock.assert_awaited_once()
         path_arg, name_arg = scan_mock.await_args[0][:2]
         assert str(path_arg) == str(vault_dir)
