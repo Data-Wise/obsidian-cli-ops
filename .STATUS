@@ -15,7 +15,35 @@ verified: |
   Pre-release: dev↔main reconciled (merge origin/main into dev) + 61 Phase-1 docstrings backfilled.
   Tests: 426 pytest passed / 33 skipped, 67 jest passed / 2 skipped.
   Release-check harness on dev (PR #50, commit 8b7f852, 2026-06-23): core/doc_counts.py + validate-counts.sh + obs doctor --layer docs + verify-caveats.sh + post-install-check.sh + post-release-sweep.sh. craft issue #200 filed to generalize verify-caveats/post-install-check patterns. feature/release-harness worktree removed.
-target: v4.2.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
+target: v4.2.0 - vault↔index sync reconciliation (obs scan --prune/--no-prune, content-hash short-circuit preserving embeddings, scan-error visibility, obs doctor --layer sync) — in flight on feature/vault-sync-reconcile
+
+## 🚧 v4.2.0 (Unreleased) — Vault ↔ index sync reconciliation
+
+On `feature/vault-sync-reconcile` (off `feature/spec-vault-sync-reconcile`). Spec:
+`docs/specs/SPEC-vault-sync-reconcile-2026-06-26.md`; plan: `ORCHESTRATE-vault-sync-reconcile.md`.
+Closes the vault↔DB sync gaps. Not yet released; targets v4.2.0.
+
+- **`obs scan --prune` / `--no-prune`** (S1/S2) — opt-in mark-and-sweep that reconciles the
+  index with disk: after scanning, rows whose path is gone (deleted/renamed notes) are swept,
+  cascading to links/tags/graph-metrics/embeddings. Default stays additive (`--no-prune`);
+  a scan that sees zero files skips the sweep with a warning (bad-path / unmaterialised-iCloud
+  guard, no wipe). MCP `rescan_vault` gains the same opt-in `prune=False` parameter.
+- **Embedding-cache preservation (N1) + content-hash short-circuit (N2)** — each `obs scan`
+  used to re-insert every note unconditionally, and the row replace's `ON DELETE CASCADE`
+  wiped each note's `note_embeddings` row (full recompute, latency + paid-API cost, next AI op).
+  The scanner now compares each file's `content_hash` against the stored one and skips unchanged
+  notes, preserving embeddings/links/tags.
+- **Scan-error visibility (S4)** — a note that failed to parse/insert was swallowed by
+  `except Exception: continue` while `complete_scan` hardcoded an error count of 0. Failures are
+  now counted, captured (path + exception), logged, and surfaced in the scan summary and
+  `scan_history`; the scan still completes. Summary now also reports unchanged/pruned/failed counts.
+- **`obs doctor --layer sync` (S5)** — new per-vault sync layer with content-based (not just
+  time-based) drift: `sync-ghosts`, `sync-missing`, `sync-errors`, and a `sync-drift` summary.
+- Tests: full suite green (511 passed / 41 skipped) incl. unit + e2e `TestE2ESyncLifecycle`
+  (gated under `E2E=1`) + doctor sync dogfood. Docs: changelog `[Unreleased]`, CLI reference,
+  man page, MCP_README, troubleshooting.
+
+---
 
 ## 🎯 Current State
 

@@ -6,6 +6,34 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Vault ↔ index sync reconciliation
+
+#### Added
+
+- **`obs scan --prune` / `--no-prune`** — opt-in mark-and-sweep that reconciles the index
+  with disk. After scanning, rows whose path is gone from disk (notes deleted or renamed)
+  are swept, cascading to their links, tags, graph metrics, and embeddings (S1/S2). Default
+  stays **additive** (`--no-prune`). A scan that sees zero files skips the sweep with a
+  warning rather than wiping the index (bad-path / un-materialised-iCloud guard).
+- **MCP `rescan_vault(vault_id, prune=False)`** — gains the same opt-in `prune` parameter.
+- **`obs doctor --layer sync`** — new per-vault sync layer giving content-based (not just
+  time-based) drift visibility: `sync-ghosts` (rows whose file is gone), `sync-missing`
+  (`*.md` on disk absent from the DB), `sync-errors` (last scan recorded failures), and a
+  `sync-drift` summary line (S5).
+- Scan summary now reports **unchanged**, **pruned**, and **failed** note counts.
+
+#### Fixed
+
+- **AI embedding cache destroyed on every scan (N1)** — each `obs scan` re-inserted every
+  note unconditionally, and the row replace's `ON DELETE CASCADE` wiped each note's
+  `note_embeddings` row, forcing a full recompute (latency + paid-API cost) on the next AI
+  op. The scanner now compares each file's `content_hash` against the stored one and
+  **skips unchanged notes** (N2), preserving embeddings, links, and tags.
+- **Silent per-note scan loss (S4)** — a note that failed to parse or insert was swallowed
+  by `except Exception: continue` while `complete_scan` hardcoded an error count of 0. Scan
+  failures are now counted, captured (path + exception), logged, and surfaced in the scan
+  summary and `scan_history`; the scan still completes.
+
 ---
 
 ## v4.1.0 (2026-06-26) — MCP rescan fix, server_info & count gates

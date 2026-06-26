@@ -50,6 +50,20 @@ Find Obsidian vaults under
 (defaults to the current directory). With
 .BR \-\-scan ,
 perform a deeper scan.
+.TP
+.B scan\fR \fIpath\fR [\fB\-\-name\fR \fIname\fR] [\fB\-\-analyze\fR] [\fB\-\-prune\fR | \fB\-\-no\-prune\fR]
+Scan a vault directory and register or update it in the database. The default
+is additive: notes are added and updated but never removed, so a note deleted
+or renamed on disk lingers in the index. With
+.BR \-\-prune ,
+sweep rows whose file is gone from disk (cascading to their links, tags, graph
+metrics, and embeddings); the sweep is skipped with a warning if the scan sees
+zero files, guarding against wiping the index on a mis\-pointed path.
+.BR \-\-no\-prune
+is the explicit default. Unchanged notes are skipped by content\-hash
+comparison, preserving the AI embedding cache. With
+.BR \-\-analyze ,
+run graph analysis immediately after scanning.
 .SS Graph Analysis
 .TP
 .B analyze\fR \fIvault\fR
@@ -114,11 +128,13 @@ may be a vault name/ID or a note ID.
 .SS Diagnostics
 .TP
 .B doctor\fR [\fB\-\-vault\fR \fIid\fR] [\fB\-\-layer\fR \fIlayer\fR]... [\fB\-\-json\fR]
-Run self\-diagnostic checks across five layers:
+Run self\-diagnostic checks across seven layers:
 .BR python " (runtime & imports),"
 .BR database " (SQLite integrity & vault count),"
 .BR vault " (path, freshness, note/link counts),"
+.BR sync " (vault\-vs\-index drift: ghosts, missing, scan errors),"
 .BR mcp " (Claude Desktop config),"
+.BR docs " (doc count accuracy),"
 and
 .BR icloud " (macOS write\-latency & offload detection)."
 Use
