@@ -31,7 +31,7 @@ Developer guide for Claude Code when working with this repository.
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
 - **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
-- **Pytest**: Testing harness (370+ unit + 113 MCP unit + 32 E2E pytest)
+- **Pytest**: Testing harness (380+ unit + 113 MCP unit + 32 E2E pytest)
 
 ## Architecture
 
@@ -66,7 +66,7 @@ python3 src/python/obs_cli.py db init
 
 ### Essential Commands
 
-**v3.4.0** - 46 commands (17 top-level + subcommands):
+**v3.4.0** - 48 commands (17 top-level + subcommands):
 
 ```bash
 # PRIMARY COMMANDS
@@ -103,7 +103,7 @@ obs help [--all]                # Show help
 obs version                     # Show version
 
 # Development
-pytest src/python/tests/        # Run Python unit tests (370+ unit + 113 MCP)
+pytest src/python/tests/        # Run Python unit tests (380+ unit + 113 MCP)
 pytest src/python/tests/test_mcp_server.py # Run MCP unit tests (113 tests)
 E2E=1 pytest src/python/tests/e2e/ -v  # Run E2E tests (32 tests, gated)
 python3 src/python/obs_cli.py --help  # Python CLI help
@@ -113,7 +113,7 @@ mkdocs serve                    # Serve docs locally
 ### Testing
 
 ```bash
-pytest src/python/tests/        # 370+ unit tests passing
+pytest src/python/tests/        # 380+ unit tests passing
 pytest src/python/tests/test_mcp_server.py # 113 MCP unit tests
 E2E=1 pytest src/python/tests/e2e/ -v  # 32 E2E tests (requires real env)
 npx jest                        # 69 Jest tests passing
@@ -140,7 +140,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `core/` - Business logic (1,128 lines)
   - `obs_cli.py` - CLI interface (985 lines)
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
-  - `tests/` - Test suite (370+ unit + 113 MCP unit + 32 E2E pytest tests)
+  - `tests/` - Test suite (380+ unit + 113 MCP unit + 32 E2E pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
 
 ### Documentation

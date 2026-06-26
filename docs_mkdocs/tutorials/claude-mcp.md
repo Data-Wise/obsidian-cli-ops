@@ -10,7 +10,7 @@ Connect `obs` to Claude Desktop and use natural language to search, analyze, and
 
 ## Step 1: What Is the MCP Integration?
 
-MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. `obs` ships an MCP server (`mcp_server.py`) that exposes **41 tools** covering your full vault workflow:
+MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. `obs` ships an MCP server (`mcp_server.py`) that exposes **42 tools** covering your full vault workflow:
 
 ```mermaid
 flowchart LR
@@ -369,7 +369,7 @@ done
 | Goal | Tutorial / Doc |
 |------|----------------|
 | Full tool reference | [Claude Integration](../claude-integration.md) |
-| All 41 MCP tools | [CLI Reference — MCP section](../cli-reference.md#claude-mcp-integration) |
+| All 42 MCP tools | [CLI Reference — MCP section](../cli-reference.md#claude-mcp-integration) |
 | Cowork plugin (Phase 2) | [Proposal](https://github.com/Data-Wise/obsidian-cli-ops/blob/dev/PROPOSAL-claude-integration-2026-06-15.md) |
 | Developer API details | [API Reference](../developer/api-reference.md) |
 

@@ -216,6 +216,26 @@ class DatabaseManager:
             cursor = conn.execute("DELETE FROM vaults WHERE id = ?", (vault_id,))
             return cursor.rowcount > 0
 
+    def rename_vault(self, vault_id: str, new_name: str) -> bool:
+        """
+        Change a vault's display name by exact ID.
+
+        Only the ``name`` column changes — the vault ID (a hash of the path)
+        and the path itself are untouched, so existing notes/links stay valid.
+
+        Args:
+            vault_id: Exact vault ID
+            new_name: New display name
+
+        Returns:
+            True if a vault row was updated, False if no row matched.
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                "UPDATE vaults SET name = ? WHERE id = ?", (new_name, vault_id)
+            )
+            return cursor.rowcount > 0
+
     def list_vaults(self) -> List[Dict]:
         """List all vaults."""
         with self.get_connection() as conn:

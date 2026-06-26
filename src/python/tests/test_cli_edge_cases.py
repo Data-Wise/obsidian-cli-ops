@@ -313,3 +313,69 @@ class TestVaultDeleteCommand:
         assert out["deleted"] is True
         assert out["vault_id"] == vid
         assert out["notes_removed"] == 1
+
+
+class TestVaultRenameInfoCommands:
+    """Tests for `obs vault rename` and `obs vault info` against a real DB."""
+
+    @staticmethod
+    def _cli_with_real_db():
+        from obs_cli import ObsCLI
+        from db_manager import DatabaseManager
+        from core.vault_manager import VaultManager
+        db = DatabaseManager(db_path=":memory:")
+        db.initialize_database()
+        with patch('obs_cli.DatabaseManager', return_value=db), \
+             patch('obs_cli.VaultManager', return_value=VaultManager(db)), \
+             patch('obs_cli.GraphAnalyzer'):
+            cli = ObsCLI()
+        return cli, db
+
+    @patch('obs_cli.console')
+    def test_rename_updates_name(self, mock_console):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("OldName", "/tmp/old")
+
+        cli.rename_vault("OldName", "FreshName")
+
+        assert db.get_vault(vid)["name"] == "FreshName"
+
+    @patch('obs_cli.console')
+    def test_rename_rejects_name_collision(self, mock_console):
+        cli, db = self._cli_with_real_db()
+        db.add_vault("Existing", "/tmp/existing")
+        db.add_vault("Mover", "/tmp/mover")
+
+        with pytest.raises(SystemExit) as exc:
+            cli.rename_vault("Mover", "Existing")
+        assert exc.value.code == 1
+        # Collision was blocked — Mover keeps its name.
+        printed = " ".join(str(c) for c in mock_console.print.call_args_list)
+        assert "already uses the name" in printed
+
+    @patch('obs_cli.console')
+    def test_rename_not_found_exits_nonzero(self, mock_console):
+        cli, _ = self._cli_with_real_db()
+        with pytest.raises(SystemExit) as exc:
+            cli.rename_vault("ghost", "whatever")
+        assert exc.value.code == 1
+
+    def test_info_json(self, capsys):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("InfoVault", "/tmp/info")
+        db.add_note(vid, "n.md", "N", "body")
+
+        cli.info_vault("InfoVault", as_json=True)
+
+        import json as _json
+        out = _json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+        assert out["id"] == vid
+        assert out["name"] == "InfoVault"
+        assert out["notes"] == 1
+
+    @patch('obs_cli.console')
+    def test_info_not_found_exits_nonzero(self, mock_console):
+        cli, _ = self._cli_with_real_db()
+        with pytest.raises(SystemExit) as exc:
+            cli.info_vault("ghost")
+        assert exc.value.code == 1

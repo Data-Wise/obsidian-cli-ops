@@ -263,6 +263,45 @@ def delete_vault(vault_id: str, confirm: bool = False) -> str:
 
 
 @mcp.tool()
+def rename_vault(vault_id: str, new_name: str) -> str:
+    """
+    Rename a vault's display name. The path and ID are unchanged, so notes,
+    links, and graph metrics stay valid.
+
+    Args:
+        vault_id: Vault name, ID, or unambiguous ID prefix (from list_vaults()).
+        new_name: New display name.
+
+    Refuses the rename if another vault already uses new_name, which would make
+    name-based vault resolution ambiguous.
+    """
+    try:
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        canonical_id = vault["id"]
+        old_name = vault["name"]
+
+        collision = next(
+            (v for v in vault_manager.list_vaults()
+             if v.name == new_name and v.id != canonical_id),
+            None,
+        )
+        if collision:
+            return (
+                f"❌ Another vault already uses the name '{new_name}' "
+                f"(id `{collision.id}`) — names must stay unambiguous."
+            )
+
+        renamed = db.rename_vault(canonical_id, new_name)
+        if not renamed:
+            return f"Vault not found: {vault_id}"
+        return f"✏️ Renamed vault **{old_name}** → **{new_name}**"
+    except Exception as e:
+        return f"Error renaming vault: {e}"
+
+
+@mcp.tool()
 def get_vault_stats(vault_id: Optional[str] = None) -> str:
     """
     Get statistics for a specific vault or the entire obs database.

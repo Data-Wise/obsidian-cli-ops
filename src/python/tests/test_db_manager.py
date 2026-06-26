@@ -50,3 +50,23 @@ class TestDeleteVault:
     def test_delete_vault_returns_false_when_missing(self, db):
         """Deleting an unknown vault id reports no row removed."""
         assert db.delete_vault("does-not-exist") is False
+
+
+class TestRenameVault:
+    """Tests for DatabaseManager.rename_vault."""
+
+    def test_rename_changes_name_only(self, db):
+        """Renaming updates the name but leaves id and path intact."""
+        vault_id = db.add_vault(name="OldName", path="/tmp/rename-vault")
+
+        renamed = db.rename_vault(vault_id, "NewName")
+
+        assert renamed is True
+        row = db.get_vault(vault_id)
+        assert row["name"] == "NewName"
+        assert row["id"] == vault_id
+        assert row["path"] == "/tmp/rename-vault"
+
+    def test_rename_returns_false_when_missing(self, db):
+        """Renaming an unknown vault id reports no row updated."""
+        assert db.rename_vault("does-not-exist", "Whatever") is False

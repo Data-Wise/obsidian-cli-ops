@@ -8,7 +8,7 @@ Reference documentation for the MCP tool API, Python CLI API, AI provider interf
 
 ## MCP Server API (v3.3.0)
 
-The MCP server (`src/python/mcp_server.py`) exposes 41 tools and 4 resources over stdio to Claude Desktop, Claude Code, and Cowork.
+The MCP server (`src/python/mcp_server.py`) exposes 42 tools and 4 resources over stdio to Claude Desktop, Claude Code, and Cowork.
 
 ### Connection Flow
 
@@ -481,5 +481,5 @@ MCP tools catch all exceptions and return structured error JSON rather than prop
 ## See Also
 
 - [Architecture](architecture.md) — layer diagrams and data flows
-- [Claude Integration](../claude-integration.md) — MCP setup guide with all 41 tools
+- [Claude Integration](../claude-integration.md) — MCP setup guide with all 42 tools
 - [Testing Overview](testing/overview.md) — test strategy and coverage

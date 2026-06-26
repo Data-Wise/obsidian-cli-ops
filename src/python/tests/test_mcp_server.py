@@ -261,6 +261,28 @@ class TestVaultTools:
         assert isinstance(result, str)
         assert "not found" in result.lower()
 
+    # --- rename_vault ---
+
+    def test_rename_vault_changes_name(self, mcp_mod, real_db):
+        vid = real_db.add_vault("BeforeName", "/tmp/rename-mcp-vault")
+        result = mcp_mod.rename_vault("BeforeName", "AfterName")
+        assert "renamed" in result.lower() or "✏️" in result
+        assert real_db.get_vault(vid)["name"] == "AfterName"
+        real_db.delete_vault(vid)  # cleanup
+
+    def test_rename_vault_rejects_collision(self, mcp_mod, real_db):
+        a = real_db.add_vault("KeepName", "/tmp/keep-mcp-vault")
+        b = real_db.add_vault("MoveName", "/tmp/move-mcp-vault")
+        result = mcp_mod.rename_vault("MoveName", "KeepName")
+        assert "already uses the name" in result
+        assert real_db.get_vault(b)["name"] == "MoveName"  # unchanged
+        real_db.delete_vault(a)
+        real_db.delete_vault(b)
+
+    def test_rename_vault_unknown(self, mcp_mod):
+        result = mcp_mod.rename_vault("vault-does-not-exist", "Whatever")
+        assert "not found" in result.lower()
+
 
 # ---------------------------------------------------------------------------
 # Search tools

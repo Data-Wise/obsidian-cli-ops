@@ -40,7 +40,7 @@ flowchart LR
 | [Getting Started](getting-started.md) | 🟢 Beginner | ~10 min | Install, discover vaults, scan, view stats |
 | [Graph Analysis](graph-analysis.md) | 🟡 Intermediate | ~15 min | Analyze graph, interpret metrics, find hubs & orphans |
 | [AI Features](ai-features.md) | 🔵 Advanced | ~30 min | Setup AI providers, similar notes, refactor, quality |
-| [Claude / MCP Integration](claude-mcp.md) | 🟣 Integration | ~20 min | Connect Claude Desktop, use all 41 MCP tools, note CRUD |
+| [Claude / MCP Integration](claude-mcp.md) | 🟣 Integration | ~20 min | Connect Claude Desktop, use all 42 MCP tools, note CRUD |
 
 ---
 
