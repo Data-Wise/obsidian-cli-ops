@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="4.1.0"
+VERSION="4.2.0"
 
 # --- Helper Functions ---
 

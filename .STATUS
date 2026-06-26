@@ -2,7 +2,7 @@ priority: P1
 status: ✅ v4.1.0 SHIPPED 2026-06-26 (dev→main, PR #68, merge d979a6c): #62 rescan_vault async fix, #53 server_info MCP tool, mcp-async-run doctor guard (+ _check_mcp config-gating fix), command-count SSOT gate (obs_commands leaf=45), obs link + obs research board. main CI green, Deploy Docs success, tap @ 4.1.0 (sha256 b236a9d == tarball, verified), live site v4.1.0, post-release-sweep clean.
 progress: 100
 updated: 2026-06-26
-version: 4.1.0
+version: 4.2.0
 next: |
   1. 5.1 vault CRUD via official-CLI bridge (delegate; offline-CRUD regression must be stated in the changelog). SPEC-next-overhaul §1/§5. (Was the original v4.1 target; v4.1.0 shipped the MCP-correctness slice instead.)
   2. 5.3 PARA validator.
@@ -49,11 +49,11 @@ Not yet released; targets v4.2.0 (dev→main).
 
 ## 🎯 Current State
 
-**Phase**: v4.1.0 SHIPPED to main (d979a6c, 2026-06-26); dev == main
+**Phase**: v4.2.0 release in flight (dev→main); vault-sync reconcile + vault docs
 **Architecture**: Three-layer (CLI → Core → Data), ZSH-first
-**Tests**: 488 pytest + 67 Jest passing (33/2 skipped); PR #50 harness gate + command-count gate in test_doc_counts.py
-**Commands**: 45 runnable (17 top-level; incl. obs config + obs research families)
-**MCP Tools**: 40 (27 core + 13 research; incl insert_to_note #40, server_info #53)
+**Tests**: 544 pytest + 67 Jest passing (1/2 skipped non-e2e); PR #50 harness gate + command-count gate in test_doc_counts.py
+**Commands**: 48 runnable (17 top-level; incl. obs config + obs research families)
+**MCP Tools**: 42 (incl rename_vault/delete_vault, insert_to_note #40, server_info #53)
 **AI Providers**: 5 (gemini-api, anthropic-api, ollama, gemini-cli, claude-cli)
 **Code**: ~9,200 lines (ZSH 533 + Python ~3,800 + AI 1,500+)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
