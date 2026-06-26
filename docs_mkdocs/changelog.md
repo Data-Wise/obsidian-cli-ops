@@ -6,7 +6,7 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
-## [4.2.0] - 2026-06-26
+## v4.2.0 (2026-06-26) — Vault ↔ index sync reconciliation
 
 ### Vault ↔ index sync reconciliation
 
