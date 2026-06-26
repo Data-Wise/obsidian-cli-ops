@@ -1,6 +1,6 @@
 {
   "name": "obsidian-cli-ops",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "An intelligent command-line tool for managing multi-vault Obsidian systems with knowledge graph analysis.",
   "main": "index.js",
   "directories": {

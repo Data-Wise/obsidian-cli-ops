@@ -6,7 +6,7 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (39):
+Tools (40):
   Vault:    list_vaults, get_vault_stats, discover_vaults
   Search:   search_notes, find_similar_notes, unified_search
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
@@ -14,7 +14,7 @@ Tools (39):
   Notes:    read_note, write_note, create_note, list_notes, append_to_note,
             insert_to_note, rename_note, delete_note, get_note_links, rescan_vault
   AI:       run_obs_ai
-  Temporal: get_bridge_status, get_trends, get_stale_notes, get_daily_digest
+  Temporal: get_bridge_status, server_info, get_trends, get_stale_notes, get_daily_digest
   Config:   diagnose
   Zotero:   zotero_search, zotero_get, zotero_cite, zotero_recent
   PDF:      pdf_search
@@ -38,7 +38,7 @@ import os
 import sys
 import subprocess
 import stat
-import asyncio
+import re
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -79,7 +79,7 @@ if Path(sys.executable).resolve() != Path(_obs_python).resolve():
 # ---------------------------------------------------------------------------
 
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Ensure src/python is on path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -100,6 +100,34 @@ mcp = FastMCP("obsidian-ops")
 db = DatabaseManager()
 vault_manager = VaultManager(db)
 graph_analyzer = GraphAnalyzer(db)
+
+# ---------------------------------------------------------------------------
+# Server identity / staleness detection (#53)
+# ---------------------------------------------------------------------------
+# An in-process MCP server keeps the OLD code in memory after an upgrade — this
+# is exactly what masked the v4.0.0 fix and motivated #53 (a v4.0.0-fixed tool
+# still failed because the running server predated the fix). We freeze the
+# version this process loaded at import time and compare it, on request, with
+# the version currently on disk; a mismatch means the host is running stale code.
+_VERSION_FILE = Path(__file__).parent / "__init__.py"
+
+
+def _read_disk_version() -> str:
+    """Parse __version__ from __init__.py on disk — the repo's single source of
+    truth (same regex as `obs version` / test_version_consistency). Read fresh
+    each call so a post-upgrade change is observable from a long-running process.
+    """
+    try:
+        m = re.search(r'__version__\s*=\s*"([^"]+)"',
+                      _VERSION_FILE.read_text(encoding="utf-8"))
+        return m.group(1) if m else "unknown"
+    except OSError:
+        return "unknown"
+
+
+# Frozen at import = the version of the code THIS process is actually running.
+_SERVER_VERSION = _read_disk_version()
+_SERVER_STARTED_AT = datetime.now(timezone.utc).isoformat()
 
 # Path to obs CLI (for AI subcommand subprocess calls)
 _OBS_CLI = Path(__file__).parent / "obs_cli.py"
@@ -1049,7 +1077,7 @@ def get_note_links(note_id: str) -> str:
 
 
 @mcp.tool()
-def rescan_vault(vault_id: str) -> str:
+async def rescan_vault(vault_id: str) -> str:
     """
     Rescan a vault to sync the obs database with current filesystem state.
 
@@ -1067,9 +1095,12 @@ def rescan_vault(vault_id: str) -> str:
         # Real scan: vault_manager.scan_vault re-reads the filesystem and updates
         # the DB. (The old code shelled to `obs stats`, which is READ-ONLY and
         # never rescanned — it reported success while changing nothing.)
-        result = asyncio.run(
-            vault_manager.scan_vault(vault["path"], vault["name"])
-        )
+        #
+        # FastMCP dispatches this handler inside an already-running event loop,
+        # so we `await` the coroutine directly. The previous asyncio.run() raised
+        # `RuntimeError: asyncio.run() cannot be called from a running event
+        # loop` on every MCP call (#62), leaving the DB/index silently stale.
+        result = await vault_manager.scan_vault(vault["path"], vault["name"])
         return (
             f"🔄 **Rescanned {result.vault_name}**\n"
             f"- Notes scanned: {result.notes_scanned}\n"
@@ -1145,6 +1176,48 @@ def get_bridge_status() -> str:
         return json.dumps(result.to_dict(), indent=2)
     except Exception as e:
         return f"Error checking bridge status: {e}"
+
+
+@mcp.tool()
+def server_info() -> str:
+    """
+    Report this running obs MCP server's identity and whether it is stale.
+
+    An in-process MCP server keeps the code it loaded at startup in memory, so
+    after an `obs` upgrade the host can keep serving OLD tool code until it is
+    restarted (this is what masked the v4.0.0 fix and motivated #53). Call this
+    when a tool behaves as if a known fix is missing.
+
+    Returns a JSON object with:
+      server_version (str)       — version of the code THIS process loaded
+                                   (frozen when the server started).
+      installed_version (str)    — version currently on disk.
+      started_at (str)           — ISO-8601 UTC timestamp of server start.
+      restart_recommended (bool) — True when server_version != installed_version
+                                   (the host is running stale code).
+      hint (str)                 — guidance, present only when restart_recommended.
+
+    If restart_recommended is True, reload/restart the MCP host (Cowork/Claude)
+    so the freshly installed server loads.
+    """
+    try:
+        installed = _read_disk_version()
+        stale = installed != "unknown" and installed != _SERVER_VERSION
+        info = {
+            "server_version": _SERVER_VERSION,
+            "installed_version": installed,
+            "started_at": _SERVER_STARTED_AT,
+            "restart_recommended": stale,
+        }
+        if stale:
+            info["hint"] = (
+                f"Running server is v{_SERVER_VERSION} but v{installed} is "
+                "installed — restart the MCP host (Cowork/Claude) to load it."
+            )
+        import json
+        return json.dumps(info, indent=2)
+    except Exception as e:
+        return f"Error reading server info: {e}"
 
 
 @mcp.tool()

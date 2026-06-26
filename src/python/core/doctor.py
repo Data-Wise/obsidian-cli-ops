@@ -361,7 +361,41 @@ def _check_vaults(vault_id: Optional[str] = None) -> list[DoctorResult]:
 def _check_mcp() -> list[DoctorResult]:
     results = []
 
-    # mcp-config
+    # --- Config-independent checks: source code + package availability ---
+    # These inspect the installed source / environment, NOT the Claude Desktop
+    # config, so they must run even when that config is absent (CI, servers, a
+    # fresh checkout). Previously they sat after an early `return` in the
+    # config-missing branch and were silently skipped there — which let the
+    # mcp-tool-resolvers / mcp-async-run static guards (#62) go unrun on any
+    # host without Claude Desktop configured.
+
+    # mcp-server (check mcp_server.py exists alongside this file)
+    candidate = Path(__file__).parent.parent / "mcp_server.py"
+    if candidate.exists():
+        results.append(DoctorResult("mcp-server", "mcp", "mcp_server.py importable", "pass",
+                                    str(candidate)))
+    else:
+        results.append(DoctorResult("mcp-server", "mcp", "mcp_server.py importable", "fail",
+                                    f"mcp_server.py not found at {candidate}",
+                                    "Reinstall: brew reinstall obsidian-cli-ops"))
+
+    # mcp-tool-resolvers — static guard against the exact-ID-only resolver bug
+    results.append(_check_mcp_tool_resolvers(candidate))
+
+    # mcp-async-run — static guard against asyncio.run() in a sync @mcp.tool (#62)
+    results.append(_check_mcp_async_run(candidate))
+
+    # mcp-fastmcp
+    try:
+        import mcp  # noqa: F401
+        results.append(DoctorResult("mcp-fastmcp", "mcp", "FastMCP available", "pass",
+                                    f"mcp package importable"))
+    except ImportError:
+        results.append(DoctorResult("mcp-fastmcp", "mcp", "FastMCP available", "fail",
+                                    "mcp package not importable",
+                                    "Run: ./install.sh  or  brew reinstall obsidian-cli-ops"))
+
+    # --- Claude Desktop config checks ---
     config_path = None
     for p in _CLAUDE_DESKTOP_CONFIG_PATHS:
         if p.exists():
@@ -372,9 +406,8 @@ def _check_mcp() -> list[DoctorResult]:
         results.append(DoctorResult("mcp-config", "mcp", "Claude Desktop config", "fail",
                                     "claude_desktop_config.json not found",
                                     f"Expected at: {_CLAUDE_DESKTOP_CONFIG_PATHS[0]}"))
-        for cid, label in [("mcp-entry", "obsidian-ops entry"), ("mcp-server", "mcp_server.py importable"),
-                            ("mcp-fastmcp", "FastMCP available")]:
-            results.append(DoctorResult(cid, "mcp", label, "skip", "skipped: config missing"))
+        results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "skip",
+                                    "skipped: config missing"))
         return results
 
     results.append(DoctorResult("mcp-config", "mcp", "Claude Desktop config", "pass", str(config_path)))
@@ -408,32 +441,6 @@ def _check_mcp() -> list[DoctorResult]:
     except (json.JSONDecodeError, OSError) as e:
         results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "error",
                                     f"Cannot parse config: {e}"))
-        for cid, label in [("mcp-server", "mcp_server.py importable"), ("mcp-fastmcp", "FastMCP available")]:
-            results.append(DoctorResult(cid, "mcp", label, "skip", "skipped: config unreadable"))
-        return results
-
-    # mcp-fastmcp
-    try:
-        import mcp  # noqa: F401
-        results.append(DoctorResult("mcp-fastmcp", "mcp", "FastMCP available", "pass",
-                                    f"mcp package importable"))
-    except ImportError:
-        results.append(DoctorResult("mcp-fastmcp", "mcp", "FastMCP available", "fail",
-                                    "mcp package not importable",
-                                    "Run: ./install.sh  or  brew reinstall obsidian-cli-ops"))
-
-    # mcp-server (check mcp_server.py exists alongside this file)
-    candidate = Path(__file__).parent.parent / "mcp_server.py"
-    if candidate.exists():
-        results.append(DoctorResult("mcp-server", "mcp", "mcp_server.py importable", "pass",
-                                    str(candidate)))
-    else:
-        results.append(DoctorResult("mcp-server", "mcp", "mcp_server.py importable", "fail",
-                                    f"mcp_server.py not found at {candidate}",
-                                    "Reinstall: brew reinstall obsidian-cli-ops"))
-
-    # mcp-tool-resolvers — static guard against the exact-ID-only resolver bug
-    results.append(_check_mcp_tool_resolvers(candidate))
 
     return results
 
@@ -499,6 +506,68 @@ def _check_mcp_tool_resolvers(server_path: Path) -> DoctorResult:
                         "all vault-taking tools use name/ID/prefix resolution")
 
 
+def _find_async_run_offenders(source: str) -> list[str]:
+    """Return "<tool>()" for each SYNC @mcp.tool function whose body calls
+    asyncio.run(...) — the #62 anti-pattern. FastMCP dispatches tool handlers
+    inside an already-running event loop, so asyncio.run() raises
+    `RuntimeError: asyncio.run() cannot be called from a running event loop`.
+
+    Only sync `def` handlers are flagged: an `async def` that awaits its
+    coroutine is the correct fix, and `isinstance(node, ast.FunctionDef)` is
+    False for ast.AsyncFunctionDef, so async handlers are skipped automatically.
+    """
+    tree = ast.parse(source)
+    offenders: list[str] = []
+
+    def is_mcp_tool(fn: ast.FunctionDef) -> bool:
+        for dec in fn.decorator_list:
+            # matches both @mcp.tool and @mcp.tool(...)
+            target = dec.func if isinstance(dec, ast.Call) else dec
+            if isinstance(target, ast.Attribute) and target.attr == "tool" \
+                    and isinstance(target.value, ast.Name) and target.value.id == "mcp":
+                return True
+        return False
+
+    for fn in ast.walk(tree):
+        # ast.FunctionDef excludes ast.AsyncFunctionDef → only sync handlers
+        if not isinstance(fn, ast.FunctionDef) or not is_mcp_tool(fn):
+            continue
+        for node in ast.walk(fn):
+            if not isinstance(node, ast.Call):
+                continue
+            f = node.func
+            if isinstance(f, ast.Attribute) and f.attr == "run" \
+                    and isinstance(f.value, ast.Name) and f.value.id == "asyncio":
+                offenders.append(f"{fn.name}()")
+                break
+    return offenders
+
+
+def _check_mcp_async_run(server_path: Path) -> DoctorResult:
+    """Flag sync MCP tools that call asyncio.run() (crashes inside FastMCP's
+    running event loop — see #62)."""
+    label = "MCP tools free of asyncio.run() in sync handlers"
+    if not server_path.exists():
+        return DoctorResult("mcp-async-run", "mcp", label, "skip",
+                            "skipped: mcp_server.py not found")
+    try:
+        offenders = _find_async_run_offenders(server_path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError) as e:
+        return DoctorResult("mcp-async-run", "mcp", label, "error",
+                            f"Cannot analyze mcp_server.py: {e}")
+    if offenders:
+        return DoctorResult(
+            "mcp-async-run", "mcp", label, "fail",
+            f"{len(offenders)} sync @mcp.tool call asyncio.run(): "
+            + ", ".join(offenders),
+            "Make the handler `async def` and `await` the coroutine. FastMCP "
+            "dispatches tools inside a running event loop, where asyncio.run() "
+            "raises RuntimeError (#62).",
+        )
+    return DoctorResult("mcp-async-run", "mcp", label, "pass",
+                        "no sync @mcp.tool handler calls asyncio.run()")
+
+
 # ---------------------------------------------------------------------------
 # Layer 5 — documentation count consistency
 # ---------------------------------------------------------------------------
@@ -514,8 +583,8 @@ def _check_doc_counts() -> list[DoctorResult]:
                              "skipped: core.doc_counts unavailable")]
     counts = source_counts()
     mismatches = find_mismatches(counts)
-    summary = (f"tools={counts['mcp_tools']} resources={counts['mcp_resources']} "
-               f"providers={counts['ai_providers']}")
+    summary = (f"commands={counts['obs_commands']} tools={counts['mcp_tools']} "
+               f"resources={counts['mcp_resources']} providers={counts['ai_providers']}")
     if not mismatches:
         return [DoctorResult("doc-counts", "docs", "Doc count consistency", "pass",
                              f"docs aligned with source ({summary})")]

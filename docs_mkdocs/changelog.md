@@ -6,6 +6,48 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+---
+
+## v4.1.0 (2026-06-26) — MCP rescan fix, server_info & count gates
+
+### Fixed
+
+- **`rescan_vault` MCP tool crashed on every call** (#62) — the sync handler ran
+  `asyncio.run(scan_vault(...))` inside FastMCP's already-running event loop,
+  raising `RuntimeError: asyncio.run() cannot be called from a running event
+  loop`. The scan never ran, so the obs DB/search index went silently stale
+  after every write tool. The handler is now `async def` and `await`s the
+  coroutine. A regression test drives the tool inside a live event loop so the
+  failure mode can't silently return.
+- **Command-count drift** — docs disagreed on the `obs` command total
+  (`.STATUS` said 25, refcard 35, cli-reference 40); none matched the code.
+  Reconciled every current-state surface to the real count: **45 runnable
+  commands** (17 top-level groups, incl. the `obs config` / `obs research`
+  families absorbed from nexus-cli).
+
+### Added
+
+- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. [Schema](obs-sync-yml.md).
+- **`obs research board`** — deterministic atlas → vault dashboard renderer (manuscripts + programs); marker-bounded atomic write; `--out`, `--kind`, `--dry-run`. [Tutorial](tutorials/research-board.md).
+- **`server_info` MCP tool** (#53) — reports the running server's
+  `server_version`, `installed_version`, `started_at`, and
+  `restart_recommended`. An in-process MCP server keeps the code it loaded at
+  startup in memory, so after an upgrade the host can serve stale tool code
+  until restarted; `server_info` makes that observable without a restart.
+  (Tool count 39 → 40.)
+- **`obs doctor` `mcp-async-run` check** (mcp layer) — static AST guard that
+  fails if any **sync** `@mcp.tool()` handler calls `asyncio.run()`, so the #62
+  bug class cannot recur. Mirrors the existing `mcp-tool-resolvers` guard.
+- **Command-count gate** — `core/doc_counts.py` now derives the runnable `obs`
+  command count (leaf subcommands) statically from `obs_cli.py` (AST), so it
+  joins MCP tools/resources/providers as a gated single source of truth.
+  `validate-counts.sh`, `obs doctor --layer docs`, and `test_doc_counts.py` all
+  surface it; command-count drift can no longer merge.
+
+---
+
+## v4.0.1 (2026-06-23) — insert_to_note + fixes + release-quality tooling
+
 ### Added
 
 - **`insert_to_note` MCP tool** — heading-aware insertion (#40): insert content
@@ -15,11 +57,22 @@ All notable changes to Obsidian CLI Ops.
   running graph analysis; accepts `--name`, `--analyze`, `--check` (#52).
 - **Staleness warnings** — `obs analyze`, `obs search`, `obs health` now warn to stderr
   when the vault index is older than 24 h (configurable via `config.yaml`) (#52).
+- **Release-check harness** (#50) — `core/doc_counts.py` single-source count gate with
+  thin consumers (`validate-counts.sh`, `obs doctor --layer docs`, `test_doc_counts.py`)
+  plus release-time `verify-caveats` / `post-install-check` / `post-release-sweep` scripts.
+- **Unit-test count gate** — round-down-to-10 floor ("340+ unit") so doc/test-count
+  drift is caught in CI without a doc bump on every test added.
 
 ### Fixed
 
 - Vault scan no longer crashes on dotfiles (e.g. `.md`) — `_extract_title()` now
   handles the zero-stem edge case with a hash fallback (#51).
+
+### Docs
+
+- `craft:site:audit` remediation: monitoring & diagnostics command reference
+  (`bridge status`, `trends`, `stale`, `daily-digest`, `doctor`), TUI/R-Dev removal,
+  monitoring/temporal API methods, corrected test counts, monitoring/research tutorials.
 
 ---
 

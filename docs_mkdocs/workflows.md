@@ -159,7 +159,7 @@ graph TD
 
 !!! tip "5-minute setup"
     See [Claude Integration](claude-integration.md) to connect `obs` to Claude Desktop.
-    Once connected, all 39 MCP tools are available in every Claude conversation.
+    Once connected, all 40 MCP tools are available in every Claude conversation.
 
 ---
 

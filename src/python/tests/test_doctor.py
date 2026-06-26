@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "core"))
 from core.doctor import (
     DoctorResult, run_checks, _check_python, _check_database, _check_mcp,
     _check_icloud, _find_bad_vault_resolvers, _check_mcp_tool_resolvers,
+    _find_async_run_offenders, _check_mcp_async_run,
 )
 
 _VersionInfo = namedtuple("version_info", ["major", "minor", "micro", "releaselevel", "serial"])
@@ -263,10 +264,16 @@ class TestCheckMCP:
         monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS",
                             [tmp_path / "nonexistent.json"])
         results = _check_mcp()
+        ids = {r.id for r in results}
         cfg = next(r for r in results if r.id == "mcp-config")
         assert cfg.status == "fail"
-        skips = [r for r in results if r.status == "skip"]
-        assert len(skips) >= 2
+        # Only the config-dependent entry check skips when the config is absent.
+        entry = next(r for r in results if r.id == "mcp-entry")
+        assert entry.status == "skip"
+        # Source-code static guards are config-independent and must still run
+        # (regression: they were silently skipped in the config-missing branch).
+        assert "mcp-tool-resolvers" in ids
+        assert "mcp-async-run" in ids
 
     def test_pass_with_valid_config(self, tmp_path, monkeypatch):
         config_path = tmp_path / "claude_desktop_config.json"
@@ -437,3 +444,95 @@ class TestMcpToolResolvers:
     def test_check_skips_when_missing(self, tmp_path):
         result = _check_mcp_tool_resolvers(tmp_path / "nope.py")
         assert result.status == "skip"
+
+
+# ---------------------------------------------------------------------------
+# MCP async-run static guard (#62: asyncio.run() inside a sync @mcp.tool)
+# ---------------------------------------------------------------------------
+
+_ASYNC_RUN_OK = '''
+@mcp.tool()
+async def rescan_vault(vault_id: str) -> str:
+    result = await vault_manager.scan_vault(vault_id)
+    return result.vault_name
+'''
+
+_ASYNC_RUN_BAD = '''
+@mcp.tool()
+def rescan_vault(vault_id: str) -> str:
+    result = asyncio.run(vault_manager.scan_vault(vault_id))
+    return result.vault_name
+'''
+
+_ASYNC_RUN_NONTOOL_OK = '''
+def cli_entry(vault_id: str) -> str:
+    """Sync CLI caller — asyncio.run() is valid here (no running loop)."""
+    return asyncio.run(vault_manager.scan_vault(vault_id))
+'''
+
+
+class TestMcpAsyncRun:
+    def test_clean_when_async_handler(self):
+        assert _find_async_run_offenders(_ASYNC_RUN_OK) == []
+
+    def test_flags_sync_handler_calling_asyncio_run(self):
+        assert _find_async_run_offenders(_ASYNC_RUN_BAD) == ["rescan_vault()"]
+
+    def test_ignores_asyncio_run_outside_mcp_tool(self):
+        """Only @mcp.tool handlers run inside FastMCP's loop; a plain sync
+        function (e.g. the CLI path) may legitimately call asyncio.run()."""
+        assert _find_async_run_offenders(_ASYNC_RUN_NONTOOL_OK) == []
+
+    def test_real_mcp_server_is_clean(self):
+        """The shipped mcp_server.py must have zero sync asyncio.run() tools."""
+        server = Path(__file__).parent.parent / "mcp_server.py"
+        assert _find_async_run_offenders(server.read_text(encoding="utf-8")) == []
+
+    def test_check_passes_on_real_server(self):
+        server = Path(__file__).parent.parent / "mcp_server.py"
+        result = _check_mcp_async_run(server)
+        assert result.id == "mcp-async-run"
+        assert result.layer == "mcp"
+        assert result.status == "pass"
+
+    def test_check_fails_on_bad_stub(self, tmp_path):
+        bad = tmp_path / "mcp_server.py"
+        bad.write_text(_ASYNC_RUN_BAD)
+        result = _check_mcp_async_run(bad)
+        assert result.status == "fail"
+        assert "rescan_vault()" in result.message
+
+    def test_check_skips_when_missing(self, tmp_path):
+        result = _check_mcp_async_run(tmp_path / "nope.py")
+        assert result.status == "skip"
+
+    def test_check_errors_on_unparseable_source(self, tmp_path):
+        """Unparseable source → 'error' status (not a crash), matching the
+        sibling resolver guard's error contract."""
+        bad = tmp_path / "mcp_server.py"
+        bad.write_text("def broken(:\n    pass\n")
+        result = _check_mcp_async_run(bad)
+        assert result.status == "error"
+
+    def test_flags_multiple_offenders(self):
+        src = _ASYNC_RUN_BAD + '''
+@mcp.tool()
+def reindex(vault_id: str) -> str:
+    return asyncio.run(vault_manager.scan_vault(vault_id))
+'''
+        offenders = _find_async_run_offenders(src)
+        assert offenders == ["rescan_vault()", "reindex()"]
+
+    def test_matches_bare_decorator(self):
+        """@mcp.tool (no parens) is still an MCP tool and must be flagged."""
+        src = '''
+@mcp.tool
+def rescan_vault(vault_id: str) -> str:
+    return asyncio.run(vault_manager.scan_vault(vault_id))
+'''
+        assert _find_async_run_offenders(src) == ["rescan_vault()"]
+
+    def test_registered_in_mcp_layer(self):
+        """_check_mcp() must surface the mcp-async-run result."""
+        ids = {r.id for r in _check_mcp()}
+        assert "mcp-async-run" in ids

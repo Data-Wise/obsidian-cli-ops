@@ -4,7 +4,7 @@
 >
 > **Last Updated:** 2026-06-23
 >
-> **Current Release:** v4.0.1 (Released 2026-06-23) — `insert_to_note` MCP tool (#40), dotfile/scan/staleness fixes (#51, #52), release-check harness + unit-test floor gate, doc audit. Built on v4.0.0 (nexus-cli absorption, 2026-06-22).
+> **Current Release:** v4.1.0 (Released 2026-06-26) — `rescan_vault` asyncio crash fix (#62), `server_info` MCP tool (#53), `obs doctor` `mcp-async-run` guard, command-count single-source gate (45 runnable commands), plus `obs link` + `obs research board`. Built on v4.0.1 (2026-06-23) and v4.0.0 (nexus-cli absorption, 2026-06-22).
 >
 > **Strategic Direction:** "Brain + Hands" — obs analyzes/suggests (graph + AI + temporal), official Obsidian CLI executes (CRUD, move, create)
 > **Install:** `brew install data-wise/tap/obsidian-cli-ops`
@@ -26,20 +26,20 @@
 > **Decided 2026-06-22.** Spec: `docs/specs/SPEC-next-overhaul-2026-06-22.md` (§1 resolved → delegate, not FS-direct build)
 > **Context:** Official Obsidian CLI (~115 commands) owns vault primitives (CRUD, search, tags, backlinks, orphans, daily notes). v4.1 routes vault CRUD to it as obs's "hands" — `obs` keeps the analysis/intelligence moat.
 
-### Theme A — Integration Bridge (delegate to official CLI)
+### Theme A — Integration Bridge (delegate to official CLI) — remaining v4.1 work
 
-- [ ] **`obs bridge status`** — detect official `obsidian` CLI + running app, report capabilities/version
 - [ ] **`obs apply <plan-file> [--execute]`** — execute approved refactor/tag/link plans via the official CLI; dry-run default, interactive confirm
-- [ ] **Vault CRUD delegation** — `read / write / daily / template / backlinks / recent / orphans` routed to official CLI. **Trade-off documented**: offline regression (CRUD requires Obsidian app running via IPC)
+- [ ] **Vault CRUD delegation** — `read / write / daily / template / backlinks / recent / orphans` routed to official CLI. **Trade-off documented**: offline regression (CRUD requires Obsidian app running via IPC) — must be stated plainly in the v4.1 changelog (SPEC-next-overhaul §5)
 - [ ] **Read-side enrichment** — alias resolution + accurate backlinks from official CLI when app running; silent fallback to file scan (fixes `graph_builder.py:57` alias TODO)
 
-### Shipped in prior releases (Themes B — Temporal Analytics)
+### Shipped (Theme A bridge-status + Theme B temporal analytics)
 
+- ✅ **`obs bridge status`** — detect official `obsidian` CLI + running app, report capabilities/version *(shipped v4.0.x; MCP tool `get_bridge_status`)*
 - ✅ **`obs trends <vault>`** — knowledge-growth curve, note/link velocity, activity heatmap
 - ✅ **`obs stale <vault>`** — staleness ranked by PageRank × age
-- ✅ **`obs ai daily-digest <vault>`** — daily health digest (orphans, decayed hubs, stale-but-important)
+- ✅ **`obs daily-digest <vault>`** — daily health digest (bridge + trends + stale)
 
-**Build order:** bridge `status` → `trends`+`stale` → `apply`+real `--apply` → `daily-digest` → read-side enrichment.
+**Remaining build order:** `apply` + real `--apply` → vault-CRUD delegation → read-side enrichment.
 
 ---
 

@@ -863,6 +863,13 @@ def main():
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
+    link_parser = subparsers.add_parser('link', help='Create the per-project .obs/sync.yml mirror map (ADR-001)')
+    link_parser.add_argument('project_dir', nargs='?', default='.', help='Project directory (default: cwd)')
+    link_parser.add_argument('--vault-root', default=None, help='Vault root for an active mirror')
+    link_parser.add_argument('--mirror', choices=['auto', 'mirror', 'none'], default='auto', help='Mirror mode (default: auto)')
+    link_parser.add_argument('--force', action='store_true', help='Overwrite an existing map')
+    link_parser.add_argument('--json', action='store_true', help='Output result as JSON')
+
     config_parser = subparsers.add_parser('config', help='Manage obs unified config (~/.config/obs/config.yaml)')
     config_sub = config_parser.add_subparsers(dest='config_command')
     config_sub.add_parser('show', help='Print current config and its source')
@@ -875,6 +882,12 @@ def main():
     # --- Phase 4: obs research namespace (D8) ---
     research_parser = subparsers.add_parser('research', help='Research domain commands (Zotero, PDF, courses, manuscripts)')
     research_sub = research_parser.add_subparsers(dest='research_command')
+
+    # research board — atlas state -> vault dashboard (SPEC-obs)
+    board_parser = research_sub.add_parser('board', help='Render the research action board from atlas state')
+    board_parser.add_argument('--out', default=None, help='Vault file to update (marker-bounded); prints to stdout if omitted')
+    board_parser.add_argument('--kind', default=None, help='Filter to a kind (manuscript|program|package)')
+    board_parser.add_argument('--dry-run', action='store_true', help='With --out, show what would change without writing')
 
     # zotero subcommands
     zotero_parser = research_sub.add_parser('zotero', help='Zotero library commands')
@@ -1596,6 +1609,16 @@ def main():
             has_fail = any(r.status == 'fail' for r in results)
             sys.exit(1 if has_fail else 0)
 
+        elif args.command == 'link':
+            from research.obs_link import write_link
+            mirror = None if args.mirror == 'auto' else args.mirror
+            res = write_link(args.project_dir, vault_root=args.vault_root, mirror=mirror, force=args.force)
+            if args.json:
+                print(json.dumps(res))
+            else:
+                verb = 'Created' if res['created'] else 'Exists'
+                print(f"{verb}: {res['path']} (mirror: {res['mirror']})")
+
         elif args.command == 'config':
             sub = getattr(args, 'config_command', None)
             if sub == 'show':
@@ -1616,6 +1639,19 @@ def main():
             cfg = config_loader.load()
 
             sub = getattr(args, 'research_command', None)
+
+            if sub == 'board':
+                from research.research_board import load_projects, load_research_projects, build_block, write_marked_block
+                kind = getattr(args, 'kind', None)
+                projects = load_projects(kind=kind) if kind else load_research_projects()
+                block = build_block(projects)
+                out = getattr(args, 'out', None)
+                if out:
+                    res = write_marked_block(out, block, dry_run=getattr(args, 'dry_run', False))
+                    print(f"{res['action']}: {res['path']} (changed={res['changed']})")
+                else:
+                    print(block)
+                sys.exit(0)
 
             if sub == 'zotero':
                 if cfg is None or cfg.research is None or cfg.research.zotero is None:

@@ -1,13 +1,13 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 40 `obs` commands (24 core + 16 from the nexus-cli absorption, shipped in v4.0.0) + 39 MCP tools for Claude
+> - **What:** Full reference for all 45 `obs` commands (17 top-level groups, incl. the config & research families absorbed from nexus-cli in v4.0.0) + 40 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 4.0.1
+**Version:** 4.1.0
 
 ---
 
@@ -264,6 +264,15 @@ obs doctor --layer db --json         # DB checks as JSON
 !!! info "Doc count gate"
     `obs doctor --layer docs` is part of the release harness — it catches count drift between source code and documentation before any release lands.
 
+!!! info "MCP static guards"
+    `obs doctor --layer mcp` includes two AST guards over `mcp_server.py` that
+    catch whole bug classes before release:
+
+    - **`mcp-tool-resolvers`** — fails if a `@mcp.tool` resolves a vault with the
+      exact-ID-only `db.get_vault()` instead of name/ID/prefix resolution.
+    - **`mcp-async-run`** — fails if a **sync** `@mcp.tool` calls `asyncio.run()`,
+      which crashes inside FastMCP's running event loop (regression guard for #62).
+
 ---
 
 ## :chart_with_upwards_trend: Graph Analysis
@@ -468,6 +477,42 @@ obs version
 
 ---
 
+## :books: Research Registry
+
+### obs link
+
+Create the per-project `.obs/sync.yml` mirror map ([schema](obs-sync-yml.md)). Idempotent.
+
+```bash
+obs link [project_dir] [--vault-root <path>] [--mirror auto|mirror|none] [--force] [--json]
+```
+
+- `--vault-root` — vault path for an active mirror (defaults to `mirror: none` when omitted).
+- `--mirror` — force the mode; `--force` overwrites an existing map.
+
+```bash
+obs link                                  # mirror: none (non-vault project)
+obs link --vault-root ~/vault/Research/x  # active mirror
+```
+
+### obs research board
+
+Render a deterministic dashboard of manuscripts + programs from atlas state into the vault
+([tutorial](tutorials/research-board.md)).
+
+```bash
+obs research board [--out <vault file>] [--kind manuscript|program|package] [--dry-run]
+```
+
+- No `--out` → prints to stdout. `--out` → marker-bounded atomic update of the file.
+- `--dry-run` → shows changes, writes nothing (non-zero exit on drift — a scheduling guard).
+- No `--kind` → manuscripts + programs; `--kind` narrows to one.
+
+```bash
+obs research board
+obs research board --out ~/vault/00_meta/_RESEARCH-BOARD.md
+```
+
 ## :gear: Config Management
 
 !!! info "Shipped in v4.0.0"
@@ -648,7 +693,7 @@ obs research bib check <name>
 
 ## :robot_face: Claude / MCP Integration
 
-`obs` exposes **39 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
+`obs` exposes **40 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
 Claude Code, and Cowork. Once configured (see [Claude Integration](claude-integration.md)),
 you can ask Claude natural-language questions about your vaults.
 
@@ -677,7 +722,7 @@ you can ask Claude natural-language questions about your vaults.
 "Run a quality check on MyVault"
 ```
 
-See [Claude Integration](claude-integration.md) for full setup instructions and all 39 tools.
+See [Claude Integration](claude-integration.md) for full setup instructions and all 40 tools.
 
 ---
 
