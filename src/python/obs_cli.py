@@ -341,8 +341,12 @@ class ObsCLI:
         print(f"  Notes: {result.notes_scanned}")
         print(f"  Links: {result.links_found}")
         print(f"  Tags: {result.tags_found}")
+        if result.notes_unchanged > 0:
+            print(f"  Unchanged: {result.notes_unchanged}")
         if result.notes_pruned > 0:
             print(f"  Pruned: {result.notes_pruned}")
+        if result.notes_failed > 0:
+            print(f"  Failed: {result.notes_failed}")
         print(f"  Duration: {result.duration_seconds:.2f}s")
 
         if verbose:

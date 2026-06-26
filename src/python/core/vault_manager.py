@@ -183,6 +183,8 @@ class VaultManager:
                 notes_scanned=stats.get('notes_scanned', 0),
                 links_found=stats.get('links_added', 0),
                 notes_pruned=stats.get('notes_pruned', 0),
+                notes_unchanged=stats.get('notes_unchanged', 0),
+                notes_failed=stats.get('notes_failed', 0),
                 duration_seconds=time.time() - start_time
             )
 
