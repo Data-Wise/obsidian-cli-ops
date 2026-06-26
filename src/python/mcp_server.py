@@ -38,7 +38,6 @@ import os
 import sys
 import subprocess
 import stat
-import asyncio
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -1049,7 +1048,7 @@ def get_note_links(note_id: str) -> str:
 
 
 @mcp.tool()
-def rescan_vault(vault_id: str) -> str:
+async def rescan_vault(vault_id: str) -> str:
     """
     Rescan a vault to sync the obs database with current filesystem state.
 
@@ -1067,9 +1066,12 @@ def rescan_vault(vault_id: str) -> str:
         # Real scan: vault_manager.scan_vault re-reads the filesystem and updates
         # the DB. (The old code shelled to `obs stats`, which is READ-ONLY and
         # never rescanned — it reported success while changing nothing.)
-        result = asyncio.run(
-            vault_manager.scan_vault(vault["path"], vault["name"])
-        )
+        #
+        # FastMCP dispatches this handler inside an already-running event loop,
+        # so we `await` the coroutine directly. The previous asyncio.run() raised
+        # `RuntimeError: asyncio.run() cannot be called from a running event
+        # loop` on every MCP call (#62), leaving the DB/index silently stale.
+        result = await vault_manager.scan_vault(vault["path"], vault["name"])
         return (
             f"🔄 **Rescanned {result.vault_name}**\n"
             f"- Notes scanned: {result.notes_scanned}\n"
