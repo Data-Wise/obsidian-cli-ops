@@ -759,6 +759,11 @@ obs_research() {
     $OBS_PYTHON "$python_cli" research "$@"
 }
 
+obs_vault() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" vault "$@"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -841,6 +846,9 @@ obs() {
             ;;
         "research")
             obs_research "$@"
+            ;;
+        "vault")
+            obs_vault "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

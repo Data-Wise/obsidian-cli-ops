@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.1.0 | **Tools:** 40 | **Protocol:** FastMCP (stdio)
+**Version:** 4.1.0 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -58,7 +58,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 
 ---
 
-## Available Tools (40)
+## Available Tools (42)
 
 > **`vault_id` accepts a vault name, full ID, or unambiguous ID prefix.** You don't
 > need the exact hash ID — `get_vault_stats("ResearchVault")` works the same as
@@ -192,7 +192,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 40 tools)
+     mcp_server.py   (FastMCP, 42 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓
