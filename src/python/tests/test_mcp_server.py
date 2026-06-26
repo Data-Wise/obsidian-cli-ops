@@ -569,6 +569,44 @@ class TestRescanTool:
 
 
 # ---------------------------------------------------------------------------
+# Server info — #53: detect a stale in-process MCP server
+# ---------------------------------------------------------------------------
+
+class TestServerInfo:
+    def test_surfaces_version_and_started_at(self, mcp_mod):
+        import json
+        info = json.loads(mcp_mod.server_info())
+        assert isinstance(info["server_version"], str) and info["server_version"]
+        assert info["server_version"] == mcp_mod._SERVER_VERSION
+        assert info["installed_version"] == mcp_mod._read_disk_version()
+        assert isinstance(info["started_at"], str) and "T" in info["started_at"]
+
+    def test_no_restart_when_versions_match(self, mcp_mod):
+        import json
+        # In a healthy server the frozen version equals the on-disk version.
+        info = json.loads(mcp_mod.server_info())
+        assert info["restart_recommended"] is False
+        assert "hint" not in info
+
+    def test_restart_recommended_on_version_mismatch(self, mcp_mod):
+        """A running server older than the installed code → restart_recommended."""
+        import json
+        with patch.object(mcp_mod, "_read_disk_version", return_value="99.0.0"):
+            info = json.loads(mcp_mod.server_info())
+        assert info["installed_version"] == "99.0.0"
+        assert info["server_version"] == mcp_mod._SERVER_VERSION
+        assert info["restart_recommended"] is True
+        assert "restart" in info["hint"].lower()
+
+    def test_unknown_disk_version_does_not_flag_restart(self, mcp_mod):
+        """A failed disk read ('unknown') must not produce a false stale flag."""
+        import json
+        with patch.object(mcp_mod, "_read_disk_version", return_value="unknown"):
+            info = json.loads(mcp_mod.server_info())
+        assert info["restart_recommended"] is False
+
+
+# ---------------------------------------------------------------------------
 # Vault resolution — Bug A regression: name / prefix must resolve, not just ID
 # ---------------------------------------------------------------------------
 

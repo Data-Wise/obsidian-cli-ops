@@ -41,10 +41,10 @@
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
-| MCP Server — all 39 tools + 4 resources | 113 | pytest | `test_mcp_server.py` |
+| MCP Server — all 40 tools + 4 resources | 113 | pytest | `test_mcp_server.py` |
 | **MCP Subtotal** | **113** | **pytest** | |
 
-Covers all 39 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.
+Covers all 40 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.
 
 ### E2E Tests (pytest, gated)
 

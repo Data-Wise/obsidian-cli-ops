@@ -100,6 +100,37 @@ db = DatabaseManager()
 vault_manager = VaultManager(db)
 graph_analyzer = GraphAnalyzer(db)
 
+# ---------------------------------------------------------------------------
+# Server identity / staleness detection (#53)
+# ---------------------------------------------------------------------------
+# An in-process MCP server keeps the OLD code in memory after an upgrade — this
+# is exactly what masked the v4.0.0 fix and motivated #53 (a v4.0.0-fixed tool
+# still failed because the running server predated the fix). We freeze the
+# version this process loaded at import time and compare it, on request, with
+# the version currently on disk; a mismatch means the host is running stale code.
+import re as _re
+from datetime import timezone as _timezone
+
+_VERSION_FILE = Path(__file__).parent / "__init__.py"
+
+
+def _read_disk_version() -> str:
+    """Parse __version__ from __init__.py on disk — the repo's single source of
+    truth (same regex as `obs version` / test_version_consistency). Read fresh
+    each call so a post-upgrade change is observable from a long-running process.
+    """
+    try:
+        m = _re.search(r'__version__\s*=\s*"([^"]+)"',
+                       _VERSION_FILE.read_text(encoding="utf-8"))
+        return m.group(1) if m else "unknown"
+    except OSError:
+        return "unknown"
+
+
+# Frozen at import = the version of the code THIS process is actually running.
+_SERVER_VERSION = _read_disk_version()
+_SERVER_STARTED_AT = datetime.now(_timezone.utc).isoformat()
+
 # Path to obs CLI (for AI subcommand subprocess calls)
 _OBS_CLI = Path(__file__).parent / "obs_cli.py"
 _PYTHON = sys.executable  # already the obs venv python
@@ -1147,6 +1178,48 @@ def get_bridge_status() -> str:
         return json.dumps(result.to_dict(), indent=2)
     except Exception as e:
         return f"Error checking bridge status: {e}"
+
+
+@mcp.tool()
+def server_info() -> str:
+    """
+    Report this running obs MCP server's identity and whether it is stale.
+
+    An in-process MCP server keeps the code it loaded at startup in memory, so
+    after an `obs` upgrade the host can keep serving OLD tool code until it is
+    restarted (this is what masked the v4.0.0 fix and motivated #53). Call this
+    when a tool behaves as if a known fix is missing.
+
+    Returns a JSON object with:
+      server_version (str)       — version of the code THIS process loaded
+                                   (frozen when the server started).
+      installed_version (str)    — version currently on disk.
+      started_at (str)           — ISO-8601 UTC timestamp of server start.
+      restart_recommended (bool) — True when server_version != installed_version
+                                   (the host is running stale code).
+      hint (str)                 — guidance, present only when restart_recommended.
+
+    If restart_recommended is True, reload/restart the MCP host (Cowork/Claude)
+    so the freshly installed server loads.
+    """
+    try:
+        installed = _read_disk_version()
+        stale = installed != "unknown" and installed != _SERVER_VERSION
+        info = {
+            "server_version": _SERVER_VERSION,
+            "installed_version": installed,
+            "started_at": _SERVER_STARTED_AT,
+            "restart_recommended": stale,
+        }
+        if stale:
+            info["hint"] = (
+                f"Running server is v{_SERVER_VERSION} but v{installed} is "
+                "installed — restart the MCP host (Cowork/Claude) to load it."
+            )
+        import json
+        return json.dumps(info, indent=2)
+    except Exception as e:
+        return f"Error reading server info: {e}"
 
 
 @mcp.tool()
