@@ -682,6 +682,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../tutorials/vault-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vault Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../tutorials/graph-analysis/" class="md-nav__link">
         
   
@@ -1847,7 +1875,7 @@
 
 <h1 id="testing-overview">Testing Overview<a class="headerlink" href="#testing-overview" title="Permanent link">&para;</a></h1>
 <p><strong>Version:</strong> 4.1.0
-<strong>Total Tests:</strong> 550+ — 360+ unit pytest, 113 MCP unit pytest, 32 E2E pytest, 69 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see <code>core/doc_counts.py</code>).</p>
+<strong>Total Tests:</strong> 550+ — 410+ unit pytest, 113 MCP unit pytest, 32 E2E pytest, 69 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see <code>core/doc_counts.py</code>).</p>
 <h2 id="test-coverage">Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">&para;</a></h2>
 <h3 id="unit-tests-pytest">Unit Tests (pytest)<a class="headerlink" href="#unit-tests-pytest" title="Permanent link">&para;</a></h3>
 <table>
@@ -2036,7 +2064,7 @@
 </thead>
 <tbody>
 <tr>
-<td>MCP Server — all 40 tools + 4 resources</td>
+<td>MCP Server — all 42 tools + 4 resources</td>
 <td>113</td>
 <td>pytest</td>
 <td><code>test_mcp_server.py</code></td>
@@ -2049,7 +2077,7 @@
 </tr>
 </tbody>
 </table>
-<p>Covers all 40 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.</p>
+<p>Covers all 42 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions.</p>
 <h3 id="e2e-tests-pytest-gated">E2E Tests (pytest, gated)<a class="headerlink" href="#e2e-tests-pytest-gated" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

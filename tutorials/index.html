@@ -747,6 +747,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#vault-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ai-quick-hits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -830,6 +841,34 @@
     
   
     Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vault-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vault Management
   
 
     
@@ -1671,6 +1710,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#vault-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ai-quick-hits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1795,6 +1845,12 @@
 <td>Install, discover vaults, scan, view stats</td>
 </tr>
 <tr>
+<td><a href="vault-management/">Vault Management</a></td>
+<td>🟢 Beginner</td>
+<td>~10 min</td>
+<td>Inspect, rename, and safely delete vaults (index-only)</td>
+</tr>
+<tr>
 <td><a href="graph-analysis/">Graph Analysis</a></td>
 <td>🟡 Intermediate</td>
 <td>~15 min</td>
@@ -1810,7 +1866,7 @@
 <td><a href="claude-mcp/">Claude / MCP Integration</a></td>
 <td>🟣 Integration</td>
 <td>~20 min</td>
-<td>Connect Claude Desktop, use all 40 MCP tools, note CRUD</td>
+<td>Connect Claude Desktop, use all 42 MCP tools, note CRUD</td>
 </tr>
 </tbody>
 </table>
@@ -1836,53 +1892,59 @@
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v<span class="w">        </span><span class="c1"># graph metrics + hubs</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w">           </span><span class="c1"># knowledge gaps</span>
 </code></pre></div>
+<h3 id="vault-management">Vault Management<a class="headerlink" href="#vault-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>info<span class="w"> </span>MyVault<span class="w">              </span><span class="c1"># metadata for one vault (--json for scripting)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>MyVault<span class="w"> </span><span class="s2">&quot;My Vault&quot;</span><span class="w"> </span><span class="c1"># relabel (path/ID unchanged; collisions refused)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span>MyVault<span class="w">           </span><span class="c1"># dry-run preview (nothing removed)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span>MyVault<span class="w"> </span>--force<span class="w">    </span><span class="c1"># remove from index — files on disk untouched</span>
+</code></pre></div>
 <h3 id="ai-quick-hits">AI Quick Hits<a class="headerlink" href="#ai-quick-hits" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">                           </span><span class="c1"># which providers are available</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w">                </span><span class="c1"># semantically similar notes</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>MyVault<span class="w">               </span><span class="c1"># potential duplicates</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">       </span><span class="c1"># preview scope (no AI calls)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">                 </span><span class="c1"># full reorganization plan</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w">                  </span><span class="c1"># score all notes, worst-first</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w">            </span><span class="c1"># merge candidate pairs</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">      </span><span class="c1"># suggest + auto-apply tags</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">                           </span><span class="c1"># which providers are available</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w">                </span><span class="c1"># semantically similar notes</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>MyVault<span class="w">               </span><span class="c1"># potential duplicates</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">       </span><span class="c1"># preview scope (no AI calls)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">                 </span><span class="c1"># full reorganization plan</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w">                  </span><span class="c1"># score all notes, worst-first</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w">            </span><span class="c1"># merge candidate pairs</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">      </span><span class="c1"># suggest + auto-apply tags</span>
 </code></pre></div>
 <h3 id="note-operations-via-claude-mcp">Note Operations via Claude (MCP)<a class="headerlink" href="#note-operations-via-claude-mcp" title="Permanent link">&para;</a></h3>
 <p>Ask Claude these after connecting the <code>obsidian-ops</code> MCP server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>&quot;List the 5 most orphaned notes in MyVault&quot;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&quot;Create a note called &#39;Meeting 2026-06-15&#39; in Research&quot;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>&quot;Append today&#39;s summary to my daily note&quot;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>&quot;Check vault health and list the top issues&quot;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>&quot;Run a quality check on all notes in MyVault&quot;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>&quot;Find notes that might be merged&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&quot;Search my research vault for causal inference&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&quot;List the 5 most orphaned notes in MyVault&quot;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>&quot;Create a note called &#39;Meeting 2026-06-15&#39; in Research&quot;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>&quot;Append today&#39;s summary to my daily note&quot;
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>&quot;Check vault health and list the top issues&quot;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>&quot;Run a quality check on all notes in MyVault&quot;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>&quot;Find notes that might be merged&quot;
 </code></pre></div>
 <h3 id="json-scripting">JSON / Scripting<a class="headerlink" href="#json-scripting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pretty-print vault stats</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show 5 worst-quality notes</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">notes = json.load(sys.stdin)[&#39;notes&#39;]</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">for n in notes[:5]: print(f\&quot;{n[&#39;score&#39;]:.2f}  {n[&#39;title&#39;]}\&quot;)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Filter refactor suggestions by category</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">plan = json.load(sys.stdin)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">for s in plan[&#39;suggestions&#39;]:</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">    if s[&#39;category&#39;] in (&#39;archive&#39;, &#39;merge-folder&#39;):</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">        print(f\&quot;[{s[&#39;category&#39;]}] {s[&#39;description&#39;]}\&quot;)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pretty-print vault stats</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show 5 worst-quality notes</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">notes = json.load(sys.stdin)[&#39;notes&#39;]</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">for n in notes[:5]: print(f\&quot;{n[&#39;score&#39;]:.2f}  {n[&#39;title&#39;]}\&quot;)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Filter refactor suggestions by category</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">plan = json.load(sys.stdin)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">for s in plan[&#39;suggestions&#39;]:</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">    if s[&#39;category&#39;] in (&#39;archive&#39;, &#39;merge-folder&#39;):</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s2">        print(f\&quot;[{s[&#39;category&#39;]}] {s[&#39;description&#39;]}\&quot;)</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="vault-cleanup-pipeline">Vault Cleanup Pipeline<a class="headerlink" href="#vault-cleanup-pipeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">                          </span><span class="c1"># 1. diagnose</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">           </span><span class="c1"># 2. preview scope</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">                     </span><span class="c1"># 3. full plan</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.85<span class="w">  </span><span class="c1"># 4. merge candidates</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">          </span><span class="c1"># 5. auto-tag</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w">                         </span><span class="c1"># 6. re-check</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">                          </span><span class="c1"># 1. diagnose</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">           </span><span class="c1"># 2. preview scope</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">                     </span><span class="c1"># 3. full plan</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.85<span class="w">  </span><span class="c1"># 4. merge candidates</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">          </span><span class="c1"># 5. auto-tag</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w">                         </span><span class="c1"># 6. re-check</span>
 </code></pre></div>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>

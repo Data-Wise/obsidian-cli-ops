@@ -12,29 +12,31 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/vault-management/">
       
       
+        <link rel="prev" href="../getting-started/">
       
-        <link rel="next" href="adhd-quick-start/">
+      
+        <link rel="next" href="../graph-analysis/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Obsidian CLI Ops</title>
+        <title>Vault Management - Obsidian CLI Ops</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/adhd.css">
+      <link rel="stylesheet" href="../../stylesheets/adhd.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#obs-your-vaults-command-line" class="md-skip">
+        <a href="#vault-management" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href="../.." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Vault Management
             
           </span>
         </div>
@@ -225,11 +227,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -250,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="adhd-quick-start/" class="md-tabs__link">
+        <a href="../../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -266,11 +266,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="tutorials/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -290,7 +292,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="refcard/" class="md-tabs__link">
+        <a href="../../refcard/" class="md-tabs__link">
           
   
   
@@ -310,7 +312,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="developer/architecture/" class="md-tabs__link">
+        <a href="../../developer/architecture/" class="md-tabs__link">
           
   
   
@@ -344,7 +346,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href="../.." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -371,37 +373,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -417,70 +392,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-it-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What It Does
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#learn-more" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Learn More
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -544,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adhd-quick-start/" class="md-nav__link">
+      <a href="../../adhd-quick-start/" class="md-nav__link">
         
   
   
@@ -572,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   
@@ -600,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -628,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
+      <a href="../../usage/" class="md-nav__link">
         
   
   
@@ -660,26 +571,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -697,7 +613,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -715,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -743,7 +659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -768,10 +684,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="tutorials/vault-management/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vault Management
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -787,6 +730,114 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-obs-vault-family" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The obs vault Family
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-inspect-a-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Inspect a Vault
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-rename-a-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Rename a Vault
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-preview-a-deletion-dry-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Preview a Deletion (dry-run)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-commit-the-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Commit the Deletion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-a-full-reset-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: A Full "Reset" Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-claude-desktop-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Claude Desktop (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recap
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -799,7 +850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/graph-analysis/" class="md-nav__link">
+      <a href="../graph-analysis/" class="md-nav__link">
         
   
   
@@ -827,7 +878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/ai-features/" class="md-nav__link">
+      <a href="../ai-features/" class="md-nav__link">
         
   
   
@@ -855,7 +906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/claude-mcp/" class="md-nav__link">
+      <a href="../claude-mcp/" class="md-nav__link">
         
   
   
@@ -883,7 +934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/research-setup/" class="md-nav__link">
+      <a href="../research-setup/" class="md-nav__link">
         
   
   
@@ -911,7 +962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/research-board/" class="md-nav__link">
+      <a href="../research-board/" class="md-nav__link">
         
   
   
@@ -939,7 +990,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/monitoring-and-health/" class="md-nav__link">
+      <a href="../monitoring-and-health/" class="md-nav__link">
         
   
   
@@ -967,7 +1018,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cookbook/" class="md-nav__link">
+      <a href="../../cookbook/" class="md-nav__link">
         
   
   
@@ -1054,7 +1105,7 @@
   
   
     <li class="md-nav__item">
-      <a href="refcard/" class="md-nav__link">
+      <a href="../../refcard/" class="md-nav__link">
         
   
   
@@ -1082,7 +1133,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cli-reference/" class="md-nav__link">
+      <a href="../../cli-reference/" class="md-nav__link">
         
   
   
@@ -1110,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="obs-sync-yml/" class="md-nav__link">
+      <a href="../../obs-sync-yml/" class="md-nav__link">
         
   
   
@@ -1138,7 +1189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="workflows/" class="md-nav__link">
+      <a href="../../workflows/" class="md-nav__link">
         
   
   
@@ -1166,7 +1217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ai-setup/" class="md-nav__link">
+      <a href="../../ai-setup/" class="md-nav__link">
         
   
   
@@ -1194,7 +1245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="claude-integration/" class="md-nav__link">
+      <a href="../../claude-integration/" class="md-nav__link">
         
   
   
@@ -1222,7 +1273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -1309,7 +1360,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer/architecture/" class="md-nav__link">
+      <a href="../../developer/architecture/" class="md-nav__link">
         
   
   
@@ -1337,7 +1388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer/api-reference/" class="md-nav__link">
+      <a href="../../developer/api-reference/" class="md-nav__link">
         
   
   
@@ -1417,7 +1468,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer/testing/overview/" class="md-nav__link">
+      <a href="../../developer/testing/overview/" class="md-nav__link">
         
   
   
@@ -1445,7 +1496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer/testing/core-tests/" class="md-nav__link">
+      <a href="../../developer/testing/core-tests/" class="md-nav__link">
         
   
   
@@ -1473,7 +1524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer/testing/sandbox/" class="md-nav__link">
+      <a href="../../developer/testing/sandbox/" class="md-nav__link">
         
   
   
@@ -1509,7 +1560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="migration/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
@@ -1564,10 +1615,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-it-does" class="md-nav__link">
+  <a href="#the-obs-vault-family" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What It Does
+        The obs vault Family
       
     </span>
   </a>
@@ -1575,10 +1626,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#step-1-inspect-a-vault" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Step 1: Inspect a Vault
       
     </span>
   </a>
@@ -1586,10 +1637,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#step-2-rename-a-vault" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture
+        Step 2: Rename a Vault
       
     </span>
   </a>
@@ -1597,10 +1648,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#learn-more" class="md-nav__link">
+  <a href="#step-3-preview-a-deletion-dry-run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Learn More
+        Step 3: Preview a Deletion (dry-run)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-commit-the-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Commit the Deletion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-a-full-reset-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: A Full "Reset" Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-claude-desktop-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Claude Desktop (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recap
       
     </span>
   </a>
@@ -1627,67 +1722,157 @@
   
 
 
-<h1 id="obs-your-vaults-command-line">obs -- Your Vault's Command Line<a class="headerlink" href="#obs-your-vaults-command-line" title="Permanent link">&para;</a></h1>
-<p><a href="https://github.com/Data-Wise/obsidian-cli-ops/releases"><img alt="Version" src="https://img.shields.io/badge/version-4.2.0-blue.svg" /></a>
-<a href="https://github.com/Data-Wise/obsidian-cli-ops/actions"><img alt="Build Status" src="https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg" /></a>
-<a href="https://github.com/Data-Wise/obsidian-cli-ops"><img alt="Tests" src="https://img.shields.io/badge/tests-450%2B%20passing-brightgreen.svg" /></a>
-<a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/python-3.9%2B-blue.svg" /></a>
-<a href="claude-integration/"><img alt="MCP Tools" src="https://img.shields.io/badge/MCP%20tools-25-purple.svg" /></a>
-<a href="https://github.com/Data-Wise/obsidian-cli-ops/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg" /></a></p>
-<p>A laser-focused CLI for Obsidian vault management with AI-powered graph analysis — and a full
-Claude / MCP integration so you can query your vaults in natural language.</p>
-<p><a class="md-button md-button--primary" href="installation/">Install Now</a>
-<a class="md-button" href="refcard/">Quick Reference</a>
-<a class="md-button" href="claude-integration/">Claude Integration</a></p>
+<h1 id="vault-management">Vault Management<a class="headerlink" href="#vault-management" title="Permanent link">&para;</a></h1>
+<p>Inspect, rename, and safely remove vaults from the obs index using the <code>obs vault</code> command family. These operate on the <strong>database index only</strong> — your markdown files on disk are never touched.</p>
+<p><strong>Time:</strong> ~10 minutes | <strong>Level:</strong> 🟢 Beginner | <strong>Steps:</strong> 5</p>
+<p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> and have at least one scanned vault.</p>
 <hr />
-<h2 id="what-it-does">What It Does<a class="headerlink" href="#what-it-does" title="Permanent link">&para;</a></h2>
-<div class="admonition tip">
-<p class="admonition-title">Vault Discovery</p>
-<p>Automatically find and scan Obsidian vaults. Tracks notes, links, tags, and graph structure in a local SQLite database.</p>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">AI Insights</p>
-<p>Find similar notes, detect duplicates, identify knowledge gaps, and get reorganization suggestions -- powered by 5 AI providers with smart fallback routing.</p>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">Graph Analysis</p>
-<p>PageRank, centrality, clustering, orphan/hub detection. Understand your vault's structure at a glance with the health dashboard.</p>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">Claude Integration (v4.0.0)</p>
-<p>42 MCP tools connect <code>obs</code> to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. <a href="claude-integration/">Setup takes 5 minutes →</a></p>
-</div>
+<h2 id="the-obs-vault-family">The <code>obs vault</code> Family<a class="headerlink" href="#the-obs-vault-family" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+<th>Touches disk?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs vault info &lt;vault&gt;</code></td>
+<td>Show one vault's metadata</td>
+<td>No (read-only)</td>
+</tr>
+<tr>
+<td><code>obs vault rename &lt;vault&gt; &lt;name&gt;</code></td>
+<td>Change the display name</td>
+<td>No (index only)</td>
+</tr>
+<tr>
+<td><code>obs vault delete &lt;vault&gt;</code></td>
+<td>Remove the vault from the index</td>
+<td><strong>No</strong> — files stay</td>
+</tr>
+</tbody>
+</table>
+<p>All three accept a vault <strong>name</strong>, full <strong>ID</strong>, or unambiguous <strong>ID prefix</strong> — the same resolution used by <code>obs stats</code> and <code>obs health</code>. Add <code>--json</code> to any of them for machine-readable output.</p>
 <hr />
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Install</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>brew<span class="w"> </span>install<span class="w"> </span>data-wise/tap/obsidian-cli-ops
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Discover your vaults</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Check vault health</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault
+<h2 id="step-1-inspect-a-vault">Step 1: Inspect a Vault<a class="headerlink" href="#step-1-inspect-a-vault" title="Permanent link">&para;</a></h2>
+<p>Start by looking at what obs knows about a vault:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>info<span class="w"> </span>Research
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>╭─────────────── 📁 Research ───────────────╮
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ Name: Research                            │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│ ID: a1b2c3d4e5f6...                       │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ Path: /Users/you/Documents/Research       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│ Notes: 482                                │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│ Last scanned: 2 hours ago                 │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ Registered: 3 months ago                  │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>╰───────────────────────────────────────────╯
+</code></pre></div>
+<p>For scripting, request JSON instead:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>info<span class="w"> </span>Research<span class="w"> </span>--json
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># {&quot;id&quot;: &quot;a1b2c3...&quot;, &quot;name&quot;: &quot;Research&quot;, &quot;path&quot;: &quot;/Users/you/Documents/Research&quot;,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">#  &quot;notes&quot;: 482, &quot;last_scanned&quot;: &quot;...&quot;, &quot;created_at&quot;: &quot;...&quot;}</span>
 </code></pre></div>
 <hr />
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    A[ZSH CLI&lt;br/&gt;obs.zsh] --&gt; B[Python Core&lt;br/&gt;obs_cli.py]
-    B --&gt; C[VaultManager&lt;br/&gt;GraphAnalyzer]
-    B --&gt; D[AI Features&lt;br/&gt;5 providers]
-    C --&gt; E[(SQLite&lt;br/&gt;vault_db)]
-    D --&gt; E</code></pre>
-<p><strong>Three-layer design:</strong> Presentation (CLI) --&gt; Application (Core + AI) --&gt; Data (SQLite + Files)</p>
+<h2 id="step-2-rename-a-vault">Step 2: Rename a Vault<a class="headerlink" href="#step-2-rename-a-vault" title="Permanent link">&para;</a></h2>
+<p>When a vault was registered with an awkward auto-generated name (often the directory basename), give it a friendlier label:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>Research<span class="w"> </span><span class="s2">&quot;Research Vault&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># ✏️  Renamed Research → Research Vault</span>
+</code></pre></div>
+<p>The <strong>path and ID are unchanged</strong> — only the display name moves. Every note, link, and graph metric stays valid because they key off the ID (a hash of the path), not the name.</p>
+<div class="admonition warning">
+<p class="admonition-title">Collisions are refused</p>
+<p>If another vault already uses the target name, the rename fails:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>WorkNotes<span class="w"> </span><span class="s2">&quot;Research Vault&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># ❌ Another vault already uses the name &#39;Research Vault&#39; (id b7c8...);</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#    names must stay unambiguous.</span>
+</code></pre></div>
+<p>This keeps name-based lookup (<code>obs stats "Research Vault"</code>) deterministic.</p>
+</div>
 <hr />
-<h2 id="learn-more">Learn More<a class="headerlink" href="#learn-more" title="Permanent link">&para;</a></h2>
+<h2 id="step-3-preview-a-deletion-dry-run">Step 3: Preview a Deletion (dry-run)<a class="headerlink" href="#step-3-preview-a-deletion-dry-run" title="Permanent link">&para;</a></h2>
+<p>Deletion is <strong>dry-run by default</strong> — running it without <code>--force</code> changes nothing and just previews the impact:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span><span class="s2">&quot;Old Archive&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>╭──────────── ⚠️  DRY RUN — nothing deleted ────────────╮
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│ Name: Old Archive                                    │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│ ID: f9e8d7c6...                                      │
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│ Path: /Users/you/Documents/OldArchive                │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│ Notes that will be removed: 137                      │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│                                                      │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│ The vault folder on disk is NOT touched — only the   │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│ obs index.                                           │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│ Re-run with --force to delete.                       │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>╰──────────────────────────────────────────────────────╯
+</code></pre></div>
+<p>Read the note count carefully — that's how many index rows (and their links, tags, and graph metrics) will cascade away.</p>
+<hr />
+<h2 id="step-4-commit-the-deletion">Step 4: Commit the Deletion<a class="headerlink" href="#step-4-commit-the-deletion" title="Permanent link">&para;</a></h2>
+<p>When the preview looks right, pass <code>--force</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span><span class="s2">&quot;Old Archive&quot;</span><span class="w"> </span>--force
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 🗑️  Deleted vault Old Archive (137 notes removed from the obs index).</span>
+</code></pre></div>
+<p>What happens under the hood:</p>
 <ul>
-<li><a href="installation/">Installation</a> -- Homebrew or manual setup</li>
-<li><a href="usage/">Usage</a> -- Core commands and workflows</li>
-<li><a href="refcard/">Quick Reference</a> -- Command cheat sheet</li>
-<li><a href="cookbook/">Cookbook</a> -- Task-based recipes</li>
-<li><a href="ai-setup/">AI Setup Guide</a> -- Configure AI providers</li>
-<li><a href="claude-integration/">Claude Integration</a> -- MCP server setup (42 tools)</li>
-<li><a href="developer/architecture/">Architecture</a> -- How it works</li>
+<li>The <code>vaults</code> row is deleted.</li>
+<li>A SQLite <code>ON DELETE CASCADE</code> foreign key removes the vault's notes, and that cascades again to the notes' links, tags, graph metrics, and embeddings.</li>
+<li><strong>The markdown files on disk are untouched.</strong></li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Deletion is reversible by re-scanning</p>
+<p>Because the files are never removed, you can rebuild the index any time:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Documents/OldArchive<span class="w"> </span>--analyze
+</code></pre></div>
+</div>
+<hr />
+<h2 id="step-5-a-full-reset-workflow">Step 5: A Full "Reset" Workflow<a class="headerlink" href="#step-5-a-full-reset-workflow" title="Permanent link">&para;</a></h2>
+<p>Combining the verbs lets you reset a vault's index without risking data:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Drop a stale or corrupted index</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span>MyVault<span class="w"> </span>--force
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Rebuild it cleanly from the files on disk</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Documents/MyVault<span class="w"> </span>--analyze
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Give it a tidy display name</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>MyVault<span class="w"> </span><span class="s2">&quot;My Vault&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="from-claude-desktop-mcp">From Claude Desktop (MCP)<a class="headerlink" href="#from-claude-desktop-mcp" title="Permanent link">&para;</a></h2>
+<p>The same operations are available as MCP tools when obs is connected to Claude Desktop, Claude Code, or Cowork:</p>
+<table>
+<thead>
+<tr>
+<th>Ask Claude</th>
+<th>Tool called</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>"Rename my Research vault to Archive"</em></td>
+<td><code>rename_vault("Research", "Archive")</code></td>
+</tr>
+<tr>
+<td><em>"Remove the Old Archive vault — preview first"</em></td>
+<td><code>delete_vault("Old Archive", confirm=False)</code></td>
+</tr>
+<tr>
+<td><em>"Yes, delete it"</em></td>
+<td><code>delete_vault("Old Archive", confirm=True)</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>delete_vault</code> follows the same dry-run-then-confirm safety contract as the CLI: <code>confirm=False</code> (the default) previews, <code>confirm=True</code> commits.</p>
+<p>There is no separate <code>vault info</code> MCP tool — <code>get_vault_stats(vault_id)</code> already returns a vault's metadata and content stats.</p>
+<hr />
+<h2 id="recap">Recap<a class="headerlink" href="#recap" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>obs vault info</code> — read-only inspection of one vault.</li>
+<li><code>obs vault rename</code> — relabel without moving anything; collisions refused.</li>
+<li><code>obs vault delete</code> — dry-run by default, <code>--force</code> to commit, <strong>files always safe</strong>.</li>
+<li>Deletion cascades through the index but never touches disk, so re-scanning fully restores a vault.</li>
+</ul>
+<p><strong>Next:</strong> <a href="../monitoring-and-health/">Monitoring &amp; Health</a> to track vaults over time, or the <a href="../../cookbook/">Cookbook</a> for copy-paste recipes.</p>
 
 
 
@@ -1747,10 +1932,10 @@ Claude / MCP integration so you can query your vaults in natural language.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

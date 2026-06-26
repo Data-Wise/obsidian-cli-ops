@@ -687,6 +687,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/vault-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vault Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tutorials/graph-analysis/" class="md-nav__link">
         
   
@@ -1263,6 +1291,50 @@
     <span class="md-ellipsis">
       
         Compare vault health across vaults
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspect-a-single-vaults-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect a single vault's metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-a-vaults-display-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename a vault's display name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safely-remove-a-vault-from-the-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safely remove a vault from the index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-register-a-vault-under-a-new-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-register a vault under a new name
       
     </span>
   </a>
@@ -2512,6 +2584,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#inspect-a-single-vaults-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect a single vault's metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-a-vaults-display-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename a vault's display name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safely-remove-a-vault-from-the-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safely remove a vault from the index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-register-a-vault-under-a-new-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-register a vault under a new name
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3126,31 +3242,72 @@
 <a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="s2">&quot;</span>
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="k">done</span>
 </code></pre></div>
+<h3 id="inspect-a-single-vaults-metadata">Inspect a single vault's metadata<a class="headerlink" href="#inspect-a-single-vaults-metadata" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Human-readable panel</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>obs<span class="w"> </span>vault<span class="w"> </span>info<span class="w"> </span>MyVault
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Machine-readable (id, path, note count, timestamps)</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>obs<span class="w"> </span>vault<span class="w"> </span>info<span class="w"> </span>MyVault<span class="w"> </span>--json
+</code></pre></div>
+<h3 id="rename-a-vaults-display-name">Rename a vault's display name<a class="headerlink" href="#rename-a-vaults-display-name" title="Permanent link">&para;</a></h3>
+<p>The path and ID never change, so notes, links, and graph metrics stay intact —
+only the label you see in <code>obs</code> changes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Rename by current name…</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span><span class="s2">&quot;Untitled&quot;</span><span class="w"> </span><span class="s2">&quot;Research Vault&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># …or by ID prefix</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>a1b2c3<span class="w"> </span>Archive
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Collisions are refused</p>
+<p><code>obs vault rename X Y</code> fails if another vault already uses the name <code>Y</code> —
+name-based lookup (<code>obs stats Y</code>, <code>get_vault_stats("Y")</code>) must stay
+unambiguous.</p>
+</div>
+<h3 id="safely-remove-a-vault-from-the-index">Safely remove a vault from the index<a class="headerlink" href="#safely-remove-a-vault-from-the-index" title="Permanent link">&para;</a></h3>
+<p>Deletion is <strong>index-only</strong> — your markdown files on disk are never touched. The
+default is a dry-run; you must pass <code>--force</code> to actually delete.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. Preview what would be removed (nothing changes)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span>OldVault
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># 2. Commit the removal — cascades to notes/links/tags/metrics</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span>OldVault<span class="w"> </span>--force
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Re-index any time by re-scanning the folder</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Documents/OldVault
+</code></pre></div>
+<h3 id="re-register-a-vault-under-a-new-name">Re-register a vault under a new name<a class="headerlink" href="#re-register-a-vault-under-a-new-name" title="Permanent link">&para;</a></h3>
+<p>Because delete is index-only and <code>scan</code> re-registers by path, you can "reset" a
+vault's index without losing files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span>MyVault<span class="w"> </span>--force<span class="w">        </span><span class="c1"># drop the stale index</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Documents/MyVault<span class="w"> </span>--analyze<span class="w">  </span><span class="c1"># rebuild it fresh</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>MyVault<span class="w"> </span><span class="s2">&quot;My Vault&quot;</span><span class="w">      </span><span class="c1"># tidy the display name</span>
+</code></pre></div>
 <hr />
 <h2 id="scripting-automation">Scripting &amp; Automation<a class="headerlink" href="#scripting-automation" title="Permanent link">&para;</a></h2>
 <h3 id="json-output-for-all-data-commands">JSON output for all data commands<a class="headerlink" href="#json-output-for-all-data-commands" title="Permanent link">&para;</a></h3>
 <p>Most commands support <code>--json</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>--json<span class="w">                          </span><span class="c1"># Global stats</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">          </span><span class="c1"># Vault stats</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">                 </span><span class="c1"># Health scores</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">                </span><span class="c1"># Graph metrics</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">            </span><span class="c1"># Refactor plan</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">          </span><span class="c1"># Duplicate groups</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--json<span class="w">     </span><span class="c1"># Link suggestions</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">                </span><span class="c1"># Knowledge gaps</span>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">           </span><span class="c1"># Vault summary</span>
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">       </span><span class="c1"># Merge candidates</span>
-<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">         </span><span class="c1"># Tag suggestions</span>
-<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">             </span><span class="c1"># Quality scores</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>--json<span class="w">                          </span><span class="c1"># Global stats</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">          </span><span class="c1"># Vault stats</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">                 </span><span class="c1"># Health scores</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">                </span><span class="c1"># Graph metrics</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">            </span><span class="c1"># Refactor plan</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">          </span><span class="c1"># Duplicate groups</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--json<span class="w">     </span><span class="c1"># Link suggestions</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">                </span><span class="c1"># Knowledge gaps</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>obs<span class="w"> </span>ai<span class="w"> </span>summarize<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">           </span><span class="c1"># Vault summary</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">       </span><span class="c1"># Merge candidates</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">         </span><span class="c1"># Tag suggestions</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w">             </span><span class="c1"># Quality scores</span>
 </code></pre></div>
 <h3 id="pipe-refactor-suggestions-to-a-checklist">Pipe refactor suggestions to a checklist<a class="headerlink" href="#pipe-refactor-suggestions-to-a-checklist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="s2">plan = json.load(sys.stdin)</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="s2">for s in plan[&#39;suggestions&#39;]:</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="s2">    priority = {&#39;high&#39;: &#39;!!!&#39;, &#39;medium&#39;: &#39;!!&#39;, &#39;low&#39;: &#39;!&#39;}[s[&#39;priority&#39;]]</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="s2">    print(f&#39;- [ ] {priority} {s[\&quot;description\&quot;]}&#39;)</span>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>vault_cleanup_tasks.md
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="s2">plan = json.load(sys.stdin)</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="s2">for s in plan[&#39;suggestions&#39;]:</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="s2">    priority = {&#39;high&#39;: &#39;!!!&#39;, &#39;medium&#39;: &#39;!!&#39;, &#39;low&#39;: &#39;!&#39;}[s[&#39;priority&#39;]]</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="s2">    print(f&#39;- [ ] {priority} {s[\&quot;description\&quot;]}&#39;)</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>vault_cleanup_tasks.md
 </code></pre></div>
 <hr />
 <h2 id="using-obs-with-the-native-obsidian-cli">Using obs with the Native Obsidian CLI<a class="headerlink" href="#using-obs-with-the-native-obsidian-cli" title="Permanent link">&para;</a></h2>
@@ -3161,65 +3318,65 @@
 <code>obsidian</code> = note CRUD + search + tags (requires Obsidian running).</p>
 </div>
 <h3 id="quick-capture-ai-analysis">Quick capture + AI analysis<a class="headerlink" href="#quick-capture-ai-analysis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Capture a thought via native CLI</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obsidian<span class="w"> </span>daily:append<span class="w"> </span><span class="nv">content</span><span class="o">=</span><span class="s2">&quot;Idea: refactor auth module to use JWT&quot;</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Later, analyze the vault for related notes</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>auth-module
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>auth-module
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Capture a thought via native CLI</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>obsidian<span class="w"> </span>daily:append<span class="w"> </span><span class="nv">content</span><span class="o">=</span><span class="s2">&quot;Idea: refactor auth module to use JWT&quot;</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Later, analyze the vault for related notes</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>auth-module
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>auth-module
 </code></pre></div>
 <h3 id="find-orphans-then-fix-them">Find orphans, then fix them<a class="headerlink" href="#find-orphans-then-fix-them" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># obs finds orphans via graph analysis</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">              </span><span class="c1"># Shows orphan count</span>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">         </span><span class="c1"># Suggests where orphans belong</span>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># Native CLI reads/moves the actual files</span>
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>obsidian<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;stale-idea&quot;</span>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>obsidian<span class="w"> </span>move<span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;stale-idea&quot;</span><span class="w"> </span><span class="nv">to</span><span class="o">=</span><span class="s2">&quot;archive/&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># obs finds orphans via graph analysis</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">              </span><span class="c1"># Shows orphan count</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">         </span><span class="c1"># Suggests where orphans belong</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># Native CLI reads/moves the actual files</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>obsidian<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;stale-idea&quot;</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>obsidian<span class="w"> </span>move<span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;stale-idea&quot;</span><span class="w"> </span><span class="nv">to</span><span class="o">=</span><span class="s2">&quot;archive/&quot;</span>
 </code></pre></div>
 <h3 id="rename-tags-vault-wide">Rename tags vault-wide<a class="headerlink" href="#rename-tags-vault-wide" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># obs shows tag distribution</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="s2">stats = json.load(sys.stdin)</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="s2">for tag in stats.get(&#39;top_tags&#39;, [])[:10]:</span>
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="s2">    print(f\&quot;  {tag[&#39;name&#39;]}: {tag[&#39;count&#39;]} notes\&quot;)</span>
-<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="s2">&quot;</span>
-<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>
-<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="c1"># Native CLI renames across all files</span>
-<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>obsidian<span class="w"> </span>tags:rename<span class="w"> </span><span class="nv">old</span><span class="o">=</span>javascript<span class="w"> </span><span class="nv">new</span><span class="o">=</span>js
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># obs shows tag distribution</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="s2">stats = json.load(sys.stdin)</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="s2">for tag in stats.get(&#39;top_tags&#39;, [])[:10]:</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="s2">    print(f\&quot;  {tag[&#39;name&#39;]}: {tag[&#39;count&#39;]} notes\&quot;)</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="s2">&quot;</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Native CLI renames across all files</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>obsidian<span class="w"> </span>tags:rename<span class="w"> </span><span class="nv">old</span><span class="o">=</span>javascript<span class="w"> </span><span class="nv">new</span><span class="o">=</span>js
 </code></pre></div>
 <h3 id="daily-vault-health-ritual">Daily vault health ritual<a class="headerlink" href="#daily-vault-health-ritual" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Morning check (30 seconds)</span>
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">                          </span><span class="c1"># Overall scores</span>
-<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>obsidian<span class="w"> </span>daily<span class="w">                              </span><span class="c1"># Open today&#39;s note</span>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>obsidian<span class="w"> </span>tasks<span class="w">                              </span><span class="c1"># Review open tasks</span>
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
-<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># Weekly deep dive (5 minutes)</span>
-<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w">                      </span><span class="c1"># Worst-scoring notes</span>
-<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">           </span><span class="c1"># Scope check</span>
-<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w">                         </span><span class="c1"># Knowledge gaps</span>
-<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v<span class="w">                      </span><span class="c1"># Graph metrics</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Morning check (30 seconds)</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w">                          </span><span class="c1"># Overall scores</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>obsidian<span class="w"> </span>daily<span class="w">                              </span><span class="c1"># Open today&#39;s note</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>obsidian<span class="w"> </span>tasks<span class="w">                              </span><span class="c1"># Review open tasks</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="c1"># Weekly deep dive (5 minutes)</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w">                      </span><span class="c1"># Worst-scoring notes</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">           </span><span class="c1"># Scope check</span>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w">                         </span><span class="c1"># Knowledge gaps</span>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w"> </span>-v<span class="w">                      </span><span class="c1"># Graph metrics</span>
 </code></pre></div>
 <h3 id="search-analyze-pipeline">Search + analyze pipeline<a class="headerlink" href="#search-analyze-pipeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Native search finds notes by content</span>
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>obsidian<span class="w"> </span>search<span class="w"> </span><span class="nv">query</span><span class="o">=</span><span class="s2">&quot;[tag:python]&quot;</span>
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># obs finds notes by graph position and AI similarity</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>python-basics
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>python-basics
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Native search finds notes by content</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>obsidian<span class="w"> </span>search<span class="w"> </span><span class="nv">query</span><span class="o">=</span><span class="s2">&quot;[tag:python]&quot;</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># obs finds notes by graph position and AI similarity</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>python-basics
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>obs<span class="w"> </span>ai<span class="w"> </span>suggest-links<span class="w"> </span>python-basics
 </code></pre></div>
 <h3 id="create-notes-from-ai-suggestions">Create notes from AI suggestions<a class="headerlink" href="#create-notes-from-ai-suggestions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># obs identifies knowledge gaps</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="s2">gaps = json.load(sys.stdin)</span>
-<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="s2">for g in gaps.get(&#39;gaps&#39;, [])[:3]:</span>
-<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="s2">    print(g[&#39;topic&#39;])</span>
-<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="s2">&quot;</span>
-<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>
-<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="c1"># Native CLI creates the missing notes</span>
-<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>obsidian<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Missing Topic&quot;</span><span class="w"> </span><span class="nv">template</span><span class="o">=</span><span class="s2">&quot;note-template&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># obs identifies knowledge gaps</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>gaps<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="s2">gaps = json.load(sys.stdin)</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="s2">for g in gaps.get(&#39;gaps&#39;, [])[:3]:</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="s2">    print(g[&#39;topic&#39;])</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="s2">&quot;</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="c1"># Native CLI creates the missing notes</span>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>obsidian<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Missing Topic&quot;</span><span class="w"> </span><span class="nv">template</span><span class="o">=</span><span class="s2">&quot;note-template&quot;</span>
 </code></pre></div>
 <details class="info">
 <summary>Setup: Enable native CLI</summary>
@@ -3302,64 +3459,64 @@ similarity scores and merge rationale.</p>
 <h2 id="research-workflow">Research Workflow<a class="headerlink" href="#research-workflow" title="Permanent link">&para;</a></h2>
 <p><strong>Prerequisites:</strong> Complete <a href="../tutorials/research-setup/">Research Setup</a> to configure Zotero, PDF directories, and manuscripts.</p>
 <h3 id="search-zotero-from-the-terminal">Search Zotero from the terminal<a class="headerlink" href="#search-zotero-from-the-terminal" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Keyword search across all Zotero items</span>
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Filter by item type</span>
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;sensitivity analysis&quot;</span><span class="w"> </span>--type<span class="w"> </span>journalArticle
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1"># Filter by tag</span>
-<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>--tag<span class="w"> </span><span class="s2">&quot;to-read&quot;</span>
-<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>
-<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="c1"># Get a specific item by Zotero key</span>
-<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>A1B2C3D4
-<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>
-<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="c1"># See what you added recently</span>
-<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Keyword search across all Zotero items</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Filter by item type</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;sensitivity analysis&quot;</span><span class="w"> </span>--type<span class="w"> </span>journalArticle
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Filter by tag</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>--tag<span class="w"> </span><span class="s2">&quot;to-read&quot;</span>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1"># Get a specific item by Zotero key</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>A1B2C3D4
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a><span class="c1"># See what you added recently</span>
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <h3 id="find-pdfs-by-content">Find PDFs by content<a class="headerlink" href="#find-pdfs-by-content" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Full-text search across all configured PDF directories</span>
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;instrumental variable&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
-<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Output as JSON for scripting</span>
-<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>obs<span class="w"> </span>--json<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;heterogeneous effects&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="s2">for r in json.load(sys.stdin):</span>
-<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="s2">    print(f\&quot;{r[&#39;title&#39;]}: {r[&#39;path&#39;]}\&quot;)</span>
-<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Full-text search across all configured PDF directories</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;instrumental variable&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># Output as JSON for scripting</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>obs<span class="w"> </span>--json<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;heterogeneous effects&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="s2">for r in json.load(sys.stdin):</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="s2">    print(f\&quot;{r[&#39;title&#39;]}: {r[&#39;path&#39;]}\&quot;)</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="track-manuscript-status">Track manuscript status<a class="headerlink" href="#track-manuscript-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Overview of all manuscripts</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
-<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># List all manuscripts (add --archived to include archived ones)</span>
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list
-<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
-<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Deep-dive on one manuscript</span>
-<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>collider-bias
-<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>
-<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="c1"># Check citations are complete before submitting</span>
-<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>collider-bias
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Overview of all manuscripts</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># List all manuscripts (add --archived to include archived ones)</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Deep-dive on one manuscript</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>collider-bias
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="c1"># Check citations are complete before submitting</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>collider-bias
 </code></pre></div>
 <h3 id="cross-tool-research-pipeline">Cross-tool research pipeline<a class="headerlink" href="#cross-tool-research-pipeline" title="Permanent link">&para;</a></h3>
 <p>Combine Zotero search, PDF discovery, and vault search for a complete literature review:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># 1. Find recent Zotero items on your topic</span>
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;measurement error&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
-<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># 2. Find PDFs you haven&#39;t linked to Obsidian yet</span>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>obs<span class="w"> </span>--json<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;measurement error&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="s2">results = json.load(sys.stdin)</span>
-<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="s2">print(f&#39;Found {len(results)} relevant PDFs&#39;)</span>
-<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="s2">for r in results[:3]:</span>
-<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="s2">    print(f&#39;  {r[\&quot;title\&quot;]}&#39;)</span>
-<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="s2">&quot;</span>
-<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>
-<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a><span class="c1"># 3. Check your vault for existing notes</span>
-<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;measurement error&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>
-<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a><span class="c1"># 4. Check manuscript citation completeness</span>
-<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>me-mediator<span class="w">   </span><span class="c1"># catches missing refs before submission</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># 1. Find recent Zotero items on your topic</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;measurement error&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="c1"># 2. Find PDFs you haven&#39;t linked to Obsidian yet</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>obs<span class="w"> </span>--json<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;measurement error&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="s2">results = json.load(sys.stdin)</span>
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="s2">print(f&#39;Found {len(results)} relevant PDFs&#39;)</span>
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a><span class="s2">for r in results[:3]:</span>
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a><span class="s2">    print(f&#39;  {r[\&quot;title\&quot;]}&#39;)</span>
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a><span class="s2">&quot;</span>
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>
+<a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a><span class="c1"># 3. Check your vault for existing notes</span>
+<a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;measurement error&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a>
+<a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a><span class="c1"># 4. Check manuscript citation completeness</span>
+<a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>me-mediator<span class="w">   </span><span class="c1"># catches missing refs before submission</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Vault + Zotero unified search via Claude</p>

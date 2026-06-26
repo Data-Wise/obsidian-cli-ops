@@ -682,6 +682,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/vault-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vault Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tutorials/graph-analysis/" class="md-nav__link">
         
   
@@ -1214,15 +1242,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#all-39-mcp-tools" class="md-nav__link">
+  <a href="#all-42-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        All 39 MCP Tools
+        All 42 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="All 39 MCP Tools">
+    <nav class="md-nav" aria-label="All 42 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1947,15 +1975,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#all-39-mcp-tools" class="md-nav__link">
+  <a href="#all-42-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        All 39 MCP Tools
+        All 42 MCP Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="All 39 MCP Tools">
+    <nav class="md-nav" aria-label="All 42 MCP Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2278,7 +2306,7 @@
 - <strong>How:</strong> Add one JSON block to <code>claude_desktop_config.json</code>, restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.1.0</p>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.2.0</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -2289,7 +2317,7 @@
 <li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
 <li><strong>"Run a quality check on all notes"</strong> — <code>obs ai quality</code> via AI passthrough</li>
 </ul>
-<p>The MCP server exposes <strong>40 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
+<p>The MCP server exposes <strong>42 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2328,7 +2356,7 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <p>Claude should call <code>list_vaults()</code> and return your vault list. If nothing happens, see
 <a href="#troubleshooting">Troubleshooting</a> below.</p>
 <hr />
-<h2 id="all-39-mcp-tools">All 39 MCP Tools<a class="headerlink" href="#all-39-mcp-tools" title="Permanent link">&para;</a></h2>
+<h2 id="all-42-mcp-tools">All 42 MCP Tools<a class="headerlink" href="#all-42-mcp-tools" title="Permanent link">&para;</a></h2>
 <h3 id="vault-tools">Vault Tools<a class="headerlink" href="#vault-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2353,6 +2381,16 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <td><code>discover_vaults</code></td>
 <td><code>path</code></td>
 <td>Find Obsidian vaults in a directory tree</td>
+</tr>
+<tr>
+<td><code>rename_vault</code></td>
+<td><code>vault_id</code>, <code>new_name</code></td>
+<td>Rename a vault's display name (path/ID unchanged); rejects name collisions</td>
+</tr>
+<tr>
+<td><code>delete_vault</code></td>
+<td><code>vault_id</code>, <code>confirm=False</code></td>
+<td>Remove a vault from the index — <code>confirm=True</code> required; default is <strong>dry-run</strong>. Files on disk untouched</td>
 </tr>
 </tbody>
 </table>
