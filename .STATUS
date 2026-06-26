@@ -29,6 +29,11 @@ target: v4.2.0 - 5.1 vault CRUD via official-CLI bridge (delegate)
 **Docs Site**: https://data-wise.github.io/obsidian-cli-ops/
 **Homebrew**: `brew install data-wise/tap/obsidian-cli-ops`
 
+### Active Worktrees
+
+- `feature/spec-vault-sync-reconcile` — SPEC + ORCHESTRATE for vault↔DB sync reconciliation (created 2026-06-26). Spec: `docs/specs/SPEC-vault-sync-reconcile-2026-06-26.md`.
+- `feature/vault-sync-reconcile` @ `~/.git-worktrees/obsidian-cli-ops/feature-vault-sync-reconcile` — implementation worktree off the spec branch; ORCHESTRATE-vault-sync-reconcile.md drives 5 phases (S4 errors → --prune/reconcile → doctor sync layer → e2e/dogfood → docs). Not yet started — needs its own session.
+
 ---
 
 ## ✅ v4.0.0 (2026-06-22) — nexus-cli absorption (Phase 1) + MCP vault-resolution correctness + doctor guard

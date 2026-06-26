@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **40 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **42 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 

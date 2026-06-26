@@ -219,6 +219,89 @@ def list_vaults() -> str:
 
 
 @mcp.tool()
+def delete_vault(vault_id: str, confirm: bool = False) -> str:
+    """
+    Delete a vault from the obs database (the vault folder on disk is NOT touched).
+
+    Args:
+        vault_id: Vault name, ID, or unambiguous ID prefix (from list_vaults()).
+        confirm: Must be True to actually delete. Pass False (default) to preview
+                 what would be removed without doing it.
+
+    Removing the vault row cascades — via ON DELETE CASCADE foreign keys — to all
+    of its notes, links, tags, graph metrics, and embeddings in the obs index.
+    The markdown files themselves are left in place; re-run discover_vaults() +
+    rescan_vault() to re-index.
+    """
+    try:
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        canonical_id = vault["id"]
+        note_count = len(db.list_notes(canonical_id))
+
+        if not confirm:
+            return (
+                f"⚠️  **DRY RUN — nothing deleted**\n\n"
+                f"Would remove vault **{vault['name']}** from the obs index:\n"
+                f"- ID: `{canonical_id}`\n"
+                f"- Path (left untouched on disk): {vault['path']}\n"
+                f"- Notes that would be removed from the index: {note_count}\n\n"
+                f"To actually delete, call delete_vault('{vault_id}', confirm=True)"
+            )
+
+        deleted = db.delete_vault(canonical_id)
+        if not deleted:
+            return f"Vault not found: {vault_id}"
+        return (
+            f"🗑️ **Vault removed from index**: {vault['name']}\n"
+            f"- Notes removed: {note_count}\n"
+            f"- Files on disk were NOT touched ({vault['path']})"
+        )
+    except Exception as e:
+        return f"Error deleting vault: {e}"
+
+
+@mcp.tool()
+def rename_vault(vault_id: str, new_name: str) -> str:
+    """
+    Rename a vault's display name. The path and ID are unchanged, so notes,
+    links, and graph metrics stay valid.
+
+    Args:
+        vault_id: Vault name, ID, or unambiguous ID prefix (from list_vaults()).
+        new_name: New display name.
+
+    Refuses the rename if another vault already uses new_name, which would make
+    name-based vault resolution ambiguous.
+    """
+    try:
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        canonical_id = vault["id"]
+        old_name = vault["name"]
+
+        collision = next(
+            (v for v in vault_manager.list_vaults()
+             if v.name == new_name and v.id != canonical_id),
+            None,
+        )
+        if collision:
+            return (
+                f"❌ Another vault already uses the name '{new_name}' "
+                f"(id `{collision.id}`) — names must stay unambiguous."
+            )
+
+        renamed = db.rename_vault(canonical_id, new_name)
+        if not renamed:
+            return f"Vault not found: {vault_id}"
+        return f"✏️ Renamed vault **{old_name}** → **{new_name}**"
+    except Exception as e:
+        return f"Error renaming vault: {e}"
+
+
+@mcp.tool()
 def get_vault_stats(vault_id: Optional[str] = None) -> str:
     """
     Get statistics for a specific vault or the entire obs database.
