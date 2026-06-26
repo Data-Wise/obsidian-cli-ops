@@ -29,6 +29,7 @@ the meaningful MCP number.
 
 from __future__ import annotations
 
+import ast
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,6 +37,7 @@ from pathlib import Path
 # repo root: this file is src/python/core/doc_counts.py -> parents[3] == root
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 _MCP_SERVER = PROJECT_ROOT / "src" / "python" / "mcp_server.py"
+_OBS_CLI = PROJECT_ROOT / "src" / "python" / "obs_cli.py"
 _AI_PROVIDERS = PROJECT_ROOT / "src" / "python" / "ai" / "providers"
 _TESTS_DIR = PROJECT_ROOT / "src" / "python" / "tests"
 
@@ -56,6 +58,58 @@ def _count_test_functions(path: Path) -> int:
     if not path.exists():
         return 0
     return len(_TEST_DEF.findall(path.read_text(encoding="utf-8")))
+
+
+def _count_obs_commands(path: Path = _OBS_CLI) -> int:
+    """Count **runnable** ``obs`` commands (leaf subcommands) from argparse.
+
+    A "command" is any terminal ``obs ...`` invocation a user can actually run —
+    e.g. ``obs scan``, ``obs ai duplicates``, ``obs research board``. Group
+    parsers that only hold subcommands (``ai``, ``config``, ``research``, ``db``,
+    ``bridge``, and the nested ``zotero``/``pdf``/``course``/``manuscript``/
+    ``bib`` families) are NOT counted themselves — only their leaves are.
+
+    Derived statically from ``obs_cli.py`` (AST), so it cannot drift from code:
+      * every ``X.add_parser('name')`` defines a command ``name``;
+      * a parser is a *group* (excluded) iff its assigned variable later
+        receives ``.add_subparsers()``.
+    Returns ``leaves = all add_parser names − group names`` (0 if unparseable).
+    """
+    if not path.exists():
+        return 0
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError):
+        return 0
+
+    # Parser variables that nest subcommands (i.e. groups).
+    parsers_with_subs: set[str] = set()
+    # command-name -> variable it was assigned to (only assigned add_parser calls).
+    assigned: dict[str, str] = {}
+    all_names: list[str] = []
+
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)):
+            continue
+        attr = node.func.attr
+        if attr == "add_subparsers" and isinstance(node.func.value, ast.Name):
+            parsers_with_subs.add(node.func.value.id)
+        elif attr == "add_parser" and node.args and isinstance(node.args[0], ast.Constant):
+            all_names.append(node.args[0].value)
+
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Assign) and isinstance(node.value, ast.Call)
+                and isinstance(node.value.func, ast.Attribute)
+                and node.value.func.attr == "add_parser"
+                and node.value.args
+                and isinstance(node.value.args[0], ast.Constant)):
+            for t in node.targets:
+                if isinstance(t, ast.Name):
+                    assigned[node.value.args[0].value] = t.id
+
+    group_names = {name for name, var in assigned.items() if var in parsers_with_subs}
+    return sum(1 for n in all_names if n not in group_names)
 
 
 # ---------------------------------------------------------------------------
@@ -89,6 +143,7 @@ def source_counts() -> dict[str, int]:
         "mcp_tools": mcp_tools,
         "mcp_resources": mcp_resources,
         "ai_providers": ai_providers,
+        "obs_commands": _count_obs_commands(),
         "unit_tests": unit_tests,
         "e2e_tests": e2e_tests,
         # Gated value: round down to 10 so "340+" tolerates additions within a
@@ -149,6 +204,15 @@ _PATTERNS: dict[str, tuple[str, ...]] = {
         r"\*\*AI Providers:\*\*\s*(\d+)",
         r"\*\*AI Providers\*\*:?\s*(\d+)",
         r"(\d+) AI [Pp]roviders",
+    ),
+    # Runnable obs commands (leaf subcommands). Anchored on a bold "Commands"
+    # label, the "obs commands" noun, or the "(N top-level …)" breakdown so the
+    # many contextual "3 commands" / "10 commands" learning-level mentions never
+    # match. See _count_obs_commands for the definition.
+    "obs_commands": (
+        r"\*\*Commands:?\*\*:?\s*(\d+)",
+        r"all (\d+) `?obs`? commands",
+        r"(\d+) commands \(17 top-level",
     ),
     # Unit-test FLOOR — anchored on "N+ unit" so bare totals ("454 pytest"),
     # exact inventory cells ("342"), and "113 MCP unit" never match.
@@ -275,8 +339,9 @@ def main(argv: list[str] | None = None) -> int:
             print("  fix with: scripts/validate-counts.sh --fix")
         return 1
     if not quiet:
-        print(f"\033[32m✓ counts aligned\033[0m  tools={counts['mcp_tools']} "
-              f"resources={counts['mcp_resources']} providers={counts['ai_providers']}")
+        print(f"\033[32m✓ counts aligned\033[0m  commands={counts['obs_commands']} "
+              f"tools={counts['mcp_tools']} resources={counts['mcp_resources']} "
+              f"providers={counts['ai_providers']}")
     return 0
 
 

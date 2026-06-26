@@ -3,7 +3,7 @@
 **Version:** 4.0.1
 **Last Updated:** 2026-06-23
 
-> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 35 commands (19 shipped + 16 Phase 1, unreleased) including the `obs config` and `obs research` domains.
+> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 45 commands (17 top-level incl. the `obs config` and `obs research` domains).
 
 ---
 
