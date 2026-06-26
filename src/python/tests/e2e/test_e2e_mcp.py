@@ -174,9 +174,14 @@ def e2e_vault(tmp_path_factory):
     for title, content in notes.items():
         (vault_dir / f"{title}.md").write_text(content)
 
-    # Init DB + register vault
-    db_dir = tmp_path_factory.mktemp("e2e_db")
-    env = {**os.environ, "OBS_DB_PATH": str(db_dir / "obs.db")}
+    # Init DB + register vault.
+    # DatabaseManager() resolves its path from Path.home()/.config/obs/... and
+    # honors NO db-path env var, so we isolate the whole obs DB by overriding
+    # HOME for the CLI + MCP-server subprocesses. This keeps the user's real
+    # ~/.config/obs DB untouched (no production pollution from prune/delete
+    # lifecycle tests) and makes the sqlite oracle below deterministic.
+    e2e_home = tmp_path_factory.mktemp("e2e_home")
+    env = {**os.environ, "HOME": str(e2e_home)}
 
     subprocess.run(
         [_OBS_PYTHON, str(_OBS_CLI), "db", "init"],
@@ -557,6 +562,335 @@ class TestE2ERescanAndRefresh:
         # List notes
         result = mcp_proc.call_tool("list_notes", {"vault_id": vault_id, "limit": 50})
         assert isinstance(result, str)
+
+
+# ---------------------------------------------------------------------------
+# Sync-lifecycle helpers (own-vault-per-test for deterministic counts)
+# ---------------------------------------------------------------------------
+import sqlite3 as _sqlite3
+import uuid as _uuid
+
+
+def _build_and_scan_vault(env, tmp_path_factory, notes: dict, name_hint: str = "sync") -> Path:
+    """Create a throwaway vault on disk, register + scan it via obs_cli.py.
+
+    `notes` maps a basename (without .md) → file content. Returns the vault dir.
+    Each call gets its OWN vault so count-sensitive lifecycle assertions
+    (N→N-1, exactly-one-row, exactly-1-ghost) are not corrupted by other tests
+    sharing the module-scoped fixture vault.
+    """
+    vault_dir = tmp_path_factory.mktemp(f"e2e_{name_hint}")
+    (vault_dir / ".obsidian").mkdir()
+    (vault_dir / ".obsidian" / "app.json").write_text("{}")
+    for basename, content in notes.items():
+        (vault_dir / f"{basename}.md").write_text(content)
+    subprocess.run(
+        [_OBS_PYTHON, str(_OBS_CLI), "scan", str(vault_dir)],
+        env=env, capture_output=True, timeout=60, check=True,
+    )
+    return vault_dir
+
+
+def _db_path(env) -> str:
+    """The obs DB the subprocesses use — resolved from the isolated HOME
+    (DatabaseManager defaults to ~/.config/obs/vault_db.sqlite)."""
+    return str(Path(env["HOME"]) / ".config" / "obs" / "vault_db.sqlite")
+
+
+def _vault_id_for_path(env, vault_dir: Path) -> str:
+    """Look up the registered vault id straight from the DB (ground truth)."""
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        row = conn.execute(
+            "SELECT id FROM vaults WHERE path = ?", (str(vault_dir),)
+        ).fetchone()
+        assert row is not None, f"vault not registered for {vault_dir}"
+        return row[0]
+    finally:
+        conn.close()
+
+
+def _db_note_paths(env, vault_id: str) -> set[str]:
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        rows = conn.execute(
+            "SELECT path FROM notes WHERE vault_id = ?", (vault_id,)
+        ).fetchall()
+        return {r[0] for r in rows}
+    finally:
+        conn.close()
+
+
+def _db_note_id(env, vault_id: str, path: str) -> str | None:
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        row = conn.execute(
+            "SELECT id FROM notes WHERE vault_id = ? AND path = ?",
+            (vault_id, path),
+        ).fetchone()
+        return row[0] if row else None
+    finally:
+        conn.close()
+
+
+def _db_note_tags(env, note_id: str) -> set[str]:
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        rows = conn.execute(
+            "SELECT t.tag FROM note_tags nt "
+            "JOIN tags t ON t.id = nt.tag_id "
+            "WHERE nt.note_id = ?",
+            (note_id,),
+        ).fetchall()
+        return {r[0] for r in rows}
+    finally:
+        conn.close()
+
+
+def _last_scan_failed_count(env, vault_id: str) -> int:
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        row = conn.execute(
+            "SELECT notes_failed FROM scan_history WHERE vault_id = ? "
+            "ORDER BY started_at DESC, id DESC LIMIT 1",
+            (vault_id,),
+        ).fetchone()
+        return int(row[0]) if row and row[0] is not None else 0
+    finally:
+        conn.close()
+
+
+def _seed_embedding(env, note_id: str) -> None:
+    """Insert a note_embeddings row (creating the table if needed)."""
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS note_embeddings (
+                note_id TEXT NOT NULL,
+                provider TEXT NOT NULL,
+                model TEXT NOT NULL,
+                vector BLOB NOT NULL,
+                updated_at TEXT NOT NULL,
+                file_mtime REAL NOT NULL,
+                PRIMARY KEY (note_id, provider, model),
+                FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+            )
+        """)
+        conn.execute(
+            "INSERT OR REPLACE INTO note_embeddings "
+            "(note_id, provider, model, vector, updated_at, file_mtime) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (note_id, "e2e-provider", "e2e-model", b"\x00\x01\x02\x03",
+             "2026-06-26T00:00:00", 0.0),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _embedding_count(env, note_id: str) -> int:
+    conn = _sqlite3.connect(_db_path(env))
+    try:
+        row = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='note_embeddings'"
+        ).fetchone()
+        if not row:
+            return 0
+        return int(conn.execute(
+            "SELECT COUNT(*) FROM note_embeddings WHERE note_id = ?", (note_id,)
+        ).fetchone()[0])
+    finally:
+        conn.close()
+
+
+def _doctor_sync_json(env, vault_id: str) -> list[dict]:
+    """Run `obs doctor --vault <id> --layer sync --json` and parse results."""
+    proc = subprocess.run(
+        [_OBS_PYTHON, str(_OBS_CLI), "doctor", "--vault", vault_id,
+         "--layer", "sync", "--json"],
+        env=env, capture_output=True, text=True, timeout=60,
+    )
+    return json.loads(proc.stdout)
+
+
+class TestE2ESyncLifecycle:
+    """Vault ↔ DB sync lifecycle (S1/S2/S4/N1 + empty-vault guard).
+
+    Each test builds its OWN vault so the deterministic counts can't be
+    perturbed by the shared module fixture. Acts via the MCP rescan_vault
+    tool (with prune) and asserts ground truth straight from the DB.
+    """
+
+    def test_delete_on_disk_then_rescan_prunes(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """S1: delete a file on disk, rescan --prune → row gone, count N→N-1."""
+        _, _, env = e2e_vault
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Keep One": "# Keep One\n\ncontent\n",
+             "Keep Two": "# Keep Two\n\ncontent\n",
+             "Delete Me": "# Delete Me\n\ncontent\n"},
+            "del",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+        before = _db_note_paths(env, vault_id)
+        assert "Delete Me.md" in before
+        assert len(before) == 3
+
+        (vault_dir / "Delete Me.md").unlink()
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id, "prune": True})
+
+        after = _db_note_paths(env, vault_id)
+        assert "Delete Me.md" not in after, "deleted note should be pruned"
+        assert len(after) == len(before) - 1
+
+    def test_rename_on_disk_no_duplicate(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """S2: rename a.md→b.md, rescan --prune → exactly one row, no ghost."""
+        _, _, env = e2e_vault
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Old Name": "# Old Name\n\nrename me\n"},
+            "ren",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+        assert _db_note_paths(env, vault_id) == {"Old Name.md"}
+
+        (vault_dir / "Old Name.md").rename(vault_dir / "New Name.md")
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id, "prune": True})
+
+        paths = _db_note_paths(env, vault_id)
+        assert "Old Name.md" not in paths, "stale rename ghost should be pruned"
+        assert paths == {"New Name.md"}, f"expected exactly one row, got {paths}"
+
+    def test_remove_tag_then_rescan_reconciles(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """S3 self-heal: strip a #tag, rescan → tag absent from index."""
+        _, _, env = e2e_vault
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Tagged": "# Tagged\n\nbody\n\n#keepme #removeme\n"},
+            "tag",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+        note_id = _db_note_id(env, vault_id, "Tagged.md")
+        assert note_id is not None
+        tags_before = _db_note_tags(env, note_id)
+        assert "removeme" in tags_before
+
+        (vault_dir / "Tagged.md").write_text("# Tagged\n\nbody\n\n#keepme\n")
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id})
+
+        tags_after = _db_note_tags(env, note_id)
+        assert "removeme" not in tags_after, "removed tag should be reconciled away"
+        assert "keepme" in tags_after
+
+    def test_unparseable_note_counts_as_error_not_silent(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """S4: a note with broken YAML frontmatter is counted, not swallowed."""
+        _, _, env = e2e_vault
+        # Invalid YAML frontmatter trips parse_file (yaml.parser.ParserError).
+        bad = "---\ntitle: Unclosed\nkey: [a, b\n---\n# Content\n"
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Good Note": "# Good Note\n\nfine\n", "Bad Note": bad},
+            "err",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+        # Rescan via MCP, then assert the failure was recorded (not silent).
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id})
+        assert _last_scan_failed_count(env, vault_id) >= 1, (
+            "unparseable note must be counted in scan_history.notes_failed, "
+            "not silently swallowed"
+        )
+
+    def test_prune_skipped_when_vault_appears_empty(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """Safety guard: empty vault dir → prune skipped, index NOT wiped."""
+        _, _, env = e2e_vault
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Lonely": "# Lonely\n\nthe only note\n"},
+            "empty",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+        assert _db_note_paths(env, vault_id) == {"Lonely.md"}
+
+        # Remove the only file → dir now has no *.md → seen_paths == 0.
+        (vault_dir / "Lonely.md").unlink()
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id, "prune": True})
+
+        # Guard must have fired: row survives rather than being wiped.
+        assert _db_note_paths(env, vault_id) == {"Lonely.md"}, (
+            "empty-vault prune guard must NOT wipe the index"
+        )
+
+    def test_unchanged_note_preserves_embeddings(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """N1: rescanning a byte-identical note keeps its note_embeddings row."""
+        _, _, env = e2e_vault
+        content = "# Stable\n\nthis content does not change\n\n#stable\n"
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory, {"Stable": content}, "emb",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+        note_id = _db_note_id(env, vault_id, "Stable.md")
+        assert note_id is not None
+
+        # Seed an embedding for this note, then rescan WITHOUT changing the file.
+        _seed_embedding(env, note_id)
+        assert _embedding_count(env, note_id) == 1
+
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id})
+
+        # content_hash matches → short-circuit fires → no REPLACE → cascade
+        # never runs → embedding survives.
+        assert _embedding_count(env, note_id) == 1, (
+            "unchanged note must not destroy its embedding cache (N1)"
+        )
+
+
+class TestE2EDoctorSyncDogfood:
+    """Dogfood: real `obs doctor --layer sync` against a fixture vault."""
+
+    def test_doctor_sync_clean_on_fresh_scan(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """Fresh scan → sync layer reports no ghosts / nothing missing."""
+        _, _, env = e2e_vault
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Fresh A": "# Fresh A\n\nclean\n", "Fresh B": "# Fresh B\n\nclean\n"},
+            "clean",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+
+        results = _doctor_sync_json(env, vault_id)
+        by_id = {r["id"]: r for r in results}
+        ghosts = by_id.get(f"sync-ghosts:{vault_id}")
+        missing = by_id.get(f"sync-missing:{vault_id}")
+        assert ghosts is not None and missing is not None, (
+            f"sync checks for {vault_id} not emitted: {[r['id'] for r in results]}"
+        )
+        assert ghosts["status"] == "pass", f"expected clean ghosts, got {ghosts}"
+        assert missing["status"] == "pass", f"expected nothing missing, got {missing}"
+
+    def test_doctor_sync_detects_injected_ghost(self, mcp_proc, e2e_vault, tmp_path_factory):
+        """Delete a file on disk WITHOUT rescanning → doctor flags exactly 1 ghost."""
+        _, _, env = e2e_vault
+        vault_dir = _build_and_scan_vault(
+            env, tmp_path_factory,
+            {"Survivor": "# Survivor\n\nstays\n", "Ghost": "# Ghost\n\nwill vanish\n"},
+            "ghost",
+        )
+        vault_id = _vault_id_for_path(env, vault_dir)
+
+        # Delete on disk but do NOT rescan → DB still has the row → ghost.
+        (vault_dir / "Ghost.md").unlink()
+
+        results = _doctor_sync_json(env, vault_id)
+        by_id = {r["id"]: r for r in results}
+        ghosts = by_id.get(f"sync-ghosts:{vault_id}")
+        assert ghosts is not None, (
+            f"sync-ghosts for {vault_id} not emitted: {[r['id'] for r in results]}"
+        )
+        assert ghosts["status"] == "warn", f"expected a ghost warning, got {ghosts}"
+        # Message format: "<N> DB row(s) point to files gone from disk"
+        assert ghosts["message"].startswith("1 "), (
+            f"expected exactly 1 ghost, got message {ghosts['message']!r}"
+        )
 
 
 class TestE2EServerStability:
