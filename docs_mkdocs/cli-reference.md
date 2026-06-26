@@ -169,6 +169,81 @@ obs health <vault>
 
 ---
 
+### obs vault info
+
+Show metadata for a single vault.
+
+```bash
+obs vault info <vault> [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `--json` | Emit the result as JSON instead of a panel |
+
+Reports name, ID, path, note count, last-scanned time, and registration time.
+
+---
+
+### obs vault rename
+
+Change a vault's display name. The path and ID (a hash of the path) are
+unchanged, so existing notes, links, and graph metrics stay valid.
+
+```bash
+obs vault rename <vault> <new-name> [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `new-name` | New display name |
+| `--json` | Emit the result as JSON |
+
+**Examples:**
+
+```bash
+obs vault rename OldName "Research Vault"   # Rename by current name
+obs vault rename abc123 Archive             # Rename by ID prefix
+```
+
+!!! warning "Name collisions are rejected"
+    If another vault already uses the new name, the rename is refused -- name-based
+    vault resolution must stay unambiguous.
+
+---
+
+### obs vault delete
+
+Remove a vault from the obs database. **The vault folder on disk is never
+touched** -- only the index is removed. Deletion cascades to the vault's notes,
+links, tags, graph metrics, and embeddings.
+
+```bash
+obs vault delete <vault> [--force] [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `--force` | Actually delete. Without it, prints a dry-run preview only. |
+| `--json` | Emit the result as JSON |
+
+**Examples:**
+
+```bash
+obs vault delete MyVault            # Dry-run preview (nothing removed)
+obs vault delete MyVault --force    # Actually remove from the index
+```
+
+!!! tip "Dry-run by default"
+    `obs vault delete <vault>` previews what would be removed (name, path, note
+    count) without changing anything. Re-run with `--force` to commit. Re-index a
+    deleted vault any time with `obs scan <path>`.
+
+---
+
 ## :stethoscope: Monitoring & Diagnostics
 
 ### obs bridge status

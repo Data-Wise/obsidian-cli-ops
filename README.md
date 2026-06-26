@@ -93,6 +93,11 @@ obs discover <path>             # Find vaults in directory
 obs analyze <vault>             # Analyze vault graph metrics
 obs health <vault>              # Vault health dashboard
 
+# VAULT MANAGEMENT
+obs vault info <vault>          # Show a single vault's metadata
+obs vault rename <vault> <name> # Rename display name (path/ID unchanged)
+obs vault delete <vault>        # Remove from index (dry-run; --force to delete)
+
 # AI FEATURES (optional)
 obs ai status                   # Check provider status
 obs ai setup                    # Interactive setup wizard

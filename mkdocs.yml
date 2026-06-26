@@ -74,6 +74,7 @@ nav:
   - Tutorials & Cookbook:
       - Overview: tutorials/index.md
       - Getting Started: tutorials/getting-started.md
+      - Vault Management: tutorials/vault-management.md
       - Graph Analysis: tutorials/graph-analysis.md
       - AI Features: tutorials/ai-features.md
       - Claude / MCP Integration: tutorials/claude-mcp.md

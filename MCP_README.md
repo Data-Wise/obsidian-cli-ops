@@ -71,6 +71,8 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 | `list_vaults()` | List all registered vaults with stats |
 | `get_vault_stats(vault_id)` | Detailed stats for a vault |
 | `discover_vaults(path)` | Find Obsidian vaults in a directory |
+| `rename_vault(vault_id, new_name)` | Rename a vault's display name (path/ID unchanged); rejects name collisions |
+| `delete_vault(vault_id, confirm)` | Remove a vault from the index — `confirm=True` required; default is dry-run. Files on disk are untouched |
 
 ### Search Tools
 

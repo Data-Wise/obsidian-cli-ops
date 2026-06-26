@@ -160,6 +160,12 @@ obs_help() {
         echo "  obs health <vault>        Vault health dashboard"
         echo ""
 
+        echo "📁 VAULT MANAGEMENT"
+        echo "  obs vault info <vault>    Show a single vault's metadata"
+        echo "  obs vault rename <vault> <name>  Rename display name (path/ID unchanged)"
+        echo "  obs vault delete <vault> [--force]  Remove from index (dry-run without --force)"
+        echo ""
+
         echo "🤖 AI FEATURES"
         echo "  obs ai status             Show AI provider status"
         echo "  obs ai setup              Interactive AI setup wizard"

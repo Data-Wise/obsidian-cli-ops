@@ -365,6 +365,61 @@ print(f\"  Overall: {h['overall']}/100\")
 done
 ```
 
+### Inspect a single vault's metadata
+
+```bash
+# Human-readable panel
+obs vault info MyVault
+
+# Machine-readable (id, path, note count, timestamps)
+obs vault info MyVault --json
+```
+
+### Rename a vault's display name
+
+The path and ID never change, so notes, links, and graph metrics stay intact —
+only the label you see in `obs` changes.
+
+```bash
+# Rename by current name…
+obs vault rename "Untitled" "Research Vault"
+
+# …or by ID prefix
+obs vault rename a1b2c3 Archive
+```
+
+!!! warning "Collisions are refused"
+    `obs vault rename X Y` fails if another vault already uses the name `Y` —
+    name-based lookup (`obs stats Y`, `get_vault_stats("Y")`) must stay
+    unambiguous.
+
+### Safely remove a vault from the index
+
+Deletion is **index-only** — your markdown files on disk are never touched. The
+default is a dry-run; you must pass `--force` to actually delete.
+
+```bash
+# 1. Preview what would be removed (nothing changes)
+obs vault delete OldVault
+
+# 2. Commit the removal — cascades to notes/links/tags/metrics
+obs vault delete OldVault --force
+
+# Re-index any time by re-scanning the folder
+obs scan ~/Documents/OldVault
+```
+
+### Re-register a vault under a new name
+
+Because delete is index-only and `scan` re-registers by path, you can "reset" a
+vault's index without losing files:
+
+```bash
+obs vault delete MyVault --force        # drop the stale index
+obs scan ~/Documents/MyVault --analyze  # rebuild it fresh
+obs vault rename MyVault "My Vault"      # tidy the display name
+```
+
 ---
 
 ## Scripting & Automation
