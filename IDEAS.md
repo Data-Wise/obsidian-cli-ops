@@ -21,7 +21,21 @@
 
 ---
 
-## 🎯 v4.1.0 — Vault CRUD Bridge (In Planning)
+## ✅ v4.1.0 — Shipped (2026-06-26)
+
+- ✅ `rescan_vault` asyncio crash fix (#62), `server_info` MCP tool (#53), `obs doctor` `mcp-async-run` guard
+- ✅ Command-count single-source gate (`obs_commands` from `obs_cli.py` AST); `obs link` + `obs research board`
+
+---
+
+## ✅ v4.2.0 — Shipped (2026-06-26)
+
+- ✅ Vault↔index sync reconciliation: `obs scan --prune/--no-prune`, content-hash short-circuit preserving embeddings, scan-error visibility (S4), `obs doctor --layer sync` (S5), vault-nesting check (I1), defensive tag-normalization (F1), `templates/` exclusion (D1)
+- ✅ Vault-management prose docs (tutorial, cli-reference, cookbook, man page) for `obs vault info/rename/delete`
+
+---
+
+## 🎯 v4.3.0 — Vault CRUD Bridge (Next)
 
 > **Decided 2026-06-22.** Spec: `docs/specs/SPEC-next-overhaul-2026-06-22.md` (§1 resolved → delegate, not FS-direct build)
 > **Context:** Official Obsidian CLI (~115 commands) owns vault primitives (CRUD, search, tags, backlinks, orphans, daily notes). v4.1 routes vault CRUD to it as obs's "hands" — `obs` keeps the analysis/intelligence moat.
