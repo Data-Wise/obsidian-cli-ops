@@ -28,7 +28,7 @@ Claude / MCP integration so you can query your vaults in natural language.
     PageRank, centrality, clustering, orphan/hub detection. Understand your vault's structure at a glance with the health dashboard.
 
 !!! tip "Claude Integration (v4.0.0)"
-    39 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
+    40 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
 
 ---
 
@@ -69,5 +69,5 @@ graph LR
 - [Quick Reference](refcard.md) -- Command cheat sheet
 - [Cookbook](cookbook.md) -- Task-based recipes
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
-- [Claude Integration](claude-integration.md) -- MCP server setup (39 tools)
+- [Claude Integration](claude-integration.md) -- MCP server setup (40 tools)
 - [Architecture](developer/architecture.md) -- How it works
