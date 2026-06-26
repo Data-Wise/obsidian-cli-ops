@@ -477,6 +477,42 @@ obs version
 
 ---
 
+## :books: Research Registry
+
+### obs link
+
+Create the per-project `.obs/sync.yml` mirror map ([schema](obs-sync-yml.md)). Idempotent.
+
+```bash
+obs link [project_dir] [--vault-root <path>] [--mirror auto|mirror|none] [--force] [--json]
+```
+
+- `--vault-root` — vault path for an active mirror (defaults to `mirror: none` when omitted).
+- `--mirror` — force the mode; `--force` overwrites an existing map.
+
+```bash
+obs link                                  # mirror: none (non-vault project)
+obs link --vault-root ~/vault/Research/x  # active mirror
+```
+
+### obs research board
+
+Render a deterministic dashboard of manuscripts + programs from atlas state into the vault
+([tutorial](tutorials/research-board.md)).
+
+```bash
+obs research board [--out <vault file>] [--kind manuscript|program|package] [--dry-run]
+```
+
+- No `--out` → prints to stdout. `--out` → marker-bounded atomic update of the file.
+- `--dry-run` → shows changes, writes nothing (non-zero exit on drift — a scheduling guard).
+- No `--kind` → manuscripts + programs; `--kind` narrows to one.
+
+```bash
+obs research board
+obs research board --out ~/vault/00_meta/_RESEARCH-BOARD.md
+```
+
 ## :gear: Config Management
 
 !!! info "Shipped in v4.0.0"

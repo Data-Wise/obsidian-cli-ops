@@ -1641,8 +1641,9 @@ def main():
             sub = getattr(args, 'research_command', None)
 
             if sub == 'board':
-                from research.research_board import load_projects, build_block, write_marked_block
-                projects = load_projects(kind=getattr(args, 'kind', None))
+                from research.research_board import load_projects, load_research_projects, build_block, write_marked_block
+                kind = getattr(args, 'kind', None)
+                projects = load_projects(kind=kind) if kind else load_research_projects()
                 block = build_block(projects)
                 out = getattr(args, 'out', None)
                 if out:

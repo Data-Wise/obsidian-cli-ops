@@ -18,6 +18,8 @@ All notable changes to Obsidian CLI Ops.
 
 ### Added
 
+- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. [Schema](obs-sync-yml.md).
+- **`obs research board`** — deterministic atlas → vault dashboard renderer (manuscripts + programs); marker-bounded atomic write; `--out`, `--kind`, `--dry-run`. [Tutorial](tutorials/research-board.md).
 - **`server_info` MCP tool** (#53) — reports the running server's
   `server_version`, `installed_version`, `started_at`, and
   `restart_recommended`. An in-process MCP server keeps the code it loaded at
