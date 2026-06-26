@@ -12,27 +12,31 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/releases/v2.2.0/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/obs-sync-yml/">
       
       
+        <link rel="prev" href="../cli-reference/">
+      
+      
+        <link rel="next" href="../workflows/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Release Notes v2.2.0 - Obsidian CLI Ops</title>
+        <title>.obs/sync.yml Schema - Obsidian CLI Ops</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/adhd.css">
+      <link rel="stylesheet" href="../stylesheets/adhd.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-notes-v220" class="md-skip">
+        <a href="#obssyncyml-project-mirror-map" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href=".." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release Notes v2.2.0
+              .obs/sync.yml Schema
             
           </span>
         </div>
@@ -225,7 +229,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -246,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../adhd-quick-start/" class="md-tabs__link">
+        <a href="../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -266,7 +270,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../tutorials/" class="md-tabs__link">
+        <a href="../tutorials/" class="md-tabs__link">
           
   
   
@@ -282,11 +286,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../refcard/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../refcard/" class="md-tabs__link">
           
   
   
@@ -306,7 +312,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../developer/architecture/" class="md-tabs__link">
+        <a href="../developer/architecture/" class="md-tabs__link">
           
   
   
@@ -340,7 +346,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href=".." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -370,7 +376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -449,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adhd-quick-start/" class="md-nav__link">
+      <a href="../adhd-quick-start/" class="md-nav__link">
         
   
   
@@ -477,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -505,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -533,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -620,7 +626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/" class="md-nav__link">
+      <a href="../tutorials/" class="md-nav__link">
         
   
   
@@ -648,7 +654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/getting-started/" class="md-nav__link">
+      <a href="../tutorials/getting-started/" class="md-nav__link">
         
   
   
@@ -676,7 +682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/graph-analysis/" class="md-nav__link">
+      <a href="../tutorials/graph-analysis/" class="md-nav__link">
         
   
   
@@ -704,7 +710,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/ai-features/" class="md-nav__link">
+      <a href="../tutorials/ai-features/" class="md-nav__link">
         
   
   
@@ -732,7 +738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/claude-mcp/" class="md-nav__link">
+      <a href="../tutorials/claude-mcp/" class="md-nav__link">
         
   
   
@@ -760,7 +766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/research-setup/" class="md-nav__link">
+      <a href="../tutorials/research-setup/" class="md-nav__link">
         
   
   
@@ -788,7 +794,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/research-board/" class="md-nav__link">
+      <a href="../tutorials/research-board/" class="md-nav__link">
         
   
   
@@ -816,7 +822,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/monitoring-and-health/" class="md-nav__link">
+      <a href="../tutorials/monitoring-and-health/" class="md-nav__link">
         
   
   
@@ -844,7 +850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cookbook/" class="md-nav__link">
+      <a href="../cookbook/" class="md-nav__link">
         
   
   
@@ -876,26 +882,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -913,7 +924,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -931,7 +942,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../refcard/" class="md-nav__link">
+      <a href="../refcard/" class="md-nav__link">
         
   
   
@@ -959,7 +970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli-reference/" class="md-nav__link">
+      <a href="../cli-reference/" class="md-nav__link">
         
   
   
@@ -984,10 +995,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../obs-sync-yml/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .obs/sync.yml Schema
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1003,6 +1041,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create / refresh
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1015,7 +1106,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workflows/" class="md-nav__link">
+      <a href="../workflows/" class="md-nav__link">
         
   
   
@@ -1043,7 +1134,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../ai-setup/" class="md-nav__link">
+      <a href="../ai-setup/" class="md-nav__link">
         
   
   
@@ -1071,7 +1162,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../claude-integration/" class="md-nav__link">
+      <a href="../claude-integration/" class="md-nav__link">
         
   
   
@@ -1099,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1186,7 +1277,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/architecture/" class="md-nav__link">
+      <a href="../developer/architecture/" class="md-nav__link">
         
   
   
@@ -1214,7 +1305,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/api-reference/" class="md-nav__link">
+      <a href="../developer/api-reference/" class="md-nav__link">
         
   
   
@@ -1294,7 +1385,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/testing/overview/" class="md-nav__link">
+      <a href="../developer/testing/overview/" class="md-nav__link">
         
   
   
@@ -1322,7 +1413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/testing/core-tests/" class="md-nav__link">
+      <a href="../developer/testing/core-tests/" class="md-nav__link">
         
   
   
@@ -1350,7 +1441,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/testing/sandbox/" class="md-nav__link">
+      <a href="../developer/testing/sandbox/" class="md-nav__link">
         
   
   
@@ -1386,7 +1477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
@@ -1441,10 +1532,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ai-powered-knowledge-management" class="md-nav__link">
+  <a href="#schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI-Powered Knowledge Management
+        Schema
       
     </span>
   </a>
@@ -1452,182 +1543,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#new-ai-commands" class="md-nav__link">
+  <a href="#fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        New AI Commands
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="New AI Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-similar-note_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai similar &lt;note_id&gt;
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-analyze-note_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai analyze &lt;note_id&gt;
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-duplicates-vault" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai duplicates &lt;vault&gt;
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai status
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai setup
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obs-ai-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs ai test
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-provider-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multi-Provider Architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Multi-Provider Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#supported-providers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Providers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smart-routing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Smart Routing
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#user-friendly-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        User-Friendly Dependencies
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Details
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Technical Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#new-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        New Files
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#new-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        New Tests
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Results
+        Fields
       
     </span>
   </a>
@@ -1635,54 +1554,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#breaking-changes" class="md-nav__link">
+  <a href="#create-refresh" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Breaking Changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dependencies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-guide" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Guide
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's Next
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
+        Create / refresh
       
     </span>
   </a>
@@ -1709,265 +1584,64 @@
   
 
 
-<h1 id="release-notes-v220">Release Notes v2.2.0<a class="headerlink" href="#release-notes-v220" title="Permanent link">&para;</a></h1>
-<h2 id="ai-powered-knowledge-management">AI-Powered Knowledge Management<a class="headerlink" href="#ai-powered-knowledge-management" title="Permanent link">&para;</a></h2>
-<p>This release adds a complete multi-provider AI system for intelligent note analysis, similarity detection, and duplicate finding. Phase 5 of the project roadmap is now complete.</p>
-<hr />
-<h2 id="new-ai-commands">New AI Commands<a class="headerlink" href="#new-ai-commands" title="Permanent link">&para;</a></h2>
-<h3 id="obs-ai-similar-note_id"><code>obs ai similar &lt;note_id&gt;</code><a class="headerlink" href="#obs-ai-similar-note_id" title="Permanent link">&para;</a></h3>
-<p>Find notes similar to a given note using semantic embeddings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>abc123<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.5
+<h1 id="obssyncyml-project-mirror-map"><code>.obs/sync.yml</code> — Project Mirror Map<a class="headerlink" href="#obssyncyml-project-mirror-map" title="Permanent link">&para;</a></h1>
+<p>Every project carries a <code>.obs/sync.yml</code> (docs-standards <strong>ADR-001</strong> settings contract). It is
+<strong>obs-owned</strong> and created by <a href="../cli-reference/"><code>obs link</code></a>. Vault-mirroring projects (research /
+teaching) declare a <code>vault_root</code> + <code>pairs</code>; everything else uses <code>mirror: none</code> so the file exists but
+is a no-op.</p>
+<h2 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h2>
+<p>Placeholder (non-vault project):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">mirror</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
 </code></pre></div>
-<p><strong>Features:</strong>
-- Semantic similarity using vector embeddings
-- Configurable similarity threshold (0-1)
-- Works across all notes in a vault
-- Sorted by similarity score</p>
-<h3 id="obs-ai-analyze-note_id"><code>obs ai analyze &lt;note_id&gt;</code><a class="headerlink" href="#obs-ai-analyze-note_id" title="Permanent link">&para;</a></h3>
-<p>Deep analysis of a single note's content.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>analyze<span class="w"> </span>abc123<span class="w"> </span>--provider<span class="w"> </span>gemini-api
+<p>Active mirror:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">mirror</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mirror</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">vault_root</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;~/Library/Mobile</span><span class="nv"> </span><span class="s">Documents/iCloud~md~obsidian/Documents/Research/20_projects/pmed_extensions&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">pairs</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> vault</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;teaching&quot;</span><span class="p p-Indicator">,</span><span class="nt"> repo</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;teaching&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> vault</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;04_gauge/teaching&quot;</span><span class="p p-Indicator">,</span><span class="nt"> repo</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;01-gauge-pmed/teaching&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*.md&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;_archive&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
-<p><strong>Returns:</strong>
-- Identified topics and themes
-- Suggested tags
-- Quality scores (completeness, clarity)
-- Improvement suggestions</p>
-<h3 id="obs-ai-duplicates-vault"><code>obs ai duplicates &lt;vault&gt;</code><a class="headerlink" href="#obs-ai-duplicates-vault" title="Permanent link">&para;</a></h3>
-<p>Detect potential duplicate notes in a vault.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>duplicates<span class="w"> </span>my-vault<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.85<span class="w"> </span>--limit<span class="w"> </span><span class="m">50</span>
-</code></pre></div>
-<p><strong>Features:</strong>
-- Groups similar notes together
-- Configurable similarity threshold
-- Shows average similarity per group
-- Helps clean up redundant content</p>
-<h3 id="obs-ai-status"><code>obs ai status</code><a class="headerlink" href="#obs-ai-status" title="Permanent link">&para;</a></h3>
-<p>Check AI provider availability and configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
-</code></pre></div>
-<p><strong>Shows:</strong>
-- Provider availability (gemini-api, gemini-cli, claude-cli, ollama)
-- API key status
-- Missing dependencies with quick-fix commands
-- Current configuration</p>
-<h3 id="obs-ai-setup"><code>obs ai setup</code><a class="headerlink" href="#obs-ai-setup" title="Permanent link">&para;</a></h3>
-<p>Interactive setup wizard for AI providers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup
-</code></pre></div>
-<p><strong>Features:</strong>
-- Auto-detects available providers
-- Offers to install missing dependencies
-- Configures API keys
-- Tests provider connectivity</p>
-<h3 id="obs-ai-test"><code>obs ai test</code><a class="headerlink" href="#obs-ai-test" title="Permanent link">&para;</a></h3>
-<p>Test AI provider functionality.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--provider<span class="w"> </span>ollama
-</code></pre></div>
-<hr />
-<h2 id="multi-provider-architecture">Multi-Provider Architecture<a class="headerlink" href="#multi-provider-architecture" title="Permanent link">&para;</a></h2>
-<h3 id="supported-providers">Supported Providers<a class="headerlink" href="#supported-providers" title="Permanent link">&para;</a></h3>
+<h2 id="fields">Fields<a class="headerlink" href="#fields" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Provider</th>
-<th>Type</th>
-<th>Best For</th>
-<th>Embeddings</th>
+<th>Field</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>gemini-api</code></td>
-<td>API</td>
-<td>Fast batch operations</td>
-<td>Yes</td>
+<td><code>schema</code></td>
+<td>Format version (currently <code>1</code>).</td>
 </tr>
 <tr>
-<td><code>gemini-cli</code></td>
-<td>CLI</td>
-<td>Fallback when no API key</td>
-<td>No</td>
+<td><code>mirror</code></td>
+<td><code>none</code> (placeholder) or <code>mirror</code> (sync vault↔repo).</td>
 </tr>
 <tr>
-<td><code>claude-cli</code></td>
-<td>CLI</td>
-<td>High-quality analysis</td>
-<td>No</td>
+<td><code>vault_root</code></td>
+<td>iCloud Obsidian vault path the project mirrors (mirror mode).</td>
 </tr>
 <tr>
-<td><code>ollama</code></td>
-<td>Local</td>
-<td>Privacy, offline use</td>
-<td>Yes</td>
+<td><code>pairs</code></td>
+<td><code>{ vault, repo }</code> directory pairings (numbering may differ).</td>
+</tr>
+<tr>
+<td><code>include</code> / <code>exclude</code></td>
+<td>Glob filters (default <code>*.md</code> / <code>_archive</code>).</td>
 </tr>
 </tbody>
 </table>
-<h3 id="smart-routing">Smart Routing<a class="headerlink" href="#smart-routing" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Automatic provider selection based on operation type</li>
-<li>Fallback chain when preferred provider unavailable</li>
-<li>Prompts to install missing dependencies</li>
-</ul>
-<h3 id="user-friendly-dependencies">User-Friendly Dependencies<a class="headerlink" href="#user-friendly-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install with specific provider support</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pip<span class="w"> </span>install<span class="w"> </span>obs<span class="o">[</span>gemini<span class="o">]</span><span class="w">    </span><span class="c1"># Gemini API support</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pip<span class="w"> </span>install<span class="w"> </span>obs<span class="o">[</span>ollama<span class="o">]</span><span class="w">    </span><span class="c1"># Ollama support</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>pip<span class="w"> </span>install<span class="w"> </span>obs<span class="o">[</span>all<span class="o">]</span><span class="w">       </span><span class="c1"># All providers</span>
+<h2 id="create-refresh">Create / refresh<a class="headerlink" href="#create-refresh" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>link<span class="w">                                  </span><span class="c1"># mirror: none (non-vault project)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>link<span class="w"> </span>--vault-root<span class="w"> </span>~/vault/Research/x<span class="w">  </span><span class="c1"># active mirror</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>link<span class="w"> </span>--force<span class="w">                          </span><span class="c1"># overwrite an existing map</span>
 </code></pre></div>
-<hr />
-<h2 id="technical-details">Technical Details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h2>
-<h3 id="new-files">New Files<a class="headerlink" href="#new-files" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Lines</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>src/python/ai/features.py</code></td>
-<td>350</td>
-<td>AI feature implementations</td>
-</tr>
-<tr>
-<td><code>src/python/ai/router.py</code></td>
-<td>310</td>
-<td>Smart provider routing</td>
-</tr>
-<tr>
-<td><code>src/python/ai/config.py</code></td>
-<td>350</td>
-<td>Configuration + setup wizard</td>
-</tr>
-<tr>
-<td><code>src/python/ai/install.py</code></td>
-<td>200</td>
-<td>Dependency management</td>
-</tr>
-<tr>
-<td><code>src/python/ai/providers/base.py</code></td>
-<td>250</td>
-<td>Abstract provider interface</td>
-</tr>
-<tr>
-<td><code>src/python/ai/providers/gemini_api.py</code></td>
-<td>200</td>
-<td>Gemini API provider</td>
-</tr>
-<tr>
-<td><code>src/python/ai/providers/gemini_cli.py</code></td>
-<td>150</td>
-<td>Gemini CLI provider</td>
-</tr>
-<tr>
-<td><code>src/python/ai/providers/claude_cli.py</code></td>
-<td>150</td>
-<td>Claude CLI provider</td>
-</tr>
-<tr>
-<td><code>src/python/ai/providers/ollama.py</code></td>
-<td>200</td>
-<td>Ollama provider</td>
-</tr>
-</tbody>
-</table>
-<h3 id="new-tests">New Tests<a class="headerlink" href="#new-tests" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Test File</th>
-<th>Tests</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>test_ai_features.py</code></td>
-<td>23</td>
-<td>Feature implementations</td>
-</tr>
-<tr>
-<td><code>test_ai_router.py</code></td>
-<td>19</td>
-<td>Provider routing</td>
-</tr>
-<tr>
-<td><code>test_ai_providers.py</code></td>
-<td>28</td>
-<td>Provider classes</td>
-</tr>
-<tr>
-<td><code>test_ai_config.py</code></td>
-<td>12</td>
-<td>Configuration</td>
-</tr>
-<tr>
-<td><code>test_ai_install.py</code></td>
-<td>14</td>
-<td>Dependency management</td>
-</tr>
-<tr>
-<td><strong>Total</strong></td>
-<td><strong>96</strong></td>
-<td>New AI tests</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="test-results">Test Results<a class="headerlink" href="#test-results" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Phase 5 Tests:    96 passed
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Total Tests:     394+ tests
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Test Coverage:   ~72% overall
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>AI Coverage:     ~80%
-</code></pre></div>
-<hr />
-<h2 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
-<p>None. All existing commands continue to work.</p>
-<hr />
-<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
-<p><strong>Required:</strong>
-- Python 3.9+
-- numpy (for similarity calculations)</p>
-<p><strong>Optional (per provider):</strong>
-- <code>google-generativeai</code> for gemini-api
-- <code>requests</code> for ollama
-- <code>gemini</code> CLI tool for gemini-cli
-- <code>claude</code> CLI tool for claude-cli</p>
-<hr />
-<h2 id="upgrade-guide">Upgrade Guide<a class="headerlink" href="#upgrade-guide" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Update the package</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Install AI dependencies (optional)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Or install specific providers</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>pip<span class="w"> </span>install<span class="w"> </span>google-generativeai<span class="w">  </span><span class="c1"># For Gemini API</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w">               </span><span class="c1"># For similarity features</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Run setup wizard</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup
-</code></pre></div>
-<hr />
-<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Phase 6: Learning System (future)</li>
-<li>User feedback collection</li>
-<li>Rule generation from corrections</li>
-<li>Confidence adaptation</li>
-<li>TUI integration for AI features</li>
-<li>Topic clustering (<code>obs ai topics</code>)</li>
-<li>Merge suggestions (<code>obs ai suggest</code>)</li>
-</ul>
-<hr />
-<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Documentation:</strong> https://data-wise.github.io/obsidian-cli-ops/</li>
-<li><strong>Repository:</strong> https://github.com/Data-Wise/obsidian-cli-ops</li>
-<li><strong>AI Setup Guide:</strong> docs/user/guides/ai-setup.md</li>
-</ul>
+<p><code>obs link</code> is <strong>idempotent</strong> — an existing map is never clobbered unless <code>--force</code>. <code>atlas doctor</code> audits
+that every project has one.</p>
 
 
 
@@ -2027,10 +1701,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

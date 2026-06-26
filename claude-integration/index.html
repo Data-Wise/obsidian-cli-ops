@@ -794,6 +794,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/research-board/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Board
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tutorials/monitoring-and-health/" class="md-nav__link">
         
   
@@ -950,6 +978,34 @@
     
   
     CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../obs-sync-yml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .obs/sync.yml Schema
   
 
     
@@ -1236,10 +1292,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bridge-tool" class="md-nav__link">
+  <a href="#bridge-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bridge Tool
+        Bridge Tools
       
     </span>
   </a>
@@ -1969,10 +2025,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bridge-tool" class="md-nav__link">
+  <a href="#bridge-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bridge Tool
+        Bridge Tools
       
     </span>
   </a>
@@ -2222,7 +2278,7 @@
 - <strong>How:</strong> Add one JSON block to <code>claude_desktop_config.json</code>, restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.0.1</p>
+<p><strong>Time:</strong> ~5 minutes | <strong>Level:</strong> Intermediate | <strong>Version:</strong> 4.1.0</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -2233,7 +2289,7 @@
 <li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
 <li><strong>"Run a quality check on all notes"</strong> — <code>obs ai quality</code> via AI passthrough</li>
 </ul>
-<p>The MCP server exposes <strong>39 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
+<p>The MCP server exposes <strong>40 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2452,7 +2508,7 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 </table>
 <p><strong><code>command</code> values:</strong> <code>similar</code>, <code>analyze</code>, <code>duplicates</code>, <code>suggest-links</code>, <code>gaps</code>,
 <code>summarize</code>, <code>refactor</code>, <code>merge-suggest</code>, <code>tag-suggest</code>, <code>quality</code></p>
-<h3 id="bridge-tool">Bridge Tool<a class="headerlink" href="#bridge-tool" title="Permanent link">&para;</a></h3>
+<h3 id="bridge-tools">Bridge Tools<a class="headerlink" href="#bridge-tools" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2466,6 +2522,11 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <td><code>get_bridge_status</code></td>
 <td>—</td>
 <td>Check whether the Obsidian official CLI is installed and the app is running</td>
+</tr>
+<tr>
+<td><code>server_info</code></td>
+<td>—</td>
+<td>Running obs MCP server version + <code>restart_recommended</code> (flags a stale in-process server after an upgrade)</td>
 </tr>
 </tbody>
 </table>
