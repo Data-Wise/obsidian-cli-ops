@@ -38,6 +38,7 @@ import os
 import sys
 import subprocess
 import stat
+import re
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -78,7 +79,7 @@ if Path(sys.executable).resolve() != Path(_obs_python).resolve():
 # ---------------------------------------------------------------------------
 
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Ensure src/python is on path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -108,9 +109,6 @@ graph_analyzer = GraphAnalyzer(db)
 # still failed because the running server predated the fix). We freeze the
 # version this process loaded at import time and compare it, on request, with
 # the version currently on disk; a mismatch means the host is running stale code.
-import re as _re
-from datetime import timezone as _timezone
-
 _VERSION_FILE = Path(__file__).parent / "__init__.py"
 
 
@@ -120,8 +118,8 @@ def _read_disk_version() -> str:
     each call so a post-upgrade change is observable from a long-running process.
     """
     try:
-        m = _re.search(r'__version__\s*=\s*"([^"]+)"',
-                       _VERSION_FILE.read_text(encoding="utf-8"))
+        m = re.search(r'__version__\s*=\s*"([^"]+)"',
+                      _VERSION_FILE.read_text(encoding="utf-8"))
         return m.group(1) if m else "unknown"
     except OSError:
         return "unknown"
@@ -129,7 +127,7 @@ def _read_disk_version() -> str:
 
 # Frozen at import = the version of the code THIS process is actually running.
 _SERVER_VERSION = _read_disk_version()
-_SERVER_STARTED_AT = datetime.now(_timezone.utc).isoformat()
+_SERVER_STARTED_AT = datetime.now(timezone.utc).isoformat()
 
 # Path to obs CLI (for AI subcommand subprocess calls)
 _OBS_CLI = Path(__file__).parent / "obs_cli.py"
