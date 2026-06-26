@@ -6,7 +6,7 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (39):
+Tools (40):
   Vault:    list_vaults, get_vault_stats, discover_vaults
   Search:   search_notes, find_similar_notes, unified_search
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
@@ -14,7 +14,7 @@ Tools (39):
   Notes:    read_note, write_note, create_note, list_notes, append_to_note,
             insert_to_note, rename_note, delete_note, get_note_links, rescan_vault
   AI:       run_obs_ai
-  Temporal: get_bridge_status, get_trends, get_stale_notes, get_daily_digest
+  Temporal: get_bridge_status, server_info, get_trends, get_stale_notes, get_daily_digest
   Config:   diagnose
   Zotero:   zotero_search, zotero_get, zotero_cite, zotero_recent
   PDF:      pdf_search
