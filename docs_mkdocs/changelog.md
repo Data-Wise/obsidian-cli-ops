@@ -6,6 +6,28 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`rescan_vault` MCP tool crashed on every call** (#62) — the sync handler ran
+  `asyncio.run(scan_vault(...))` inside FastMCP's already-running event loop,
+  raising `RuntimeError: asyncio.run() cannot be called from a running event
+  loop`. The scan never ran, so the obs DB/search index went silently stale
+  after every write tool. The handler is now `async def` and `await`s the
+  coroutine. A regression test drives the tool inside a live event loop so the
+  failure mode can't silently return.
+
+### Added
+
+- **`server_info` MCP tool** (#53) — reports the running server's
+  `server_version`, `installed_version`, `started_at`, and
+  `restart_recommended`. An in-process MCP server keeps the code it loaded at
+  startup in memory, so after an upgrade the host can serve stale tool code
+  until restarted; `server_info` makes that observable without a restart.
+  (Tool count 39 → 40.)
+- **`obs doctor` `mcp-async-run` check** (mcp layer) — static AST guard that
+  fails if any **sync** `@mcp.tool()` handler calls `asyncio.run()`, so the #62
+  bug class cannot recur. Mirrors the existing `mcp-tool-resolvers` guard.
+
 ---
 
 ## v4.0.1 (2026-06-23) — insert_to_note + fixes + release-quality tooling

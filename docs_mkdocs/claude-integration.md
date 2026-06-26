@@ -130,11 +130,12 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 **`command` values:** `similar`, `analyze`, `duplicates`, `suggest-links`, `gaps`,
 `summarize`, `refactor`, `merge-suggest`, `tag-suggest`, `quality`
 
-### Bridge Tool
+### Bridge Tools
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
 | `get_bridge_status` | — | Check whether the Obsidian official CLI is installed and the app is running |
+| `server_info` | — | Running obs MCP server version + `restart_recommended` (flags a stale in-process server after an upgrade) |
 
 ### Temporal Tools
 

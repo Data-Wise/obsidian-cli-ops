@@ -264,6 +264,15 @@ obs doctor --layer db --json         # DB checks as JSON
 !!! info "Doc count gate"
     `obs doctor --layer docs` is part of the release harness — it catches count drift between source code and documentation before any release lands.
 
+!!! info "MCP static guards"
+    `obs doctor --layer mcp` includes two AST guards over `mcp_server.py` that
+    catch whole bug classes before release:
+
+    - **`mcp-tool-resolvers`** — fails if a `@mcp.tool` resolves a vault with the
+      exact-ID-only `db.get_vault()` instead of name/ID/prefix resolution.
+    - **`mcp-async-run`** — fails if a **sync** `@mcp.tool` calls `asyncio.run()`,
+      which crashes inside FastMCP's running event loop (regression guard for #62).
+
 ---
 
 ## :chart_with_upwards_trend: Graph Analysis

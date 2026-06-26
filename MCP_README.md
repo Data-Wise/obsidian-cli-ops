@@ -119,6 +119,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 | Tool | Description |
 |------|-------------|
 | `get_bridge_status()` | Whether the official Obsidian CLI is installed + app running, with current capabilities |
+| `server_info()` | Running obs MCP server identity: `server_version`, `installed_version`, `started_at`, `restart_recommended` (true when the in-process server is stale after an upgrade) |
 
 ### Temporal Tools
 
