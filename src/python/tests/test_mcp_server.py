@@ -501,23 +501,55 @@ class TestNoteCRUD:
 # ---------------------------------------------------------------------------
 
 class TestRescanTool:
+    """#62 regression: rescan_vault must run INSIDE a live event loop.
+
+    FastMCP dispatches every @mcp.tool() call from within an already-running
+    asyncio loop. The original sync handler called asyncio.run(scan_vault(...))
+    there, raising `RuntimeError: asyncio.run() cannot be called from a running
+    event loop` (swallowed into an "Error rescanning vault: ..." string).
+
+    Calling the handler synchronously from pytest (no running loop) let
+    asyncio.run() succeed and HID the bug — the same false-confidence trap as
+    the v4.0.0 fake-schema doctor test. Every test below therefore drives the
+    handler through `_rescan` (await inside asyncio.run) to recreate FastMCP's
+    execution context.
+    """
+
+    @staticmethod
+    def _rescan(mcp_mod, vault_id):
+        """Invoke rescan_vault the way FastMCP does: awaited inside a running
+        event loop. Fails against the old sync+asyncio.run() handler; passes
+        once the handler is `async def` and awaits the coroutine."""
+        async def _call():
+            return await mcp_mod.rescan_vault(vault_id)
+        return asyncio.run(_call())
+
     def test_rescan_vault_known(self, mcp_mod, obs_vault):
         vault_id, _, _ = obs_vault
-        result = mcp_mod.rescan_vault(vault_id)
+        result = self._rescan(mcp_mod, vault_id)
         assert isinstance(result, str)
         assert "rescanned" in result.lower()
         assert "notes scanned" in result.lower()
 
     def test_rescan_vault_unknown(self, mcp_mod):
-        result = mcp_mod.rescan_vault("ghost-vault-xyz")
+        result = self._rescan(mcp_mod, "ghost-vault-xyz")
         assert any(kw in result.lower() for kw in ["not found", "error"])
 
     def test_rescan_by_name(self, mcp_mod, named_vault):
         """Bug A guard: rescan resolves a vault NAME, not just an exact ID."""
         name, _, _ = named_vault
-        result = mcp_mod.rescan_vault(name)
+        result = self._rescan(mcp_mod, name)
         assert "not found" not in result.lower()
         assert "rescanned" in result.lower()
+
+    def test_rescan_no_asyncio_run_crash(self, mcp_mod, obs_vault):
+        """#62 direct guard: the live-loop call must NOT degrade to the
+        'asyncio.run() cannot be called from a running event loop' error
+        string that the old sync handler returned on every MCP dispatch."""
+        vault_id, _, _ = obs_vault
+        result = self._rescan(mcp_mod, vault_id)
+        assert "running event loop" not in result.lower()
+        assert "error rescanning" not in result.lower()
 
     def test_rescan_actually_scans_not_stats(self, mcp_mod, obs_vault):
         """Bug B guard: rescan must call vault_manager.scan_vault(path, name),
@@ -528,12 +560,74 @@ class TestRescanTool:
         scan_mock = AsyncMock(return_value=fake)
         with patch.object(mcp_mod.vault_manager, "scan_vault", scan_mock), \
                 patch.object(mcp_mod, "_obs") as obs_mock:
-            result = mcp_mod.rescan_vault(vault_id)
+            result = self._rescan(mcp_mod, vault_id)
         scan_mock.assert_awaited_once()
         path_arg, name_arg = scan_mock.await_args[0][:2]
         assert str(path_arg) == str(vault_dir)
         obs_mock.assert_not_called()        # never the `stats` no-op path
         assert "notes scanned: 5" in result.lower()
+
+    def test_rescan_reports_scan_error(self, mcp_mod, obs_vault):
+        """A failure inside scan_vault is caught and returned as a readable
+        'Error rescanning vault: ...' string — not raised through the loop."""
+        vault_id, _, _ = obs_vault
+        boom = AsyncMock(side_effect=RuntimeError("disk gone"))
+        with patch.object(mcp_mod.vault_manager, "scan_vault", boom):
+            result = self._rescan(mcp_mod, vault_id)
+        assert isinstance(result, str)
+        assert "error rescanning vault" in result.lower()
+        assert "disk gone" in result
+
+
+# ---------------------------------------------------------------------------
+# Server info — #53: detect a stale in-process MCP server
+# ---------------------------------------------------------------------------
+
+class TestServerInfo:
+    def test_surfaces_version_and_started_at(self, mcp_mod):
+        import json
+        info = json.loads(mcp_mod.server_info())
+        assert isinstance(info["server_version"], str) and info["server_version"]
+        assert info["server_version"] == mcp_mod._SERVER_VERSION
+        assert info["installed_version"] == mcp_mod._read_disk_version()
+        assert isinstance(info["started_at"], str) and "T" in info["started_at"]
+
+    def test_no_restart_when_versions_match(self, mcp_mod):
+        import json
+        # In a healthy server the frozen version equals the on-disk version.
+        info = json.loads(mcp_mod.server_info())
+        assert info["restart_recommended"] is False
+        assert "hint" not in info
+
+    def test_restart_recommended_on_version_mismatch(self, mcp_mod):
+        """A running server older than the installed code → restart_recommended."""
+        import json
+        with patch.object(mcp_mod, "_read_disk_version", return_value="99.0.0"):
+            info = json.loads(mcp_mod.server_info())
+        assert info["installed_version"] == "99.0.0"
+        assert info["server_version"] == mcp_mod._SERVER_VERSION
+        assert info["restart_recommended"] is True
+        assert "restart" in info["hint"].lower()
+
+    def test_unknown_disk_version_does_not_flag_restart(self, mcp_mod):
+        """A failed disk read ('unknown') must not produce a false stale flag."""
+        import json
+        with patch.object(mcp_mod, "_read_disk_version", return_value="unknown"):
+            info = json.loads(mcp_mod.server_info())
+        assert info["restart_recommended"] is False
+
+    def test_disk_version_unknown_when_file_missing(self, mcp_mod, tmp_path):
+        """_read_disk_version degrades to 'unknown' (not a crash) when the
+        version file can't be read."""
+        with patch.object(mcp_mod, "_VERSION_FILE", tmp_path / "nope.py"):
+            assert mcp_mod._read_disk_version() == "unknown"
+
+    def test_disk_version_unknown_when_no_version_string(self, mcp_mod, tmp_path):
+        """A version file lacking __version__ yields 'unknown', not a stray match."""
+        f = tmp_path / "__init__.py"
+        f.write_text('__author__ = "Data-Wise"\n')
+        with patch.object(mcp_mod, "_VERSION_FILE", f):
+            assert mcp_mod._read_disk_version() == "unknown"
 
 
 # ---------------------------------------------------------------------------
