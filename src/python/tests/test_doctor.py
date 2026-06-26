@@ -264,10 +264,16 @@ class TestCheckMCP:
         monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS",
                             [tmp_path / "nonexistent.json"])
         results = _check_mcp()
+        ids = {r.id for r in results}
         cfg = next(r for r in results if r.id == "mcp-config")
         assert cfg.status == "fail"
-        skips = [r for r in results if r.status == "skip"]
-        assert len(skips) >= 2
+        # Only the config-dependent entry check skips when the config is absent.
+        entry = next(r for r in results if r.id == "mcp-entry")
+        assert entry.status == "skip"
+        # Source-code static guards are config-independent and must still run
+        # (regression: they were silently skipped in the config-missing branch).
+        assert "mcp-tool-resolvers" in ids
+        assert "mcp-async-run" in ids
 
     def test_pass_with_valid_config(self, tmp_path, monkeypatch):
         config_path = tmp_path / "claude_desktop_config.json"
