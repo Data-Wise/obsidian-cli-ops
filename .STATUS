@@ -61,8 +61,7 @@ Not yet released; targets v4.2.0 (dev→main).
 
 ### Active Worktrees
 
-- _(vault-sync-reconcile worktrees removed 2026-06-26 — work merged to dev via PRs #66/#70.)_
-- `feature/cmd-count-ssot` @ `~/.git-worktrees/obsidian-cli-ops/feature-cmd-count-ssot` — command-count SSOT work.
+- _(none — all feature worktrees cleaned up 2026-06-26. vault-sync-reconcile merged via #66/#70; cmd-count-ssot was redundant (0 ahead of dev); gifted-wilson vault-docs cherry-picked to dev as b7b6eeb.)_
 
 ---
 
