@@ -500,6 +500,32 @@ class TestMcpAsyncRun:
         result = _check_mcp_async_run(tmp_path / "nope.py")
         assert result.status == "skip"
 
+    def test_check_errors_on_unparseable_source(self, tmp_path):
+        """Unparseable source → 'error' status (not a crash), matching the
+        sibling resolver guard's error contract."""
+        bad = tmp_path / "mcp_server.py"
+        bad.write_text("def broken(:\n    pass\n")
+        result = _check_mcp_async_run(bad)
+        assert result.status == "error"
+
+    def test_flags_multiple_offenders(self):
+        src = _ASYNC_RUN_BAD + '''
+@mcp.tool()
+def reindex(vault_id: str) -> str:
+    return asyncio.run(vault_manager.scan_vault(vault_id))
+'''
+        offenders = _find_async_run_offenders(src)
+        assert offenders == ["rescan_vault()", "reindex()"]
+
+    def test_matches_bare_decorator(self):
+        """@mcp.tool (no parens) is still an MCP tool and must be flagged."""
+        src = '''
+@mcp.tool
+def rescan_vault(vault_id: str) -> str:
+    return asyncio.run(vault_manager.scan_vault(vault_id))
+'''
+        assert _find_async_run_offenders(src) == ["rescan_vault()"]
+
     def test_registered_in_mcp_layer(self):
         """_check_mcp() must surface the mcp-async-run result."""
         ids = {r.id for r in _check_mcp()}

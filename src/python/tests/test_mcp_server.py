@@ -567,6 +567,17 @@ class TestRescanTool:
         obs_mock.assert_not_called()        # never the `stats` no-op path
         assert "notes scanned: 5" in result.lower()
 
+    def test_rescan_reports_scan_error(self, mcp_mod, obs_vault):
+        """A failure inside scan_vault is caught and returned as a readable
+        'Error rescanning vault: ...' string — not raised through the loop."""
+        vault_id, _, _ = obs_vault
+        boom = AsyncMock(side_effect=RuntimeError("disk gone"))
+        with patch.object(mcp_mod.vault_manager, "scan_vault", boom):
+            result = self._rescan(mcp_mod, vault_id)
+        assert isinstance(result, str)
+        assert "error rescanning vault" in result.lower()
+        assert "disk gone" in result
+
 
 # ---------------------------------------------------------------------------
 # Server info — #53: detect a stale in-process MCP server
@@ -604,6 +615,19 @@ class TestServerInfo:
         with patch.object(mcp_mod, "_read_disk_version", return_value="unknown"):
             info = json.loads(mcp_mod.server_info())
         assert info["restart_recommended"] is False
+
+    def test_disk_version_unknown_when_file_missing(self, mcp_mod, tmp_path):
+        """_read_disk_version degrades to 'unknown' (not a crash) when the
+        version file can't be read."""
+        with patch.object(mcp_mod, "_VERSION_FILE", tmp_path / "nope.py"):
+            assert mcp_mod._read_disk_version() == "unknown"
+
+    def test_disk_version_unknown_when_no_version_string(self, mcp_mod, tmp_path):
+        """A version file lacking __version__ yields 'unknown', not a stray match."""
+        f = tmp_path / "__init__.py"
+        f.write_text('__author__ = "Data-Wise"\n')
+        with patch.object(mcp_mod, "_VERSION_FILE", f):
+            assert mcp_mod._read_disk_version() == "unknown"
 
 
 # ---------------------------------------------------------------------------
