@@ -33,6 +33,11 @@ All notable changes to Obsidian CLI Ops.
   by `except Exception: continue` while `complete_scan` hardcoded an error count of 0. Scan
   failures are now counted, captured (path + exception), logged, and surfaced in the scan
   summary and `scan_history`; the scan still completes.
+- **Non-string frontmatter tags dropped notes** — a note with a valid-YAML but non-string
+  tag element (`tags: [{}]`, `tags: [2024]`) raised `AttributeError` in `_extract_tags` and
+  the whole note was dropped from the index (same silent-drop class as the above). Tag
+  elements are now normalized (strings stripped, scalars coerced, dict/list/None skipped),
+  recovering such notes. Found via dogfood: recovered 18 real notes across two vaults.
 
 ---
 
