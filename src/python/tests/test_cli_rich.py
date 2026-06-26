@@ -125,6 +125,44 @@ class TestCLICommands:
         """Test db init command."""
         cli = ObsCLI()
         cli.db_init()
-        
+
         # Should call rebuild_database
         cli.db.rebuild_database.assert_called_once()
+
+
+class TestScanSummaryVisibility:
+    """P1: the scan summary must surface failed/unchanged/pruned counts so the S4
+    error tally + the N2 short-circuit are visible where users actually look —
+    not just in logs / scan_history."""
+
+    @patch('obs_cli.DatabaseManager')
+    @patch('obs_cli.VaultManager')
+    @patch('obs_cli.GraphAnalyzer')
+    def test_failed_and_unchanged_are_printed(self, mock_ga, mock_vm, mock_db, capsys):
+        from core.models import ScanResult
+        cli = ObsCLI()
+        result = ScanResult(
+            vault_id="v1", vault_name="V", vault_path="/tmp/v",
+            notes_scanned=10, links_found=4, tags_found=2,
+            notes_pruned=3, notes_unchanged=5, notes_failed=2,
+            duration_seconds=1.0,
+        )
+        cli._print_scan_result(result)
+        out = capsys.readouterr().out
+        assert "Failed: 2" in out
+        assert "Unchanged: 5" in out
+        assert "Pruned: 3" in out
+
+    @patch('obs_cli.DatabaseManager')
+    @patch('obs_cli.VaultManager')
+    @patch('obs_cli.GraphAnalyzer')
+    def test_zero_failed_unchanged_are_not_noise(self, mock_ga, mock_vm, mock_db, capsys):
+        """Clean scan stays terse — no Failed:/Unchanged: lines when both are 0."""
+        from core.models import ScanResult
+        cli = ObsCLI()
+        result = ScanResult(vault_id="v1", vault_name="V", vault_path="/tmp/v",
+                            notes_scanned=10, notes_failed=0, notes_unchanged=0)
+        cli._print_scan_result(result)
+        out = capsys.readouterr().out
+        assert "Failed:" not in out
+        assert "Unchanged:" not in out

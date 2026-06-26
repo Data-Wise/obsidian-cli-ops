@@ -93,7 +93,8 @@ class ObsCLI:
                     print(f"❌ Error scanning {vault_name}: {e}\n")
 
     def scan(self, vault_path: str, vault_name: Optional[str] = None,
-             analyze: bool = False, verbose: bool = False):
+             analyze: bool = False, verbose: bool = False,
+             prune: bool = False):
         """
         Scan a vault and populate database.
 
@@ -102,10 +103,13 @@ class ObsCLI:
             vault_name: Optional vault name
             analyze: Whether to run graph analysis after scan
             verbose: Print detailed output
+            prune: Opt-in sweep of deleted/renamed notes (S1/S2)
         """
         try:
             # Scan vault using core layer
-            result = asyncio.run(self.vault_manager.scan_vault(vault_path, vault_name))
+            result = asyncio.run(
+                self.vault_manager.scan_vault(vault_path, vault_name, prune=prune)
+            )
 
             # Print scan result
             self._print_scan_result(result, verbose)
@@ -503,6 +507,12 @@ class ObsCLI:
         print(f"  Notes: {result.notes_scanned}")
         print(f"  Links: {result.links_found}")
         print(f"  Tags: {result.tags_found}")
+        if result.notes_unchanged > 0:
+            print(f"  Unchanged: {result.notes_unchanged}")
+        if result.notes_pruned > 0:
+            print(f"  Pruned: {result.notes_pruned}")
+        if result.notes_failed > 0:
+            print(f"  Failed: {result.notes_failed}")
         print(f"  Duration: {result.duration_seconds:.2f}s")
 
         if verbose:
@@ -801,13 +811,13 @@ def _print_doctor_results(results):
     """Render DoctorResult list as a layered Rich table."""
     from rich.table import Table
 
-    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥"}
-    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red"}
+    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥", "info": "ℹ️ "}
+    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red", "info": "cyan"}
 
     current_layer = None
     table = None
 
-    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0}
+    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0, "info": 0}
     for r in results:
         counts[r.status] = counts.get(r.status, 0) + 1
 
@@ -849,6 +859,8 @@ def _print_doctor_results(results):
         parts.append(f"[green]{counts['pass']} pass[/]")
     if counts["skip"]:
         parts.append(f"[dim]{counts['skip']} skip[/]")
+    if counts["info"]:
+        parts.append(f"[cyan]{counts['info']} info[/]")
     verdict = "[bold green]All checks passed ✅[/]" if not counts["fail"] and not counts["error"] else "[bold red]Issues found — see hints above[/]"
     console.print(f"{verdict}  ({', '.join(parts)})")
 
@@ -904,6 +916,10 @@ def main():
     scan_parser.add_argument('--name', help='Vault name')
     scan_parser.add_argument('--analyze', action='store_true',
                             help='Analyze graph after scan')
+    scan_parser.add_argument('--prune', dest='prune',
+                            action=argparse.BooleanOptionalAction, default=False,
+                            help='Sweep deleted/renamed notes from the index '
+                                 '(--prune/--no-prune; default: additive)')
 
     # analyze command
     analyze_parser = subparsers.add_parser('analyze',
@@ -1025,7 +1041,7 @@ def main():
     doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
     doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
     doctor_parser.add_argument('--layer', action='append', dest='layers',
-                               choices=['python', 'database', 'vault', 'mcp', 'docs', 'icloud'],
+                               choices=['python', 'database', 'vault', 'sync', 'mcp', 'docs', 'icloud'],
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
@@ -1138,7 +1154,8 @@ def main():
 
         elif args.command == 'scan':
             cli.scan(args.path, vault_name=args.name,
-                    analyze=args.analyze, verbose=args.verbose)
+                    analyze=args.analyze, verbose=args.verbose,
+                    prune=args.prune)
 
         elif args.command == 'analyze':
             if args.json:

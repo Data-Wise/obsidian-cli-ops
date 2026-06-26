@@ -111,22 +111,41 @@ obs stats --vault abc        # Prefix lookup
 Scan a vault directory and register (or update) it in the database.
 
 ```bash
-obs scan <path> [--name <name>] [--analyze]
+obs scan <path> [--name <name>] [--analyze] [--prune | --no-prune]
 ```
 
-| Argument | Description |
-|----------|-------------|
-| `path` | Vault directory path to scan |
-| `--name` | Custom name for the vault (defaults to directory name) |
-| `--analyze` | Run graph analysis immediately after scanning |
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `path` | | Vault directory path to scan |
+| `--name` | directory name | Custom name for the vault |
+| `--analyze` | off | Run graph analysis immediately after scanning |
+| `--prune` / `--no-prune` | `--no-prune` | Sweep notes that were deleted or renamed on disk out of the index |
 
 **Examples:**
 
 ```bash
-obs scan ~/Documents/MyVault              # Scan and register a vault
+obs scan ~/Documents/MyVault              # Scan and register a vault (additive)
 obs scan ~/Notes --name "Personal Notes"  # Scan with a custom name
 obs scan ~/Vault --analyze                # Scan and run analysis in one step
+obs scan ~/Vault --prune                  # Scan AND remove deleted/renamed notes
 ```
+
+!!! note "Additive by default — `--prune` opts into removal"
+    A plain `obs scan` is **additive**: it adds and updates notes but never removes
+    rows, so a note deleted or renamed on disk lingers in the index (a "ghost").
+    Pass `--prune` to reconcile: after scanning, rows whose path is no longer on
+    disk are swept (cascading to their links, tags, graph metrics, and embeddings).
+    `--no-prune` is the explicit form of the default.
+
+    Pruning is **guarded against accidental wipes** — if a scan sees zero files
+    (e.g. a mis-pointed path or an iCloud vault that hasn't materialised), the
+    sweep is skipped and a warning is emitted rather than emptying the index.
+
+!!! tip "Unchanged notes are skipped, embeddings preserved"
+    A scan compares each file's content hash against the stored one and **skips
+    unchanged notes**, so re-scanning no longer rewrites every row or destroys the
+    AI embedding cache. The scan summary reports unchanged, updated, pruned, and
+    failed counts.
 
 !!! tip "Staleness warnings"
     `obs analyze`, `obs search`, and `obs health` emit a warning when the index is stale (older than 24 hours). Run `obs scan <path>` to refresh.
@@ -240,16 +259,16 @@ obs daily-digest Research --limit 3     # Fewer stale notes in output
 
 ### obs doctor
 
-Run self-diagnostic checks on the `obs` installation — database integrity, Python dependencies, MCP server config, and doc count accuracy.
+Run self-diagnostic checks on the `obs` installation — Python runtime, database integrity, per-vault health, vault↔index sync, MCP server config, doc count accuracy, and iCloud offload detection.
 
 ```bash
-obs doctor [--vault NAME] [--layer LAYER] [--json]
+obs doctor [--vault NAME] [--layer LAYER]... [--json]
 ```
 
 | Argument | Default | Description |
 |----------|---------|-------------|
-| `--vault` | all vaults | Limit vault-level checks to this vault name or ID |
-| `--layer` | all layers | Run only the specified diagnostic layer (`db`, `deps`, `mcp`, `docs`) |
+| `--vault` | all vaults | Limit vault-level and sync checks to this vault name or ID |
+| `--layer` | all layers | Run only the specified diagnostic layer (repeatable). One of `python`, `database`, `vault`, `sync`, `mcp`, `docs`, `icloud` |
 | `--json` | | Machine-readable output |
 
 **Examples:**
@@ -258,8 +277,21 @@ obs doctor [--vault NAME] [--layer LAYER] [--json]
 obs doctor                           # Full diagnostic
 obs doctor --vault Research          # Vault-scoped checks only
 obs doctor --layer docs              # Check doc count accuracy only
-obs doctor --layer db --json         # DB checks as JSON
+obs doctor --layer sync              # Vault↔index drift only
+obs doctor --layer database --json   # DB checks as JSON
 ```
+
+!!! info "Sync layer — content-based drift"
+    `obs doctor --layer sync` compares each registered vault's files on disk
+    against its index rows (a cheap `rglob` + `SELECT path` set diff), catching
+    drift that the time-only staleness warning misses. Per vault it reports:
+
+    | Check | Verdict | Catches | Fix |
+    |-------|---------|---------|-----|
+    | `sync-ghosts` | warn | DB rows whose file is gone from disk (deleted / renamed) | `obs scan <vault> --prune` |
+    | `sync-missing` | warn | `*.md` on disk absent from the DB (never scanned, or a swallowed scan error) | `obs scan <vault>` (check logs) |
+    | `sync-errors` | warn/fail | the last `scan_history` row recorded per-note failures | inspect the failing paths in the scan log |
+    | `sync-drift` | info | one-line summary: `disk=N db=M (X ghost, Y missing)` | — |
 
 !!! info "Doc count gate"
     `obs doctor --layer docs` is part of the release harness — it catches count drift between source code and documentation before any release lands.

@@ -6,6 +6,15 @@
 **Related:** #65 (silent note drop — one instance of S4), PR #66 (frontmatter-title `NOT NULL` fix), `SPEC-scanner-scan-verb-insert-heading-2026-06-23.md`
 **Target:** v4.2.0 (alongside or after 5.1 vault CRUD)
 
+> **⚠️ Phase-0 correction (2026-06-26):** empirical check (`INSERT OR REPLACE` fires
+> `ON DELETE CASCADE`, verified) revised this spec. **S3 below is a FALSE POSITIVE** — the
+> REPLACE+cascade in `add_note` already reconciles links/tags on rescan, so no S3 work is
+> needed. Two real bugs were found instead: **N1** (the cascade wipes `note_embeddings` on
+> every rescan) and **N2** (`content_hash` is never used to skip unchanged notes — the root
+> of N1 and of redundant rewrites). Implemented scope = **S1/S2/S4/S5 + N1/N2, S3 dropped**.
+> Prune relies on the confirmed FK cascade (§6 open question closed). See
+> `ORCHESTRATE-vault-sync-reconcile.md` for the authoritative phase plan.
+
 ---
 
 ## 1. Problem

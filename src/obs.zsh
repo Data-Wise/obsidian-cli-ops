@@ -275,7 +275,7 @@ obs_scan() {
 
     if [[ -z "$path" ]]; then
         _log "ERROR" "Vault path required"
-        echo "Usage: obs scan <path> [--name <name>] [--analyze]"
+        echo "Usage: obs scan <path> [--name <name>] [--analyze] [--prune|--no-prune]"
         return 1
     fi
 
@@ -291,6 +291,13 @@ obs_scan() {
     # Optional post-scan analysis
     if [[ "$*" == *"--analyze"* ]]; then
         cmd+=(--analyze)
+    fi
+
+    # Optional prune of deleted/renamed notes (S1/S2)
+    if [[ "$*" == *"--no-prune"* ]]; then
+        cmd+=(--no-prune)
+    elif [[ "$*" == *"--prune"* ]]; then
+        cmd+=(--prune)
     fi
 
     if [[ "$VERBOSE" == "true" ]]; then

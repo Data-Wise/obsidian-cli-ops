@@ -12,7 +12,7 @@ import json
 import logging
 from pathlib import Path
 from datetime import datetime, date
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Set
 from contextlib import contextmanager
 
 
@@ -127,9 +127,19 @@ class DatabaseManager:
         vault_id = self._generate_id(path)
 
         with self.get_connection() as conn:
+            # Upsert in place — never INSERT OR REPLACE here. A REPLACE would
+            # DELETE the conflicting vault row and fire ON DELETE CASCADE,
+            # wiping every note (and its note_embeddings) for the vault at the
+            # START of every rescan. Upserting updates the row without deleting
+            # children, so the content-hash short-circuit can actually preserve
+            # the embedding cache. (N1/N2)
             conn.execute("""
-                INSERT OR REPLACE INTO vaults (id, name, path, metadata)
+                INSERT INTO vaults (id, name, path, metadata)
                 VALUES (?, ?, ?, ?)
+                ON CONFLICT(id) DO UPDATE SET
+                    name = excluded.name,
+                    path = excluded.path,
+                    metadata = excluded.metadata
             """, (vault_id, name, path, json.dumps(metadata or {})))
 
         return vault_id
@@ -377,6 +387,51 @@ class DatabaseManager:
         """Get note by vault and path."""
         note_id = self._generate_id(f"{vault_id}:{path}")
         return self.get_note(note_id)
+
+    def prune_notes(self, vault_id: str, seen_paths: Set[str]) -> int:
+        """
+        Delete notes for a vault whose path is not in ``seen_paths``.
+
+        Mark-and-sweep reconcile for deleted/renamed notes (S1/S2). The caller
+        passes the set of relative paths present on disk during the scan; any DB
+        row for this vault whose path is absent from that set is a ghost and is
+        removed. Child rows (links, note_tags, graph_metrics, note_embeddings)
+        are cleaned up by ``ON DELETE CASCADE`` — no explicit child deletes.
+
+        Note: the empty-``seen_paths`` safety guard lives in the scanner (a bad
+        vault path must never wipe the index); this method computes the diff
+        from the actual DB rows rather than binding one SQL param per path, so
+        it scales to large vaults (no SQLite variable-limit blowup).
+
+        Args:
+            vault_id: Vault whose ghosts to sweep.
+            seen_paths: Relative paths present on disk this scan.
+
+        Returns:
+            Number of note rows deleted.
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                "SELECT path FROM notes WHERE vault_id = ?", (vault_id,)
+            )
+            db_paths = {row['path'] for row in cursor.fetchall()}
+            to_delete = list(db_paths - seen_paths)
+
+            if not to_delete:
+                return 0
+
+            deleted = 0
+            chunk_size = 500  # well under SQLite's default 999-variable limit
+            for i in range(0, len(to_delete), chunk_size):
+                chunk = to_delete[i:i + chunk_size]
+                placeholders = ",".join("?" for _ in chunk)
+                result = conn.execute(
+                    f"DELETE FROM notes WHERE vault_id = ? "
+                    f"AND path IN ({placeholders})",
+                    (vault_id, *chunk),
+                )
+                deleted += result.rowcount
+            return deleted
 
     def list_notes(self, vault_id: Optional[str] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> List[Dict]:
         """List all notes, optionally filtered by vault."""
@@ -683,11 +738,26 @@ class DatabaseManager:
             """, (vault_id,))
             return cursor.lastrowid
 
+    def _ensure_scan_history_columns(self, conn):
+        """Idempotent guard: add scan_history columns absent on pre-v2 databases.
+
+        The schema file uses CREATE TABLE IF NOT EXISTS, so columns added to the
+        CREATE statement only reach fresh databases. Existing databases never
+        re-run the schema (init is gated on db_path.exists()), so we add new
+        columns lazily here. Safe to call repeatedly.
+        """
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(scan_history)")}
+        if 'notes_failed' not in existing:
+            conn.execute(
+                "ALTER TABLE scan_history ADD COLUMN notes_failed INTEGER DEFAULT 0"
+            )
+
     def complete_scan(self, scan_id: int, notes_scanned: int,
                      notes_added: int = 0, notes_updated: int = 0,
-                     notes_deleted: int = 0):
+                     notes_deleted: int = 0, notes_failed: int = 0):
         """Mark scan as completed."""
         with self.get_connection() as conn:
+            self._ensure_scan_history_columns(conn)
             conn.execute("""
                 UPDATE scan_history
                 SET completed_at = CURRENT_TIMESTAMP,
@@ -695,10 +765,12 @@ class DatabaseManager:
                     notes_added = ?,
                     notes_updated = ?,
                     notes_deleted = ?,
+                    notes_failed = ?,
                     duration_seconds = (julianday(CURRENT_TIMESTAMP) - julianday(started_at)) * 86400,
                     status = 'completed'
                 WHERE id = ?
-            """, (notes_scanned, notes_added, notes_updated, notes_deleted, scan_id))
+            """, (notes_scanned, notes_added, notes_updated, notes_deleted,
+                  notes_failed, scan_id))
 
     def fail_scan(self, scan_id: int, error_message: str):
         """Mark scan as failed."""

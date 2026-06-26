@@ -106,7 +106,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 | `rename_note(note_id, new_title)` | Rename note (warns about wikilink breakage) |
 | `delete_note(note_id, confirm)` | Delete note — `confirm=True` required; default is dry-run |
 | `get_note_links(note_id)` | Incoming + outgoing links for a note |
-| `rescan_vault(vault_id)` | Re-scan vault to pick up file system changes |
+| `rescan_vault(vault_id, prune=False)` | Re-scan vault to pick up file system changes. Default is additive; `prune=True` also sweeps notes deleted or renamed on disk out of the index (cascading to their links, tags, metrics, and embeddings). Unchanged notes are skipped via content-hash, preserving the embedding cache |
 
 ### AI Passthrough Tool
 

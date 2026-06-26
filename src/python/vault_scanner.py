@@ -7,6 +7,7 @@ with notes, links, tags, and metadata.
 """
 import asyncio
 import hashlib
+import logging
 import os
 import re
 from pathlib import Path
@@ -16,6 +17,29 @@ from dataclasses import dataclass
 import frontmatter
 
 from db_manager import DatabaseManager
+
+log = logging.getLogger(__name__)
+
+# Directory names whose *.md files are scaffolds, not knowledge notes, and are
+# skipped by the scan walk (and mirrored by doctor's sync check). Templater
+# templates carry `{{x}}` / `<% %>` frontmatter that is invalid YAML.
+IGNORED_DIR_NAMES = frozenset({"templates"})
+
+
+def is_indexable_md(path: Path, vault_path: Path) -> bool:
+    """Whether a ``*.md`` file under ``vault_path`` should be indexed.
+
+    Excludes anything inside a dot-directory (e.g. ``.obsidian``) or a
+    ``templates``/``Templates`` directory (Templater scaffolds — invalid-YAML
+    frontmatter, not notes). Checks parts RELATIVE to the vault so a vault that
+    itself lives under such a directory is not wrongly excluded. Shared by the
+    scanner and ``core.doctor`` so the two never drift (zero duplication)."""
+    rel_parts = path.relative_to(vault_path).parts
+    if any(part.startswith(".") for part in rel_parts):
+        return False
+    if any(part.lower() in IGNORED_DIR_NAMES for part in rel_parts):
+        return False
+    return True
 
 
 @dataclass
@@ -124,19 +148,39 @@ class MarkdownParser:
         """Extract tags from content and frontmatter."""
         tags = set()
 
-        # From frontmatter
+        # From frontmatter. Elements are not guaranteed to be strings — real
+        # vaults contain valid YAML like ``tags: [{}]`` or ``tags: [2024]``;
+        # normalize each (coerce scalars, skip dict/list/None) so one odd tag
+        # never crashes the whole note out of the index.
         if 'tags' in frontmatter:
             fm_tags = frontmatter['tags']
-            if isinstance(fm_tags, list):
-                tags.update(tag.strip('#') for tag in fm_tags)
-            elif isinstance(fm_tags, str):
-                tags.update(tag.strip('#') for tag in fm_tags.split(','))
+            raw = fm_tags.split(',') if isinstance(fm_tags, str) else fm_tags
+            if isinstance(raw, list):
+                for tag in raw:
+                    norm = cls._normalize_tag(tag)
+                    if norm:
+                        tags.add(norm)
 
         # From content (inline #tags)
         for match in cls.TAG_PATTERN.finditer(content):
             tags.add(match.group(1))
 
         return tags
+
+    @staticmethod
+    def _normalize_tag(tag) -> Optional[str]:
+        """Coerce one frontmatter tag element to a clean tag string, or None.
+
+        str -> stripped of leading '#'/whitespace; scalar int/float -> str();
+        bool/dict/list/None and anything else -> None (skipped). Returns None for
+        empties so callers can filter with a simple truthiness check."""
+        if isinstance(tag, bool):       # bool is an int subclass — not a tag
+            return None
+        if isinstance(tag, str):
+            return tag.strip().lstrip('#').strip() or None
+        if isinstance(tag, (int, float)):
+            return str(tag)
+        return None
 
     @classmethod
     def _extract_wikilinks(cls, content: str) -> List[Tuple[str, Optional[str]]]:
@@ -191,10 +235,11 @@ class VaultScanner:
         self.parser = MarkdownParser()
 
     async def scan_vault(
-        self, 
-        vault_path: str, 
+        self,
+        vault_path: str,
         vault_name: Optional[str] = None,
-        progress_callback: Optional[Callable[[int, int], Coroutine]] = None
+        progress_callback: Optional[Callable[[int, int], Coroutine]] = None,
+        prune: bool = False
     ) -> Dict:
         """
         Asynchronously scan an Obsidian vault and populate database.
@@ -203,6 +248,10 @@ class VaultScanner:
             vault_path: Path to vault directory
             vault_name: Display name (defaults to directory name)
             progress_callback: Async function to call with (current, total) progress.
+            prune: When True, sweep the DB after the scan and delete rows for
+                notes no longer present on disk (deleted/renamed — S1/S2).
+                Default False keeps the scan additive. Skipped if no files were
+                seen (safety guard: a bad path must never wipe the index).
 
         Returns:
             Dictionary with scan statistics
@@ -226,15 +275,25 @@ class VaultScanner:
 
         try:
             md_files = [
-                p for p in vault_path.rglob('*.md') 
-                if not any(part.startswith('.') for part in p.parts)
+                p for p in vault_path.rglob('*.md')
+                if is_indexable_md(p, vault_path)
             ]
             total_files = len(md_files)
             
             stats = {
+                'vault_id': vault_id,
                 'notes_scanned': 0, 'notes_added': 0, 'notes_updated': 0,
-                'links_added': 0, 'tags_added': 0
+                'notes_unchanged': 0,
+                'links_added': 0, 'tags_added': 0,
+                'notes_failed': 0, 'failed_paths': [],
+                'notes_pruned': 0
             }
+
+            # S1/S2: track every relative path PRESENT on disk this scan so the
+            # post-scan sweep prunes exactly the absent ones. Added before the
+            # try so a note that exists but fails to parse this scan stays in
+            # the set and is NOT pruned (no S4 regression on a transient error).
+            seen_paths: Set[str] = set()
 
             # Process files in batches to avoid blocking
             batch_size = 50
@@ -242,10 +301,25 @@ class VaultScanner:
                 batch = md_files[i:i + batch_size]
                 for md_file in batch:
                     relative_path = str(md_file.relative_to(vault_path))
+                    seen_paths.add(relative_path)
                     try:
                         note_data = self.parser.parse_file(md_file)
                         existing_note = self.db.get_note_by_path(vault_id, relative_path)
-                        
+
+                        # N1/N2: short-circuit unchanged notes. add_note uses
+                        # INSERT OR REPLACE, which fires ON DELETE CASCADE and
+                        # wipes this note's note_embeddings (+ links/tags) row.
+                        # If the content is byte-identical to what we already
+                        # indexed, skip add_note and the link/tag re-add entirely
+                        # so the embedding cache (and self-healed links/tags)
+                        # survive the rescan.
+                        if existing_note is not None:
+                            new_hash = self.db._hash_content(note_data.content)
+                            if new_hash == existing_note.get('content_hash'):
+                                stats['notes_unchanged'] += 1
+                                stats['notes_scanned'] += 1
+                                continue
+
                         metadata = note_data.frontmatter.copy()
                         metadata['created_at'] = note_data.created_at.isoformat()
                         metadata['modified_at'] = note_data.modified_at.isoformat()
@@ -268,19 +342,46 @@ class VaultScanner:
                             self.db.add_link(note_id, target, display_text)
                             stats['links_added'] += 1
 
-                    except Exception:
+                    except Exception as exc:
+                        # S4: record the failure instead of silently swallowing it.
+                        # The scan MUST still complete — one bad note can't abort it.
+                        stats['notes_failed'] += 1
+                        # Cap the reported list so a pathological vault can't bloat stats.
+                        if len(stats['failed_paths']) < 50:
+                            stats['failed_paths'].append(relative_path)
+                        log.warning(
+                            "scan: failed to index note %s: %s: %s",
+                            relative_path, type(exc).__name__, exc
+                        )
                         continue
-                
+
                 # Report progress
                 if progress_callback:
                     await progress_callback(i + len(batch), total_files)
                 
                 await asyncio.sleep(0.01) # Yield control to the event loop
 
+            # S1/S2: opt-in mark-and-sweep prune of deleted/renamed notes.
+            if prune:
+                if seen_paths:
+                    stats['notes_pruned'] = self.db.prune_notes(
+                        vault_id, seen_paths
+                    )
+                else:
+                    # Safety guard: no files seen → likely a bad/unmaterialized
+                    # vault path, not a genuinely empty vault. Skip the sweep so
+                    # we never wipe a populated index.
+                    log.warning(
+                        "scan: prune skipped for vault %s — no files seen on "
+                        "disk (refusing to wipe index for a possibly bad path)",
+                        vault_id
+                    )
+
             self.db.update_vault_scan_time(vault_id)
             self.db.complete_scan(
                 scan_id, stats['notes_scanned'], stats['notes_added'],
-                stats['notes_updated'], 0
+                stats['notes_updated'], notes_deleted=stats['notes_pruned'],
+                notes_failed=stats['notes_failed']
             )
 
             return stats
