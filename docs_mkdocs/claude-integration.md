@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.0.1
+**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.1.0
 
 ---
 

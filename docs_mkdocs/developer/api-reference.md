@@ -1,6 +1,6 @@
 # API Reference
 
-**Version:** 4.0.1
+**Version:** 4.1.0
 
 Reference documentation for the MCP tool API, Python CLI API, AI provider interface, and domain models.
 

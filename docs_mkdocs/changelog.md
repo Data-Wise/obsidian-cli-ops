@@ -6,6 +6,10 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+---
+
+## v4.1.0 (2026-06-26) — MCP rescan fix, server_info & count gates
+
 ### Fixed
 
 - **`rescan_vault` MCP tool crashed on every call** (#62) — the sync handler ran
@@ -15,6 +19,11 @@ All notable changes to Obsidian CLI Ops.
   after every write tool. The handler is now `async def` and `await`s the
   coroutine. A regression test drives the tool inside a live event loop so the
   failure mode can't silently return.
+- **Command-count drift** — docs disagreed on the `obs` command total
+  (`.STATUS` said 25, refcard 35, cli-reference 40); none matched the code.
+  Reconciled every current-state surface to the real count: **45 runnable
+  commands** (17 top-level groups, incl. the `obs config` / `obs research`
+  families absorbed from nexus-cli).
 
 ### Added
 
@@ -34,14 +43,6 @@ All notable changes to Obsidian CLI Ops.
   joins MCP tools/resources/providers as a gated single source of truth.
   `validate-counts.sh`, `obs doctor --layer docs`, and `test_doc_counts.py` all
   surface it; command-count drift can no longer merge.
-
-### Fixed
-
-- **Command-count drift** — docs disagreed on the `obs` command total
-  (`.STATUS` said 25, refcard 35, cli-reference 40); none matched the code.
-  Reconciled every current-state surface to the real count: **45 runnable
-  commands** (17 top-level groups, incl. the `obs config` / `obs research`
-  families absorbed from nexus-cli).
 
 ---
 
