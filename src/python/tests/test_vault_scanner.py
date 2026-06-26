@@ -161,3 +161,31 @@ class TestExtractTitle:
         title1 = MarkdownParser._extract_title(f, "content", {})
         title2 = MarkdownParser._extract_title(f, "content", {})
         assert title1 == title2
+
+    def test_empty_frontmatter_title_falls_back_to_stem(self, tmp_path):
+        """`title:` with an empty/null value (YAML None) must not become the
+        title — returning None violates notes.title NOT NULL and drops the
+        note from the index (#65)."""
+        f = tmp_path / "empty-fm-title.md"
+        f.write_text("---\ntitle:\n---\nbody, no H1\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "empty-fm-title"
+
+    def test_blank_frontmatter_title_falls_back_to_h1(self, tmp_path):
+        """`title: ''` (blank string) falls through to the H1 heading (#65)."""
+        f = tmp_path / "blank-fm-title.md"
+        f.write_text("---\ntitle: ''\n---\n# Real Heading\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "Real Heading"
+
+    def test_whitespace_frontmatter_title_falls_back_to_stem(self, tmp_path):
+        """A whitespace-only `title:` falls through to the filename stem (#65)."""
+        f = tmp_path / "ws-fm-title.md"
+        f.write_text("---\ntitle: '   '\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "ws-fm-title"
+
+    def test_extract_title_none_value_never_returns_none(self, tmp_path):
+        """Direct: a None frontmatter title never propagates as the title (#65)."""
+        f = tmp_path / "n.md"
+        assert MarkdownParser._extract_title(f, "body, no h1", {"title": None}) == "n"
