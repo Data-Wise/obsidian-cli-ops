@@ -93,7 +93,8 @@ class ObsCLI:
                     print(f"❌ Error scanning {vault_name}: {e}\n")
 
     def scan(self, vault_path: str, vault_name: Optional[str] = None,
-             analyze: bool = False, verbose: bool = False):
+             analyze: bool = False, verbose: bool = False,
+             prune: bool = False):
         """
         Scan a vault and populate database.
 
@@ -102,10 +103,13 @@ class ObsCLI:
             vault_name: Optional vault name
             analyze: Whether to run graph analysis after scan
             verbose: Print detailed output
+            prune: Opt-in sweep of deleted/renamed notes (S1/S2)
         """
         try:
             # Scan vault using core layer
-            result = asyncio.run(self.vault_manager.scan_vault(vault_path, vault_name))
+            result = asyncio.run(
+                self.vault_manager.scan_vault(vault_path, vault_name, prune=prune)
+            )
 
             # Print scan result
             self._print_scan_result(result, verbose)
@@ -337,6 +341,8 @@ class ObsCLI:
         print(f"  Notes: {result.notes_scanned}")
         print(f"  Links: {result.links_found}")
         print(f"  Tags: {result.tags_found}")
+        if result.notes_pruned > 0:
+            print(f"  Pruned: {result.notes_pruned}")
         print(f"  Duration: {result.duration_seconds:.2f}s")
 
         if verbose:
@@ -738,6 +744,10 @@ def main():
     scan_parser.add_argument('--name', help='Vault name')
     scan_parser.add_argument('--analyze', action='store_true',
                             help='Analyze graph after scan')
+    scan_parser.add_argument('--prune', dest='prune',
+                            action=argparse.BooleanOptionalAction, default=False,
+                            help='Sweep deleted/renamed notes from the index '
+                                 '(--prune/--no-prune; default: additive)')
 
     # analyze command
     analyze_parser = subparsers.add_parser('analyze',
@@ -950,7 +960,8 @@ def main():
 
         elif args.command == 'scan':
             cli.scan(args.path, vault_name=args.name,
-                    analyze=args.analyze, verbose=args.verbose)
+                    analyze=args.analyze, verbose=args.verbose,
+                    prune=args.prune)
 
         elif args.command == 'analyze':
             if args.json:

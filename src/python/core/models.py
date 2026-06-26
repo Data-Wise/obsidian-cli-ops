@@ -121,6 +121,7 @@ class ScanResult:
     notes_scanned: int = 0
     links_found: int = 0
     tags_found: int = 0
+    notes_pruned: int = 0
     orphans_detected: int = 0
     hubs_detected: int = 0
     duration_seconds: float = 0.0
@@ -141,6 +142,7 @@ class ScanResult:
             'notes_scanned': self.notes_scanned,
             'links_found': self.links_found,
             'tags_found': self.tags_found,
+            'notes_pruned': self.notes_pruned,
             'orphans_detected': self.orphans_detected,
             'hubs_detected': self.hubs_detected,
             'duration_seconds': self.duration_seconds,

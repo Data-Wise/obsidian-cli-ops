@@ -189,10 +189,11 @@ class VaultScanner:
         self.parser = MarkdownParser()
 
     async def scan_vault(
-        self, 
-        vault_path: str, 
+        self,
+        vault_path: str,
         vault_name: Optional[str] = None,
-        progress_callback: Optional[Callable[[int, int], Coroutine]] = None
+        progress_callback: Optional[Callable[[int, int], Coroutine]] = None,
+        prune: bool = False
     ) -> Dict:
         """
         Asynchronously scan an Obsidian vault and populate database.
@@ -201,6 +202,10 @@ class VaultScanner:
             vault_path: Path to vault directory
             vault_name: Display name (defaults to directory name)
             progress_callback: Async function to call with (current, total) progress.
+            prune: When True, sweep the DB after the scan and delete rows for
+                notes no longer present on disk (deleted/renamed — S1/S2).
+                Default False keeps the scan additive. Skipped if no files were
+                seen (safety guard: a bad path must never wipe the index).
 
         Returns:
             Dictionary with scan statistics
@@ -234,8 +239,15 @@ class VaultScanner:
                 'notes_scanned': 0, 'notes_added': 0, 'notes_updated': 0,
                 'notes_unchanged': 0,
                 'links_added': 0, 'tags_added': 0,
-                'notes_failed': 0, 'failed_paths': []
+                'notes_failed': 0, 'failed_paths': [],
+                'notes_pruned': 0
             }
+
+            # S1/S2: track every relative path PRESENT on disk this scan so the
+            # post-scan sweep prunes exactly the absent ones. Added before the
+            # try so a note that exists but fails to parse this scan stays in
+            # the set and is NOT pruned (no S4 regression on a transient error).
+            seen_paths: Set[str] = set()
 
             # Process files in batches to avoid blocking
             batch_size = 50
@@ -243,6 +255,7 @@ class VaultScanner:
                 batch = md_files[i:i + batch_size]
                 for md_file in batch:
                     relative_path = str(md_file.relative_to(vault_path))
+                    seen_paths.add(relative_path)
                     try:
                         note_data = self.parser.parse_file(md_file)
                         existing_note = self.db.get_note_by_path(vault_id, relative_path)
@@ -302,10 +315,26 @@ class VaultScanner:
                 
                 await asyncio.sleep(0.01) # Yield control to the event loop
 
+            # S1/S2: opt-in mark-and-sweep prune of deleted/renamed notes.
+            if prune:
+                if seen_paths:
+                    stats['notes_pruned'] = self.db.prune_notes(
+                        vault_id, seen_paths
+                    )
+                else:
+                    # Safety guard: no files seen → likely a bad/unmaterialized
+                    # vault path, not a genuinely empty vault. Skip the sweep so
+                    # we never wipe a populated index.
+                    log.warning(
+                        "scan: prune skipped for vault %s — no files seen on "
+                        "disk (refusing to wipe index for a possibly bad path)",
+                        vault_id
+                    )
+
             self.db.update_vault_scan_time(vault_id)
             self.db.complete_scan(
                 scan_id, stats['notes_scanned'], stats['notes_added'],
-                stats['notes_updated'], notes_deleted=0,
+                stats['notes_updated'], notes_deleted=stats['notes_pruned'],
                 notes_failed=stats['notes_failed']
             )
 

@@ -1077,12 +1077,17 @@ def get_note_links(note_id: str) -> str:
 
 
 @mcp.tool()
-async def rescan_vault(vault_id: str) -> str:
+async def rescan_vault(vault_id: str, prune: bool = False) -> str:
     """
     Rescan a vault to sync the obs database with current filesystem state.
 
     Args:
         vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
+        prune: When True, also remove index rows for notes deleted or renamed on
+            disk (mark-and-sweep). Default False keeps the rescan additive,
+            matching `obs scan`. Use after delete_note() or rename_note() to
+            drop the stale row. Skipped automatically if the vault appears
+            empty (safety guard against a bad path wiping the index).
 
     Run this after write_note(), create_note(), rename_note(), or delete_note()
     to bring graph metrics and search indexes up to date. Re-scans the vault on
@@ -1100,11 +1105,18 @@ async def rescan_vault(vault_id: str) -> str:
         # so we `await` the coroutine directly. The previous asyncio.run() raised
         # `RuntimeError: asyncio.run() cannot be called from a running event
         # loop` on every MCP call (#62), leaving the DB/index silently stale.
-        result = await vault_manager.scan_vault(vault["path"], vault["name"])
+        result = await vault_manager.scan_vault(
+            vault["path"], vault["name"], prune=prune
+        )
+        pruned_line = (
+            f"- Notes pruned: {result.notes_pruned}\n"
+            if result.notes_pruned else ""
+        )
         return (
             f"🔄 **Rescanned {result.vault_name}**\n"
             f"- Notes scanned: {result.notes_scanned}\n"
             f"- Links found: {result.links_found}\n"
+            f"{pruned_line}"
             f"- Duration: {result.duration_seconds:.1f}s"
         )
     except Exception as e:

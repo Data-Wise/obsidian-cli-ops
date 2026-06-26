@@ -12,7 +12,7 @@ import json
 import logging
 from pathlib import Path
 from datetime import datetime, date
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Set
 from contextlib import contextmanager
 
 
@@ -349,6 +349,51 @@ class DatabaseManager:
         """Get note by vault and path."""
         note_id = self._generate_id(f"{vault_id}:{path}")
         return self.get_note(note_id)
+
+    def prune_notes(self, vault_id: str, seen_paths: Set[str]) -> int:
+        """
+        Delete notes for a vault whose path is not in ``seen_paths``.
+
+        Mark-and-sweep reconcile for deleted/renamed notes (S1/S2). The caller
+        passes the set of relative paths present on disk during the scan; any DB
+        row for this vault whose path is absent from that set is a ghost and is
+        removed. Child rows (links, note_tags, graph_metrics, note_embeddings)
+        are cleaned up by ``ON DELETE CASCADE`` — no explicit child deletes.
+
+        Note: the empty-``seen_paths`` safety guard lives in the scanner (a bad
+        vault path must never wipe the index); this method computes the diff
+        from the actual DB rows rather than binding one SQL param per path, so
+        it scales to large vaults (no SQLite variable-limit blowup).
+
+        Args:
+            vault_id: Vault whose ghosts to sweep.
+            seen_paths: Relative paths present on disk this scan.
+
+        Returns:
+            Number of note rows deleted.
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                "SELECT path FROM notes WHERE vault_id = ?", (vault_id,)
+            )
+            db_paths = {row['path'] for row in cursor.fetchall()}
+            to_delete = list(db_paths - seen_paths)
+
+            if not to_delete:
+                return 0
+
+            deleted = 0
+            chunk_size = 500  # well under SQLite's default 999-variable limit
+            for i in range(0, len(to_delete), chunk_size):
+                chunk = to_delete[i:i + chunk_size]
+                placeholders = ",".join("?" for _ in chunk)
+                result = conn.execute(
+                    f"DELETE FROM notes WHERE vault_id = ? "
+                    f"AND path IN ({placeholders})",
+                    (vault_id, *chunk),
+                )
+                deleted += result.rowcount
+            return deleted
 
     def list_notes(self, vault_id: Optional[str] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> List[Dict]:
         """List all notes, optionally filtered by vault."""

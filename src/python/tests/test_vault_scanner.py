@@ -249,6 +249,151 @@ class TestVaultScannerContentHashShortCircuit:
         asyncio.run(run_test())
 
 
+class TestVaultScannerPrune:
+    """S1/S2: opt-in --prune mark-and-sweep of deleted/renamed notes.
+
+    seen_paths collects every file present on disk this scan (added before the
+    try, so a failed-but-present note is NOT pruned — no S4 regression). After
+    the loop, if prune and seen_paths is non-empty, rows whose path is absent
+    from disk are deleted (cascade cleans children). Empty seen_paths skips the
+    sweep so a bad/empty vault path never wipes the index.
+    """
+
+    def test_prune_deletes_only_unseen_rows(self, scanner, tmp_path):
+        """A note deleted on disk is removed; surviving notes are untouched."""
+        vault_path = tmp_path / "PruneVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "keep.md").write_text("# Keep\n\nbody")
+        (vault_path / "gone.md").write_text("# Gone\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # Delete one file on disk.
+            (vault_path / "gone.md").unlink()
+
+            # Without prune, the ghost row survives.
+            no_prune = await scanner.scan_vault(str(vault_path))
+            assert no_prune.get('notes_pruned', 0) == 0
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # With prune, only the unseen row is removed.
+            pruned = await scanner.scan_vault(str(vault_path), prune=True)
+            assert pruned['notes_pruned'] == 1
+            remaining = scanner.db.list_notes(vault_id)
+            assert len(remaining) == 1
+            assert remaining[0]['path'] == "keep.md"
+
+        asyncio.run(run_test())
+
+    def test_rename_leaves_exactly_one_row(self, scanner, tmp_path):
+        """a.md -> b.md with --prune leaves exactly one row, no a.md ghost."""
+        vault_path = tmp_path / "RenameVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "a.md").write_text("# A\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+
+            # Rename on disk.
+            (vault_path / "a.md").rename(vault_path / "b.md")
+
+            result = await scanner.scan_vault(str(vault_path), prune=True)
+            assert result['notes_pruned'] == 1
+            notes = scanner.db.list_notes(vault_id)
+            assert len(notes) == 1
+            assert notes[0]['path'] == "b.md"
+            assert scanner.db.get_note_by_path(vault_id, "a.md") is None
+
+        asyncio.run(run_test())
+
+    def test_empty_seen_paths_skips_sweep(self, scanner, tmp_path):
+        """A vault that yields no files must NOT wipe its existing index."""
+        vault_path = tmp_path / "EmptyVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "n1.md").write_text("# N1\n\nbody")
+        (vault_path / "n2.md").write_text("# N2\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # Remove every markdown file (simulates a bad/unmaterialized path).
+            (vault_path / "n1.md").unlink()
+            (vault_path / "n2.md").unlink()
+
+            result = await scanner.scan_vault(str(vault_path), prune=True)
+            # Safety guard: sweep skipped, index intact.
+            assert result['notes_pruned'] == 0
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+        asyncio.run(run_test())
+
+    def test_failed_note_present_on_disk_is_not_pruned(self, scanner, tmp_path):
+        """A note that fails to parse but still exists on disk is NOT pruned."""
+        vault_path = tmp_path / "FailPresentVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "ok.md").write_text("# OK\n\nbody")
+        (vault_path / "bad.md").write_text("# Bad\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # Make bad.md fail to parse on the next scan.
+            from unittest.mock import patch
+            real_parse = scanner.parser.parse_file
+
+            def flaky_parse(p):
+                if p.name == "bad.md":
+                    raise ValueError("boom")
+                return real_parse(p)
+
+            with patch.object(scanner.parser, "parse_file", side_effect=flaky_parse):
+                result = await scanner.scan_vault(str(vault_path), prune=True)
+
+            # bad.md exists on disk so it stays in seen_paths and is NOT pruned.
+            assert result['notes_failed'] == 1
+            assert result['notes_pruned'] == 0
+            assert scanner.db.get_note_by_path(vault_id, "bad.md") is not None
+
+        asyncio.run(run_test())
+
+    def test_prune_cascade_removes_child_rows(self, scanner, tmp_path):
+        """Pruning a note cascades to its links/tags child rows."""
+        vault_path = tmp_path / "CascadeVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "keep.md").write_text("# Keep\n\nbody")
+        (vault_path / "rich.md").write_text("# Rich\n\n#topic and [[target]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            rich = scanner.db.get_note_by_path(vault_id, "rich.md")
+            assert len(scanner.db.get_outgoing_links(rich['id'])) == 1
+            assert "topic" in scanner.db.get_note_tags(rich['id'])
+
+            (vault_path / "rich.md").unlink()
+            result = await scanner.scan_vault(str(vault_path), prune=True)
+            assert result['notes_pruned'] == 1
+
+            # Child rows are gone via ON DELETE CASCADE.
+            assert scanner.db.get_outgoing_links(rich['id']) == []
+            assert scanner.db.get_note_tags(rich['id']) == []
+
+        asyncio.run(run_test())
+
+
 class TestMarkdownParserEdgeCases:
     """Tests for edge cases in the MarkdownParser."""
 
