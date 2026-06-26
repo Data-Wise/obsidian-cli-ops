@@ -360,12 +360,14 @@ def _check_vaults(vault_id: Optional[str] = None) -> list[DoctorResult]:
 # ---------------------------------------------------------------------------
 
 def _disk_md_paths(vault_path: Path) -> set[str]:
-    """Relative *.md paths on disk, mirroring the scanner's dotfile filter
-    (vault_scanner.py:232 — skip any path with a dot-prefixed part)."""
+    """Relative *.md paths on disk, using the scanner's own indexability filter
+    (``is_indexable_md`` — skips dot-dirs and ``templates`` dirs) so doctor's
+    sync diff never disagrees with what the scanner would actually index."""
+    from vault_scanner import is_indexable_md
     return {
         str(p.relative_to(vault_path))
         for p in vault_path.rglob("*.md")
-        if not any(part.startswith(".") for part in p.parts)
+        if is_indexable_md(p, vault_path)
     }
 
 

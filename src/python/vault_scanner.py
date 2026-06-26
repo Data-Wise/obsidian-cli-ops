@@ -20,6 +20,27 @@ from db_manager import DatabaseManager
 
 log = logging.getLogger(__name__)
 
+# Directory names whose *.md files are scaffolds, not knowledge notes, and are
+# skipped by the scan walk (and mirrored by doctor's sync check). Templater
+# templates carry `{{x}}` / `<% %>` frontmatter that is invalid YAML.
+IGNORED_DIR_NAMES = frozenset({"templates"})
+
+
+def is_indexable_md(path: Path, vault_path: Path) -> bool:
+    """Whether a ``*.md`` file under ``vault_path`` should be indexed.
+
+    Excludes anything inside a dot-directory (e.g. ``.obsidian``) or a
+    ``templates``/``Templates`` directory (Templater scaffolds — invalid-YAML
+    frontmatter, not notes). Checks parts RELATIVE to the vault so a vault that
+    itself lives under such a directory is not wrongly excluded. Shared by the
+    scanner and ``core.doctor`` so the two never drift (zero duplication)."""
+    rel_parts = path.relative_to(vault_path).parts
+    if any(part.startswith(".") for part in rel_parts):
+        return False
+    if any(part.lower() in IGNORED_DIR_NAMES for part in rel_parts):
+        return False
+    return True
+
 
 @dataclass
 class NoteData:
@@ -249,8 +270,8 @@ class VaultScanner:
 
         try:
             md_files = [
-                p for p in vault_path.rglob('*.md') 
-                if not any(part.startswith('.') for part in p.parts)
+                p for p in vault_path.rglob('*.md')
+                if is_indexable_md(p, vault_path)
             ]
             total_files = len(md_files)
             

@@ -508,3 +508,41 @@ class TestExtractTags:
         f.write_text("---\ntags:\n---\nbody\n")
         note = MarkdownParser.parse_file(f)   # fm_tags is None
         assert note.tags == set()
+
+
+class TestTemplateDirExclusion:
+    """D1: notes inside a 'templates'/'Templates' directory are scaffolds, not
+    knowledge notes — they routinely carry Templater syntax ({{x}} / <% %>) that
+    is invalid YAML. Exclude them from the scan walk (like the dotfile filter) so
+    they neither get indexed nor inflate the failed-note count."""
+
+    def test_templates_dir_excluded_not_indexed_not_failed(self, scanner, tmp_path):
+        vault = tmp_path / "TplVault"
+        (vault / ".obsidian").mkdir(parents=True)
+        (vault / "real.md").write_text("# Real\n\nbody")
+        tdir = vault / "Templates"
+        tdir.mkdir()
+        # Un-parseable Templater frontmatter — would raise without exclusion.
+        (tdir / "tmpl.md").write_text("---\nauthors: {{AUTHORS}}\n---\nbody")
+
+        async def run():
+            stats = await scanner.scan_vault(str(vault), "V")
+            assert stats['notes_scanned'] == 1          # only real.md
+            assert stats['notes_failed'] == 0           # template not even attempted
+            paths = {n['path'] for n in scanner.db.list_notes(stats['vault_id'])}
+            assert paths == {"real.md"}
+        asyncio.run(run())
+
+    def test_lowercase_templates_dir_also_excluded(self, scanner, tmp_path):
+        vault = tmp_path / "TplVault2"
+        (vault / "sub" / "templates").mkdir(parents=True)
+        (vault / ".obsidian").mkdir()
+        (vault / "keep.md").write_text("# Keep\n\nbody")
+        (vault / "sub" / "templates" / "t.md").write_text("---\nx: <% tp.date %>\n---\n")
+
+        async def run():
+            stats = await scanner.scan_vault(str(vault), "V")
+            assert stats['notes_failed'] == 0
+            paths = {n['path'] for n in scanner.db.list_notes(stats['vault_id'])}
+            assert paths == {"keep.md"}
+        asyncio.run(run())
