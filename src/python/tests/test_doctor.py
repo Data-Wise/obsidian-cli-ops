@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "core"))
 from core.doctor import (
     DoctorResult, run_checks, _check_python, _check_database, _check_mcp,
     _check_icloud, _find_bad_vault_resolvers, _check_mcp_tool_resolvers,
+    _find_async_run_offenders, _check_mcp_async_run,
 )
 
 _VersionInfo = namedtuple("version_info", ["major", "minor", "micro", "releaselevel", "serial"])
@@ -437,3 +438,69 @@ class TestMcpToolResolvers:
     def test_check_skips_when_missing(self, tmp_path):
         result = _check_mcp_tool_resolvers(tmp_path / "nope.py")
         assert result.status == "skip"
+
+
+# ---------------------------------------------------------------------------
+# MCP async-run static guard (#62: asyncio.run() inside a sync @mcp.tool)
+# ---------------------------------------------------------------------------
+
+_ASYNC_RUN_OK = '''
+@mcp.tool()
+async def rescan_vault(vault_id: str) -> str:
+    result = await vault_manager.scan_vault(vault_id)
+    return result.vault_name
+'''
+
+_ASYNC_RUN_BAD = '''
+@mcp.tool()
+def rescan_vault(vault_id: str) -> str:
+    result = asyncio.run(vault_manager.scan_vault(vault_id))
+    return result.vault_name
+'''
+
+_ASYNC_RUN_NONTOOL_OK = '''
+def cli_entry(vault_id: str) -> str:
+    """Sync CLI caller — asyncio.run() is valid here (no running loop)."""
+    return asyncio.run(vault_manager.scan_vault(vault_id))
+'''
+
+
+class TestMcpAsyncRun:
+    def test_clean_when_async_handler(self):
+        assert _find_async_run_offenders(_ASYNC_RUN_OK) == []
+
+    def test_flags_sync_handler_calling_asyncio_run(self):
+        assert _find_async_run_offenders(_ASYNC_RUN_BAD) == ["rescan_vault()"]
+
+    def test_ignores_asyncio_run_outside_mcp_tool(self):
+        """Only @mcp.tool handlers run inside FastMCP's loop; a plain sync
+        function (e.g. the CLI path) may legitimately call asyncio.run()."""
+        assert _find_async_run_offenders(_ASYNC_RUN_NONTOOL_OK) == []
+
+    def test_real_mcp_server_is_clean(self):
+        """The shipped mcp_server.py must have zero sync asyncio.run() tools."""
+        server = Path(__file__).parent.parent / "mcp_server.py"
+        assert _find_async_run_offenders(server.read_text(encoding="utf-8")) == []
+
+    def test_check_passes_on_real_server(self):
+        server = Path(__file__).parent.parent / "mcp_server.py"
+        result = _check_mcp_async_run(server)
+        assert result.id == "mcp-async-run"
+        assert result.layer == "mcp"
+        assert result.status == "pass"
+
+    def test_check_fails_on_bad_stub(self, tmp_path):
+        bad = tmp_path / "mcp_server.py"
+        bad.write_text(_ASYNC_RUN_BAD)
+        result = _check_mcp_async_run(bad)
+        assert result.status == "fail"
+        assert "rescan_vault()" in result.message
+
+    def test_check_skips_when_missing(self, tmp_path):
+        result = _check_mcp_async_run(tmp_path / "nope.py")
+        assert result.status == "skip"
+
+    def test_registered_in_mcp_layer(self):
+        """_check_mcp() must surface the mcp-async-run result."""
+        ids = {r.id for r in _check_mcp()}
+        assert "mcp-async-run" in ids

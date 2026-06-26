@@ -435,6 +435,9 @@ def _check_mcp() -> list[DoctorResult]:
     # mcp-tool-resolvers — static guard against the exact-ID-only resolver bug
     results.append(_check_mcp_tool_resolvers(candidate))
 
+    # mcp-async-run — static guard against asyncio.run() in a sync @mcp.tool (#62)
+    results.append(_check_mcp_async_run(candidate))
+
     return results
 
 
@@ -497,6 +500,68 @@ def _check_mcp_tool_resolvers(server_path: Path) -> DoctorResult:
         )
     return DoctorResult("mcp-tool-resolvers", "mcp", label, "pass",
                         "all vault-taking tools use name/ID/prefix resolution")
+
+
+def _find_async_run_offenders(source: str) -> list[str]:
+    """Return "<tool>()" for each SYNC @mcp.tool function whose body calls
+    asyncio.run(...) — the #62 anti-pattern. FastMCP dispatches tool handlers
+    inside an already-running event loop, so asyncio.run() raises
+    `RuntimeError: asyncio.run() cannot be called from a running event loop`.
+
+    Only sync `def` handlers are flagged: an `async def` that awaits its
+    coroutine is the correct fix, and `isinstance(node, ast.FunctionDef)` is
+    False for ast.AsyncFunctionDef, so async handlers are skipped automatically.
+    """
+    tree = ast.parse(source)
+    offenders: list[str] = []
+
+    def is_mcp_tool(fn: ast.FunctionDef) -> bool:
+        for dec in fn.decorator_list:
+            # matches both @mcp.tool and @mcp.tool(...)
+            target = dec.func if isinstance(dec, ast.Call) else dec
+            if isinstance(target, ast.Attribute) and target.attr == "tool" \
+                    and isinstance(target.value, ast.Name) and target.value.id == "mcp":
+                return True
+        return False
+
+    for fn in ast.walk(tree):
+        # ast.FunctionDef excludes ast.AsyncFunctionDef → only sync handlers
+        if not isinstance(fn, ast.FunctionDef) or not is_mcp_tool(fn):
+            continue
+        for node in ast.walk(fn):
+            if not isinstance(node, ast.Call):
+                continue
+            f = node.func
+            if isinstance(f, ast.Attribute) and f.attr == "run" \
+                    and isinstance(f.value, ast.Name) and f.value.id == "asyncio":
+                offenders.append(f"{fn.name}()")
+                break
+    return offenders
+
+
+def _check_mcp_async_run(server_path: Path) -> DoctorResult:
+    """Flag sync MCP tools that call asyncio.run() (crashes inside FastMCP's
+    running event loop — see #62)."""
+    label = "MCP tools free of asyncio.run() in sync handlers"
+    if not server_path.exists():
+        return DoctorResult("mcp-async-run", "mcp", label, "skip",
+                            "skipped: mcp_server.py not found")
+    try:
+        offenders = _find_async_run_offenders(server_path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError) as e:
+        return DoctorResult("mcp-async-run", "mcp", label, "error",
+                            f"Cannot analyze mcp_server.py: {e}")
+    if offenders:
+        return DoctorResult(
+            "mcp-async-run", "mcp", label, "fail",
+            f"{len(offenders)} sync @mcp.tool call asyncio.run(): "
+            + ", ".join(offenders),
+            "Make the handler `async def` and `await` the coroutine. FastMCP "
+            "dispatches tools inside a running event loop, where asyncio.run() "
+            "raises RuntimeError (#62).",
+        )
+    return DoctorResult("mcp-async-run", "mcp", label, "pass",
+                        "no sync @mcp.tool handler calls asyncio.run()")
 
 
 # ---------------------------------------------------------------------------
