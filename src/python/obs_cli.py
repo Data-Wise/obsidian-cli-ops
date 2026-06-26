@@ -641,13 +641,13 @@ def _print_doctor_results(results):
     """Render DoctorResult list as a layered Rich table."""
     from rich.table import Table
 
-    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥"}
-    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red"}
+    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥", "info": "ℹ️ "}
+    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red", "info": "cyan"}
 
     current_layer = None
     table = None
 
-    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0}
+    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0, "info": 0}
     for r in results:
         counts[r.status] = counts.get(r.status, 0) + 1
 
@@ -689,6 +689,8 @@ def _print_doctor_results(results):
         parts.append(f"[green]{counts['pass']} pass[/]")
     if counts["skip"]:
         parts.append(f"[dim]{counts['skip']} skip[/]")
+    if counts["info"]:
+        parts.append(f"[cyan]{counts['info']} info[/]")
     verdict = "[bold green]All checks passed ✅[/]" if not counts["fail"] and not counts["error"] else "[bold red]Issues found — see hints above[/]"
     console.print(f"{verdict}  ({', '.join(parts)})")
 
@@ -869,7 +871,7 @@ def main():
     doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
     doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
     doctor_parser.add_argument('--layer', action='append', dest='layers',
-                               choices=['python', 'database', 'vault', 'mcp', 'docs', 'icloud'],
+                               choices=['python', 'database', 'vault', 'sync', 'mcp', 'docs', 'icloud'],
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 

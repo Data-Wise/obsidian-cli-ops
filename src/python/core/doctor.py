@@ -18,7 +18,7 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Literal, Optional
 
-Status = Literal["pass", "warn", "fail", "skip", "error"]
+Status = Literal["pass", "warn", "fail", "skip", "error", "info"]
 
 _CLAUDE_DESKTOP_CONFIG_PATHS = [
     Path.home() / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json",
@@ -51,6 +51,7 @@ def run_checks(vault_id: Optional[str] = None, layers: Optional[list[str]] = Non
         "python": _check_python,
         "database": _check_database,
         "vault": lambda: _check_vaults(vault_id),
+        "sync": lambda: _check_sync(vault_id),
         "mcp": _check_mcp,
         "docs": _check_doc_counts,
         "icloud": _check_icloud,
@@ -62,9 +63,9 @@ def run_checks(vault_id: Optional[str] = None, layers: Optional[list[str]] = Non
         fn = all_layers.get(name)
         if fn is None:
             continue
-        if name == "vault" and not db_ok:
+        if name in ("vault", "sync") and not db_ok:
             results.append(DoctorResult(
-                id="vault-skip", layer="vault", label="Vault checks",
+                id=f"{name}-skip", layer=name, label=f"{name.capitalize()} checks",
                 status="skip", message="skipped: DB unavailable",
             ))
             continue
@@ -352,6 +353,145 @@ def _check_vaults(vault_id: Optional[str] = None) -> list[DoctorResult]:
 
     conn.close()
     return results
+
+
+# ---------------------------------------------------------------------------
+# Layer — sync (content-based vault↔DB drift, per registered vault)
+# ---------------------------------------------------------------------------
+
+def _disk_md_paths(vault_path: Path) -> set[str]:
+    """Relative *.md paths on disk, mirroring the scanner's dotfile filter
+    (vault_scanner.py:232 — skip any path with a dot-prefixed part)."""
+    return {
+        str(p.relative_to(vault_path))
+        for p in vault_path.rglob("*.md")
+        if not any(part.startswith(".") for part in p.parts)
+    }
+
+
+def _check_sync(vault_id: Optional[str] = None) -> list[DoctorResult]:
+    """Per-vault content-based sync drift between the DB index and disk.
+
+    sync-ghosts (warn) : DB rows whose path no longer exists on disk (S1/S2).
+    sync-missing (warn) : *.md on disk absent from the DB (S4 / never-scanned).
+    sync-errors (warn/fail) : last scan_history row recorded failures (S4).
+    sync-drift (info)  : one-line summary disk=N db=M (X ghost, Y missing).
+
+    Each is a cheap rglob + SELECT path + set diff; deterministic, no AI.
+    """
+    db_path = Path.home() / ".config" / "obs" / "vault_db.sqlite"
+    if not db_path.exists():
+        return [DoctorResult("sync-skip", "sync", "Sync checks", "skip", "skipped: DB missing")]
+
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+        if vault_id:
+            rows = conn.execute("SELECT * FROM vaults WHERE id = ?", (vault_id,)).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM vaults ORDER BY name").fetchall()
+    except sqlite3.OperationalError as e:
+        return [DoctorResult("sync-skip", "sync", "Sync checks", "skip", f"skipped: {e}")]
+
+    if not rows:
+        conn.close()
+        return [DoctorResult("sync-skip", "sync", "Sync checks", "skip",
+                             "No vaults registered" if not vault_id else f"Vault {vault_id!r} not found")]
+
+    results: list[DoctorResult] = []
+    for vault in rows:
+        vid = vault["id"]
+        name = vault["name"]
+        path = Path(vault["path"])
+        prefix = f"{name} ({vid[:8]})"
+
+        # Vault path gone → can't read disk; ghosts/missing are meaningless.
+        if not path.exists():
+            for cid, label in (("sync-ghosts", "Ghost rows"), ("sync-missing", "Missing on disk"),
+                               ("sync-errors", "Last scan errors"), ("sync-drift", "Drift summary")):
+                results.append(DoctorResult(f"{cid}:{vid}", "sync", f"{prefix}: {label}",
+                                            "skip", "skipped: vault path missing"))
+            continue
+
+        try:
+            disk_paths = _disk_md_paths(path)
+        except OSError as e:
+            for cid, label in (("sync-ghosts", "Ghost rows"), ("sync-missing", "Missing on disk"),
+                               ("sync-errors", "Last scan errors"), ("sync-drift", "Drift summary")):
+                results.append(DoctorResult(f"{cid}:{vid}", "sync", f"{prefix}: {label}",
+                                            "skip", f"skipped: cannot read disk ({e})"))
+            continue
+
+        try:
+            db_rows = conn.execute("SELECT path FROM notes WHERE vault_id = ?", (vid,)).fetchall()
+            db_paths = {r["path"] for r in db_rows}
+        except sqlite3.OperationalError as e:
+            results.append(DoctorResult(f"sync-ghosts:{vid}", "sync", f"{prefix}: Ghost rows",
+                                        "error", f"Query failed: {e}"))
+            continue
+
+        ghosts = db_paths - disk_paths
+        missing = disk_paths - db_paths
+
+        # sync-ghosts
+        if ghosts:
+            results.append(DoctorResult(f"sync-ghosts:{vid}", "sync", f"{prefix}: Ghost rows",
+                                        "warn", f"{len(ghosts)} DB row(s) point to files gone from disk",
+                                        f"Run: obs scan {vid} --prune"))
+        else:
+            results.append(DoctorResult(f"sync-ghosts:{vid}", "sync", f"{prefix}: Ghost rows",
+                                        "pass", "no ghost rows"))
+
+        # sync-missing
+        if missing:
+            results.append(DoctorResult(f"sync-missing:{vid}", "sync", f"{prefix}: Missing on disk",
+                                        "warn", f"{len(missing)} disk file(s) absent from the index",
+                                        f"Run: obs scan {vid}  (re-scan; check logs for errors)"))
+        else:
+            results.append(DoctorResult(f"sync-missing:{vid}", "sync", f"{prefix}: Missing on disk",
+                                        "pass", "all disk files indexed"))
+
+        # sync-errors — verdict from the latest scan_history row
+        results.append(_sync_errors_result(conn, vid, prefix))
+
+        # sync-drift — info summary line
+        results.append(DoctorResult(
+            f"sync-drift:{vid}", "sync", f"{prefix}: Drift summary", "info",
+            f"disk={len(disk_paths)} db={len(db_paths)} "
+            f"({len(ghosts)} ghost, {len(missing)} missing)"))
+
+    conn.close()
+    return results
+
+
+def _sync_errors_result(conn: sqlite3.Connection, vid: str, prefix: str) -> DoctorResult:
+    """warn/fail from the most-recent scan_history row (post-S4):
+    status=='failed' → fail; completed but notes_failed>0 → warn; else pass;
+    no scan history → skip."""
+    label = f"{prefix}: Last scan errors"
+    try:
+        row = conn.execute(
+            "SELECT status, notes_failed FROM scan_history "
+            "WHERE vault_id = ? ORDER BY started_at DESC, id DESC LIMIT 1",
+            (vid,),
+        ).fetchone()
+    except sqlite3.OperationalError as e:
+        return DoctorResult(f"sync-errors:{vid}", "sync", label, "error", f"Query failed: {e}")
+
+    if row is None:
+        return DoctorResult(f"sync-errors:{vid}", "sync", label, "skip", "no scan history")
+
+    status = row["status"]
+    failed = row["notes_failed"] or 0
+    if status == "failed":
+        return DoctorResult(f"sync-errors:{vid}", "sync", label, "fail",
+                            "last scan aborted (status=failed)",
+                            f"Run: obs scan {vid} --verbose  to see the error")
+    if failed > 0:
+        return DoctorResult(f"sync-errors:{vid}", "sync", label, "warn",
+                            f"last scan recorded {failed} per-note error(s)",
+                            "inspect failing paths in the scan log")
+    return DoctorResult(f"sync-errors:{vid}", "sync", label, "pass", "last scan had no errors")
 
 
 # ---------------------------------------------------------------------------
