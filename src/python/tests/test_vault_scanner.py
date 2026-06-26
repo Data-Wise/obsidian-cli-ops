@@ -474,3 +474,37 @@ class TestExtractTitle:
         title1 = MarkdownParser._extract_title(f, "content", {})
         title2 = MarkdownParser._extract_title(f, "content", {})
         assert title1 == title2
+
+
+class TestExtractTags:
+    """Tags from frontmatter that aren't plain strings must not crash the scan.
+
+    Real vaults contain valid YAML like ``tags: [{}]`` (a list whose element is a
+    dict) — Obsidian tolerates it, but ``tag.strip('#')`` on a dict raised
+    ``AttributeError`` and the whole note was dropped from the index (the silent
+    self-inflicted drop class, same family as #65/S4)."""
+
+    def test_dict_element_does_not_crash_and_is_skipped(self, tmp_path):
+        f = tmp_path / "weird-tags.md"
+        f.write_text("---\ntags: [{}]\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)   # must not raise
+        assert note.tags == set()
+
+    def test_mixed_list_keeps_strings_skips_nonstrings(self, tmp_path):
+        f = tmp_path / "mixed-tags.md"
+        f.write_text("---\ntags: [foo, {}, bar]\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.tags == {"foo", "bar"}
+
+    def test_scalar_tag_is_coerced(self, tmp_path):
+        """A numeric tag (e.g. a year) is coerced to its string form, not dropped."""
+        f = tmp_path / "num-tag.md"
+        f.write_text("---\ntags: [2024, foo]\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.tags == {"2024", "foo"}
+
+    def test_null_tags_is_safe(self, tmp_path):
+        f = tmp_path / "null-tags.md"
+        f.write_text("---\ntags:\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)   # fm_tags is None
+        assert note.tags == set()

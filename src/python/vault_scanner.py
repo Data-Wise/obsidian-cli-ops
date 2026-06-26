@@ -122,19 +122,39 @@ class MarkdownParser:
         """Extract tags from content and frontmatter."""
         tags = set()
 
-        # From frontmatter
+        # From frontmatter. Elements are not guaranteed to be strings — real
+        # vaults contain valid YAML like ``tags: [{}]`` or ``tags: [2024]``;
+        # normalize each (coerce scalars, skip dict/list/None) so one odd tag
+        # never crashes the whole note out of the index.
         if 'tags' in frontmatter:
             fm_tags = frontmatter['tags']
-            if isinstance(fm_tags, list):
-                tags.update(tag.strip('#') for tag in fm_tags)
-            elif isinstance(fm_tags, str):
-                tags.update(tag.strip('#') for tag in fm_tags.split(','))
+            raw = fm_tags.split(',') if isinstance(fm_tags, str) else fm_tags
+            if isinstance(raw, list):
+                for tag in raw:
+                    norm = cls._normalize_tag(tag)
+                    if norm:
+                        tags.add(norm)
 
         # From content (inline #tags)
         for match in cls.TAG_PATTERN.finditer(content):
             tags.add(match.group(1))
 
         return tags
+
+    @staticmethod
+    def _normalize_tag(tag) -> Optional[str]:
+        """Coerce one frontmatter tag element to a clean tag string, or None.
+
+        str -> stripped of leading '#'/whitespace; scalar int/float -> str();
+        bool/dict/list/None and anything else -> None (skipped). Returns None for
+        empties so callers can filter with a simple truthiness check."""
+        if isinstance(tag, bool):       # bool is an int subclass — not a tag
+            return None
+        if isinstance(tag, str):
+            return tag.strip().lstrip('#').strip() or None
+        if isinstance(tag, (int, float)):
+            return str(tag)
+        return None
 
     @classmethod
     def _extract_wikilinks(cls, content: str) -> List[Tuple[str, Optional[str]]]:
