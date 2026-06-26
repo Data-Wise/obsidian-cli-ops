@@ -336,3 +336,7 @@ Surfaced in a Cowork session while wiring the `arxiv-causal-mediation-brief` sco
 
 **Suggested order:** #51 → #52 → #40 → #54 → #53.
 **Also:** Homebrew-tap auto-bump still parked (APP_ID/APP_PRIVATE_KEY); `Knowledge_Base` vault index still stale (Documents rescanned 2026-06-22).
+
+## Active Worktrees
+
+- feature/fix-rescan-asyncio — ORCHESTRATE plan for #62 (rescan_vault asyncio crash) + doctor mcp-async-run guard + #53 stale-server detection; ~/.git-worktrees/obsidian-cli-ops/feature-fix-rescan-asyncio (created 2026-06-25, plan only — not yet implemented)
