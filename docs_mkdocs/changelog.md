@@ -6,6 +6,11 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Added
+
+- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. [Schema](obs-sync-yml.md).
+- **`obs research board`** — deterministic atlas → vault dashboard renderer (manuscripts + programs); marker-bounded atomic write; `--out`, `--kind`, `--dry-run`. [Tutorial](tutorials/research-board.md).
+
 ---
 
 ## v4.0.1 (2026-06-23) — insert_to_note + fixes + release-quality tooling

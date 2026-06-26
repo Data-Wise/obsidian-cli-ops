@@ -78,11 +78,13 @@ nav:
       - AI Features: tutorials/ai-features.md
       - Claude / MCP Integration: tutorials/claude-mcp.md
       - Research Setup: tutorials/research-setup.md
+      - Research Board: tutorials/research-board.md
       - Monitoring & Health: tutorials/monitoring-and-health.md
       - Cookbook: cookbook.md
   - Reference:
       - Quick Reference: refcard.md
       - CLI Reference: cli-reference.md
+      - .obs/sync.yml Schema: obs-sync-yml.md
       - Visual Workflows: workflows.md
       - AI Setup Guide: ai-setup.md
       - Claude Integration: claude-integration.md
