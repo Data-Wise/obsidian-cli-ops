@@ -93,7 +93,8 @@ class ObsCLI:
                     print(f"❌ Error scanning {vault_name}: {e}\n")
 
     def scan(self, vault_path: str, vault_name: Optional[str] = None,
-             analyze: bool = False, verbose: bool = False):
+             analyze: bool = False, verbose: bool = False,
+             prune: bool = False):
         """
         Scan a vault and populate database.
 
@@ -102,10 +103,13 @@ class ObsCLI:
             vault_name: Optional vault name
             analyze: Whether to run graph analysis after scan
             verbose: Print detailed output
+            prune: Opt-in sweep of deleted/renamed notes (S1/S2)
         """
         try:
             # Scan vault using core layer
-            result = asyncio.run(self.vault_manager.scan_vault(vault_path, vault_name))
+            result = asyncio.run(
+                self.vault_manager.scan_vault(vault_path, vault_name, prune=prune)
+            )
 
             # Print scan result
             self._print_scan_result(result, verbose)
@@ -288,6 +292,172 @@ class ObsCLI:
             console.print(panel)
             console.print()
 
+    def delete_vault(self, vault_identifier: str, force: bool = False,
+                     as_json: bool = False):
+        """
+        Delete a vault from the obs database (filesystem is never touched).
+
+        Resolves the identifier (name / ID / unambiguous prefix), then — unless
+        ``force`` — prints a dry-run preview of what would be removed. The actual
+        delete cascades to the vault's notes, links, tags, graph metrics, and
+        embeddings via the schema's ON DELETE CASCADE foreign keys.
+
+        Args:
+            vault_identifier: Vault name, ID, or unambiguous ID prefix.
+            force: Actually delete. Default False prints a preview only.
+            as_json: Emit a machine-readable result instead of Rich output.
+        """
+        try:
+            vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        except ValueError as e:  # ambiguous prefix
+            if as_json:
+                print(json.dumps({"deleted": False, "error": str(e)}))
+            else:
+                console.print(f"[red]❌ {e}[/]")
+            sys.exit(1)
+        if not vault:
+            if as_json:
+                print(json.dumps({"deleted": False,
+                                  "error": f"Vault not found: {vault_identifier}"}))
+            else:
+                console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+                console.print("[dim]  Tip: Run 'obs' to list known vaults[/]")
+            sys.exit(1)
+
+        vault_id = vault['id']
+        note_count = len(self.db.list_notes(vault_id))
+
+        if not force:
+            if as_json:
+                print(json.dumps({
+                    "deleted": False, "dry_run": True,
+                    "vault_id": vault_id, "name": vault['name'],
+                    "path": vault['path'], "notes": note_count,
+                }))
+            else:
+                console.print()
+                console.print(Panel(
+                    f"[bold]Name:[/] {vault['name']}\n"
+                    f"[bold]ID:[/] {vault_id}\n"
+                    f"[bold]Path:[/] {vault['path']}\n"
+                    f"[bold]Notes that will be removed:[/] {note_count}\n\n"
+                    f"[dim]The vault folder on disk is NOT touched — only the obs "
+                    f"index.[/]\n"
+                    f"Re-run with [bold]--force[/] to delete.",
+                    title="⚠️  DRY RUN — nothing deleted",
+                    border_style="yellow", box=box.ROUNDED,
+                ))
+                console.print()
+            return
+
+        deleted = self.vault_manager.delete_vault(vault_id)
+        if as_json:
+            print(json.dumps({
+                "deleted": deleted, "vault_id": vault_id,
+                "name": vault['name'], "notes_removed": note_count,
+            }))
+        elif deleted:
+            console.print(
+                f"[green]🗑️  Deleted vault[/] [bold]{vault['name']}[/] "
+                f"({note_count} notes removed from the obs index)."
+            )
+        else:
+            console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+            sys.exit(1)
+
+    def rename_vault(self, vault_identifier: str, new_name: str,
+                     as_json: bool = False):
+        """
+        Rename a vault's display name (path and ID are unchanged).
+
+        Refuses to create a name collision: if another vault already uses
+        ``new_name``, name-based resolution would become ambiguous, so the
+        rename is rejected.
+        """
+        try:
+            vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        except ValueError as e:
+            if as_json:
+                print(json.dumps({"renamed": False, "error": str(e)}))
+            else:
+                console.print(f"[red]❌ {e}[/]")
+            sys.exit(1)
+        if not vault:
+            if as_json:
+                print(json.dumps({"renamed": False,
+                                  "error": f"Vault not found: {vault_identifier}"}))
+            else:
+                console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+            sys.exit(1)
+
+        vault_id = vault['id']
+        # Guard against name collisions with a *different* vault.
+        collision = next(
+            (v for v in self.vault_manager.list_vaults()
+             if v.name == new_name and v.id != vault_id),
+            None,
+        )
+        if collision:
+            msg = (f"Another vault already uses the name '{new_name}' "
+                   f"(id {collision.id}); names must stay unambiguous.")
+            if as_json:
+                print(json.dumps({"renamed": False, "error": msg}))
+            else:
+                console.print(f"[red]❌ {msg}[/]")
+            sys.exit(1)
+
+        old_name = vault['name']
+        renamed = self.vault_manager.rename_vault(vault_id, new_name)
+        if as_json:
+            print(json.dumps({"renamed": renamed, "vault_id": vault_id,
+                              "old_name": old_name, "new_name": new_name}))
+        elif renamed:
+            console.print(
+                f"[green]✏️  Renamed[/] [bold]{old_name}[/] → [bold]{new_name}[/]"
+            )
+        else:
+            console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+            sys.exit(1)
+
+    def info_vault(self, vault_identifier: str, as_json: bool = False):
+        """Show a single vault's metadata (name, ID, path, counts, timestamps)."""
+        try:
+            vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        except ValueError as e:
+            if as_json:
+                print(json.dumps({"error": str(e)}))
+            else:
+                console.print(f"[red]❌ {e}[/]")
+            sys.exit(1)
+        if not vault:
+            if as_json:
+                print(json.dumps({"error": f"Vault not found: {vault_identifier}"}))
+            else:
+                console.print(f"[red]❌ Vault not found: {vault_identifier}[/]")
+            sys.exit(1)
+
+        note_count = len(self.db.list_notes(vault['id']))
+        if as_json:
+            print(json.dumps({
+                "id": vault['id'], "name": vault['name'], "path": vault['path'],
+                "notes": note_count, "last_scanned": vault.get('last_scanned'),
+                "created_at": vault.get('created_at'),
+            }, default=str))
+            return
+
+        console.print()
+        console.print(Panel(
+            f"[bold]Name:[/] {vault['name']}\n"
+            f"[bold]ID:[/] {vault['id']}\n"
+            f"[bold]Path:[/] {vault['path']}\n"
+            f"[bold]Notes:[/] {note_count}\n"
+            f"[bold]Last scanned:[/] {format_relative_time(vault.get('last_scanned'))}\n"
+            f"[bold]Registered:[/] {format_relative_time(vault.get('created_at'))}",
+            title=f"📁 {vault['name']}",
+            border_style="cyan", box=box.ROUNDED,
+        ))
+        console.print()
+
     def list_vaults(self):
         """List all vaults in database with Rich table."""
         vaults = self.vault_manager.list_vaults()
@@ -337,6 +507,12 @@ class ObsCLI:
         print(f"  Notes: {result.notes_scanned}")
         print(f"  Links: {result.links_found}")
         print(f"  Tags: {result.tags_found}")
+        if result.notes_unchanged > 0:
+            print(f"  Unchanged: {result.notes_unchanged}")
+        if result.notes_pruned > 0:
+            print(f"  Pruned: {result.notes_pruned}")
+        if result.notes_failed > 0:
+            print(f"  Failed: {result.notes_failed}")
         print(f"  Duration: {result.duration_seconds:.2f}s")
 
         if verbose:
@@ -635,13 +811,13 @@ def _print_doctor_results(results):
     """Render DoctorResult list as a layered Rich table."""
     from rich.table import Table
 
-    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥"}
-    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red"}
+    STATUS_ICON = {"pass": "✅", "warn": "⚠️ ", "fail": "❌", "skip": "⬜", "error": "🔥", "info": "ℹ️ "}
+    STATUS_COLOR = {"pass": "green", "warn": "yellow", "fail": "red", "skip": "dim", "error": "bold red", "info": "cyan"}
 
     current_layer = None
     table = None
 
-    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0}
+    counts = {"pass": 0, "warn": 0, "fail": 0, "skip": 0, "error": 0, "info": 0}
     for r in results:
         counts[r.status] = counts.get(r.status, 0) + 1
 
@@ -683,6 +859,8 @@ def _print_doctor_results(results):
         parts.append(f"[green]{counts['pass']} pass[/]")
     if counts["skip"]:
         parts.append(f"[dim]{counts['skip']} skip[/]")
+    if counts["info"]:
+        parts.append(f"[cyan]{counts['info']} info[/]")
     verdict = "[bold green]All checks passed ✅[/]" if not counts["fail"] and not counts["error"] else "[bold red]Issues found — see hints above[/]"
     console.print(f"{verdict}  ({', '.join(parts)})")
 
@@ -738,6 +916,10 @@ def main():
     scan_parser.add_argument('--name', help='Vault name')
     scan_parser.add_argument('--analyze', action='store_true',
                             help='Analyze graph after scan')
+    scan_parser.add_argument('--prune', dest='prune',
+                            action=argparse.BooleanOptionalAction, default=False,
+                            help='Sweep deleted/renamed notes from the index '
+                                 '(--prune/--no-prune; default: additive)')
 
     # analyze command
     analyze_parser = subparsers.add_parser('analyze',
@@ -859,7 +1041,7 @@ def main():
     doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
     doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
     doctor_parser.add_argument('--layer', action='append', dest='layers',
-                               choices=['python', 'database', 'vault', 'mcp', 'docs', 'icloud'],
+                               choices=['python', 'database', 'vault', 'sync', 'mcp', 'docs', 'icloud'],
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
 
@@ -934,6 +1116,28 @@ def main():
     bib_check = bib_sub.add_parser('check', help='Check citations in a manuscript')
     bib_check.add_argument('name', help='Manuscript name or directory name')
 
+    # Vault management commands
+    vault_parser = subparsers.add_parser('vault', help='Vault management commands')
+    vault_sub = vault_parser.add_subparsers(dest='vault_command')
+    vault_delete = vault_sub.add_parser(
+        'delete',
+        help='Delete a vault from the obs database (filesystem untouched)')
+    vault_delete.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
+    vault_delete.add_argument('-f', '--force', action='store_true',
+                              help='Actually delete (default is a dry-run preview)')
+    vault_delete.add_argument('--json', action='store_true', dest='json_output',
+                              help='Output result as JSON')
+    vault_rename = vault_sub.add_parser(
+        'rename', help='Change a vault display name (path and ID unchanged)')
+    vault_rename.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
+    vault_rename.add_argument('new_name', help='New display name')
+    vault_rename.add_argument('--json', action='store_true', dest='json_output',
+                              help='Output result as JSON')
+    vault_info = vault_sub.add_parser('info', help='Show metadata for a single vault')
+    vault_info.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
+    vault_info.add_argument('--json', action='store_true', dest='json_output',
+                            help='Output result as JSON')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -950,7 +1154,8 @@ def main():
 
         elif args.command == 'scan':
             cli.scan(args.path, vault_name=args.name,
-                    analyze=args.analyze, verbose=args.verbose)
+                    analyze=args.analyze, verbose=args.verbose,
+                    prune=args.prune)
 
         elif args.command == 'analyze':
             if args.json:
@@ -1837,6 +2042,22 @@ def main():
 
             else:
                 research_parser.print_help()
+
+        elif args.command == 'vault':
+            sub = getattr(args, 'vault_command', None)
+            as_json = getattr(args, 'json_output', False) or getattr(args, 'json', False)
+            if sub == 'delete':
+                cli.delete_vault(
+                    args.vault,
+                    force=getattr(args, 'force', False),
+                    as_json=as_json,
+                )
+            elif sub == 'rename':
+                cli.rename_vault(args.vault, args.new_name, as_json=as_json)
+            elif sub == 'info':
+                cli.info_vault(args.vault, as_json=as_json)
+            else:
+                vault_parser.print_help()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")

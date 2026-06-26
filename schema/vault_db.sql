@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS scan_history (
     notes_added INTEGER DEFAULT 0,
     notes_updated INTEGER DEFAULT 0,
     notes_deleted INTEGER DEFAULT 0,
+    notes_failed INTEGER DEFAULT 0,         -- v2: per-note scan errors (S4)
     duration_seconds REAL,
     status TEXT DEFAULT 'running',          -- running, completed, failed
     error_message TEXT,
@@ -297,7 +298,8 @@ CREATE TABLE IF NOT EXISTS schema_version (
 );
 
 INSERT INTO schema_version (version, description) VALUES
-    (1, 'Initial schema - Phase 1 Foundation');
+    (1, 'Initial schema - Phase 1 Foundation'),
+    (2, 'Add scan_history.notes_failed - per-note scan error count (S4)');
 
 -- ============================================================================
 -- INDEXES FOR PERFORMANCE

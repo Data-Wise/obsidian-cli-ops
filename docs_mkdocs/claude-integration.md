@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.1.0
+**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.2.0
 
 ---
 
@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **40 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **42 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -74,7 +74,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 
 ---
 
-## All 39 MCP Tools
+## All 42 MCP Tools
 
 ### Vault Tools
 
@@ -83,6 +83,8 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 | `list_vaults` | — | List all registered vaults with note/link counts |
 | `get_vault_stats` | `vault_id` | Detailed statistics for a vault |
 | `discover_vaults` | `path` | Find Obsidian vaults in a directory tree |
+| `rename_vault` | `vault_id`, `new_name` | Rename a vault's display name (path/ID unchanged); rejects name collisions |
+| `delete_vault` | `vault_id`, `confirm=False` | Remove a vault from the index — `confirm=True` required; default is **dry-run**. Files on disk untouched |
 
 ### Search Tools
 

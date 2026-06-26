@@ -80,3 +80,50 @@ class TestEmbeddingCacheCRUD:
         assert db.count_embeddings(provider="gemini") == 1
         assert db.count_embeddings(provider="gemini", model="model-a") == 1
         assert db.count_embeddings(provider="ollama") == 0
+
+
+class TestEmbeddingCascadeOnReplace:
+    """N1 mechanism: INSERT OR REPLACE in add_note cascades and wipes embeddings.
+
+    This documents WHY the scanner must short-circuit unchanged notes — a bare
+    re-add_note() of an already-indexed note destroys its cached embedding.
+    """
+
+    def test_add_note_replace_cascades_embedding(self, db):
+        # add_note derives the id from vault_id:path; cache against that id.
+        note_id = db.add_note(
+            vault_id="v1", path="cascade.md", title="Cascade",
+            content="first content", metadata={},
+        )
+        vector = np.array([0.1, 0.2], dtype=np.float32).tobytes()
+        db.save_embedding(note_id, "gemini-api", "text-embedding-004", vector, 1.0)
+        assert db.get_embedding(note_id, "gemini-api", "text-embedding-004") is not None
+
+        # Re-add the SAME note (same vault_id:path -> same id) — REPLACE fires
+        # ON DELETE CASCADE, which removes the note_embeddings row.
+        db.add_note(
+            vault_id="v1", path="cascade.md", title="Cascade",
+            content="second content", metadata={},
+        )
+        assert db.get_embedding(note_id, "gemini-api", "text-embedding-004") is None
+
+    def test_re_add_vault_does_not_cascade_notes_or_embeddings(self, db):
+        """add_vault must upsert in place — re-adding a vault (which every
+        rescan does at line ~220, BEFORE the note loop) must NOT cascade-wipe
+        its notes or their embeddings. This is the earlier, more total trigger
+        of N1; the content-hash short-circuit is moot if the vault REPLACE has
+        already deleted everything."""
+        vault_id = db.add_vault("Re Vault", "/tmp/re-vault")
+        note_id = db.add_note(
+            vault_id=vault_id, path="keep.md", title="Keep",
+            content="body", metadata={},
+        )
+        vector = np.array([0.9, 0.8], dtype=np.float32).tobytes()
+        db.save_embedding(note_id, "gemini-api", "text-embedding-004", vector, 1.0)
+
+        # Re-add the SAME vault (same path -> same id), as scan_vault does.
+        db.add_vault("Re Vault", "/tmp/re-vault")
+
+        # Both the note and its embedding must survive.
+        assert db.get_note(note_id) is not None
+        assert db.get_embedding(note_id, "gemini-api", "text-embedding-004") is not None

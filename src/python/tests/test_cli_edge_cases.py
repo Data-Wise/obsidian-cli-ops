@@ -236,3 +236,146 @@ class TestAnalyzeEdgeCases:
         cli = ObsCLI()
         # Should complete without error
         cli.analyze("empty123", verbose=True)
+
+
+class TestVaultDeleteCommand:
+    """Tests for `obs vault delete` (ObsCLI.delete_vault) against a real DB.
+
+    A real in-memory DatabaseManager is injected at construction so the cascade
+    behavior is genuinely exercised and the user's DB is never touched.
+    """
+
+    @staticmethod
+    def _cli_with_real_db():
+        from obs_cli import ObsCLI
+        from db_manager import DatabaseManager
+        from core.vault_manager import VaultManager
+        db = DatabaseManager(db_path=":memory:")
+        db.initialize_database()
+        with patch('obs_cli.DatabaseManager', return_value=db), \
+             patch('obs_cli.VaultManager', return_value=VaultManager(db)), \
+             patch('obs_cli.GraphAnalyzer'):
+            cli = ObsCLI()
+        return cli, db
+
+    @patch('obs_cli.console')
+    def test_dry_run_does_not_delete(self, mock_console):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("DryRun", "/tmp/dryrun")
+        db.add_note(vid, "n.md", "N", "body")
+
+        cli.delete_vault("DryRun", force=False)
+
+        # Vault still present and a preview Panel (titled "DRY RUN") was rendered.
+        assert db.get_vault(vid) is not None
+        from rich.panel import Panel
+        panels = [
+            a
+            for call in mock_console.print.call_args_list
+            for a in call.args
+            if isinstance(a, Panel)
+        ]
+        assert panels, "expected a dry-run Panel to be printed"
+        assert "DRY RUN" in str(panels[0].title)
+
+    @patch('obs_cli.console')
+    def test_force_deletes_and_cascades(self, mock_console):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("KillMe", "/tmp/killme")
+        note_id = db.add_note(vid, "n.md", "N", "body")
+
+        cli.delete_vault("KillMe", force=True)
+
+        assert db.get_vault(vid) is None
+        with db.get_connection() as conn:
+            assert conn.execute(
+                "SELECT 1 FROM notes WHERE id = ?", (note_id,)
+            ).fetchone() is None
+
+    @patch('obs_cli.console')
+    def test_not_found_exits_nonzero(self, mock_console):
+        cli, _ = self._cli_with_real_db()
+        with pytest.raises(SystemExit) as exc:
+            cli.delete_vault("does-not-exist", force=True)
+        assert exc.value.code == 1
+
+    def test_json_force_output(self, capsys):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("JsonVault", "/tmp/jsonvault")
+        db.add_note(vid, "n.md", "N", "body")
+
+        cli.delete_vault("JsonVault", force=True, as_json=True)
+
+        import json as _json
+        # The DB-init banner precedes our JSON; the result is the last stdout line.
+        last_line = capsys.readouterr().out.strip().splitlines()[-1]
+        out = _json.loads(last_line)
+        assert out["deleted"] is True
+        assert out["vault_id"] == vid
+        assert out["notes_removed"] == 1
+
+
+class TestVaultRenameInfoCommands:
+    """Tests for `obs vault rename` and `obs vault info` against a real DB."""
+
+    @staticmethod
+    def _cli_with_real_db():
+        from obs_cli import ObsCLI
+        from db_manager import DatabaseManager
+        from core.vault_manager import VaultManager
+        db = DatabaseManager(db_path=":memory:")
+        db.initialize_database()
+        with patch('obs_cli.DatabaseManager', return_value=db), \
+             patch('obs_cli.VaultManager', return_value=VaultManager(db)), \
+             patch('obs_cli.GraphAnalyzer'):
+            cli = ObsCLI()
+        return cli, db
+
+    @patch('obs_cli.console')
+    def test_rename_updates_name(self, mock_console):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("OldName", "/tmp/old")
+
+        cli.rename_vault("OldName", "FreshName")
+
+        assert db.get_vault(vid)["name"] == "FreshName"
+
+    @patch('obs_cli.console')
+    def test_rename_rejects_name_collision(self, mock_console):
+        cli, db = self._cli_with_real_db()
+        db.add_vault("Existing", "/tmp/existing")
+        db.add_vault("Mover", "/tmp/mover")
+
+        with pytest.raises(SystemExit) as exc:
+            cli.rename_vault("Mover", "Existing")
+        assert exc.value.code == 1
+        # Collision was blocked — Mover keeps its name.
+        printed = " ".join(str(c) for c in mock_console.print.call_args_list)
+        assert "already uses the name" in printed
+
+    @patch('obs_cli.console')
+    def test_rename_not_found_exits_nonzero(self, mock_console):
+        cli, _ = self._cli_with_real_db()
+        with pytest.raises(SystemExit) as exc:
+            cli.rename_vault("ghost", "whatever")
+        assert exc.value.code == 1
+
+    def test_info_json(self, capsys):
+        cli, db = self._cli_with_real_db()
+        vid = db.add_vault("InfoVault", "/tmp/info")
+        db.add_note(vid, "n.md", "N", "body")
+
+        cli.info_vault("InfoVault", as_json=True)
+
+        import json as _json
+        out = _json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+        assert out["id"] == vid
+        assert out["name"] == "InfoVault"
+        assert out["notes"] == 1
+
+    @patch('obs_cli.console')
+    def test_info_not_found_exits_nonzero(self, mock_console):
+        cli, _ = self._cli_with_real_db()
+        with pytest.raises(SystemExit) as exc:
+            cli.info_vault("ghost")
+        assert exc.value.code == 1

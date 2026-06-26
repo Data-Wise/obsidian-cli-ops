@@ -1,9 +1,9 @@
 # CLI Command Reference
 
-**Version:** 4.1.0
+**Version:** 4.2.0
 **Last Updated:** 2026-06-23
 
-> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 45 commands (17 top-level incl. the `obs config` and `obs research` domains).
+> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 48 commands (17 top-level incl. the `obs config` and `obs research` domains).
 
 ---
 
@@ -49,6 +49,36 @@ obs discover ~/Documents --scan
 ```
 
 Searches for `.obsidian/` directories recursively. With `--scan`, populates the database for each found vault.
+
+---
+
+### obs scan
+
+Scan a vault directory and register (or update) it in the database.
+
+```bash
+obs scan <path> [--name <name>] [--analyze] [--prune | --no-prune]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `path` | | Vault directory path to scan |
+| `--name` | directory name | Custom name for the vault |
+| `--analyze` | off | Run graph analysis immediately after scanning |
+| `--prune` / `--no-prune` | `--no-prune` | Sweep notes deleted or renamed on disk out of the index |
+
+**Examples:**
+```bash
+obs scan ~/Documents/MyVault    # Additive scan (default)
+obs scan ~/Vault --prune        # Scan and reconcile deleted/renamed notes
+```
+
+A plain scan is **additive** — it adds and updates notes but never removes rows, so a
+note deleted or renamed on disk lingers as a ghost. `--prune` sweeps rows whose path is
+gone from disk (cascading to their links, tags, metrics, and embeddings). The sweep is
+skipped with a warning if a scan sees zero files, guarding against wiping the index on a
+mis-pointed path. Unchanged notes are skipped via content-hash comparison, preserving the
+AI embedding cache.
 
 ---
 

@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "core"))
 from core.doctor import (
     DoctorResult, run_checks, _check_python, _check_database, _check_mcp,
     _check_icloud, _find_bad_vault_resolvers, _check_mcp_tool_resolvers,
-    _find_async_run_offenders, _check_mcp_async_run,
+    _find_async_run_offenders, _check_mcp_async_run, _check_sync,
 )
 
 _VersionInfo = namedtuple("version_info", ["major", "minor", "micro", "releaselevel", "serial"])
@@ -351,6 +351,187 @@ class TestCheckIcloud:
 
 
 # ---------------------------------------------------------------------------
+# Layer: sync (content-based vault↔DB drift)
+# ---------------------------------------------------------------------------
+
+class TestCheckSync:
+    """sync layer: ghosts (DB rows gone from disk), missing (*.md absent from
+    DB), errors (last scan recorded failures), drift (info summary)."""
+
+    def _make_db(self, tmp_path, vault_path: Path, *, disk_files, db_paths,
+                 last_scan_status="completed", notes_failed=0):
+        """Build a vault on disk + a matching/mismatching DB index.
+
+        disk_files: list of relative paths to materialize as real .md files.
+        db_paths:   list of relative paths to insert as notes rows.
+        The set difference between the two yields ghosts/missing.
+        """
+        # Materialize disk files
+        for rel in disk_files:
+            fp = vault_path / rel
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            fp.write_text(f"# {rel}\n")
+
+        db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (2)")
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.execute("INSERT INTO vaults VALUES ('v1', 'SyncVault', ?, '2026-06-25T00:00:00')",
+                     (str(vault_path),))
+        conn.execute("CREATE TABLE notes (id TEXT, vault_id TEXT, path TEXT, title TEXT, content_hash TEXT)")
+        for i, rel in enumerate(db_paths):
+            conn.execute("INSERT INTO notes VALUES (?, 'v1', ?, ?, 'h')",
+                         (f"n{i}", rel, rel))
+        conn.execute(
+            "CREATE TABLE scan_history (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "vault_id TEXT, started_at TIMESTAMP, completed_at TIMESTAMP, "
+            "notes_scanned INTEGER, notes_failed INTEGER, status TEXT)"
+        )
+        conn.execute(
+            "INSERT INTO scan_history (vault_id, started_at, completed_at, "
+            "notes_scanned, notes_failed, status) "
+            "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, ?, ?)",
+            (len(db_paths), notes_failed, last_scan_status),
+        )
+        conn.commit()
+        conn.close()
+
+    def test_clean_when_in_sync(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md", "b.md", "sub/c.md"],
+                      db_paths=["a.md", "b.md", "sub/c.md"])
+        results = _check_sync()
+        ghosts = next(r for r in results if r.id.startswith("sync-ghosts:"))
+        missing = next(r for r in results if r.id.startswith("sync-missing:"))
+        assert ghosts.status == "pass"
+        assert missing.status == "pass"
+
+    def test_detects_ghosts(self, tmp_path, monkeypatch):
+        """DB has 2 rows whose files were deleted on disk → 2 ghosts."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"],
+                      db_paths=["a.md", "gone1.md", "gone2.md"])
+        results = _check_sync()
+        ghosts = next(r for r in results if r.id.startswith("sync-ghosts:"))
+        assert ghosts.status == "warn"
+        assert "2" in ghosts.message
+        assert "--prune" in ghosts.fix_hint
+
+    def test_detects_missing(self, tmp_path, monkeypatch):
+        """3 files on disk, only 1 in DB → 2 missing."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md", "new1.md", "new2.md"],
+                      db_paths=["a.md"])
+        results = _check_sync()
+        missing = next(r for r in results if r.id.startswith("sync-missing:"))
+        assert missing.status == "warn"
+        assert "2" in missing.message
+
+    def test_ignores_dotfiles_like_scanner(self, tmp_path, monkeypatch):
+        """Files under dot-dirs (.obsidian/, .trash/) are NOT counted as missing
+        — mirrors the scanner's 'skip dotfile parts' filter."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md", ".obsidian/workspace.md", ".trash/old.md"],
+                      db_paths=["a.md"])
+        results = _check_sync()
+        missing = next(r for r in results if r.id.startswith("sync-missing:"))
+        ghosts = next(r for r in results if r.id.startswith("sync-ghosts:"))
+        assert missing.status == "pass"
+        assert ghosts.status == "pass"
+
+    def test_drift_is_info_summary(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md", "new.md"],
+                      db_paths=["a.md", "gone.md"])
+        results = _check_sync()
+        drift = next(r for r in results if r.id.startswith("sync-drift:"))
+        assert drift.status == "info"
+        # disk=2 db=2 (1 ghost, 1 missing)
+        assert "disk=2" in drift.message
+        assert "db=2" in drift.message
+        assert "1 ghost" in drift.message
+        assert "1 missing" in drift.message
+
+    def test_errors_fail_when_last_scan_failed(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"], db_paths=["a.md"],
+                      last_scan_status="failed")
+        results = _check_sync()
+        errors = next(r for r in results if r.id.startswith("sync-errors:"))
+        assert errors.status == "fail"
+
+    def test_errors_warn_when_notes_failed(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"], db_paths=["a.md"],
+                      last_scan_status="completed", notes_failed=3)
+        results = _check_sync()
+        errors = next(r for r in results if r.id.startswith("sync-errors:"))
+        assert errors.status == "warn"
+        assert "3" in errors.message
+
+    def test_errors_pass_when_clean_scan(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"], db_paths=["a.md"],
+                      last_scan_status="completed", notes_failed=0)
+        results = _check_sync()
+        errors = next(r for r in results if r.id.startswith("sync-errors:"))
+        assert errors.status == "pass"
+
+    def test_skip_when_no_db(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        results = _check_sync()
+        assert len(results) == 1
+        assert results[0].status == "skip"
+
+    def test_skip_when_vault_path_missing(self, tmp_path, monkeypatch):
+        """A vault whose path is gone → can't read disk → skip (not crash)."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "GoneVault"  # never created on disk
+        self._make_db(tmp_path, vault_path,
+                      disk_files=[], db_paths=["a.md"])
+        results = _check_sync()
+        # all sync checks for this vault should skip
+        assert all(r.status == "skip" for r in results)
+
+    def test_registered_in_sync_layer(self, tmp_path, monkeypatch):
+        """run_checks(layers=['sync']) routes to the sync layer."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"], db_paths=["a.md"])
+        results = run_checks(layers=["sync"])
+        layers = {r.layer for r in results}
+        assert layers == {"sync"}
+
+
+# ---------------------------------------------------------------------------
 # Integration: run_checks
 # ---------------------------------------------------------------------------
 
@@ -536,3 +717,46 @@ def rescan_vault(vault_id: str) -> str:
         """_check_mcp() must surface the mcp-async-run result."""
         ids = {r.id for r in _check_mcp()}
         assert "mcp-async-run" in ids
+
+
+class TestCheckVaultNesting:
+    """I1: when one registered vault's path is inside another's, notes under the
+    child are indexed under BOTH vaults (double-counted). Doctor should warn."""
+
+    def _make_db(self, tmp_path, vaults):
+        """vaults: list of (id, name, path-str)."""
+        db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+        db_path.parent.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (1)")
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.executemany("INSERT INTO vaults VALUES (?, ?, ?, '2026-06-19T00:00:00')", vaults)
+        conn.execute("CREATE TABLE notes (id TEXT, vault_id TEXT, title TEXT)")
+        conn.execute("CREATE TABLE links (id TEXT, source_note_id TEXT, target_title TEXT)")
+        conn.commit()
+        conn.close()
+
+    def test_nested_vaults_warn(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        parent = tmp_path / "Docs"; (parent / "KB").mkdir(parents=True)
+        self._make_db(tmp_path, [
+            ("v1", "Docs", str(parent)),
+            ("v2", "KB", str(parent / "KB")),
+        ])
+        from core.doctor import _check_vaults
+        with patch("platform.system", return_value="Linux"):
+            results = _check_vaults()
+        r = next(r for r in results if r.id == "vault-nesting")
+        assert r.status == "warn"
+        assert "KB" in r.message and "Docs" in r.message
+
+    def test_unnested_vaults_pass(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        a = tmp_path / "A"; b = tmp_path / "B"; a.mkdir(); b.mkdir()
+        self._make_db(tmp_path, [("v1", "A", str(a)), ("v2", "B", str(b))])
+        from core.doctor import _check_vaults
+        with patch("platform.system", return_value="Linux"):
+            results = _check_vaults()
+        r = next(r for r in results if r.id == "vault-nesting")
+        assert r.status == "pass"

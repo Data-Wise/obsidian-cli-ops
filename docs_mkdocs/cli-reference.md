@@ -1,13 +1,13 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 45 `obs` commands (17 top-level groups, incl. the config & research families absorbed from nexus-cli in v4.0.0) + 40 MCP tools for Claude
+> - **What:** Full reference for all 48 `obs` commands (17 top-level groups, incl. the config & research families absorbed from nexus-cli in v4.0.0) + 42 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 4.1.0
+**Version:** 4.2.0
 
 ---
 
@@ -111,22 +111,41 @@ obs stats --vault abc        # Prefix lookup
 Scan a vault directory and register (or update) it in the database.
 
 ```bash
-obs scan <path> [--name <name>] [--analyze]
+obs scan <path> [--name <name>] [--analyze] [--prune | --no-prune]
 ```
 
-| Argument | Description |
-|----------|-------------|
-| `path` | Vault directory path to scan |
-| `--name` | Custom name for the vault (defaults to directory name) |
-| `--analyze` | Run graph analysis immediately after scanning |
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `path` | | Vault directory path to scan |
+| `--name` | directory name | Custom name for the vault |
+| `--analyze` | off | Run graph analysis immediately after scanning |
+| `--prune` / `--no-prune` | `--no-prune` | Sweep notes that were deleted or renamed on disk out of the index |
 
 **Examples:**
 
 ```bash
-obs scan ~/Documents/MyVault              # Scan and register a vault
+obs scan ~/Documents/MyVault              # Scan and register a vault (additive)
 obs scan ~/Notes --name "Personal Notes"  # Scan with a custom name
 obs scan ~/Vault --analyze                # Scan and run analysis in one step
+obs scan ~/Vault --prune                  # Scan AND remove deleted/renamed notes
 ```
+
+!!! note "Additive by default — `--prune` opts into removal"
+    A plain `obs scan` is **additive**: it adds and updates notes but never removes
+    rows, so a note deleted or renamed on disk lingers in the index (a "ghost").
+    Pass `--prune` to reconcile: after scanning, rows whose path is no longer on
+    disk are swept (cascading to their links, tags, graph metrics, and embeddings).
+    `--no-prune` is the explicit form of the default.
+
+    Pruning is **guarded against accidental wipes** — if a scan sees zero files
+    (e.g. a mis-pointed path or an iCloud vault that hasn't materialised), the
+    sweep is skipped and a warning is emitted rather than emptying the index.
+
+!!! tip "Unchanged notes are skipped, embeddings preserved"
+    A scan compares each file's content hash against the stored one and **skips
+    unchanged notes**, so re-scanning no longer rewrites every row or destroys the
+    AI embedding cache. The scan summary reports unchanged, updated, pruned, and
+    failed counts.
 
 !!! tip "Staleness warnings"
     `obs analyze`, `obs search`, and `obs health` emit a warning when the index is stale (older than 24 hours). Run `obs scan <path>` to refresh.
@@ -147,6 +166,81 @@ obs health <vault>
 - **Link Integrity** -- broken link count
 - **Structure** -- tag coverage, hub balance
 - **Freshness** -- stale note detection
+
+---
+
+### obs vault info
+
+Show metadata for a single vault.
+
+```bash
+obs vault info <vault> [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `--json` | Emit the result as JSON instead of a panel |
+
+Reports name, ID, path, note count, last-scanned time, and registration time.
+
+---
+
+### obs vault rename
+
+Change a vault's display name. The path and ID (a hash of the path) are
+unchanged, so existing notes, links, and graph metrics stay valid.
+
+```bash
+obs vault rename <vault> <new-name> [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `new-name` | New display name |
+| `--json` | Emit the result as JSON |
+
+**Examples:**
+
+```bash
+obs vault rename OldName "Research Vault"   # Rename by current name
+obs vault rename abc123 Archive             # Rename by ID prefix
+```
+
+!!! warning "Name collisions are rejected"
+    If another vault already uses the new name, the rename is refused -- name-based
+    vault resolution must stay unambiguous.
+
+---
+
+### obs vault delete
+
+Remove a vault from the obs database. **The vault folder on disk is never
+touched** -- only the index is removed. Deletion cascades to the vault's notes,
+links, tags, graph metrics, and embeddings.
+
+```bash
+obs vault delete <vault> [--force] [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `--force` | Actually delete. Without it, prints a dry-run preview only. |
+| `--json` | Emit the result as JSON |
+
+**Examples:**
+
+```bash
+obs vault delete MyVault            # Dry-run preview (nothing removed)
+obs vault delete MyVault --force    # Actually remove from the index
+```
+
+!!! tip "Dry-run by default"
+    `obs vault delete <vault>` previews what would be removed (name, path, note
+    count) without changing anything. Re-run with `--force` to commit. Re-index a
+    deleted vault any time with `obs scan <path>`.
 
 ---
 
@@ -240,16 +334,16 @@ obs daily-digest Research --limit 3     # Fewer stale notes in output
 
 ### obs doctor
 
-Run self-diagnostic checks on the `obs` installation — database integrity, Python dependencies, MCP server config, and doc count accuracy.
+Run self-diagnostic checks on the `obs` installation — Python runtime, database integrity, per-vault health, vault↔index sync, MCP server config, doc count accuracy, and iCloud offload detection.
 
 ```bash
-obs doctor [--vault NAME] [--layer LAYER] [--json]
+obs doctor [--vault NAME] [--layer LAYER]... [--json]
 ```
 
 | Argument | Default | Description |
 |----------|---------|-------------|
-| `--vault` | all vaults | Limit vault-level checks to this vault name or ID |
-| `--layer` | all layers | Run only the specified diagnostic layer (`db`, `deps`, `mcp`, `docs`) |
+| `--vault` | all vaults | Limit vault-level and sync checks to this vault name or ID |
+| `--layer` | all layers | Run only the specified diagnostic layer (repeatable). One of `python`, `database`, `vault`, `sync`, `mcp`, `docs`, `icloud` |
 | `--json` | | Machine-readable output |
 
 **Examples:**
@@ -258,8 +352,21 @@ obs doctor [--vault NAME] [--layer LAYER] [--json]
 obs doctor                           # Full diagnostic
 obs doctor --vault Research          # Vault-scoped checks only
 obs doctor --layer docs              # Check doc count accuracy only
-obs doctor --layer db --json         # DB checks as JSON
+obs doctor --layer sync              # Vault↔index drift only
+obs doctor --layer database --json   # DB checks as JSON
 ```
+
+!!! info "Sync layer — content-based drift"
+    `obs doctor --layer sync` compares each registered vault's files on disk
+    against its index rows (a cheap `rglob` + `SELECT path` set diff), catching
+    drift that the time-only staleness warning misses. Per vault it reports:
+
+    | Check | Verdict | Catches | Fix |
+    |-------|---------|---------|-----|
+    | `sync-ghosts` | warn | DB rows whose file is gone from disk (deleted / renamed) | `obs scan <vault> --prune` |
+    | `sync-missing` | warn | `*.md` on disk absent from the DB (never scanned, or a swallowed scan error) | `obs scan <vault>` (check logs) |
+    | `sync-errors` | warn/fail | the last `scan_history` row recorded per-note failures | inspect the failing paths in the scan log |
+    | `sync-drift` | info | one-line summary: `disk=N db=M (X ghost, Y missing)` | — |
 
 !!! info "Doc count gate"
     `obs doctor --layer docs` is part of the release harness — it catches count drift between source code and documentation before any release lands.
@@ -693,7 +800,7 @@ obs research bib check <name>
 
 ## :robot_face: Claude / MCP Integration
 
-`obs` exposes **40 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
+`obs` exposes **42 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
 Claude Code, and Cowork. Once configured (see [Claude Integration](claude-integration.md)),
 you can ask Claude natural-language questions about your vaults.
 
@@ -722,7 +829,7 @@ you can ask Claude natural-language questions about your vaults.
 "Run a quality check on MyVault"
 ```
 
-See [Claude Integration](claude-integration.md) for full setup instructions and all 40 tools.
+See [Claude Integration](claude-integration.md) for full setup instructions and all 42 tools.
 
 ---
 

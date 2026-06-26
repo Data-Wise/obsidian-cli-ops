@@ -74,12 +74,325 @@ class TestVaultScannerEdgeCases:
             # The scan should skip the unreadable file and continue
             stats = await scanner.scan_vault(str(vault_path))
             assert stats['notes_scanned'] == 1 # Only the readable file was scanned
-        
+            # The unreadable file must be COUNTED as a failure, not silently dropped
+            assert stats['notes_failed'] == 1
+
         try:
             asyncio.run(run_test())
         finally:
             # Cleanup permissions so the test directory can be removed
             unreadable_file.chmod(0o600)
+
+    def test_failed_note_is_counted_and_reported(self, scanner, tmp_path):
+        """A note that fails to insert is counted + reported, and the scan completes.
+
+        Regression guard for S4: previously `except Exception: continue` swallowed
+        the failure, `notes_scanned` looked fine, and `complete_scan(..., 0)`
+        hardcoded the error count to 0 — scan reported success while a note was lost.
+        """
+        vault_path = tmp_path / "FailVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+
+        (vault_path / "good.md").write_text("# Good note")
+        (vault_path / "bad.md").write_text("# Bad note")
+
+        # Make add_note raise for exactly one path, succeed for the rest.
+        real_add_note = scanner.db.add_note
+
+        def flaky_add_note(*args, **kwargs):
+            if kwargs.get('path') == "bad.md":
+                raise ValueError("planted insert failure")
+            return real_add_note(*args, **kwargs)
+
+        scanner.db.add_note = Mock(side_effect=flaky_add_note)
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            # Scan still completes and indexes the good note
+            assert stats['notes_scanned'] == 1
+            # The bad note is counted as a failure, not silently dropped
+            assert stats['notes_failed'] == 1
+            # The failing path is reported back to the caller
+            assert "bad.md" in stats['failed_paths']
+            # The real error count is persisted to scan_history (not hardcoded 0)
+            history = scanner.db.get_scan_history(stats['vault_id'], limit=1)
+            assert history[0]['notes_failed'] == 1
+            assert history[0]['status'] == 'completed'
+
+        asyncio.run(run_test())
+
+class TestVaultScannerContentHashShortCircuit:
+    """N1/N2: rescanning an UNCHANGED note must short-circuit on content_hash.
+
+    The bug: `add_note` uses INSERT OR REPLACE, which deletes the conflicting
+    row and fires ON DELETE CASCADE — wiping that note's `note_embeddings` row
+    on EVERY rescan, because the scan loop re-add_note()s every file
+    unconditionally. The fix compares the freshly-computed content_hash to the
+    stored hash on `existing_note`; if unchanged, it skips add_note + the
+    link/tag re-add entirely (counted as notes_unchanged).
+    """
+
+    def test_unchanged_note_preserves_embedding(self, scanner, tmp_path):
+        """(a) An unchanged note keeps its note_embeddings row across a rescan."""
+        scanner.db.ensure_embeddings_table()
+
+        vault_path = tmp_path / "EmbVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "note.md").write_text("# Note\n\nstable body #t [[other]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            note = scanner.db.get_note_by_path(vault_id, "note.md")
+
+            # Simulate an AI op having cached an embedding for this note.
+            scanner.db.save_embedding(
+                note['id'], "gemini-api", "text-embedding-004",
+                b"\x00\x01\x02\x03", 123.0
+            )
+            assert scanner.db.get_embedding(
+                note['id'], "gemini-api", "text-embedding-004"
+            ) is not None
+
+            # Rescan with no content change.
+            await scanner.scan_vault(str(vault_path))
+
+            # The embedding row must survive (not cascade-wiped by REPLACE).
+            assert scanner.db.get_embedding(
+                note['id'], "gemini-api", "text-embedding-004"
+            ) is not None
+
+        asyncio.run(run_test())
+
+    def test_unchanged_note_counted_as_notes_unchanged(self, scanner, tmp_path):
+        """(b) An unchanged note is counted in notes_unchanged, not notes_updated."""
+        vault_path = tmp_path / "UnchangedVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "a.md").write_text("# A\n\nbody")
+
+        async def run_test():
+            first = await scanner.scan_vault(str(vault_path))
+            assert first['notes_added'] == 1
+            assert first.get('notes_unchanged', 0) == 0
+
+            second = await scanner.scan_vault(str(vault_path))
+            assert second['notes_unchanged'] == 1
+            assert second['notes_updated'] == 0
+            assert second['notes_added'] == 0
+            assert second['notes_scanned'] == 1
+
+        asyncio.run(run_test())
+
+    def test_unchanged_note_leaves_links_and_tags_intact(self, scanner, tmp_path):
+        """(c) Links and tags survive a no-op rescan of an unchanged note."""
+        vault_path = tmp_path / "LinkTagVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "src.md").write_text("# Src\n\n#topic and [[target]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            note = scanner.db.get_note_by_path(vault_id, "src.md")
+
+            tags_before = scanner.db.get_note_tags(note['id'])
+            links_before = scanner.db.get_outgoing_links(note['id'])
+            assert "topic" in tags_before
+            assert len(links_before) == 1
+
+            await scanner.scan_vault(str(vault_path))
+
+            assert scanner.db.get_note_tags(note['id']) == tags_before
+            assert len(scanner.db.get_outgoing_links(note['id'])) == len(links_before)
+
+        asyncio.run(run_test())
+
+    def test_changed_note_still_replaces_and_updates(self, scanner, tmp_path):
+        """A CHANGED note must still REPLACE + re-add (preserves the self-heal)."""
+        scanner.db.ensure_embeddings_table()
+
+        vault_path = tmp_path / "ChangedVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        note_file = vault_path / "m.md"
+        note_file.write_text("# M\n\n#old [[oldtarget]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            note = scanner.db.get_note_by_path(vault_id, "m.md")
+            scanner.db.save_embedding(
+                note['id'], "gemini-api", "text-embedding-004",
+                b"\x00\x01", 1.0
+            )
+
+            # Edit the content: tag/link change.
+            note_file.write_text("# M\n\n#new [[newtarget]]")
+            second = await scanner.scan_vault(str(vault_path))
+
+            assert second['notes_updated'] == 1
+            assert second.get('notes_unchanged', 0) == 0
+
+            # Self-heal: old tag/link gone, new ones present.
+            tags = scanner.db.get_note_tags(note['id'])
+            assert "new" in tags
+            assert "old" not in tags
+
+            # REPLACE fired cascade — stale embedding is cleared for a changed note.
+            assert scanner.db.get_embedding(
+                note['id'], "gemini-api", "text-embedding-004"
+            ) is None
+
+        asyncio.run(run_test())
+
+
+class TestVaultScannerPrune:
+    """S1/S2: opt-in --prune mark-and-sweep of deleted/renamed notes.
+
+    seen_paths collects every file present on disk this scan (added before the
+    try, so a failed-but-present note is NOT pruned — no S4 regression). After
+    the loop, if prune and seen_paths is non-empty, rows whose path is absent
+    from disk are deleted (cascade cleans children). Empty seen_paths skips the
+    sweep so a bad/empty vault path never wipes the index.
+    """
+
+    def test_prune_deletes_only_unseen_rows(self, scanner, tmp_path):
+        """A note deleted on disk is removed; surviving notes are untouched."""
+        vault_path = tmp_path / "PruneVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "keep.md").write_text("# Keep\n\nbody")
+        (vault_path / "gone.md").write_text("# Gone\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # Delete one file on disk.
+            (vault_path / "gone.md").unlink()
+
+            # Without prune, the ghost row survives.
+            no_prune = await scanner.scan_vault(str(vault_path))
+            assert no_prune.get('notes_pruned', 0) == 0
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # With prune, only the unseen row is removed.
+            pruned = await scanner.scan_vault(str(vault_path), prune=True)
+            assert pruned['notes_pruned'] == 1
+            remaining = scanner.db.list_notes(vault_id)
+            assert len(remaining) == 1
+            assert remaining[0]['path'] == "keep.md"
+
+        asyncio.run(run_test())
+
+    def test_rename_leaves_exactly_one_row(self, scanner, tmp_path):
+        """a.md -> b.md with --prune leaves exactly one row, no a.md ghost."""
+        vault_path = tmp_path / "RenameVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "a.md").write_text("# A\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+
+            # Rename on disk.
+            (vault_path / "a.md").rename(vault_path / "b.md")
+
+            result = await scanner.scan_vault(str(vault_path), prune=True)
+            assert result['notes_pruned'] == 1
+            notes = scanner.db.list_notes(vault_id)
+            assert len(notes) == 1
+            assert notes[0]['path'] == "b.md"
+            assert scanner.db.get_note_by_path(vault_id, "a.md") is None
+
+        asyncio.run(run_test())
+
+    def test_empty_seen_paths_skips_sweep(self, scanner, tmp_path):
+        """A vault that yields no files must NOT wipe its existing index."""
+        vault_path = tmp_path / "EmptyVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "n1.md").write_text("# N1\n\nbody")
+        (vault_path / "n2.md").write_text("# N2\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # Remove every markdown file (simulates a bad/unmaterialized path).
+            (vault_path / "n1.md").unlink()
+            (vault_path / "n2.md").unlink()
+
+            result = await scanner.scan_vault(str(vault_path), prune=True)
+            # Safety guard: sweep skipped, index intact.
+            assert result['notes_pruned'] == 0
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+        asyncio.run(run_test())
+
+    def test_failed_note_present_on_disk_is_not_pruned(self, scanner, tmp_path):
+        """A note that fails to parse but still exists on disk is NOT pruned."""
+        vault_path = tmp_path / "FailPresentVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "ok.md").write_text("# OK\n\nbody")
+        (vault_path / "bad.md").write_text("# Bad\n\nbody")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            assert len(scanner.db.list_notes(vault_id)) == 2
+
+            # Make bad.md fail to parse on the next scan.
+            from unittest.mock import patch
+            real_parse = scanner.parser.parse_file
+
+            def flaky_parse(p):
+                if p.name == "bad.md":
+                    raise ValueError("boom")
+                return real_parse(p)
+
+            with patch.object(scanner.parser, "parse_file", side_effect=flaky_parse):
+                result = await scanner.scan_vault(str(vault_path), prune=True)
+
+            # bad.md exists on disk so it stays in seen_paths and is NOT pruned.
+            assert result['notes_failed'] == 1
+            assert result['notes_pruned'] == 0
+            assert scanner.db.get_note_by_path(vault_id, "bad.md") is not None
+
+        asyncio.run(run_test())
+
+    def test_prune_cascade_removes_child_rows(self, scanner, tmp_path):
+        """Pruning a note cascades to its links/tags child rows."""
+        vault_path = tmp_path / "CascadeVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+        (vault_path / "keep.md").write_text("# Keep\n\nbody")
+        (vault_path / "rich.md").write_text("# Rich\n\n#topic and [[target]]")
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            vault_id = stats['vault_id']
+            rich = scanner.db.get_note_by_path(vault_id, "rich.md")
+            assert len(scanner.db.get_outgoing_links(rich['id'])) == 1
+            assert "topic" in scanner.db.get_note_tags(rich['id'])
+
+            (vault_path / "rich.md").unlink()
+            result = await scanner.scan_vault(str(vault_path), prune=True)
+            assert result['notes_pruned'] == 1
+
+            # Child rows are gone via ON DELETE CASCADE.
+            assert scanner.db.get_outgoing_links(rich['id']) == []
+            assert scanner.db.get_note_tags(rich['id']) == []
+
+        asyncio.run(run_test())
+
 
 class TestMarkdownParserEdgeCases:
     """Tests for edge cases in the MarkdownParser."""
@@ -161,3 +474,102 @@ class TestExtractTitle:
         title1 = MarkdownParser._extract_title(f, "content", {})
         title2 = MarkdownParser._extract_title(f, "content", {})
         assert title1 == title2
+
+    def test_empty_frontmatter_title_falls_back_to_stem(self, tmp_path):
+        """`title:` with an empty/null value (YAML None) must not become the
+        title — returning None violates notes.title NOT NULL and drops the
+        note from the index (#65)."""
+        f = tmp_path / "empty-fm-title.md"
+        f.write_text("---\ntitle:\n---\nbody, no H1\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "empty-fm-title"
+
+    def test_blank_frontmatter_title_falls_back_to_h1(self, tmp_path):
+        """`title: ''` (blank string) falls through to the H1 heading (#65)."""
+        f = tmp_path / "blank-fm-title.md"
+        f.write_text("---\ntitle: ''\n---\n# Real Heading\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "Real Heading"
+
+    def test_whitespace_frontmatter_title_falls_back_to_stem(self, tmp_path):
+        """A whitespace-only `title:` falls through to the filename stem (#65)."""
+        f = tmp_path / "ws-fm-title.md"
+        f.write_text("---\ntitle: '   '\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.title == "ws-fm-title"
+
+    def test_extract_title_none_value_never_returns_none(self, tmp_path):
+        """Direct: a None frontmatter title never propagates as the title (#65)."""
+        f = tmp_path / "n.md"
+        assert MarkdownParser._extract_title(f, "body, no h1", {"title": None}) == "n"
+
+class TestExtractTags:
+    """Tags from frontmatter that aren't plain strings must not crash the scan.
+
+    Real vaults contain valid YAML like ``tags: [{}]`` (a list whose element is a
+    dict) — Obsidian tolerates it, but ``tag.strip('#')`` on a dict raised
+    ``AttributeError`` and the whole note was dropped from the index (the silent
+    self-inflicted drop class, same family as #65/S4)."""
+
+    def test_dict_element_does_not_crash_and_is_skipped(self, tmp_path):
+        f = tmp_path / "weird-tags.md"
+        f.write_text("---\ntags: [{}]\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)   # must not raise
+        assert note.tags == set()
+
+    def test_mixed_list_keeps_strings_skips_nonstrings(self, tmp_path):
+        f = tmp_path / "mixed-tags.md"
+        f.write_text("---\ntags: [foo, {}, bar]\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.tags == {"foo", "bar"}
+
+    def test_scalar_tag_is_coerced(self, tmp_path):
+        """A numeric tag (e.g. a year) is coerced to its string form, not dropped."""
+        f = tmp_path / "num-tag.md"
+        f.write_text("---\ntags: [2024, foo]\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)
+        assert note.tags == {"2024", "foo"}
+
+    def test_null_tags_is_safe(self, tmp_path):
+        f = tmp_path / "null-tags.md"
+        f.write_text("---\ntags:\n---\nbody\n")
+        note = MarkdownParser.parse_file(f)   # fm_tags is None
+        assert note.tags == set()
+
+
+class TestTemplateDirExclusion:
+    """D1: notes inside a 'templates'/'Templates' directory are scaffolds, not
+    knowledge notes — they routinely carry Templater syntax ({{x}} / <% %>) that
+    is invalid YAML. Exclude them from the scan walk (like the dotfile filter) so
+    they neither get indexed nor inflate the failed-note count."""
+
+    def test_templates_dir_excluded_not_indexed_not_failed(self, scanner, tmp_path):
+        vault = tmp_path / "TplVault"
+        (vault / ".obsidian").mkdir(parents=True)
+        (vault / "real.md").write_text("# Real\n\nbody")
+        tdir = vault / "Templates"
+        tdir.mkdir()
+        # Un-parseable Templater frontmatter — would raise without exclusion.
+        (tdir / "tmpl.md").write_text("---\nauthors: {{AUTHORS}}\n---\nbody")
+
+        async def run():
+            stats = await scanner.scan_vault(str(vault), "V")
+            assert stats['notes_scanned'] == 1          # only real.md
+            assert stats['notes_failed'] == 0           # template not even attempted
+            paths = {n['path'] for n in scanner.db.list_notes(stats['vault_id'])}
+            assert paths == {"real.md"}
+        asyncio.run(run())
+
+    def test_lowercase_templates_dir_also_excluded(self, scanner, tmp_path):
+        vault = tmp_path / "TplVault2"
+        (vault / "sub" / "templates").mkdir(parents=True)
+        (vault / ".obsidian").mkdir()
+        (vault / "keep.md").write_text("# Keep\n\nbody")
+        (vault / "sub" / "templates" / "t.md").write_text("---\nx: <% tp.date %>\n---\n")
+
+        async def run():
+            stats = await scanner.scan_vault(str(vault), "V")
+            assert stats['notes_failed'] == 0
+            paths = {n['path'] for n in scanner.db.list_notes(stats['vault_id'])}
+            assert paths == {"keep.md"}
+        asyncio.run(run())

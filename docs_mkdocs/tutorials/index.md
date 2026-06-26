@@ -38,9 +38,10 @@ flowchart LR
 | Tutorial | Level | Time | What You'll Learn |
 |----------|-------|------|-------------------|
 | [Getting Started](getting-started.md) | 🟢 Beginner | ~10 min | Install, discover vaults, scan, view stats |
+| [Vault Management](vault-management.md) | 🟢 Beginner | ~10 min | Inspect, rename, and safely delete vaults (index-only) |
 | [Graph Analysis](graph-analysis.md) | 🟡 Intermediate | ~15 min | Analyze graph, interpret metrics, find hubs & orphans |
 | [AI Features](ai-features.md) | 🔵 Advanced | ~30 min | Setup AI providers, similar notes, refactor, quality |
-| [Claude / MCP Integration](claude-mcp.md) | 🟣 Integration | ~20 min | Connect Claude Desktop, use all 40 MCP tools, note CRUD |
+| [Claude / MCP Integration](claude-mcp.md) | 🟣 Integration | ~20 min | Connect Claude Desktop, use all 42 MCP tools, note CRUD |
 
 ---
 
@@ -71,6 +72,15 @@ obs                           # list all vaults
 obs health MyVault            # 4-dimension score
 obs analyze MyVault -v        # graph metrics + hubs
 obs ai gaps MyVault           # knowledge gaps
+```
+
+### Vault Management
+
+```bash
+obs vault info MyVault              # metadata for one vault (--json for scripting)
+obs vault rename MyVault "My Vault" # relabel (path/ID unchanged; collisions refused)
+obs vault delete MyVault           # dry-run preview (nothing removed)
+obs vault delete MyVault --force    # remove from index — files on disk untouched
 ```
 
 ### AI Quick Hits

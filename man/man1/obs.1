@@ -1,6 +1,6 @@
 .\" Man page for obs (Obsidian CLI Ops)
-.\" Updated: 2026-06-19
-.TH OBS 1 "2026-06-26" "obsidian-cli-ops 4.1.0" "User Commands"
+.\" Updated: 2026-06-26
+.TH OBS 1 "2026-06-26" "obsidian-cli-ops 4.2.0" "User Commands"
 .SH NAME
 obs \- manage Obsidian vaults with AI\-powered knowledge\-graph analysis
 .SH SYNOPSIS
@@ -50,6 +50,35 @@ Find Obsidian vaults under
 (defaults to the current directory). With
 .BR \-\-scan ,
 perform a deeper scan.
+.TP
+.B scan\fR \fIpath\fR [\fB\-\-name\fR \fIname\fR] [\fB\-\-analyze\fR] [\fB\-\-prune\fR | \fB\-\-no\-prune\fR]
+Scan a vault directory and register or update it in the database. The default
+is additive: notes are added and updated but never removed, so a note deleted
+or renamed on disk lingers in the index. With
+.BR \-\-prune ,
+sweep rows whose file is gone from disk (cascading to their links, tags, graph
+metrics, and embeddings); the sweep is skipped with a warning if the scan sees
+zero files, guarding against wiping the index on a mis\-pointed path.
+.BR \-\-no\-prune
+is the explicit default. Unchanged notes are skipped by content\-hash
+comparison, preserving the AI embedding cache. With
+.BR \-\-analyze ,
+run graph analysis immediately after scanning.
+.SS Vault Management
+.TP
+.B vault info\fR \fIvault\fR [\fB\-\-json\fR]
+Show metadata for a single vault: name, ID, path, note count, last-scanned
+and registration times. Accepts a vault name or ID prefix.
+.TP
+.B vault rename\fR \fIvault\fR \fInew\-name\fR [\fB\-\-json\fR]
+Change a vault's display name. The path and ID are unchanged. A rename that
+would collide with another vault's name is refused.
+.TP
+.B vault delete\fR \fIvault\fR [\fB\-\-force\fR] [\fB\-\-json\fR]
+Remove a vault from the database. The vault folder on disk is never touched;
+deletion cascades to the vault's notes, links, tags, and metrics. Without
+.BR \-\-force ,
+print a dry-run preview only.
 .SS Graph Analysis
 .TP
 .B analyze\fR \fIvault\fR
@@ -114,11 +143,13 @@ may be a vault name/ID or a note ID.
 .SS Diagnostics
 .TP
 .B doctor\fR [\fB\-\-vault\fR \fIid\fR] [\fB\-\-layer\fR \fIlayer\fR]... [\fB\-\-json\fR]
-Run self\-diagnostic checks across five layers:
+Run self\-diagnostic checks across seven layers:
 .BR python " (runtime & imports),"
 .BR database " (SQLite integrity & vault count),"
 .BR vault " (path, freshness, note/link counts),"
+.BR sync " (vault\-vs\-index drift: ghosts, missing, scan errors),"
 .BR mcp " (Claude Desktop config),"
+.BR docs " (doc count accuracy),"
 and
 .BR icloud " (macOS write\-latency & offload detection)."
 Use
@@ -175,6 +206,17 @@ Analyze a vault's graph:
 .TP
 Check vault health as JSON:
 .B obs health my\-vault \-\-json
+.TP
+Inspect a single vault's metadata:
+.B obs vault info my\-vault
+.TP
+Rename a vault's display name:
+.B obs vault rename my\-vault "My Vault"
+.TP
+Preview a vault deletion, then commit it:
+.B obs vault delete my\-vault
+.br
+.B obs vault delete my\-vault \-\-force
 .TP
 Configure and test AI providers:
 .B obs ai setup

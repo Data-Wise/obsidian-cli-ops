@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.1.0 | **Tools:** 40 | **Protocol:** FastMCP (stdio)
+**Version:** 4.2.0 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -58,7 +58,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 
 ---
 
-## Available Tools (40)
+## Available Tools (42)
 
 > **`vault_id` accepts a vault name, full ID, or unambiguous ID prefix.** You don't
 > need the exact hash ID — `get_vault_stats("ResearchVault")` works the same as
@@ -71,6 +71,8 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 | `list_vaults()` | List all registered vaults with stats |
 | `get_vault_stats(vault_id)` | Detailed stats for a vault |
 | `discover_vaults(path)` | Find Obsidian vaults in a directory |
+| `rename_vault(vault_id, new_name)` | Rename a vault's display name (path/ID unchanged); rejects name collisions |
+| `delete_vault(vault_id, confirm)` | Remove a vault from the index — `confirm=True` required; default is dry-run. Files on disk are untouched |
 
 ### Search Tools
 
@@ -106,7 +108,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 | `rename_note(note_id, new_title)` | Rename note (warns about wikilink breakage) |
 | `delete_note(note_id, confirm)` | Delete note — `confirm=True` required; default is dry-run |
 | `get_note_links(note_id)` | Incoming + outgoing links for a note |
-| `rescan_vault(vault_id)` | Re-scan vault to pick up file system changes |
+| `rescan_vault(vault_id, prune=False)` | Re-scan vault to pick up file system changes. Default is additive; `prune=True` also sweeps notes deleted or renamed on disk out of the index (cascading to their links, tags, metrics, and embeddings). Unchanged notes are skipped via content-hash, preserving the embedding cache |
 
 ### AI Passthrough Tool
 
@@ -192,7 +194,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 40 tools)
+     mcp_server.py   (FastMCP, 42 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓

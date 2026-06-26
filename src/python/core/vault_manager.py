@@ -137,7 +137,8 @@ class VaultManager:
         vault_path: str,
         vault_name: Optional[str] = None,
         force: bool = False,
-        progress_callback: Optional[Callable[[int, int], Coroutine]] = None
+        progress_callback: Optional[Callable[[int, int], Coroutine]] = None,
+        prune: bool = False
     ) -> ScanResult:
         """
         Asynchronously scan a vault and populate database.
@@ -147,6 +148,8 @@ class VaultManager:
             vault_name: Optional vault name (defaults to directory name)
             force: Force rescan even if vault hasn't changed
             progress_callback: Async function to call with (current, total) progress.
+            prune: Opt-in mark-and-sweep of deleted/renamed notes (S1/S2).
+                Default False keeps the scan additive.
 
         Returns:
             ScanResult with scan statistics
@@ -165,9 +168,10 @@ class VaultManager:
 
         try:
             stats = await self.scanner.scan_vault(
-                str(vault_path_obj), name, progress_callback=progress_callback
+                str(vault_path_obj), name,
+                progress_callback=progress_callback, prune=prune
             )
-            
+
             vault = self.db.get_vault_by_path(str(vault_path_obj))
             if not vault:
                 raise ScanError("Vault not found in database after scan")
@@ -178,6 +182,9 @@ class VaultManager:
                 vault_path=str(vault_path_obj),
                 notes_scanned=stats.get('notes_scanned', 0),
                 links_found=stats.get('links_added', 0),
+                notes_pruned=stats.get('notes_pruned', 0),
+                notes_unchanged=stats.get('notes_unchanged', 0),
+                notes_failed=stats.get('notes_failed', 0),
                 duration_seconds=time.time() - start_time
             )
 
@@ -511,6 +518,23 @@ class VaultManager:
 
         self.db.delete_vault(vault_id)
         return True
+
+    def rename_vault(self, vault_id: str, new_name: str) -> bool:
+        """
+        Rename a vault's display name (path and ID are unchanged).
+
+        Args:
+            vault_id: Vault ID
+            new_name: New display name
+
+        Returns:
+            True if renamed, False if the vault was not found
+        """
+        vault = self.get_vault(vault_id)
+        if not vault:
+            return False
+
+        return self.db.rename_vault(vault_id, new_name)
 
     def check_index_staleness(self, vault_id: str, threshold_hours: float = 24.0) -> StalenessResult:
         """

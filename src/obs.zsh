@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="4.1.0"
+VERSION="4.2.0"
 
 # --- Helper Functions ---
 
@@ -158,6 +158,12 @@ obs_help() {
         echo "📊 GRAPH ANALYSIS"
         echo "  obs analyze <vault>       Analyze vault graph metrics"
         echo "  obs health <vault>        Vault health dashboard"
+        echo ""
+
+        echo "📁 VAULT MANAGEMENT"
+        echo "  obs vault info <vault>    Show a single vault's metadata"
+        echo "  obs vault rename <vault> <name>  Rename display name (path/ID unchanged)"
+        echo "  obs vault delete <vault> [--force]  Remove from index (dry-run without --force)"
         echo ""
 
         echo "🤖 AI FEATURES"
@@ -275,7 +281,7 @@ obs_scan() {
 
     if [[ -z "$path" ]]; then
         _log "ERROR" "Vault path required"
-        echo "Usage: obs scan <path> [--name <name>] [--analyze]"
+        echo "Usage: obs scan <path> [--name <name>] [--analyze] [--prune|--no-prune]"
         return 1
     fi
 
@@ -291,6 +297,13 @@ obs_scan() {
     # Optional post-scan analysis
     if [[ "$*" == *"--analyze"* ]]; then
         cmd+=(--analyze)
+    fi
+
+    # Optional prune of deleted/renamed notes (S1/S2)
+    if [[ "$*" == *"--no-prune"* ]]; then
+        cmd+=(--no-prune)
+    elif [[ "$*" == *"--prune"* ]]; then
+        cmd+=(--prune)
     fi
 
     if [[ "$VERBOSE" == "true" ]]; then
@@ -759,6 +772,11 @@ obs_research() {
     $OBS_PYTHON "$python_cli" research "$@"
 }
 
+obs_vault() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" vault "$@"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -841,6 +859,9 @@ obs() {
             ;;
         "research")
             obs_research "$@"
+            ;;
+        "vault")
+            obs_vault "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"
