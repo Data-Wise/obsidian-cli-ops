@@ -21,6 +21,16 @@ All notable changes to Obsidian CLI Ops.
   (`*.md` on disk absent from the DB), `sync-errors` (last scan recorded failures), and a
   `sync-drift` summary line (S5).
 - Scan summary now reports **unchanged**, **pruned**, and **failed** note counts.
+- **`obs doctor` `vault-nesting` check** — warns when one registered vault's path is inside
+  another's (e.g. `Documents ⊃ Knowledge_Base`), which double-indexes the child's notes (I1).
+
+#### Changed
+
+- **`templates/` directories are no longer scanned** — `*.md` files inside a `templates`/
+  `Templates` directory are Templater scaffolds (invalid-YAML `{{x}}` / `<% %>` frontmatter),
+  not knowledge notes; they're skipped like dot-directories rather than counted as scan
+  failures (D1). The scanner and `obs doctor --layer sync` share one `is_indexable_md`
+  predicate so the index and the sync diff never disagree.
 
 #### Fixed
 
