@@ -717,3 +717,46 @@ def rescan_vault(vault_id: str) -> str:
         """_check_mcp() must surface the mcp-async-run result."""
         ids = {r.id for r in _check_mcp()}
         assert "mcp-async-run" in ids
+
+
+class TestCheckVaultNesting:
+    """I1: when one registered vault's path is inside another's, notes under the
+    child are indexed under BOTH vaults (double-counted). Doctor should warn."""
+
+    def _make_db(self, tmp_path, vaults):
+        """vaults: list of (id, name, path-str)."""
+        db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+        db_path.parent.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (1)")
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.executemany("INSERT INTO vaults VALUES (?, ?, ?, '2026-06-19T00:00:00')", vaults)
+        conn.execute("CREATE TABLE notes (id TEXT, vault_id TEXT, title TEXT)")
+        conn.execute("CREATE TABLE links (id TEXT, source_note_id TEXT, target_title TEXT)")
+        conn.commit()
+        conn.close()
+
+    def test_nested_vaults_warn(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        parent = tmp_path / "Docs"; (parent / "KB").mkdir(parents=True)
+        self._make_db(tmp_path, [
+            ("v1", "Docs", str(parent)),
+            ("v2", "KB", str(parent / "KB")),
+        ])
+        from core.doctor import _check_vaults
+        with patch("platform.system", return_value="Linux"):
+            results = _check_vaults()
+        r = next(r for r in results if r.id == "vault-nesting")
+        assert r.status == "warn"
+        assert "KB" in r.message and "Docs" in r.message
+
+    def test_unnested_vaults_pass(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        a = tmp_path / "A"; b = tmp_path / "B"; a.mkdir(); b.mkdir()
+        self._make_db(tmp_path, [("v1", "A", str(a)), ("v2", "B", str(b))])
+        from core.doctor import _check_vaults
+        with patch("platform.system", return_value="Linux"):
+            results = _check_vaults()
+        r = next(r for r in results if r.id == "vault-nesting")
+        assert r.status == "pass"

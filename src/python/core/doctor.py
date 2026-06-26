@@ -351,6 +351,31 @@ def _check_vaults(vault_id: Optional[str] = None) -> list[DoctorResult]:
             results.append(DoctorResult(f"vault-links:{vid}", "vault", f"{prefix}: Link graph",
                                         "error", f"Query failed: {e}"))
 
+    # vault-nesting (global) — if one registered vault's path is inside another's,
+    # the child's notes are indexed under BOTH vaults (double-counted). Queries
+    # ALL vaults regardless of the vault_id filter.
+    try:
+        allv = conn.execute("SELECT name, path FROM vaults").fetchall()
+        nested = set()
+        for a in allv:
+            pa = Path(a["path"]).resolve()
+            for b in allv:
+                if a["path"] == b["path"]:
+                    continue
+                if Path(b["path"]).resolve() in pa.parents:   # a is inside b
+                    nested.add(f"{a['name']!r} ⊂ {b['name']!r}")
+        if nested:
+            results.append(DoctorResult(
+                "vault-nesting", "vault", "Vault nesting", "warn",
+                "; ".join(sorted(nested)) + " — child notes indexed under both vaults",
+                "Register only the parent, or move the sub-vault outside it"))
+        else:
+            results.append(DoctorResult("vault-nesting", "vault", "Vault nesting", "pass",
+                                        "no nested vault registrations"))
+    except sqlite3.OperationalError as e:
+        results.append(DoctorResult("vault-nesting", "vault", "Vault nesting", "error",
+                                    f"Query failed: {e}"))
+
     conn.close()
     return results
 
