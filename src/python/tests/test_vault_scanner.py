@@ -74,12 +74,53 @@ class TestVaultScannerEdgeCases:
             # The scan should skip the unreadable file and continue
             stats = await scanner.scan_vault(str(vault_path))
             assert stats['notes_scanned'] == 1 # Only the readable file was scanned
-        
+            # The unreadable file must be COUNTED as a failure, not silently dropped
+            assert stats['notes_failed'] == 1
+
         try:
             asyncio.run(run_test())
         finally:
             # Cleanup permissions so the test directory can be removed
             unreadable_file.chmod(0o600)
+
+    def test_failed_note_is_counted_and_reported(self, scanner, tmp_path):
+        """A note that fails to insert is counted + reported, and the scan completes.
+
+        Regression guard for S4: previously `except Exception: continue` swallowed
+        the failure, `notes_scanned` looked fine, and `complete_scan(..., 0)`
+        hardcoded the error count to 0 — scan reported success while a note was lost.
+        """
+        vault_path = tmp_path / "FailVault"
+        vault_path.mkdir()
+        (vault_path / ".obsidian").mkdir()
+
+        (vault_path / "good.md").write_text("# Good note")
+        (vault_path / "bad.md").write_text("# Bad note")
+
+        # Make add_note raise for exactly one path, succeed for the rest.
+        real_add_note = scanner.db.add_note
+
+        def flaky_add_note(*args, **kwargs):
+            if kwargs.get('path') == "bad.md":
+                raise ValueError("planted insert failure")
+            return real_add_note(*args, **kwargs)
+
+        scanner.db.add_note = Mock(side_effect=flaky_add_note)
+
+        async def run_test():
+            stats = await scanner.scan_vault(str(vault_path))
+            # Scan still completes and indexes the good note
+            assert stats['notes_scanned'] == 1
+            # The bad note is counted as a failure, not silently dropped
+            assert stats['notes_failed'] == 1
+            # The failing path is reported back to the caller
+            assert "bad.md" in stats['failed_paths']
+            # The real error count is persisted to scan_history (not hardcoded 0)
+            history = scanner.db.get_scan_history(stats['vault_id'], limit=1)
+            assert history[0]['notes_failed'] == 1
+            assert history[0]['status'] == 'completed'
+
+        asyncio.run(run_test())
 
 class TestMarkdownParserEdgeCases:
     """Tests for edge cases in the MarkdownParser."""

@@ -7,6 +7,7 @@ with notes, links, tags, and metadata.
 """
 import asyncio
 import hashlib
+import logging
 import os
 import re
 from pathlib import Path
@@ -16,6 +17,8 @@ from dataclasses import dataclass
 import frontmatter
 
 from db_manager import DatabaseManager
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -227,8 +230,10 @@ class VaultScanner:
             total_files = len(md_files)
             
             stats = {
+                'vault_id': vault_id,
                 'notes_scanned': 0, 'notes_added': 0, 'notes_updated': 0,
-                'links_added': 0, 'tags_added': 0
+                'links_added': 0, 'tags_added': 0,
+                'notes_failed': 0, 'failed_paths': []
             }
 
             # Process files in batches to avoid blocking
@@ -263,9 +268,19 @@ class VaultScanner:
                             self.db.add_link(note_id, target, display_text)
                             stats['links_added'] += 1
 
-                    except Exception:
+                    except Exception as exc:
+                        # S4: record the failure instead of silently swallowing it.
+                        # The scan MUST still complete — one bad note can't abort it.
+                        stats['notes_failed'] += 1
+                        # Cap the reported list so a pathological vault can't bloat stats.
+                        if len(stats['failed_paths']) < 50:
+                            stats['failed_paths'].append(relative_path)
+                        log.warning(
+                            "scan: failed to index note %s: %s: %s",
+                            relative_path, type(exc).__name__, exc
+                        )
                         continue
-                
+
                 # Report progress
                 if progress_callback:
                     await progress_callback(i + len(batch), total_files)
@@ -275,7 +290,8 @@ class VaultScanner:
             self.db.update_vault_scan_time(vault_id)
             self.db.complete_scan(
                 scan_id, stats['notes_scanned'], stats['notes_added'],
-                stats['notes_updated'], 0
+                stats['notes_updated'], notes_deleted=0,
+                notes_failed=stats['notes_failed']
             )
 
             return stats

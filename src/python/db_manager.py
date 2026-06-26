@@ -645,11 +645,26 @@ class DatabaseManager:
             """, (vault_id,))
             return cursor.lastrowid
 
+    def _ensure_scan_history_columns(self, conn):
+        """Idempotent guard: add scan_history columns absent on pre-v2 databases.
+
+        The schema file uses CREATE TABLE IF NOT EXISTS, so columns added to the
+        CREATE statement only reach fresh databases. Existing databases never
+        re-run the schema (init is gated on db_path.exists()), so we add new
+        columns lazily here. Safe to call repeatedly.
+        """
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(scan_history)")}
+        if 'notes_failed' not in existing:
+            conn.execute(
+                "ALTER TABLE scan_history ADD COLUMN notes_failed INTEGER DEFAULT 0"
+            )
+
     def complete_scan(self, scan_id: int, notes_scanned: int,
                      notes_added: int = 0, notes_updated: int = 0,
-                     notes_deleted: int = 0):
+                     notes_deleted: int = 0, notes_failed: int = 0):
         """Mark scan as completed."""
         with self.get_connection() as conn:
+            self._ensure_scan_history_columns(conn)
             conn.execute("""
                 UPDATE scan_history
                 SET completed_at = CURRENT_TIMESTAMP,
@@ -657,10 +672,12 @@ class DatabaseManager:
                     notes_added = ?,
                     notes_updated = ?,
                     notes_deleted = ?,
+                    notes_failed = ?,
                     duration_seconds = (julianday(CURRENT_TIMESTAMP) - julianday(started_at)) * 86400,
                     status = 'completed'
                 WHERE id = ?
-            """, (notes_scanned, notes_added, notes_updated, notes_deleted, scan_id))
+            """, (notes_scanned, notes_added, notes_updated, notes_deleted,
+                  notes_failed, scan_id))
 
     def fail_scan(self, scan_id: int, error_message: str):
         """Mark scan as failed."""
