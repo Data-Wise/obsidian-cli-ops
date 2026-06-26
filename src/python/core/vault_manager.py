@@ -519,6 +519,23 @@ class VaultManager:
         self.db.delete_vault(vault_id)
         return True
 
+    def rename_vault(self, vault_id: str, new_name: str) -> bool:
+        """
+        Rename a vault's display name (path and ID are unchanged).
+
+        Args:
+            vault_id: Vault ID
+            new_name: New display name
+
+        Returns:
+            True if renamed, False if the vault was not found
+        """
+        vault = self.get_vault(vault_id)
+        if not vault:
+            return False
+
+        return self.db.rename_vault(vault_id, new_name)
+
     def check_index_staleness(self, vault_id: str, threshold_hours: float = 24.0) -> StalenessResult:
         """
         Check whether a vault's index is stale relative to a threshold.

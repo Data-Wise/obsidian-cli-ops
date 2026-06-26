@@ -208,6 +208,44 @@ class DatabaseManager:
         vault_id = self._generate_id(path)
         return self.get_vault(vault_id)
 
+    def delete_vault(self, vault_id: str) -> bool:
+        """
+        Delete a vault row by exact ID.
+
+        Children (notes, links, note_tags, graph_metrics, note_embeddings,
+        scan_history) are removed automatically by the schema's ON DELETE
+        CASCADE foreign keys — get_connection() enables PRAGMA foreign_keys.
+
+        Args:
+            vault_id: Exact vault ID
+
+        Returns:
+            True if a vault row was deleted, False if no row matched.
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute("DELETE FROM vaults WHERE id = ?", (vault_id,))
+            return cursor.rowcount > 0
+
+    def rename_vault(self, vault_id: str, new_name: str) -> bool:
+        """
+        Change a vault's display name by exact ID.
+
+        Only the ``name`` column changes — the vault ID (a hash of the path)
+        and the path itself are untouched, so existing notes/links stay valid.
+
+        Args:
+            vault_id: Exact vault ID
+            new_name: New display name
+
+        Returns:
+            True if a vault row was updated, False if no row matched.
+        """
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                "UPDATE vaults SET name = ? WHERE id = ?", (new_name, vault_id)
+            )
+            return cursor.rowcount > 0
+
     def list_vaults(self) -> List[Dict]:
         """List all vaults."""
         with self.get_connection() as conn:

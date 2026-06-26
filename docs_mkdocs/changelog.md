@@ -87,6 +87,10 @@ All notable changes to Obsidian CLI Ops.
   `validate-counts.sh`, `obs doctor --layer docs`, and `test_doc_counts.py` all
   surface it; command-count drift can no longer merge.
 
+### Fixed
+
+- **Scanner: empty/null frontmatter `title:`** no longer crashes the scan with a `NOT NULL` constraint failure on `notes.title` (which silently dropped the note from the index). The title now falls back to the H1 heading or the filename stem (#65; an uncovered case of #51).
+
 ---
 
 ## v4.0.1 (2026-06-23) — insert_to_note + fixes + release-quality tooling

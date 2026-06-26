@@ -120,9 +120,14 @@ class MarkdownParser:
     @staticmethod
     def _extract_title(file_path: Path, content: str, frontmatter: Dict) -> str:
         """Extract title from frontmatter, first heading, or filename."""
-        # 1. Try frontmatter
-        if 'title' in frontmatter:
-            return frontmatter['title']
+        # 1. Try frontmatter — but guard against an empty/null `title:` value.
+        #    YAML parses a bare `title:` to None; returning it (or an empty or
+        #    whitespace-only string) violates the notes.title NOT NULL constraint
+        #    and silently drops the note from the index (#65; an uncovered case
+        #    of #51). Fall through to the H1/filename fallbacks below instead.
+        fm_title = frontmatter.get('title')
+        if fm_title is not None and str(fm_title).strip():
+            return str(fm_title).strip()
 
         # 2. Try first H1 heading
         match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
