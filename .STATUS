@@ -15,13 +15,13 @@ verified: |
   Pre-release: dev↔main reconciled (merge origin/main into dev) + 61 Phase-1 docstrings backfilled.
   Tests: 426 pytest passed / 33 skipped, 67 jest passed / 2 skipped.
   Release-check harness on dev (PR #50, commit 8b7f852, 2026-06-23): core/doc_counts.py + validate-counts.sh + obs doctor --layer docs + verify-caveats.sh + post-install-check.sh + post-release-sweep.sh. craft issue #200 filed to generalize verify-caveats/post-install-check patterns. feature/release-harness worktree removed.
-target: v4.2.0 - vault↔index sync reconciliation (obs scan --prune/--no-prune, content-hash short-circuit preserving embeddings, scan-error visibility, obs doctor --layer sync) — in flight on feature/vault-sync-reconcile
+target: v4.2.0 - vault↔index sync reconciliation (obs scan --prune/--no-prune, content-hash short-circuit preserving embeddings, scan-error visibility, obs doctor --layer sync, F1 tag-normalization, D1 templates-exclusion, I1 vault-nesting) — MERGED to dev (PRs #66/#70, dev @ 3c7e38a); awaiting v4.2.0 release
 
 ## 🚧 v4.2.0 (Unreleased) — Vault ↔ index sync reconciliation
 
-On `feature/vault-sync-reconcile` (off `feature/spec-vault-sync-reconcile`). Spec:
-`docs/specs/SPEC-vault-sync-reconcile-2026-06-26.md`; plan: `ORCHESTRATE-vault-sync-reconcile.md`.
-Closes the vault↔DB sync gaps. Not yet released; targets v4.2.0.
+Merged to `dev` via PRs #66 + #70 (dev @ `3c7e38a`). Spec:
+`docs/specs/SPEC-vault-sync-reconcile-2026-06-26.md`. Closes the vault↔DB sync gaps.
+Not yet released; targets v4.2.0 (dev→main).
 
 - **`obs scan --prune` / `--no-prune`** (S1/S2) — opt-in mark-and-sweep that reconciles the
   index with disk: after scanning, rows whose path is gone (deleted/renamed notes) are swept,
@@ -39,7 +39,9 @@ Closes the vault↔DB sync gaps. Not yet released; targets v4.2.0.
   `scan_history`; the scan still completes. Summary now also reports unchanged/pruned/failed counts.
 - **`obs doctor --layer sync` (S5)** — new per-vault sync layer with content-based (not just
   time-based) drift: `sync-ghosts`, `sync-missing`, `sync-errors`, and a `sync-drift` summary.
-- Tests: full suite green (511 passed / 41 skipped) incl. unit + e2e `TestE2ESyncLifecycle`
+- **Defensive tag-normalization (F1)**, **templates/ exclusion (D1, shared `is_indexable_md`
+  predicate reused by `doctor._disk_md_paths`)**, and **`obs doctor` `vault-nesting` check (I1)**.
+- Tests: full suite green (544 passed / 1 skipped, unit) incl. unit + e2e `TestE2ESyncLifecycle`
   (gated under `E2E=1`) + doctor sync dogfood. Docs: changelog `[Unreleased]`, CLI reference,
   man page, MCP_README, troubleshooting.
 
@@ -59,8 +61,8 @@ Closes the vault↔DB sync gaps. Not yet released; targets v4.2.0.
 
 ### Active Worktrees
 
-- `feature/spec-vault-sync-reconcile` — SPEC + ORCHESTRATE for vault↔DB sync reconciliation (created 2026-06-26). Spec: `docs/specs/SPEC-vault-sync-reconcile-2026-06-26.md`.
-- `feature/vault-sync-reconcile` @ `~/.git-worktrees/obsidian-cli-ops/feature-vault-sync-reconcile` — implementation worktree off the spec branch; ORCHESTRATE-vault-sync-reconcile.md drives 5 phases (S4 errors → --prune/reconcile → doctor sync layer → e2e/dogfood → docs). Not yet started — needs its own session.
+- _(vault-sync-reconcile worktrees removed 2026-06-26 — work merged to dev via PRs #66/#70.)_
+- `feature/cmd-count-ssot` @ `~/.git-worktrees/obsidian-cli-ops/feature-cmd-count-ssot` — command-count SSOT work.
 
 ---
 
