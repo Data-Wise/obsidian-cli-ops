@@ -29,6 +29,19 @@ All notable changes to Obsidian CLI Ops.
 - **`obs doctor` `mcp-async-run` check** (mcp layer) — static AST guard that
   fails if any **sync** `@mcp.tool()` handler calls `asyncio.run()`, so the #62
   bug class cannot recur. Mirrors the existing `mcp-tool-resolvers` guard.
+- **Command-count gate** — `core/doc_counts.py` now derives the runnable `obs`
+  command count (leaf subcommands) statically from `obs_cli.py` (AST), so it
+  joins MCP tools/resources/providers as a gated single source of truth.
+  `validate-counts.sh`, `obs doctor --layer docs`, and `test_doc_counts.py` all
+  surface it; command-count drift can no longer merge.
+
+### Fixed
+
+- **Command-count drift** — docs disagreed on the `obs` command total
+  (`.STATUS` said 25, refcard 35, cli-reference 40); none matched the code.
+  Reconciled every current-state surface to the real count: **45 runnable
+  commands** (17 top-level groups, incl. the `obs config` / `obs research`
+  families absorbed from nexus-cli).
 
 ---
 

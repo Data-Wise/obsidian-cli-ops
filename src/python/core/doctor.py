@@ -583,8 +583,8 @@ def _check_doc_counts() -> list[DoctorResult]:
                              "skipped: core.doc_counts unavailable")]
     counts = source_counts()
     mismatches = find_mismatches(counts)
-    summary = (f"tools={counts['mcp_tools']} resources={counts['mcp_resources']} "
-               f"providers={counts['ai_providers']}")
+    summary = (f"commands={counts['obs_commands']} tools={counts['mcp_tools']} "
+               f"resources={counts['mcp_resources']} providers={counts['ai_providers']}")
     if not mismatches:
         return [DoctorResult("doc-counts", "docs", "Doc count consistency", "pass",
                              f"docs aligned with source ({summary})")]

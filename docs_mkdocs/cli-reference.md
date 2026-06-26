@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 40 `obs` commands (24 core + 16 from the nexus-cli absorption, shipped in v4.0.0) + 40 MCP tools for Claude
+> - **What:** Full reference for all 45 `obs` commands (17 top-level groups, incl. the config & research families absorbed from nexus-cli in v4.0.0) + 40 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet

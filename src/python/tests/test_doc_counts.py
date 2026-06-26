@@ -7,7 +7,7 @@ tools" while ``mcp_server.py`` exposed 38. Shares its logic with
 the single source module ``core.doc_counts``.
 """
 
-from core.doc_counts import source_counts, find_mismatches
+from core.doc_counts import source_counts, find_mismatches, _count_obs_commands
 
 
 class TestDocCounts:
@@ -20,11 +20,35 @@ class TestDocCounts:
         assert c["mcp_resources"] >= 0
         assert c["ai_providers"] > 0
         assert c["mcp_tools"] >= c["mcp_resources"]
+        assert c["obs_commands"] > 0, "no obs commands counted in obs_cli.py"
         assert c["unit_tests"] > 0, "no unit test functions counted"
         assert c["e2e_tests"] >= 0
         # Gated floor = unit count rounded down to the nearest 10.
         assert c["unit_tests_floor"] == (c["unit_tests"] // 10) * 10
         assert c["unit_tests_floor"] <= c["unit_tests"]
+
+    def test_obs_command_count_excludes_groups(self, tmp_path):
+        """_count_obs_commands counts only runnable LEAF commands — group
+        parsers that merely nest subcommands are excluded."""
+        src = (
+            "import argparse\n"
+            "parser = argparse.ArgumentParser()\n"
+            "subparsers = parser.add_subparsers()\n"
+            "subparsers.add_parser('alpha')\n"            # leaf
+            "g = subparsers.add_parser('group')\n"        # group -> excluded
+            "gsub = g.add_subparsers()\n"
+            "gsub.add_parser('beta')\n"                   # leaf
+            "gsub.add_parser('gamma')\n"                  # leaf
+            "subparsers.add_parser('delta')\n"           # leaf
+        )
+        f = tmp_path / "obs_cli.py"
+        f.write_text(src)
+        # alpha, beta, gamma, delta = 4 leaves; 'group' is not counted.
+        assert _count_obs_commands(f) == 4
+
+    def test_obs_command_count_missing_file(self, tmp_path):
+        """Degrades to 0 (not a crash) when obs_cli.py is absent."""
+        assert _count_obs_commands(tmp_path / "nope.py") == 0
 
     def test_static_test_count_assumption_holds(self):
         """Sentinel: gated test files must not parametrize / dynamically generate.
