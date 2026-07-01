@@ -83,7 +83,8 @@ nav:
       - Monitoring & Health: tutorials/monitoring-and-health.md
       - Cookbook: cookbook.md
   - Reference:
-      - Quick Reference: refcard.md
+      - Overview: reference/index.md
+      - Quick Reference Card: refcard.md
       - CLI Reference: cli-reference.md
       - .obs/sync.yml Schema: obs-sync-yml.md
       - Visual Workflows: workflows.md

@@ -8,6 +8,27 @@
 
 ---
 
+## :compass: Which Workflow Should You Use?
+
+```mermaid
+flowchart TD
+    A{"What's your goal?"}
+    A -->|"First time setup"| B["↓ Onboarding Workflow\nInstall → discover → scan → analyze"]
+    A -->|"Daily check-in"| C["↓ Daily Usage\nobs → stats → health"]
+    A -->|"Vault health & cleanup"| D["↓ Vault Health Check\nhealth → analyze → refactor"]
+    A -->|"AI deep analysis"| E["↓ AI Analysis Pipeline\nduplicates → gaps → refactor"]
+    A -->|"Weekly planning"| F["↓ Board Management\nboard refresh → action board"]
+    A -->|"Research pipeline"| G["↓ Research Workflow\nzotero → pdf → manuscript"]
+    A -->|"Single note deep-dive"| H["↓ Note-Level Analysis\nanalyze → similar → suggest-links"]
+    A -->|"Claude natural language"| I["↓ Claude / MCP Workflow\nMCP tools → ask Claude"]
+
+    style A fill:#6366f1,color:#fff
+    style F fill:#a855f7,color:#fff
+    style G fill:#ec4899,color:#fff
+```
+
+---
+
 ## :wave: Onboarding Workflow
 
 First time using `obs`? Follow this path:
@@ -54,6 +75,11 @@ graph LR
 
 !!! tip "Make it a habit"
     Run `obs health MyVault` once a week to catch issues early. Add it to your weekly review workflow.
+
+??? tip "Monday morning: board refresh"
+    Already set up launchd? The board refreshes automatically at 09:15 every Monday.
+    Just open `_ACTION-BOARD.md` and review the action items.  
+    First time: `obs board refresh && obs board status`
 
 ---
 
@@ -160,6 +186,60 @@ graph TD
 !!! tip "5-minute setup"
     See [Claude Integration](claude-integration.md) to connect `obs` to Claude Desktop.
     Once connected, all 42 MCP tools are available in every Claude conversation.
+
+---
+
+---
+
+## :clipboard: Board Management Workflow (v4.3.0)
+
+Weekly action-board refresh for research planning:
+
+```mermaid
+flowchart TD
+    A[obs board status] --> B{Board exists?}
+    B -->|"No"| C[obs board refresh --dry-run]
+    B -->|"Yes, stale"| C
+    B -->|"Fresh"| D[Open _ACTION-BOARD.md]
+    C --> E[obs board refresh]
+    E --> D
+    D --> F[Review status tables & ranked actions]
+    F --> G{"Need LLM?"}
+    G -->|"Yes"| H[Run research--action-board prompt]
+    G -->|"No"| I[Work through Act on now items]
+    H --> I
+    I --> J[Next week: auto-refresh via launchd]
+    style A fill:#6366f1,color:#fff
+    style H fill:#a855f7,color:#fff
+    style I fill:#22c55e,color:#fff
+```
+
+!!! tip "launchd automation"
+    The launchd plist `com.data-wise.obs-board-refresh` fires every Monday at 09:15.
+    Manual trigger: `launchctl kickstart gui/$(id -u)/com.data-wise.obs-board-refresh`
+    or `scripts/board-refresh.sh`.
+
+---
+
+## :microscope: Research Pipeline Workflow
+
+End-to-end research workflow combining Zotero, PDF search, and vault:
+
+```mermaid
+flowchart LR
+    A[obs research zotero search] --> B[Review results]
+    B --> C[obs research zotero get KEY]
+    B --> D[obs research pdf search]
+    D --> E[obs search in vault]
+    E --> F[obs research manuscript stats]
+    F --> G[obs research bib check NAME]
+    style A fill:#6366f1,color:#fff
+    style G fill:#22c55e,color:#fff
+```
+
+??? tip "unified search via Claude"
+    From Claude Desktop, ask: *"Search my vault and Zotero for papers on collider bias"* —  
+    `unified_search` fans out to vault, Zotero, and PDF in one call.
 
 ---
 

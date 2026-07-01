@@ -275,6 +275,7 @@ src/python/
     models.py                # Domain models (~310 lines)
     exceptions.py            # Custom exceptions
     note_inserter.py         # Heading-aware Markdown insertion (markdown-it-py AST)
+    board.py                 # Board sync engine — 5 connectors, merger, renderer, vault writer
 
   ai/                        # AI FEATURES LAYER
     features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
@@ -299,7 +300,7 @@ schema/vault_db.sql          # Database schema
 
 ## Testing
 
-- **450+ pytest tests** covering core, AI, vault features, data layer, and MCP server (+32 E2E gated behind `E2E=1`)
+- **450+ pytest tests** covering core, AI, vault features, data layer, and MCP server (+71 E2E gated behind `E2E=1`)
 - **69 Jest tests** for ZSH wrapper + dependency-bootstrapping validation
 - Core layer tested independently with mocked dependencies
 - AI providers mocked for deterministic tests

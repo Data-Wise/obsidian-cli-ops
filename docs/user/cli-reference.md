@@ -1,9 +1,9 @@
 # CLI Command Reference
 
-**Version:** 4.2.0
-**Last Updated:** 2026-06-23
+**Version:** 4.3.0
+**Last Updated:** 2026-07-01
 
-> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 49 commands (17 top-level incl. the `obs config` and `obs research` domains).
+> **Note:** This is the **legacy** docs directory and the command list below is a partial snapshot. The live MkDocs site at `docs_mkdocs/` is authoritative — see [CLI Reference](../docs_mkdocs/cli-reference.md) for the full surface: 49 commands (18 top-level incl. `obs board`, `obs config`, and `obs research` domains).
 
 ---
 
@@ -461,6 +461,46 @@ obs --verbose ai refactor MyVault        # Show progress on stderr
 
 ---
 
+## Board Management
+
+### obs board refresh
+
+Refresh the `_ACTION-BOARD.md` file from atlas state, vault stats, and `.STATUS` files.
+
+```bash
+obs board refresh [--vault <name>] [--all] [--dry-run] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--vault` | first research vault | Vault name or ID |
+| `--all` | | Refresh boards in all vaults |
+| `--dry-run` | | Show what would change without writing |
+| `--json` | | Machine-readable JSON output |
+
+### obs board status
+
+Show board existence, last-refreshed age, and ghost drift status.
+
+```bash
+obs board status [--vault <name>] [--all] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--vault` | all vaults | Vault name or ID |
+| `--all` | | Show status for all vaults |
+| `--json` | | Machine-readable JSON output |
+
+**Output:**
+
+```
+  Research: board=✔ last=0d ago
+  Documents: board=✘ last=never
+```
+
+---
+
 ## Quick Reference
 
 | Command | Purpose |
@@ -468,6 +508,8 @@ obs --verbose ai refactor MyVault        # Show progress on stderr
 | `obs vaults` | List registered vaults |
 | `obs discover <path>` | Find vaults in directory |
 | `obs stats` | Show statistics |
+| `obs board refresh` | Refresh research action board |
+| `obs board status` | Show board refresh status |
 | `obs analyze <vault>` | Graph analysis |
 | `obs db init` | Initialize database |
 | `obs ai status` | Provider status |

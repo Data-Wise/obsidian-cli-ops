@@ -1,13 +1,13 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 49 `obs` commands (17 top-level groups, incl. the config & research families absorbed from nexus-cli in v4.0.0) + 42 MCP tools for Claude
+> - **What:** Full reference for all 49 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
 { .tldr }
 
-**Version:** 4.2.0
+**Version:** 4.3.0
 
 ---
 
@@ -673,6 +673,70 @@ obs config edit
 
 ---
 
+## :clipboard: Board Management
+
+!!! info "New in v4.3.0"
+    `obs board` ships in **v4.3.0** (board-sync automation) — deterministic action-board
+    refresh from atlas, vault, and `.STATUS` files. The LLM augments thinking sections
+    on demand via the `research--action-board` prompt.
+
+### obs board refresh
+
+Refresh the `_ACTION-BOARD.md` file from atlas project state, vault stats, and
+`.STATUS` files.
+
+```bash
+obs board refresh [--vault <name>] [--all] [--dry-run] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--vault` | first research vault | Vault name or ID |
+| `--all` | | Refresh boards in all vaults |
+| `--dry-run` | | Show what would change without writing |
+| `--json` | | Machine-readable JSON output |
+
+**Examples:**
+
+```bash
+obs board refresh                            # Refresh first research vault
+obs board refresh --vault Research           # Specific vault
+obs board refresh --all                      # All vaults
+obs board refresh --dry-run                  # Preview changes
+```
+
+### obs board status
+
+Show whether `_ACTION-BOARD.md` exists, when it was last refreshed, and
+whether the vault has ghost drift.
+
+```bash
+obs board status [--vault <name>] [--all] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--vault` | all vaults | Vault name or ID |
+| `--all` | | Show status for all vaults |
+| `--json` | | Machine-readable JSON output |
+
+**Examples:**
+
+```bash
+obs board status                 # Status for all vaults
+obs board status --vault Research # Single vault
+obs board status --json          # JSON output
+```
+
+**Output:**
+
+```
+  Research: board=✔ last=0d ago
+  Documents: board=✘ last=never
+```
+
+---
+
 ## :microscope: Research Domain
 
 !!! info "Shipped in v4.0.0"
@@ -764,6 +828,8 @@ obs research bib check <name>
 | `obs stale <vault>` | Find stale high-importance notes |
 | `obs daily-digest <vault>` | Bridge + trends + stale summary |
 | `obs doctor` | Self-diagnostic checks |
+| `obs board refresh` | Refresh research action board |
+| `obs board status` | Show board refresh status |
 | `obs analyze <vault>` | Graph analysis |
 | `obs db init` | Initialize database |
 | `obs ai status` | Provider status |

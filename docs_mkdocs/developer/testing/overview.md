@@ -1,7 +1,7 @@
 # Testing Overview
 
 **Version:** 4.1.0
-**Total Tests:** 550+ — 440+ unit pytest, 113 MCP unit pytest, 32 E2E pytest, 69 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see `core/doc_counts.py`).
+**Total Tests:** 600+ — 440+ unit pytest, 113 MCP unit pytest, 71 E2E pytest, 69 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see `core/doc_counts.py`).
 
 ## Test Coverage
 
@@ -30,6 +30,7 @@
 | Embedding Cache | 6 | pytest | `test_embedding_cache.py` |
 | Vault Manager | 6 | pytest | `test_vault_manager.py` |
 | Version Consistency | 6 | pytest | `test_version_consistency.py` |
+| Board Engine | 28 | pytest | `test_board.py` |
 | Doc Count Gate | 5 | pytest | `test_doc_counts.py` |
 | DB Metrics | 1 | pytest | `test_db_metrics.py` |
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
@@ -50,8 +51,8 @@ Covers all 42 MCP tools and 4 resources with mock vault/DB fixtures. Includes ed
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
-| MCP dogfood — real subprocess JSON-RPC | 32 | pytest | `tests/e2e/test_e2e_mcp.py` |
-| **E2E Subtotal** | **32** | **pytest** | |
+| MCP dogfood — real subprocess JSON-RPC | 71 | pytest | `tests/e2e/test_e2e_mcp.py` |
+| **E2E Subtotal** | **71** | **pytest** | |
 
 E2E tests spin up the real MCP server as a subprocess and exercise the JSON-RPC protocol end-to-end. **Gated behind `E2E=1`** — not run in standard CI to avoid environment dependencies.
 
