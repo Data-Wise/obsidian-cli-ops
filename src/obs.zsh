@@ -166,6 +166,11 @@ obs_help() {
         echo "  obs vault delete <vault> [--force]  Remove from index (dry-run without --force)"
         echo ""
 
+        echo "📋 RESEARCH BOARD"
+        echo "  obs board refresh [--all] [--dry-run]  Refresh research board from atlas state"
+        echo "  obs board status          Show board refresh status"
+        echo ""
+
         echo "🤖 AI FEATURES"
         echo "  obs ai status             Show AI provider status"
         echo "  obs ai setup              Interactive AI setup wizard"
@@ -777,6 +782,11 @@ obs_vault() {
     $OBS_PYTHON "$python_cli" vault "$@"
 }
 
+obs_board() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" board "$@"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -862,6 +872,9 @@ obs() {
             ;;
         "vault")
             obs_vault "$@"
+            ;;
+        "board")
+            obs_board "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"
