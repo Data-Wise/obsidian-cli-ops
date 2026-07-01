@@ -1177,6 +1177,11 @@ def main():
     quarto_preview.add_argument('name', help='Manuscript name or directory name')
     quarto_preview.add_argument('--port', type=int, default=4848, help='Preview port (default: 4848)')
 
+    # research learn — interactive tutorials
+    learn_parser = research_sub.add_parser('learn', help='Interactive tutorials for Obsidian CLI Ops')
+    learn_parser.add_argument('level', choices=['getting-started', 'medium', 'advanced'], help='Tutorial difficulty level')
+    learn_parser.add_argument('--step', type=int, help='Start from a specific step')
+
     # bib subcommands
     bib_parser = research_sub.add_parser('bib', help='Bibliography commands')
     bib_sub = bib_parser.add_subparsers(dest='bib_command')
