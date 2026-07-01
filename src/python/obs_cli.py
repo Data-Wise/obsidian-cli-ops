@@ -1052,6 +1052,21 @@ def main():
     link_parser.add_argument('--force', action='store_true', help='Overwrite an existing map')
     link_parser.add_argument('--json', action='store_true', help='Output result as JSON')
 
+    # --- v4.3.0: Board refresh subcommand (SPEC-board-sync-automation) ---
+    board_parser = subparsers.add_parser('board', help='Research board management')
+    board_subparsers = board_parser.add_subparsers(dest='board_command', help='Board subcommands')
+
+    refresh_parser = board_subparsers.add_parser('refresh', help='Refresh research board from atlas state')
+    refresh_parser.add_argument('--vault', default=None, help='Vault name or ID (default: first research vault)')
+    refresh_parser.add_argument('--all', action='store_true', help='Refresh boards in all vaults')
+    refresh_parser.add_argument('--dry-run', action='store_true', help='Show what would change without writing')
+    refresh_parser.add_argument('--json', action='store_true', help='Output result as JSON')
+
+    status_parser = board_subparsers.add_parser('status', help='Show board refresh status')
+    status_parser.add_argument('--vault', default=None, help='Vault name or ID')
+    status_parser.add_argument('--all', action='store_true', help='Show status for all vaults')
+    status_parser.add_argument('--json', action='store_true', help='Output result as JSON')
+
     config_parser = subparsers.add_parser('config', help='Manage obs unified config (~/.config/obs/config.yaml)')
     config_sub = config_parser.add_subparsers(dest='config_command')
     config_sub.add_parser('show', help='Print current config and its source')
@@ -1823,6 +1838,73 @@ def main():
             else:
                 verb = 'Created' if res['created'] else 'Exists'
                 print(f"{verb}: {res['path']} (mirror: {res['mirror']})")
+
+        elif args.command == 'board':
+            from core.board import BoardEngine
+            engine = BoardEngine()
+            cmd = getattr(args, 'board_command', None)
+
+            if cmd == 'refresh':
+                dry_run = getattr(args, 'dry_run', False)
+                if getattr(args, 'all', False):
+                    results = engine.refresh_all(dry_run=dry_run)
+                else:
+                    vault = getattr(args, 'vault', None)
+                    if vault:
+                        results = [engine.refresh_for_vault_name(vault, dry_run=dry_run)]
+                    else:
+                        vaults = engine._vm.list_vaults()
+                        if vaults:
+                            results = [engine.refresh(vaults[0].id, dry_run=dry_run)]
+                        else:
+                            results = [{"error": "No vaults found", "path": "", "changed": False}]
+                if getattr(args, 'json_output', False) or getattr(args, 'json', False):
+                    import json as _json
+                    print(_json.dumps(results, indent=2))
+                else:
+                    for r in results:
+                        action = r.get('action', 'no-change')
+                        path = r.get('path', '')
+                        err = r.get('error')
+                        if err:
+                            print(f"Error: {err}")
+                        else:
+                            print(f"{action}: {path}")
+                sys.exit(0)
+
+            elif cmd == 'status':
+                if getattr(args, 'all', False):
+                    vaults = engine._vm.list_vaults()
+                    results = [engine.status(v.id) for v in vaults]
+                else:
+                    vault = getattr(args, 'vault', None)
+                    if vault:
+                        vaults = engine._vm.list_vaults()
+                        matched = [v for v in vaults if v.name.lower() == vault.lower()]
+                        if matched:
+                            results = [engine.status(matched[0].id)]
+                        else:
+                            results = [{"vault": vault, "board_exists": False, "error": "vault not found"}]
+                    else:
+                        vaults = engine._vm.list_vaults()
+                        results = [engine.status(v.id) for v in vaults] if vaults else []
+                if getattr(args, 'json_output', False) or getattr(args, 'json', False):
+                    import json as _json
+                    print(_json.dumps(results, indent=2))
+                else:
+                    for r in results:
+                        name = r.get('vault', '?')
+                        exists = r.get('board_exists', False)
+                        days = r.get('last_refreshed_days_ago')
+                        drift = r.get('drift', False)
+                        status_str = "✔" if exists else "✘"
+                        age_str = f"{days}d ago" if days is not None else "never"
+                        drift_str = " ⚠ drift" if drift else ""
+                        print(f"  {name}: board={status_str} last={age_str}{drift_str}")
+                sys.exit(0)
+
+            board_parser.print_help()
+            sys.exit(0)
 
         elif args.command == 'config':
             sub = getattr(args, 'config_command', None)

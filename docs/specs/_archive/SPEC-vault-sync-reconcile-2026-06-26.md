@@ -1,6 +1,6 @@
 # SPEC: Vault ↔ DB Index Sync Reconciliation
 
-**Status:** Draft
+**Status:** ✅ Shipped in v4.2.0 (2026-06-26, PRs #66/#70/#71, merge 3a28700)
 **Created:** 2026-06-26
 **Author:** Investigation (debugger session)
 **Related:** #65 (silent note drop — one instance of S4), PR #66 (frontmatter-title `NOT NULL` fix), `SPEC-scanner-scan-verb-insert-heading-2026-06-23.md`

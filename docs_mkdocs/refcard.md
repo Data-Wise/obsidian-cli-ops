@@ -1,237 +1,204 @@
 # Quick Reference Card
 
-> **TL;DR** (30 seconds)
-> - **What:** Printable cheat sheet — every command on one page
-> - **Why:** Pin it, bookmark it, keep it open while you work
-> - **How:** `obs` to start, `obs help --all` for full details
-> - **Next:** [Cookbook](cookbook.md) for task-based recipes
+> **TL;DR** — Printable cheat sheet: every command, flag, provider, MCP tool.
+> **How:** `obs` to start, `obs help --all` for full details.
+> **Next:** [Cookbook](cookbook.md) for task-based recipes · [Reference Index](reference/index.md)
 { .tldr }
 
 ---
 
-## Core Commands
+## :file_folder: Core Commands
 
 | Command | Description |
 |---------|-------------|
 | `obs` | List all registered vaults |
-| `obs search <query>` | Search notes by title (all vaults) |
-| `obs search <query> --vault <name>` | Limit title search to one vault |
-| `obs search <query> --limit N` | Cap results (default 20) |
-| `obs search <query> --json` | Machine-readable JSON output |
-| `obs stats [vault]` | Show vault or global statistics |
-| `obs discover <path>` | Find Obsidian vaults in a directory |
-| `obs scan <path>` | Scan and register a vault |
-| `obs analyze <vault>` | Analyze vault graph metrics |
-| `obs health <vault>` | Vault health dashboard (scores + recommendations) |
+| `obs search <q> [--vault V] [--limit N] [--json]` | Search notes by title |
+| `obs stats [--vault V] [--json]` | Vault or global statistics |
+| `obs discover <path> [--scan]` | Find Obsidian vaults |
+| `obs scan <path> [--name N] [--analyze] [--prune]` | Scan & register a vault |
+| `obs analyze <vault> [-v] [--json]` | Graph metrics (PageRank, centrality) |
+| `obs health <vault> [--json]` | 4-dimension health dashboard |
 
-## Monitoring & Diagnostics
+## :stethoscope: Monitoring & Diagnostics
 
 | Command | Description |
 |---------|-------------|
 | `obs bridge status` | Obsidian CLI bridge status |
-| `obs trends <vault>` | Weekly activity trends |
-| `obs stale <vault>` | Find stale high-importance notes |
-| `obs daily-digest <vault>` | Bridge + trends + stale summary |
-| `obs doctor` | Self-diagnostic checks |
+| `obs trends <vault> [--days N] [--json]` | Weekly activity trends |
+| `obs stale <vault> [--limit N] [--json]` | Stale high-importance notes |
+| `obs daily-digest <vault> [--days N] [--limit N] [--json]` | Bridge + trends + stale |
+| `obs doctor [--vault V] [--layer L] [--json]` | 7-layer self-diagnostic |
+| `obs board refresh [--vault V] [--all] [--dry-run] [--json]` | Generate `_ACTION-BOARD.md` |
+| `obs board status [--vault V] [--all] [--json]` | Board refresh status |
 
-## AI Commands
-
-| Command | Description |
-|---------|-------------|
-| `obs ai status` | Show AI provider availability |
-| `obs ai setup` | Interactive provider setup wizard |
-| `obs ai test` | Test all AI provider connections |
-| `obs ai similar <note_id>` | Find semantically similar notes |
-| `obs ai analyze <note_id>` | Deep AI analysis of a note |
-| `obs ai duplicates <vault>` | Detect potential duplicate notes |
-| `obs ai suggest-links <note_id>` | Suggest new links based on similarity |
-| `obs ai gaps <vault>` | Find knowledge gaps in the vault |
-| `obs ai summarize <vault>` | Summarize vault themes and stats |
-| `obs ai refactor <vault>` | AI-powered vault reorganization suggestions |
-| `obs ai merge-suggest <vault>` | Find note pairs that may be merge candidates |
-| `obs ai tag-suggest <target>` | Suggest tags for untagged notes (vault or single note) |
-| `obs ai quality <target>` | Score notes on quality (completeness, connectivity, metadata, freshness) |
-
-## Config Commands
+## :robot: AI Commands
 
 | Command | Description |
 |---------|-------------|
-| `obs config show` | Print current config and its source file |
-| `obs config validate` | Validate config and report errors |
-| `obs config migrate` | Convert legacy obs/nexus config to unified YAML |
-| `obs config init` | Interactive wizard to create a fresh config |
-| `obs config edit` | Open config file in `$EDITOR` |
+| `obs ai status` / `setup` / `test` | Provider management |
+| `obs ai similar <note> [--limit N] [--provider P]` | Semantically similar notes |
+| `obs ai analyze <note> [--provider P]` | Deep note analysis |
+| `obs ai duplicates <vault> [--threshold F]` | Potential duplicates |
+| `obs ai suggest-links <note> [--limit N]` | New link suggestions |
+| `obs ai gaps <vault>` | Knowledge gaps (stubs, orphans) |
+| `obs ai summarize <vault> [--folder F] [--tag T]` | Vault-wide themes |
+| `obs ai refactor <vault> [--dry-run] [--json]` | Reorganization plan |
+| `obs ai merge-suggest <vault> [--threshold F] [--json]` | Merge candidates |
+| `obs ai tag-suggest <target> [--apply] [--json]` | Tag suggestions |
+| `obs ai quality <target> [--json]` | Note quality scoring |
 
-## Research Commands
-
-| Command | Description |
-|---------|-------------|
-| `obs research zotero search <query>` | Search Zotero library (`--limit N`, `--type T`, `--tag T`) |
-| `obs research zotero get <key>` | Get a Zotero item by key (`--format F`) |
-| `obs research zotero recent` | List recently modified Zotero items (`--limit N`) |
-| `obs research pdf search <query>` | Search PDF content (`--limit N`) |
-| `obs research course list` | List all courses |
-| `obs research course show <name>` | Show course details |
-| `obs research course lectures <name>` | List lectures for a course |
-| `obs research manuscript list` | List all manuscripts (`--archived`) |
-| `obs research manuscript show <name>` | Show manuscript details |
-| `obs research manuscript stats` | Show manuscript statistics |
-| `obs research bib check <name>` | Check citations in a manuscript |
-
-## Utilities
+## :gear: Config
 
 | Command | Description |
 |---------|-------------|
-| `obs help` | Quick help (essential commands) |
-| `obs help --all` | Full command reference |
+| `obs config show` / `validate` / `init` / `edit` | YAML config management |
+| `obs config migrate [--dry-run]` | Convert legacy config |
+
+## :books: Research Commands
+
+| Command | Description |
+|---------|-------------|
+| `obs research zotero search <q> [--limit N] [--type T] [--tag T]` | Zotero library search |
+| `obs research zotero get <key>` | Item by Zotero key |
+| `obs research zotero recent [--limit N]` | Recently modified |
+| `obs research pdf search <q> [--limit N]` | Full-text PDF search |
+| `obs research course list / show / lectures` | Course management |
+| `obs research manuscript list / show / stats` | Manuscript tracking |
+| `obs research bib check <name>` | Citation completeness |
+
+## :wrench: Vault Management
+
+| Command | Description |
+|---------|-------------|
+| `obs vault info <vault> [--json]` | Single vault metadata |
+| `obs vault rename <vault> <new-name> [--json]` | Rename display name |
+| `obs vault delete <vault> [--force] [--json]` | Remove from index (dry-run by default) |
+
+## :link: Other
+
+| Command | Description |
+|---------|-------------|
+| `obs link [dir] [--vault-root P] [--mirror M]` | Create `.obs/sync.yml` mirror map |
+| `obs research board [--out F] [--kind K] [--dry-run]` | Legacy research board renderer |
+| `obs help [--all]` | Show help |
 | `obs version` | Show version |
 
-## Global Flags
+## :zap: Global Flags
 
-| Flag | Description |
-|------|-------------|
-| `--verbose` / `-v` | Enable verbose output |
-| `--json` | Output as JSON (where supported) |
+| Flag | Used with |
+|------|-----------|
+| `--json` | `stats`, `health`, `analyze`, `doctor`, `board`, all AI subcommands |
+| `--verbose` / `-v` | `scan`, `analyze`, `discover` |
+| `--dry-run` | `ai refactor`, `board refresh`, `research board`, `config migrate`, `vault delete` |
 
-## AI Refactor Flags
+---
 
-| Flag | Description |
-|------|-------------|
-| `--dry-run` | Show scope without AI calls |
-| `--provider NAME` | Force a specific AI provider |
-| `--json` | Machine-readable JSON output |
+## :robot_face: AI Provider Priority
 
-## Vault Lookup
+Auto-selection order (first available wins):
+
+| # | Provider | Speed | Privacy | Setup |
+|---|----------|-------|---------|-------|
+| 1 | `gemini-api` | Fast | API key | `obs ai setup` |
+| 2 | `anthropic-api` | Best quality | API key | `obs ai setup` |
+| 3 | `ollama` | Medium | 100% local | Local install |
+| 4 | `gemini-cli` | Fast | API call | Pre-installed |
+| 5 | `claude-cli` | Fast | API call | Pre-installed |
+
+Override: `obs ai similar <note> --provider ollama`
+
+## :mag: Vault Lookup
 
 Commands accepting `<vault>` support flexible lookup:
 
 ```bash
-obs stats MyVault        # By name
-obs stats a812           # By ID prefix
-obs analyze Research_Lab # By name
+obs stats MyVault        # By display name
+obs stats a812           # By ID prefix (first 4+ chars)
 ```
 
-## AI Provider Priority
-
-Auto-selection order (first available wins):
-
-1. `gemini-api` (fastest, needs API key)
-2. `anthropic-api` (highest quality, needs API key)
-3. `ollama` (local, private)
-4. `gemini-cli` (free, no API key)
-5. `claude-cli` (free, no API key)
-
-Override with `--provider`:
+## :memo: Common Workflows
 
 ```bash
-obs ai similar <note_id> --provider ollama
-obs ai refactor MyVault --provider anthropic-api
-```
-
-!!! tip "Start here"
-    New to `obs`? Run these 3 commands: `obs` → `obs stats MyVault` → `obs analyze MyVault`. That's it.
-
-## Common Workflows
-
-```bash
-# First-time setup (isolated venv, no manual pip)
-./install.sh
-python3 src/python/obs_cli.py db init
+# First-time setup
+brew install data-wise/tap/obsidian-cli-ops
 obs discover ~/Documents --scan
-
-# Daily check
-obs
 obs health MyVault
 
-# AI analysis
-obs ai status
-obs ai refactor MyVault --dry-run
-obs ai refactor MyVault
+# Weekly board refresh
+obs board refresh --dry-run && obs board refresh
 
-# Quality features (v3.2.0)
-obs ai merge-suggest MyVault              # Find merge candidates
-obs ai tag-suggest MyVault --apply        # Suggest + auto-apply tags
-obs ai quality MyVault                    # Score all notes
+# Full health pipeline
+obs doctor                            # diagnose
+obs ai refactor MyVault --dry-run     # preview
+obs ai refactor MyVault               # plan
+obs ai merge-suggest MyVault          # merge candidates
+obs ai tag-suggest MyVault --apply    # auto-tag
+obs scan MyVault --prune && obs analyze MyVault  # re-check
 
-# Export for scripting
+# Research pipeline
+obs research zotero search "topic" --limit 10
+obs research pdf search "topic"
+obs research manuscript stats
+obs research bib check my-paper
+
+# Export everything as JSON
 obs stats --vault MyVault --json
-obs ai quality MyVault --json | python3 -m json.tool
+obs health MyVault --json
+obs ai quality MyVault --json
+obs doctor --json
 ```
 
 ---
 
-??? info "Vault lookup shortcut"
-    Any command accepting `<vault>` also accepts an ID prefix — type just the first 4 characters instead of the full name.
+## :link: Claude / MCP Tools (v3.3.0)
 
----
+42 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
 
-## Claude / MCP Tools (v3.3.0)
-
-Ask Claude natural-language questions about your vaults. Requires one-time Claude Desktop setup
-— see [Claude Integration](claude-integration.md).
-
-| MCP Tool | Description |
-|----------|-------------|
-| `list_vaults()` | List all registered vaults |
-| `get_vault_stats(vault_id)` | Vault statistics |
-| `discover_vaults(path)` | Find vaults in a directory |
-| `search_notes(query, vault_id)` | Full-text search |
-| `find_similar_notes(note_id)` | Semantically similar notes |
-| `get_hub_notes(vault_id)` | Most-connected notes |
-| `get_orphaned_notes(vault_id)` | Notes with no links |
-| `get_broken_links(vault_id)` | Unresolved wikilinks |
-| `analyze_vault(vault_id)` | Graph metrics |
-| `get_vault_health(vault_id)` | 4-dimension health score |
-| `list_notes(vault_id)` | Paginated note listing |
-| `read_note(note_id)` | Read note content |
-| `write_note(note_id, content)` | Overwrite note (auto-backup) |
-| `create_note(vault_id, title, content)` | Create new note |
-| `append_to_note(note_id, content)` | Append to note |
-| `insert_to_note(note_id, content, after_heading=...)` | Insert at heading position |
-| `rename_note(note_id, new_title)` | Rename note |
-| `delete_note(note_id, confirm=True)` | Delete note (dry-run by default) |
-| `run_obs_ai(command, target)` | All `obs ai` subcommands |
+| Group | Tools |
+|-------|-------|
+| **Vault** | `list_vaults`, `get_vault_stats`, `discover_vaults` |
+| **Search** | `search_notes`, `find_similar_notes` |
+| **Graph** | `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault` |
+| **Health** | `get_vault_health` |
+| **Notes** | `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault` |
+| **AI** | `run_obs_ai` (all 11 subcommands) |
+| **Bridge** | `get_bridge_status` |
+| **Temporal** | `get_trends`, `get_stale_notes`, `get_daily_digest` |
+| **Diagnostics** | `diagnose` |
+| **Research** | `zotero_search`, `zotero_get`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check`, `unified_search`, `server_info`, `get_note_links` |
 
 **Example Claude prompts:**
 
 ```
 "Search my research vault for causal inference"
 "List orphaned notes in MyVault"
-"Create a note called 'Meeting 2026-06-15'"
-"Check vault health for Research"
-"Run a quality check on all notes in MyVault"
+"Create a note called 'Meeting 2026-06-15' in Research"
+"Check vault health and list top 3 issues"
+"Find notes that might be merged"
 ```
 
 ---
 
-## Native Obsidian CLI (v1.12.4+)
+## :bookmark: Native Obsidian CLI (v1.12.4+)
 
-Obsidian ships its own CLI for note-level operations. Use it alongside `obs` for a complete workflow.
-
-!!! tip "Two tools, zero overlap"
-    `obs` = graph analysis + AI insights. `obsidian` = note CRUD + search + tags. They complement each other.
+`obs` (graph + AI) + `obsidian` (note CRUD) = complete terminal workflow.
 
 | Command | Description |
 |---------|-------------|
 | `obsidian` | Interactive TUI file browser |
-| `obsidian files` | List all files in vault |
-| `obsidian read file="NAME"` | Read a note by wikilink |
-| `obsidian create name="TITLE"` | Create a new note |
+| `obsidian files` | List all files |
+| `obsidian read file="NAME"` | Read by wikilink |
+| `obsidian create name="TITLE"` | Create note |
 | `obsidian search query="TEXT"` | Full-text search |
-| `obsidian daily` | Open today's daily note |
-| `obsidian daily:append content="TEXT"` | Quick capture to daily note |
-| `obsidian tags` | List all tags |
-| `obsidian tags:rename old=X new=Y` | Rename tags vault-wide |
-| `obsidian backlinks file="NAME"` | Find incoming links |
-| `obsidian orphans` | Notes with zero links |
-| `obsidian properties file="NAME"` | Read YAML frontmatter |
-| `obsidian properties:set file="NAME" key=val` | Set a property |
+| `obsidian daily` / `daily:append` | Daily note |
+| `obsidian tags` / `tags:rename` | Tag management |
+| `obsidian backlinks file="NAME"` | Incoming links |
+| `obsidian orphans` | Zero-link notes |
+| `obsidian properties file="NAME"` | Read frontmatter |
 
-??? info "Requires Obsidian running"
-    The native CLI communicates with a running Obsidian instance. Enable it in Settings → General → Command line interface.
-
-See the [official docs](https://help.obsidian.md/cli) for the full command list.
+Requires Obsidian running (Settings → General → Command line interface).
+See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.2.0 | **Commands:** 48 (17 top-level; incl. config + research families from nexus-cli) | **MCP Tools:** 42 | **AI Providers:** 5
+**Version:** 4.3.0 | **Commands:** 49 | **MCP Tools:** 42 | **AI Providers:** 5

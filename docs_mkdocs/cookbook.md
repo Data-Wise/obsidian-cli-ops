@@ -1,6 +1,7 @@
 # Cookbook
 
 > **TL;DR** (30 seconds)
+>
 > - **What:** Task-based recipes for common vault management scenarios
 > - **Why:** Copy-paste solutions instead of reading docs
 > - **How:** `obs discover ~/Documents --scan` — find and scan vaults in one step
@@ -14,7 +15,7 @@
 ## First-Time Setup Flow
 
 ```mermaid
-graph TD
+flowchart TD
     A[brew install] --> B[obs discover ~/Documents --scan]
     B --> C[obs]
     C --> D{Vaults found?}
@@ -24,47 +25,6 @@ graph TD
     style A fill:#6366f1,color:#fff
     style E fill:#22c55e,color:#fff
 ```
-
-## Getting Started
-
-### First-time setup
-
-```bash
-# Install
-brew install data-wise/tap/obsidian-cli-ops
-
-# Initialize the database
-python3 src/python/obs_cli.py db init
-
-# Discover and scan vaults in one step
-obs discover ~/Documents --scan
-
-# Check what was found
-obs
-```
-
-### Discover vaults from iCloud
-
-```bash
-obs discover ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents --scan
-```
-
-obs also auto-checks this location when you run `obs` with no arguments.
-
-### Scan an existing vault
-
-```bash
-# Scan by path (first time)
-obs scan /path/to/your/vault
-
-# Re-scan to pick up new notes
-obs scan /path/to/your/vault
-```
-
-Scanning reads all markdown files, extracts wikilinks, tags, and metadata into the knowledge graph.
-
-!!! tip "One-liner setup"
-    `obs discover ~/Documents --scan` finds and scans all vaults in one step.
 
 ---
 
@@ -149,11 +109,14 @@ Run `obs analyze MyVault` and check the density value:
 obs analyze MyVault --verbose
 ```
 
-Hub notes are the backbone of your knowledge graph. Review them regularly -- they influence many notes. Consider splitting hubs with 50+ connections.
+Hub notes are the backbone of your knowledge graph. Review them regularly
+-- they influence many notes. Consider splitting hubs with 50+ connections.
 
 ### Understand clusters
 
-Clusters are groups of notes more connected to each other than to the rest. The cluster count in `obs analyze` output tells you how many topic communities exist:
+Clusters are groups of notes more connected to each other than to the rest.
+The cluster count in `obs analyze` output tells you how many topic
+communities exist:
 
 - Very few clusters (1-2): vault may lack structure
 - Many small clusters: topics may not be cross-linked enough
@@ -272,10 +235,13 @@ obs ai refactor MyVault --dry-run
 obs ai refactor MyVault --json
 ```
 
-Suggestion categories: `move` (unsorted notes), `archive` (stale folders), `merge-folder` (small folders), `create-folder` (scattered tags), `connect` (orphans near clusters).
+Suggestion categories: `move` (unsorted notes), `archive` (stale folders),
+`merge-folder` (small folders), `create-folder` (scattered tags),
+`connect` (orphans near clusters).
 
 !!! warning "AI refactor is read-only"
-    The refactor command only **suggests** changes — it never moves or deletes your files. Safe to run anytime.
+    The refactor command only **suggests** changes — it never moves or
+    deletes your files. Safe to run anytime.
 
 ### Find merge candidates
 
@@ -297,7 +263,8 @@ for c in json.load(sys.stdin):
 ```
 
 !!! tip "Embeddings required"
-    `merge-suggest` uses cached embeddings from the `note_embeddings` table. Run `obs ai similar` or `obs ai duplicates` first to populate the cache.
+    `merge-suggest` uses cached embeddings from the `note_embeddings` table.
+    Run `obs ai similar` or `obs ai duplicates` first to populate the cache.
 
 ### Suggest tags for untagged notes
 
@@ -335,7 +302,8 @@ print(f'{len(low)} notes need attention (score < 30)')
 "
 ```
 
-Quality dimensions (weighted): completeness (30%), connectivity (30%), metadata (20%), freshness (20%).
+Quality dimensions (weighted): completeness (30%), connectivity (30%),
+metadata (20%), freshness (20%).
 
 ---
 
@@ -459,7 +427,9 @@ for s in plan['suggestions']:
 
 ## Using obs with the Native Obsidian CLI
 
-Obsidian v1.12.4+ ships a [native CLI](https://help.obsidian.md/cli) for note-level operations (read, create, search, tags). Use it alongside `obs` for a complete terminal workflow.
+Obsidian v1.12.4+ ships a [native CLI](https://help.obsidian.md/cli) for
+note-level operations (read, create, search, tags). Use it alongside `obs`
+for a complete terminal workflow.
 
 !!! tip "Two tools, zero overlap"
     `obs` = graph analysis + AI insights (works offline, reads SQLite).
@@ -585,7 +555,9 @@ Claude looks up the daily note via `search_notes` or `list_notes`, then calls `a
 
 > *"Add this row to the Results table in my sensitivity-analysis note: | OLS | 0.45 | 0.02 |"*
 
-Claude calls `insert_to_note(note_id, content="| OLS | 0.45 | 0.02 |", after_heading="Results", as_table_row=True)`.
+Claude calls `insert_to_note(note_id,
+content="| OLS | 0.45 | 0.02 |", after_heading="Results",
+as_table_row=True)`.
 Only the table is touched — the rest of the note is unchanged.
 
 > *"Replace the Abstract section of my paper draft with this revised version: [...]"*
@@ -598,7 +570,10 @@ Everything between `## Abstract` and the next same-level heading is replaced.
 Claude calls `insert_to_note(note_id, content="## Limitations\n\n...", before_heading="References")`.
 
 !!! tip "When to use which write tool"
-    `append_to_note` → end of file, no structure needed. `write_note` → full replacement with auto-backup. `insert_to_note` → heading-aware surgical edit (table row, section swap, before/after).
+    `append_to_note` → end of file, no structure needed.
+    `write_note` → full replacement with auto-backup.
+    `insert_to_note` → heading-aware surgical edit
+    (table row, section swap, before/after).
 
 ### AI analysis via Claude
 
@@ -613,7 +588,7 @@ Claude calls `run_obs_ai("gaps", "MyVault")` and presents actionable gap-filling
 Claude calls `run_obs_ai("quality", "MyVault")` and presents the lowest-scoring notes with
 their dimension breakdowns.
 
-### Find merge candidates
+### Find merge candidates via Claude
 
 > *"Find notes in MyVault that are very similar to each other and might be merged"*
 
@@ -630,9 +605,129 @@ similarity scores and merge rationale.
 
 ---
 
+## Which Workflow Should You Use?
+
+Not sure which `obs` workflow fits your task? Use this decision flowchart:
+
+```mermaid
+flowchart TD
+    Q1{"What do you want to do?"}
+    Q1 -->|"First time setup"| S1[Install → discover → scan]
+    Q1 -->|"View vault health"| S2[obs health + obs analyze]
+    Q1 -->|"Find & fix issues"| S3[obs doctor → obs ai refactor]
+    Q1 -->|"AI analysis"| S4[obs ai setup → obs ai features]
+    Q1 -->|"Weekly planning"| S5[obs board refresh]
+    Q1 -->|"Research tasks"| S6[obs research workflow]
+    Q1 -->|"Automate / script"| S7[JSON + scripts]
+    Q1 -->|"Claude natural language"| S8[MCP integration]
+
+    S2 --> Q2{"Health is…"}
+    Q2 -->|"Good"| D1["✅ You're done"]
+    Q2 -->|"Has issues"| I1[obs ai gaps → fix orphans/links]
+
+    S3 --> R1[obs ai refactor --dry-run]
+    R1 --> R2[obs ai merge-suggest]
+    R2 --> R3[obs ai tag-suggest --apply]
+    R3 --> R4[obs scan --prune & re-check]
+
+    S4 --> A1[Set up providers]
+    A1 --> A2{Pick feature}
+    A2 -->|"Similar notes"| A3[obs ai similar]
+    A2 -->|"Duplicates"| A4[obs ai duplicates]
+    A2 -->|"Knowledge gaps"| A5[obs ai gaps]
+    A2 -->|"Vault summary"| A6[obs ai summarize]
+    A2 -->|"Reorganization"| A7[obs ai refactor]
+    A2 -->|"Merge candidates"| A8[obs ai merge-suggest]
+    A2 -->|"Note quality"| A9[obs ai quality]
+
+    S5 --> B1[obs board refresh --dry-run]
+    B1 --> B2[obs board refresh]
+    B2 --> B3[Open _ACTION-BOARD.md]
+    B3 --> B4[LLM augment thinking sections]
+
+    S6 --> R01[obs research zotero search]
+    R01 --> R02[obs research pdf search]
+    R02 --> R03[obs research manuscript stats]
+
+    S7 --> J1[obs stats --json]
+    J1 --> J2[obs health --json]
+    J2 --> J3[obs ai quality --json]
+
+    style S1 fill:#6366f1,color:#fff
+    style S2 fill:#22c55e,color:#fff
+    style S3 fill:#eab308,color:#000
+    style S4 fill:#3b82f6,color:#fff
+    style S5 fill:#a855f7,color:#fff
+    style S6 fill:#ec4899,color:#fff
+    style S7 fill:#64748b,color:#fff
+    style S8 fill:#06b6d4,color:#fff
+```
+
+---
+
+## Board Sync Workflow
+
+Keep your `_ACTION-BOARD.md` up to date for weekly planning.
+
+```bash
+# 1. Preview what would change
+obs board refresh --dry-run
+
+# 2. Generate the deterministic board
+obs board refresh
+
+# 3. Check board status
+obs board status
+
+# 4. Open _ACTION-BOARD.md in your vault
+```
+
+### What the board contains
+
+The rendered `_ACTION-BOARD.md` includes:
+
+| Section | Source | Editable? |
+|---------|--------|-----------|
+| Status tables | Atlas + .STATUS + vault DB | Deterministic (overwritten on refresh) |
+| "Act on now" | Heuristic ranking | Deterministic |
+| TL;DR | LLM placeholder | LLM augments on demand |
+| Future ideas | LLM placeholder | LLM augments on demand |
+| Threats | LLM placeholder | LLM augments on demand |
+| This week | LLM placeholder | LLM augments on demand |
+
+### Weekly cadence
+
+```mermaid
+flowchart TD
+    M[Monday 09:15] -->|launchd auto-refresh| R[obs board refresh]
+    R --> B[_ACTION-BOARD.md updated]
+    B --> O[Open board note]
+    O --> L[LLM augments thinking sections]
+    L --> W[Work through "Act on now" items]
+    W --> N[Next Monday]
+    style M fill:#a855f7,color:#fff
+    style R fill:#6366f1,color:#fff
+```
+
+### Automate with launchd
+
+If you installed the launchd plist during setup, the board refreshes automatically
+every Monday at 09:15:
+
+```bash
+# Check the agent is loaded
+launchctl list | grep obs-board
+
+# Trigger a manual refresh
+launchctl kickstart gui/$(id -u)/com.data-wise.obs-board-refresh
+```
+
+---
+
 ## Research Workflow
 
-**Prerequisites:** Complete [Research Setup](tutorials/research-setup.md) to configure Zotero, PDF directories, and manuscripts.
+**Prerequisites:** Complete [Research Setup](tutorials/research-setup.md)
+to configure Zotero, PDF directories, and manuscripts.
 
 ### Search Zotero from the terminal
 

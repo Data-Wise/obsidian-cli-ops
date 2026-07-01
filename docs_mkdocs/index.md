@@ -1,10 +1,10 @@
 # obs -- Your Vault's Command Line
 
-[![Version](https://img.shields.io/badge/version-4.2.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-4.3.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
 [![Tests](https://img.shields.io/badge/tests-450%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![MCP Tools](https://img.shields.io/badge/MCP%20tools-25-purple.svg)](claude-integration.md)
+[![MCP Tools](https://img.shields.io/badge/MCP%20tools-42-purple.svg)](claude-integration.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/LICENSE)
 
 A laser-focused CLI for Obsidian vault management with AI-powered graph analysis — and a full
@@ -27,6 +27,11 @@ Claude / MCP integration so you can query your vaults in natural language.
 !!! tip "Graph Analysis"
     PageRank, centrality, clustering, orphan/hub detection. Understand your vault's structure at a glance with the health dashboard.
 
+!!! tip "Board Sync (v4.3.0)"
+    `obs board refresh` generates a deterministic `_ACTION-BOARD.md` from atlas
+    state, vault stats, and `.STATUS` files — heuristic-ranked action items plus
+    status tables. LLM augments thinking sections on demand.
+
 !!! tip "Claude Integration (v4.0.0)"
     42 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
 
@@ -34,15 +39,31 @@ Claude / MCP integration so you can query your vaults in natural language.
 
 ## Quick Start
 
+### 1. Install & scan
+
 ```bash
-# 1. Install
 brew install data-wise/tap/obsidian-cli-ops
-
-# 2. Discover your vaults
 obs discover ~/Documents --scan
-
-# 3. Check vault health
 obs health MyVault
+```
+
+### 2. Pick your workflow
+
+```mermaid
+flowchart TD
+    A[obs ready] --> B{"Goal?"}
+    B -->|"Vault health & cleanup"| C[obs doctor → obs ai refactor]
+    B -->|"AI analysis"| D[obs ai setup → obs ai similar/gaps]
+    B -->|"Weekly planning"| E[obs board refresh]
+    B -->|"Research"| F[obs research zotero/pdf/manuscript]
+    B -->|"Natural language"| G[Claude MCP integration]
+
+    style A fill:#6366f1,color:#fff
+    style C fill:#22c55e,color:#fff
+    style D fill:#a855f7,color:#fff
+    style E fill:#3b82f6,color:#fff
+    style F fill:#ec4899,color:#fff
+    style G fill:#06b6d4,color:#fff
 ```
 
 ---

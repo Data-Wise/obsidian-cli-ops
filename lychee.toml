@@ -1,0 +1,17 @@
+# lychee link checker configuration
+# https://github.com/lycheeverse/lychee
+
+exclude = [
+  '^#',
+  '^http://localhost',
+  '^http://127.0.0.1',
+  '^mailto:',
+  '^git@',
+  '^https://www.npmjs.com/package/',
+]
+
+max_concurrency = 8
+timeout = 30
+retry_wait_time = 5
+max_retries = 2
+accept = [200, 204, 206, 301, 302, 303, 307, 308]

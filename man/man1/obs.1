@@ -156,6 +156,19 @@ Use
 .B \-\-layer
 (repeatable) to restrict to a subset.
 Exits 0 when all checks pass/warn; 1 on any fail; 2 on unexpected error.
+.SS Board Management
+.TP
+.B board refresh\fR [\fB\-\-vault\fR \fIname\fR] [\fB\-\-all\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR]
+Refresh the \fI_ACTION\-BOARD.md\fR file from atlas project state, vault stats,
+and \fI.STATUS\fR files. Defaults to the first research vault; use
+.B \-\-all
+to update all vaults and
+.B \-\-dry\-run
+to preview without writing.
+.TP
+.B board status\fR [\fB\-\-vault\fR \fIname\fR] [\fB\-\-all\fR] [\fB\-\-json\fR]
+Show whether the board file exists, when it was last refreshed, and whether
+the vault has ghost drift. Defaults to all vaults.
 .SS Utilities
 .TP
 .B help\fR [\fB\-\-all\fR]
@@ -222,6 +235,12 @@ Configure and test AI providers:
 .B obs ai setup
 .br
 .B obs ai test
+.TP
+Refresh the research action board:
+.B obs board refresh
+.TP
+Check board refresh status:
+.B obs board status
 .TP
 Preview an AI refactor without applying it:
 .B obs ai refactor my\-vault \-\-dry\-run

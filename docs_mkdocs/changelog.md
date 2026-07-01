@@ -6,7 +6,53 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
-## [4.2.0] - 2026-06-26
+## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
+
+### Board sync automation
+
+#### Added
+
+- **`obs board refresh`** — multi-source board engine that reads from atlas
+  (`atlas project list`), vault DB (ghost drift detection), and `.STATUS` files
+  (YAML + fallback line parser), then merges into a deterministic `_ACTION-BOARD.md`
+  with heuristic-ranked action items and status tables.
+- **`obs board status`** — check whether `_ACTION-BOARD.md` exists, when it was
+  last refreshed, and whether the vault has ghost drift.
+- **`scripts/board-refresh.sh`** — weekly cron shell script with Python path
+  resolver (3-candidate chain matching `obs.zsh` priority), intended for launchd
+  automation.
+- **`core/board.py`** — 535-line engine with 5 components: `AtlasConnector`,
+  `StatusConnector` (PyYAML with fallback), `VaultConnector`, `Merger`,
+  `BoardRenderer` (action ranking, progress bars, status icons), and `VaultWriter`
+  (marker-aware ± full-file overwrite).
+
+### E2E dogfood expansion
+
+#### Added
+
+- New test classes: `TestE2ENoteLinks`, `TestE2EDogfoodCLI`, `TestE2EMiscTools`
+- New MCP tool coverage: `write_note`, `rename_note`, `get_note_links`
+  (outgoing/incoming/orphan), `insert_to_note`, `server_info`,
+  `get_bridge_status`, `get_trends`, `get_stale_notes`, `get_daily_digest`,
+  `diagnose`, `unified_search`
+- New CLI subprocess tests: `doctor`, `health`, `analyze`, `search`, `vaults`, `stats`
+- New edge cases: `create_note` subfolder, duplicate guard, negative limits,
+  unicode queries, empty vault_id, path traversal, unknown vault
+
+#### Fixed
+
+- `test_delete_confirm_removes_file`: title slugification mismatch (spaces→hyphens
+  in filenames broke file lookup)
+- `create_note` E2E tests: content heading must match `title` param for
+  `search_notes` to find the note; `rescan_vault` required after creation for DB indexing
+- `import json` shadowing in `obs_cli.py` that broke `obs doctor --layer sync --json`
+
+#### Changed
+
+- E2E test count: 32 → 71 (all passing, 0 skips)
+- Doc counts synced via `scripts/validate-counts.sh --fix`
+
+## v4.2.0 (2026-06-26) — Vault ↔ index sync reconciliation
 
 ### Vault ↔ index sync reconciliation
 
