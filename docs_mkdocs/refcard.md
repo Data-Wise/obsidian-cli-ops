@@ -234,4 +234,4 @@ See the [official docs](https://help.obsidian.md/cli) for the full command list.
 
 ---
 
-**Version:** 4.2.0 | **Commands:** 48 (17 top-level; incl. config + research families from nexus-cli) | **MCP Tools:** 42 | **AI Providers:** 5
+**Version:** 4.2.0 | **Commands:** 49 (17 top-level; incl. config + research families from nexus-cli) | **MCP Tools:** 42 | **AI Providers:** 5

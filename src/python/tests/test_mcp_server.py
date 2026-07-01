@@ -468,12 +468,15 @@ class TestNoteCRUD:
         vault_id, vault_dir, _ = obs_vault
         # Create a disposable note
         mcp_mod.create_note(vault_id, "RenameTarget", "# RenameTarget\n\nWill be renamed.")
+        # Re-scan so the new note is indexed and we can obtain its ID.
+        from vault_scanner import VaultScanner
+        scanner = VaultScanner(real_db)
+        asyncio.run(scanner.scan_vault(str(vault_dir), vault_id))
         rows = real_db.list_notes(vault_id, limit=100)
         rename_id = next(
             (r["id"] for r in rows if "RenameTarget" in r["title"]), None
         )
-        if rename_id is None:
-            pytest.skip("RenameTarget not yet indexed in DB (scanner not re-run)")
+        assert rename_id is not None, "RenameTarget was not indexed after re-scan"
         result = mcp_mod.rename_note(rename_id, "RenameSuccess")
         assert isinstance(result, str)
 
