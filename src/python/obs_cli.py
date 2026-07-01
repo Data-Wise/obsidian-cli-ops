@@ -1099,6 +1099,18 @@ def main():
     zot_get.add_argument('--format', default='apa', choices=['apa', 'bibtex', 'full'], help='Output format (default: apa)')
     zot_recent = zotero_sub.add_parser('recent', help='List recently modified Zotero items')
     zot_recent.add_argument('--limit', '-n', type=int, default=10, help='Max results (default: 10)')
+    zot_cite = zotero_sub.add_parser('cite', help='Generate citation for a Zotero item')
+    zot_cite.add_argument('key', help='Zotero item key')
+    zot_cite.add_argument('--style', '-s', default='apa', choices=['apa', 'bibtex'], help='Citation style (default: apa)')
+    zot_tags = zotero_sub.add_parser('tags', help='List all tags with counts')
+    zot_tags.add_argument('--limit', '-n', type=int, default=30, help='Max tags (default: 30)')
+    zot_tags.add_argument('--json', action='store_true', help='Output as JSON')
+    zot_collections = zotero_sub.add_parser('collections', help='List all collections')
+    zot_collections.add_argument('--json', action='store_true', help='Output as JSON')
+    zot_bytag = zotero_sub.add_parser('by-tag', help='Get items with a specific tag')
+    zot_bytag.add_argument('tag', help='Tag to search for')
+    zot_bytag.add_argument('--limit', '-n', type=int, default=20, help='Max results (default: 20)')
+    zot_bytag.add_argument('--json', action='store_true', help='Output as JSON')
 
     # pdf subcommands
     pdf_parser = research_sub.add_parser('pdf', help='PDF search commands')
@@ -1106,6 +1118,11 @@ def main():
     pdf_search = pdf_sub.add_parser('search', help='Search PDF content')
     pdf_search.add_argument('query', help='Search query')
     pdf_search.add_argument('--limit', '-n', type=int, default=10, help='Max results (default: 10)')
+    pdf_extract_parser = pdf_sub.add_parser('extract', help='Extract text from a PDF file')
+    pdf_extract_parser.add_argument('path', help='Path to PDF file')
+    pdf_extract_parser.add_argument('--pages', '-p', help='Page range (e.g. 1-5)')
+    pdf_extract_parser.add_argument('--layout', '-l', action='store_true', help='Preserve layout')
+    pdf_extract_parser.add_argument('--json', action='store_true', help='Output as JSON')
 
     # course subcommands
     course_parser = research_sub.add_parser('course', help='Course management commands')
@@ -1124,6 +1141,46 @@ def main():
     ms_show = ms_sub.add_parser('show', help='Show manuscript details')
     ms_show.add_argument('name', help='Manuscript name or directory name')
     ms_sub.add_parser('stats', help='Show manuscript statistics')
+    ms_batch_status = ms_sub.add_parser('batch-status', help='Update status for multiple manuscripts')
+    ms_batch_status.add_argument('names', nargs='+', help='Manuscript names')
+    ms_batch_status.add_argument('--status', '-s', required=True, help='New status value')
+    ms_batch_progress = ms_sub.add_parser('batch-progress', help='Update progress for multiple manuscripts')
+    ms_batch_progress.add_argument('updates', nargs='+', help='Updates as name:progress (e.g. paper1:75)')
+    ms_batch_archive = ms_sub.add_parser('batch-archive', help='Archive multiple manuscripts')
+    ms_batch_archive.add_argument('names', nargs='+', help='Manuscript names to archive')
+    ms_export = ms_sub.add_parser('export', help='Export manuscript metadata to file')
+    ms_export.add_argument('output', help='Output file path')
+    ms_export.add_argument('--format', '-f', default='json', choices=['json', 'csv'], help='Export format (default: json)')
+
+    # research search — unified cross-source search
+    research_search_parser = research_sub.add_parser('search', help='Search across vault, Zotero, and PDF sources')
+    research_search_parser.add_argument('query', help='Search query')
+    research_search_parser.add_argument('--source', '-s', choices=['vault', 'zotero', 'pdf', 'all'], default='all', help='Source to search (default: all)')
+    research_search_parser.add_argument('--limit', '-n', type=int, default=20, help='Max results (default: 20)')
+    research_search_parser.add_argument('--json', action='store_true', help='Output as JSON')
+
+    # research graph — vault graph export
+    research_graph_parser = research_sub.add_parser('graph', help='Export vault knowledge graph')
+    research_graph_parser.add_argument('vault', help='Vault name or ID')
+    research_graph_parser.add_argument('--format', choices=['graphml', 'd3', 'json'], default='json', help='Export format (default: json)')
+    research_graph_parser.add_argument('--output', '-o', help='Output file path (defaults to stdout)')
+    research_graph_parser.add_argument('--limit', type=int, default=200, help='Max notes to include (default: 200)')
+    research_graph_parser.add_argument('--tags', '-t', action='store_true', help='Include tag nodes')
+
+    # research quarto — build/preview Quarto manuscripts
+    quarto_parser = research_sub.add_parser('quarto', help='Quarto manuscript build/preview commands')
+    quarto_sub = quarto_parser.add_subparsers(dest='quarto_command')
+    quarto_build = quarto_sub.add_parser('build', help='Build a Quarto manuscript')
+    quarto_build.add_argument('name', help='Manuscript name or directory name')
+    quarto_build.add_argument('--format', default='html', help='Output format (default: html; maps to quarto render --to)')
+    quarto_preview = quarto_sub.add_parser('preview', help='Preview a Quarto manuscript')
+    quarto_preview.add_argument('name', help='Manuscript name or directory name')
+    quarto_preview.add_argument('--port', type=int, default=4848, help='Preview port (default: 4848)')
+
+    # research learn — interactive tutorials
+    learn_parser = research_sub.add_parser('learn', help='Interactive tutorials for Obsidian CLI Ops')
+    learn_parser.add_argument('level', choices=['getting-started', 'medium', 'advanced'], help='Tutorial difficulty level')
+    learn_parser.add_argument('--step', type=int, help='Start from a specific step')
 
     # bib subcommands
     bib_parser = research_sub.add_parser('bib', help='Bibliography commands')
@@ -1979,6 +2036,52 @@ def main():
                     else:
                         for i, item in enumerate(items, 1):
                             print(f"{i}. [{item.key}] {item.title}")
+                elif zcmd == 'cite':
+                    item = zc.get(args.key)
+                    if item is None:
+                        print(f"Key not found: {args.key}")
+                        sys.exit(1)
+                    if args.style == 'bibtex':
+                        print(item.citation_bibtex())
+                    else:
+                        print(item.citation_apa())
+                elif zcmd == 'tags':
+                    tags = zc.tags(limit=args.limit)
+                    if not tags:
+                        print("No tags found.")
+                    else:
+                        if getattr(args, 'json', False):
+                            import json
+                            print(json.dumps([{"tag": t[0], "count": t[1]} for t in tags], indent=2))
+                        else:
+                            print(f"Tags ({len(tags)}):")
+                            for tag, count in tags:
+                                print(f"  {tag}: {count}")
+                elif zcmd == 'collections':
+                    collections = zc.collections()
+                    if not collections:
+                        print("No collections found.")
+                    else:
+                        if getattr(args, 'json', False):
+                            import json
+                            print(json.dumps([{"name": c[0], "count": c[1]} for c in collections], indent=2))
+                        else:
+                            print("Collections:")
+                            for name, count in collections:
+                                print(f"  {name} ({count} items)")
+                elif zcmd == 'by-tag':
+                    items = zc.by_tag(args.tag, limit=args.limit)
+                    if not items:
+                        print(f"No items found with tag: {args.tag}")
+                    else:
+                        if getattr(args, 'json', False):
+                            import json
+                            print(json.dumps([i.to_dict() for i in items], indent=2))
+                        else:
+                            print(f"Items tagged '{args.tag}' ({len(items)}):")
+                            for i, item in enumerate(items, 1):
+                                year = item.date[:4] if item.date else "n.d."
+                                print(f"  {i}. [{item.key}] {item.title} ({year})")
                 else:
                     zotero_parser.print_help()
 
@@ -2000,6 +2103,28 @@ def main():
                         for r in results:
                             print(f"[p.{r.page}] {r.filename}")
                             print(f"  …{r.context}…")
+                elif pcmd == 'extract':
+                    if not extractor.available():
+                        print("pdftotext not found — install poppler: brew install poppler")
+                        sys.exit(1)
+                    try:
+                        doc = extractor.extract(args.path, pages=args.pages, layout=args.layout)
+                    except FileNotFoundError:
+                        print(f"PDF not found: {args.path}")
+                        sys.exit(1)
+                    except RuntimeError as e:
+                        print(str(e))
+                        sys.exit(1)
+                    if getattr(args, 'json', False):
+                        import json
+                        print(json.dumps(doc.to_dict(), indent=2))
+                    else:
+                        print(f"File: {doc.filename}")
+                        print(f"Pages: {doc.page_count}  Size: {doc.size_bytes // 1024} KB")
+                        if args.pages:
+                            print(f"Pages extracted: {args.pages}")
+                        print()
+                        print(doc.text)
                 else:
                     pdf_parser.print_help()
 
@@ -2018,37 +2143,159 @@ def main():
                         print(f"{'Course':<30} {'Status':<10} {'Progress':<10} {'Week':<6} {'Lectures'}")
                         print("-" * 70)
                         for c in courses:
-                            print(f"{c.name:<30} {(c.status.status or '-'):<10} "
-                                  f"{(c.status.progress or '-'):<10} "
-                                  f"{str(c.status.current_week or '-'):<6} {c.lecture_count}")
+                            print(f"{c.name:<30} {(c.status or '-'):<10} "
+                                  f"{(c.progress or '-'):<10} "
+                                  f"{str(c.week or '-'):<6} {c.lecture_count}")
                 elif ccmd == 'show':
                     course = cm.get_course(args.name)
                     if course is None:
                         print(f"Course not found: {args.name}")
                         sys.exit(1)
                     print(f"Course: {course.name}")
-                    if course.quarto_config:
-                        print(f"Title:  {course.quarto_config.title}")
-                    print(f"Status: {course.status.status or '-'}")
-                    print(f"Progress: {course.status.progress or '-'}")
-                    print(f"Week: {course.status.current_week or '-'}")
-                    if course.status.next_action:
-                        print(f"Next: {course.status.next_action}")
+                    print(f"Title:  {course.title}")
+                    print(f"Status: {course.status or '-'}")
+                    print(f"Progress: {course.progress or '-'}")
+                    print(f"Week: {course.week or '-'}")
+                    if course.next_action:
+                        print(f"Next: {course.next_action}")
                     print(f"Lectures: {course.lecture_count}")
                 elif ccmd == 'lectures':
                     course = cm.get_course(args.name)
                     if course is None:
                         print(f"Course not found: {args.name}")
                         sys.exit(1)
-                    lectures = cm.list_lectures(course)
+                    lectures = cm.list_lectures(course.name)
                     if not lectures:
                         print("No lectures found.")
                     else:
                         for lec in lectures:
-                            week = f"Week {lec.week_number}" if lec.week_number else "    "
+                            week = f"Week {lec.week}" if lec.week else "    "
                             print(f"  {week:<8} {lec.title or lec.filename}")
                 else:
                     course_parser.print_help()
+
+            elif sub == 'search':
+                from db_manager import DatabaseManager
+                dbm = DatabaseManager()
+                zotero_db = Path(cfg.research.zotero.database).expanduser() if cfg and cfg.research and cfg.research.zotero else None
+                pdf_dirs = [Path(d).expanduser() for d in cfg.research.pdf_directories] if cfg and cfg.research and cfg.research.pdf_directories else None
+                from research.unified_search import UnifiedSearch
+                us = UnifiedSearch(db_manager=dbm, zotero_db=zotero_db, pdf_dirs=pdf_dirs)
+                sources = None if getattr(args, 'source', 'all') == 'all' else [args.source]
+                results = us.search(args.query, sources=sources, limit_per_source=args.limit)
+                if getattr(args, 'json', False):
+                    import json
+                    print(json.dumps([r.to_dict() for r in results], indent=2, default=str))
+                elif not results:
+                    print("No results found.")
+                else:
+                    print(f"Search: '{args.query}' ({len(results)} results)\n")
+                    for r in results:
+                        icon = {"vault": "📝", "zotero": "📚", "pdf": "📄"}.get(r.source, "•")
+                        print(f"  {icon} [{r.source}] {r.title}")
+                        print(f"     {r.snippet}")
+
+            elif sub == 'graph':
+                from db_manager import DatabaseManager
+                from graph_builder import GraphBuilder
+                dbm = DatabaseManager()
+                try:
+                    vault = dbm.get_vault_by_name_or_id(args.vault)
+                except ValueError as e:
+                    print(f"Error: {e}", file=sys.stderr)
+                    sys.exit(1)
+                if not vault:
+                    print(f"Vault not found: {args.vault}", file=sys.stderr)
+                    sys.exit(1)
+                gb = GraphBuilder(dbm)
+                graph = gb.build_graph(vault['id'])
+                import networkx as nx
+                out = getattr(args, 'output', None)
+                fmt = args.format
+                if fmt == 'graphml':
+                    if out:
+                        nx.write_graphml(graph, out)
+                        print(f"Exported GraphML to: {out}")
+                    else:
+                        print(nx.generate_graphml(graph))
+                elif fmt in ('d3', 'json'):
+                    nodes = []
+                    for nid in graph.nodes():
+                        note = dbm.get_note(nid)
+                        nodes.append({"id": nid, "title": note.get("title", nid) if note else nid, "group": 1})
+                    links = [{"source": u, "target": v} for u, v in graph.edges()]
+                    if getattr(args, 'tags', False):
+                        tag_stats = dbm.get_vault_tag_stats(vault['id'])
+                        tag_map = {}
+                        for t in tag_stats:
+                            tag_name = t['tag']
+                            tid = f"tag:{tag_name}"
+                            nodes.append({"id": tid, "title": f"#{tag_name}", "group": 2})
+                            tag_map[tag_name] = tid
+                        with dbm.get_connection() as conn:
+                            cursor = conn.execute("""
+                                SELECT n.id, t.name FROM note_tags nt
+                                JOIN tags t ON nt.tag_id = t.id
+                                JOIN notes n ON nt.note_id = n.id
+                                WHERE n.vault_id = ?
+                            """, (vault['id'],))
+                            for row in cursor.fetchall():
+                                tid = tag_map.get(row[1])
+                                if tid:
+                                    links.append({"source": row[0], "target": tid})
+                    data = {"nodes": nodes, "links": links}
+                    import json as _json
+                    output = _json.dumps(data, indent=2, default=str)
+                    if out:
+                        Path(out).write_text(output)
+                        print(f"Exported {fmt} to: {out}")
+                    else:
+                        print(output)
+                else:
+                    print(f"Unsupported format: {fmt}")
+
+            elif sub == 'quarto':
+                if cfg is None or cfg.research is None or cfg.research.writing is None:
+                    print("research.writing not configured — run `obs config show` for details")
+                    sys.exit(1)
+                from research.manuscript import ManuscriptManager
+                mm = ManuscriptManager(cfg.research.writing.manuscripts_dir)
+                qcmd = getattr(args, 'quarto_command', None)
+                if qcmd == 'build':
+                    ms = mm.get_manuscript(args.name)
+                    if ms is None:
+                        print(f"Manuscript not found: {args.name}")
+                        sys.exit(1)
+                    import subprocess as sp
+                    fmt = args.format
+                    if fmt == 'manuscript':
+                        fmt = 'html'
+                    result = sp.run(
+                        ["quarto", "render", ms.path, "--to", fmt],
+                        capture_output=True, text=True
+                    )
+                    if result.returncode == 0:
+                        print(f"Built {ms.name} successfully")
+                        if result.stdout:
+                            print(result.stdout)
+                    else:
+                        print(f"Build failed:\n{result.stderr}")
+                        sys.exit(1)
+                elif qcmd == 'preview':
+                    ms = mm.get_manuscript(args.name)
+                    if ms is None:
+                        print(f"Manuscript not found: {args.name}")
+                        sys.exit(1)
+                    import subprocess as sp
+                    result = sp.run(
+                        ["quarto", "preview", ms.path, "--port", str(args.port)],
+                        capture_output=True, text=True
+                    )
+                    print(result.stdout)
+                    if result.returncode != 0:
+                        print(f"Preview failed:\n{result.stderr}")
+                else:
+                    quarto_parser.print_help()
 
             elif sub == 'manuscript':
                 if cfg is None or cfg.research is None or cfg.research.writing is None:
@@ -2066,8 +2313,8 @@ def main():
                         print(f"{'Manuscript':<35} {'Status':<12} {'Progress':<10} {'Words'}")
                         print("-" * 70)
                         for m in manuscripts:
-                            print(f"{m.name:<35} {(m.status.status or '-'):<12} "
-                                  f"{(m.status.progress or '-'):<10} "
+                            print(f"{m.name:<35} {(m.status or '-'):<12} "
+                                  f"{(m.progress or '-'):<10} "
                                   f"{m.word_count or '-'}")
                 elif mcmd == 'show':
                     ms = mm.get_manuscript(args.name)
@@ -2075,17 +2322,17 @@ def main():
                         print(f"Manuscript not found: {args.name}")
                         sys.exit(1)
                     print(f"Manuscript: {ms.name}")
-                    if ms.quarto_config:
-                        print(f"Title:    {ms.quarto_config.title}")
-                        if ms.quarto_config.authors:
-                            print(f"Authors:  {', '.join(ms.quarto_config.authors)}")
-                    print(f"Status:   {ms.status.status or '-'}")
-                    print(f"Progress: {ms.status.progress or '-'}")
-                    if ms.status.target:
-                        print(f"Target:   {ms.status.target}")
+                    if ms.title:
+                        print(f"Title:    {ms.title}")
+                    if ms.authors:
+                        print(f"Authors:  {', '.join(ms.authors)}")
+                    print(f"Status:   {ms.status or '-'}")
+                    print(f"Progress: {ms.progress or '-'}")
+                    if ms.target:
+                        print(f"Target:   {ms.target}")
                     if ms.word_count:
                         print(f"Words:    {ms.word_count}")
-                    print(f"Format:   {ms.format}")
+                    print(f"Format:   {ms.format_type or '-'}")
                 elif mcmd == 'stats':
                     stats = mm.get_statistics()
                     print(f"Total manuscripts: {stats['total']}")
@@ -2093,6 +2340,48 @@ def main():
                     print(f"Total words:       {stats.get('total_words', 0)}")
                     for fmt, count in stats.get('by_format', {}).items():
                         print(f"  {fmt}: {count}")
+                elif mcmd == 'batch-status':
+                    result = mm.batch_update_status(args.names, args.status)
+                    print(f"Updated {result['success']} manuscripts")
+                    if result['failed'] > 0:
+                        print(f"Failed: {result['failed']}")
+                        for error in result['errors']:
+                            print(f"  {error}")
+                elif mcmd == 'batch-progress':
+                    parsed = {}
+                    for update in args.updates:
+                        try:
+                            name, progress_str = update.split(":")
+                            parsed[name] = int(progress_str)
+                        except ValueError:
+                            print(f"Invalid format '{update}' (expected name:progress)")
+                    if not parsed:
+                        print("No valid updates provided")
+                        sys.exit(1)
+                    result = mm.batch_update_progress(parsed)
+                    print(f"Updated {result['success']} manuscripts")
+                    if result['failed'] > 0:
+                        print(f"Failed: {result['failed']}")
+                        for error in result['errors']:
+                            print(f"  {error}")
+                elif mcmd == 'batch-archive':
+                    result = mm.batch_archive(args.names)
+                    print(f"Archived {result['success']} manuscripts")
+                    if result['archived_to']:
+                        print("Archived to:")
+                        for path in result['archived_to']:
+                            print(f"  {path}")
+                    if result['failed'] > 0:
+                        print(f"Failed: {result['failed']}")
+                        for error in result['errors']:
+                            print(f"  {error}")
+                elif mcmd == 'export':
+                    try:
+                        mm.batch_export_metadata(args.output, format=args.format)
+                        print(f"Exported manuscript metadata to: {args.output}")
+                    except ValueError as e:
+                        print(f"Error: {e}")
+                        sys.exit(1)
                 else:
                     ms_parser.print_help()
 
@@ -2101,10 +2390,10 @@ def main():
                     print("research.writing not configured — run `obs config show` for details")
                     sys.exit(1)
                 from research.bibliography import BibliographyManager
-                bm = BibliographyManager(cfg.research.writing.manuscripts_dir)
+                bm = BibliographyManager()
                 bcmd = getattr(args, 'bib_command', None)
                 if bcmd == 'check':
-                    result = bm.check_citations(args.name)
+                    result = bm.check_citations(Path(cfg.research.writing.manuscripts_dir) / args.name)
                     if result is None:
                         print(f"Manuscript not found or no .bib file: {args.name}")
                         sys.exit(1)

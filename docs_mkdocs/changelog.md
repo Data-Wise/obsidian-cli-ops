@@ -52,6 +52,39 @@ All notable changes to Obsidian CLI Ops.
 - E2E test count: 32 → 71 (all passing, 0 skips)
 - Doc counts synced via `scripts/validate-counts.sh --fix`
 
+### Release-prep fixes (2026-07-01)
+
+Follow-up pass closing gaps found before the v4.3.0 GitHub release was cut.
+
+#### Added
+
+- `obs board refresh`/`obs board status` wired into the `src/obs.zsh` shell
+  dispatcher — previously reachable only via the raw `python3 obs_cli.py` path
+- `obs board`/`research board` listed in `obs help --all`
+- `obs research learn`, `obs config validate`, `obs config migrate` documented
+  with runnable examples (were CLI-reference-only, no tutorial coverage)
+- `docs/planning/README.md` updated with the `specs-completed/` archive
+  convention and a SPEC-lifecycle rule mirroring the existing
+  ORCHESTRATE-deletion convention
+
+#### Fixed
+
+- Command count corrected 62 → 63 across `CLAUDE.md`, `cli-reference.md`,
+  `refcard.md` (`obs research learn` had landed after the count was last set)
+- Version strings corrected 4.2.0 → 4.3.0 across 14 files (`obs.zsh`,
+  `pyproject.toml`, `package.json`, man page, tests) — the in-repo version bump
+  for this release had been incomplete
+- MCP Tool Groups section in `cli-reference.md` completed (6 → 10 groups) to
+  match `refcard.md`
+- Stale anchor link (`refcard.md#claude-mcp-tools-v330`) broken by the above fix
+
+#### Removed
+
+- 34 stale/already-shipped branches (local + remote) whose content had landed
+  via squash-merge but were never cleaned up
+- Stray `ORCHESTRATE-*.md` working artifacts that leaked onto `dev` from
+  merged PRs
+
 ## v4.2.0 (2026-06-26) — Vault ↔ index sync reconciliation
 
 ### Vault ↔ index sync reconciliation

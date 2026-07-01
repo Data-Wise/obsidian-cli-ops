@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 49 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
+> - **What:** Full reference for all 63 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
@@ -775,6 +775,54 @@ List recently modified Zotero items.
 obs research zotero recent [--limit N]
 ```
 
+### obs research zotero cite
+
+Generate an APA or BibTeX citation for a Zotero item.
+
+```bash
+obs research zotero cite <key> [--style apa|bibtex]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `key` | required | Zotero item key |
+| `--style` | `apa` | Citation style (`apa` or `bibtex`) |
+
+### obs research zotero tags
+
+List all tags with item counts.
+
+```bash
+obs research zotero tags [--limit N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--limit` | `30` | Maximum tags to show |
+| `--json` | | Machine-readable JSON output |
+
+### obs research zotero collections
+
+List all collections with item counts.
+
+```bash
+obs research zotero collections [--json]
+```
+
+### obs research zotero by-tag
+
+Get all items tagged with a specific tag.
+
+```bash
+obs research zotero by-tag <tag> [--limit N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `tag` | required | Tag name to filter by |
+| `--limit` | `20` | Maximum results |
+| `--json` | | Machine-readable JSON output |
+
 ### obs research pdf search
 
 Search full-text content of indexed PDFs.
@@ -782,6 +830,23 @@ Search full-text content of indexed PDFs.
 ```bash
 obs research pdf search <query> [--limit N]
 ```
+
+### obs research pdf extract
+
+Extract text from a PDF file using `pdftotext`.
+
+```bash
+obs research pdf extract <path> [--pages RANGE] [--layout] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `path` | required | Path to the PDF file |
+| `--pages` | | Page range (e.g. `1-5`, `3`) |
+| `--layout` | | Preserve visual layout instead of raw text |
+| `--json` | | Machine-readable JSON output |
+
+Requires `pdftotext` (`brew install poppler`).
 
 ### obs research course list / show / lectures
 
@@ -803,12 +868,145 @@ obs research manuscript show <name>           # Show manuscript details
 obs research manuscript stats                 # Aggregate statistics
 ```
 
+### obs research manuscript batch-status
+
+Update status for multiple manuscripts at once.
+
+```bash
+obs research manuscript batch-status <name> [<name>...] --status <value>
+```
+
+| Argument | Description |
+|----------|-------------|
+| `name` | One or more manuscript names |
+| `--status` / `-s` | New status value (e.g. `under_review`, `archived`) |
+
+### obs research manuscript batch-progress
+
+Update progress for multiple manuscripts.
+
+```bash
+obs research manuscript batch-progress <name>:<progress> [<name>:<progress>...]
+```
+
+Each argument is `name:progress` (e.g. `paper1:75`). Progress is 0-100.
+
+### obs research manuscript batch-archive
+
+Archive multiple manuscripts by moving them to an `Archive/` subdirectory.
+
+```bash
+obs research manuscript batch-archive <name> [<name>...]
+```
+
+### obs research manuscript export
+
+Export all manuscript metadata to a JSON or CSV file.
+
+```bash
+obs research manuscript export <output> [--format json|csv]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `output` | required | Output file path |
+| `--format` | `json` | Export format (`json` or `csv`) |
+
 ### obs research bib check
 
 Check citations in a manuscript's bibliography file.
 
 ```bash
 obs research bib check <name>
+```
+
+### obs research search
+
+Unified cross-source search across vault notes, Zotero, and PDF sources.
+
+```bash
+obs research search <query> [--source vault|zotero|pdf|all] [--limit N] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `query` | required | Search string |
+| `--source` | `all` | Restrict to one source |
+| `--limit` | `20` | Maximum results per source |
+| `--json` | | Machine-readable JSON output |
+
+Fans out to all configured research backends and returns a merged, scored result list.
+
+### obs research graph
+
+Export a vault's knowledge graph for use in visualization tools.
+
+```bash
+obs research graph <vault> [--format graphml|d3|json] [--output FILE] [--limit N] [--tags]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `vault` | required | Vault name or ID |
+| `--format` | `json` | Export format: `graphml` (Gephi), `d3` (D3.js JSON), `json` (nodes + edges) |
+| `--output` | stdout | Write to file instead of stdout |
+| `--limit` | `200` | Maximum notes to include |
+| `--tags` | | Include tag nodes in the graph |
+
+### obs research quarto build
+
+Build a Quarto manuscript.
+
+```bash
+obs research quarto build <name> [--format FORMAT]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `name` | required | Manuscript name or directory name |
+| `--format` | `html` | Output format (maps to `quarto render --to`) |
+
+### obs research quarto preview
+
+Preview a Quarto manuscript in the browser.
+
+```bash
+obs research quarto preview <name> [--port PORT]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `name` | required | Manuscript name or directory name |
+| `--port` | `4848` | Preview server port |
+
+### obs research learn
+
+Interactive, guided tutorials for the `obs` CLI at three difficulty levels: `getting-started`,
+`medium`, and `advanced`.
+
+```bash
+obs research learn <getting-started|medium|advanced> [--step N]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `level` | required | Tutorial level: `getting-started`, `medium`, or `advanced` |
+| `--step` | | Resume from a specific step number |
+
+- **Getting Started** — installation check, config, command structure, first Zotero search,
+  `--json` output.
+- **Medium** — research (Zotero search → get → cite), knowledge (vault search → graph analyze),
+  teaching (course list), and writing (manuscript list) workflows.
+- **Advanced** — batch manuscript operations, graph exports (GraphML/D3), Claude JSON pipelines,
+  bibliography checking, and Quarto automation.
+
+Each step can show a command to try; when interactive, it prompts to confirm before continuing
+and lets you pause and resume later with `--step`.
+
+```bash
+obs research learn getting-started
+obs research learn medium
+obs research learn advanced --step 3
 ```
 
 ---
@@ -853,14 +1051,28 @@ obs research bib check <name>
 | `obs research zotero search <q>` | Search Zotero library |
 | `obs research zotero get <key>` | Get Zotero item by key |
 | `obs research zotero recent` | Recent Zotero items |
+| `obs research zotero cite <key>` | Generate APA/BibTeX citation |
+| `obs research zotero tags` | List tags with counts |
+| `obs research zotero collections` | List collections |
+| `obs research zotero by-tag <tag>` | Items by tag |
 | `obs research pdf search <q>` | Search PDF content |
+| `obs research pdf extract <path>` | Extract text from PDF |
 | `obs research course list` | List all courses |
 | `obs research course show <name>` | Show course details |
 | `obs research course lectures <name>` | List course lectures |
 | `obs research manuscript list` | List manuscripts |
 | `obs research manuscript show <name>` | Show manuscript details |
 | `obs research manuscript stats` | Manuscript statistics |
+| `obs research manuscript batch-status` | Bulk update status |
+| `obs research manuscript batch-progress` | Bulk update progress |
+| `obs research manuscript batch-archive` | Archive manuscripts |
+| `obs research manuscript export` | Export metadata |
 | `obs research bib check <name>` | Check citations |
+| `obs research search <q>` | Cross-source search |
+| `obs research graph <vault>` | Export knowledge graph |
+| `obs research quarto build <name>` | Build Quarto manuscript |
+| `obs research quarto preview <name>` | Preview Quarto manuscript |
+| `obs research learn <level>` | Interactive tutorial (getting-started/medium/advanced) |
 
 ---
 
@@ -872,9 +1084,9 @@ you can ask Claude natural-language questions about your vaults.
 
 ### MCP Tool Groups
 
-**Vault** — `list_vaults`, `get_vault_stats`, `discover_vaults`
+**Vault** — `list_vaults`, `get_vault_stats`, `discover_vaults`, `delete_vault`, `rename_vault`
 
-**Search** — `search_notes`, `find_similar_notes`
+**Search** — `search_notes`, `find_similar_notes`, `unified_search`
 
 **Graph** — `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault`
 
@@ -884,6 +1096,16 @@ you can ask Claude natural-language questions about your vaults.
 `insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault`
 
 **AI** — `run_obs_ai` (bridges all `obs ai` subcommands)
+
+**Bridge** — `get_bridge_status`, `server_info`
+
+**Temporal** — `get_trends`, `get_stale_notes`, `get_daily_digest`
+
+**Diagnostics** — `diagnose`
+
+**Research** — `zotero_search`, `zotero_get`, `zotero_cite`, `zotero_recent`, `pdf_search`,
+`course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`,
+`manuscript_stats`, `bib_check`
 
 ### Example Claude prompts
 

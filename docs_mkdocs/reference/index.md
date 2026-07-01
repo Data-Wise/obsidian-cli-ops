@@ -80,7 +80,7 @@ and workflow — all on one page.
 
 | Toolset | Refcard | Integration |
 |---------|---------|-------------|
-| 42 tools in 10 groups | [MCP table](../refcard.md#claude-mcp-tools-v330) | [Setup guide](../claude-integration.md) |
+| 42 tools in 10 groups | [MCP table](../refcard.md#claude-mcp-tools) | [Setup guide](../claude-integration.md) |
 
 ---
 

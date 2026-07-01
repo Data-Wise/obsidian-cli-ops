@@ -1,5 +1,8 @@
 # SPEC: Local Pre-Push Hook
 
+> [!warning] ARCHIVED (2026-07-01) — shipped in v4.3.0
+> This spec is fully implemented. For **live state and next steps** see [`.STATUS`](../../../.STATUS). Kept for history only.
+
 **Date**: 2026-06-30
 **Status**: Draft (v2 — trimmed for speed, no tokens, no workflow friction)
 

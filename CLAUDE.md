@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 4.2.0
+**Current Version**: 4.3.0
 **Status**: Stable release
 **Priority**: P1
 
@@ -66,7 +66,7 @@ python3 src/python/obs_cli.py db init
 
 ### Essential Commands
 
-**v3.4.0** - 49 commands (17 top-level + subcommands):
+**v4.3.0** - 63 commands (18 top-level + subcommands):
 
 ```bash
 # PRIMARY COMMANDS
@@ -213,6 +213,8 @@ Details in schema file and `docs_mkdocs/developer/architecture.md`.
 - Keep commits focused and atomic (conventional commits)
 - Update relevant docs before committing
 - Run tests before pushing
+- `ORCHESTRATE-*.md` files are deleted after merge to `dev` (working artifacts, not history)
+- `SPEC-*.md` files move to `docs/planning/specs-completed/` (not deleted) once their work ships and `.STATUS verified:` confirms it — check at the same time `ORCHESTRATE-*.md` files are deleted, i.e., at merge-to-dev cleanup
 
 ## Additional Resources
 

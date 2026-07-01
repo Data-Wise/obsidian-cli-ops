@@ -19,6 +19,12 @@
 | `obs analyze <vault> [-v] [--json]` | Graph metrics (PageRank, centrality) |
 | `obs health <vault> [--json]` | 4-dimension health dashboard |
 
+## :floppy_disk: Database
+
+| Command | Description |
+|---------|-------------|
+| `obs db init` | Initialize or rebuild the SQLite database (`~/.config/obs/vault_db.sqlite`) |
+
 ## :stethoscope: Monitoring & Diagnostics
 
 | Command | Description |
@@ -59,12 +65,26 @@
 | Command | Description |
 |---------|-------------|
 | `obs research zotero search <q> [--limit N] [--type T] [--tag T]` | Zotero library search |
-| `obs research zotero get <key>` | Item by Zotero key |
+| `obs research zotero get <key> [--format F]` | Item by Zotero key |
 | `obs research zotero recent [--limit N]` | Recently modified |
+| `obs research zotero cite <key> [--style S]` | APA/BibTeX citation |
+| `obs research zotero tags [--limit N]` | Tags with counts |
+| `obs research zotero collections` | List collections |
+| `obs research zotero by-tag <tag> [--limit N]` | Items by tag |
 | `obs research pdf search <q> [--limit N]` | Full-text PDF search |
+| `obs research pdf extract <path> [--pages R] [--layout]` | Extract PDF text |
 | `obs research course list / show / lectures` | Course management |
 | `obs research manuscript list / show / stats` | Manuscript tracking |
+| `obs research manuscript batch-status <n>... --status <s>` | Bulk status update |
+| `obs research manuscript batch-progress <n>:<p>...` | Bulk progress update |
+| `obs research manuscript batch-archive <n>...` | Archive manuscripts |
+| `obs research manuscript export <out> [--format F]` | Export metadata |
 | `obs research bib check <name>` | Citation completeness |
+| `obs research search <q> [--source S] [--json]` | Cross-source search |
+| `obs research graph <v> [--format F] [--output O] [--tags]` | Export knowledge graph |
+| `obs research quarto build <n> [--format F]` | Build Quarto manuscript |
+| `obs research quarto preview <n> [--port P]` | Preview Quarto manuscript |
+| `obs research learn <level> [--step N]` | Interactive tutorial (getting-started/medium/advanced) |
 
 ## :wrench: Vault Management
 
@@ -150,22 +170,22 @@ obs doctor --json
 
 ---
 
-## :link: Claude / MCP Tools (v3.3.0)
+## :link: Claude / MCP Tools
 
 42 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
 
 | Group | Tools |
 |-------|-------|
-| **Vault** | `list_vaults`, `get_vault_stats`, `discover_vaults` |
-| **Search** | `search_notes`, `find_similar_notes` |
+| **Vault** | `list_vaults`, `get_vault_stats`, `discover_vaults`, `delete_vault`, `rename_vault` |
+| **Search** | `search_notes`, `find_similar_notes`, `unified_search` |
 | **Graph** | `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault` |
 | **Health** | `get_vault_health` |
 | **Notes** | `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault` |
 | **AI** | `run_obs_ai` (all 11 subcommands) |
-| **Bridge** | `get_bridge_status` |
+| **Bridge** | `get_bridge_status`, `server_info` |
 | **Temporal** | `get_trends`, `get_stale_notes`, `get_daily_digest` |
 | **Diagnostics** | `diagnose` |
-| **Research** | `zotero_search`, `zotero_get`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check`, `unified_search`, `server_info`, `get_note_links` |
+| **Research** | `zotero_search`, `zotero_get`, `zotero_cite`, `zotero_recent`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check` |
 
 **Example Claude prompts:**
 
@@ -201,4 +221,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.3.0 | **Commands:** 49 | **MCP Tools:** 42 | **AI Providers:** 5
+**Version:** 4.3.0 | **Commands:** 63 | **MCP Tools:** 42 | **AI Providers:** 5

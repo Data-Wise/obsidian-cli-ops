@@ -1,6 +1,6 @@
 # SPEC — Research Board Sync & Automation Pipeline
 
-**Status:** DRAFT — written from the /brainstorm output (explore+refine, deep research)
+**Status:** ✅ Phases 1, 2, 4 shipped (2026-07-01, PRs #43c90a7b/v4.3.0 + #80-82); Phase 3 (Knowledge_Base board) explicitly deferred, not scheduled
 **Date:** 2026-06-30
 **Owner:** @dtofighi
 **Supersedes:** `ADR-scheduled-tasks-architecture.md` (proposed, vault-side)

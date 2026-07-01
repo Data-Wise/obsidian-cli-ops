@@ -1,5 +1,8 @@
 # SPEC: Harden Docs/Website Skills
 
+> [!warning] ARCHIVED (2026-07-01) — mostly shipped (6/8), split across repos
+> Of the 8-item manifest, only `lychee.toml` and `docs-quality.md` shipped here (commit `e915a3f`, PR #73); `site-lifecycle`, `preflight-check`, `nav-sync`, and `mermaid-linter` were implemented as skill edits in the sibling `craft` repo, not this one. `docs-linter` and `docs-ops` were never built. For **live state and next steps** see [`.STATUS`](../../../.STATUS). Kept for history only.
+
 **Date**: 2026-06-30
 **Status**: Planned
 **Origin**: docs-audit session exposed detection gaps in 4 skills; need for 2 new skills + 1 project config file

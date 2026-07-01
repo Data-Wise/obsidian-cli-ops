@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 4.0.0
+# Version: 4.3.0
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="4.2.0"
+VERSION="4.3.0"
 
 # --- Helper Functions ---
 
@@ -164,6 +164,11 @@ obs_help() {
         echo "  obs vault info <vault>    Show a single vault's metadata"
         echo "  obs vault rename <vault> <name>  Rename display name (path/ID unchanged)"
         echo "  obs vault delete <vault> [--force]  Remove from index (dry-run without --force)"
+        echo ""
+
+        echo "📋 RESEARCH BOARD"
+        echo "  obs board refresh [--all] [--dry-run]  Refresh research board from atlas state"
+        echo "  obs board status          Show board refresh status"
         echo ""
 
         echo "🤖 AI FEATURES"
@@ -777,6 +782,11 @@ obs_vault() {
     $OBS_PYTHON "$python_cli" vault "$@"
 }
 
+obs_board() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" board "$@"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -862,6 +872,9 @@ obs() {
             ;;
         "vault")
             obs_vault "$@"
+            ;;
+        "board")
+            obs_board "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

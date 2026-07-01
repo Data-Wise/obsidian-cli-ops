@@ -1,6 +1,9 @@
 # Project Plan: Obsidian CLI Ops v2.0
 ## Intelligent Multi-Vault Knowledge Management System
 
+> [!warning] ARCHIVED (2026-07-01) — historical (v2.0 era), superseded
+> This v2.0 plan predates v3.x–v4.3 and the nexus-cli absorption. For **live state** see [`.STATUS`](../../.STATUS); for the **active plan** see [`SPEC-merge-nexus-cli-v2-2026-06-21.md`](../../SPEC-merge-nexus-cli-v2-2026-06-21.md). Kept for history only.
+
 > **Vision:** Transform obs from a vault management tool into an intelligent knowledge companion that learns, suggests, and adapts to how you organize information.
 
 ---
