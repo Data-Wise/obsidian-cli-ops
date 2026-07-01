@@ -1,12 +1,13 @@
 priority: P1
-status: ✅ Tutorial system ported (Interactive learn command)
+status: ✅ v4.3.0 RELEASED (GitHub release + Homebrew tap bumped)
 progress: 100
-updated: 2026-06-30
+updated: 2026-07-01
 version: 4.3.0
 next: |
   1. Port plugin skills
   2. Port vault template ops (low priority)
 verified: |
+  v4.3.0 RELEASED 2026-07-01: release PR #83 (dev→main, regular merge 9617159), main CI green, tag v4.3.0 + GitHub release published, Homebrew tap auto-bumped (data-wise/homebrew-tap commit "update to v4.3.0", sha256 80219a2d), docs auto-deployed to Pages. Tests: 514 pytest + 67 Jest passing; counts aligned (63 cmds/42 tools). Release-prep this cycle: version bump 4.2.0→4.3.0 across 14 files, count 62→63, MCP tool groups completed, tutorial coverage for research/config/board commands, 34 stale branches + leaked ORCHESTRATE files cleaned.
   v4.3.0 SHIPPED 2026-06-30 (PR #75, dev→main, merge 7038cbd): Phase 2 nexus-cli absorption (13 commands, 62 total) + pre-push hook. Tests: 573 pytest + 45 E2E passing.
   Note: "62 total" was the count at PR #75 shipment (7038cbd). `obs research learn` landed after (commit 2f9839d), bringing the live count to 63 — see _count_obs_commands(). This line is preserved as the historical PR #75 record, not a live count.
-  Board-sync automation (2026-07-01, PRs #80-82, still on dev): `obs board refresh/status` wired into `src/obs.zsh` dispatcher (was Python-CLI-only before), added to `obs help --all`; `scripts/board-refresh.sh` + `com.data-wise.obs-board-refresh` launchd (weekly Mon 09:15) confirmed pre-existing (e915a3f7); board vs research-board dedup reviewed — keep both (different CLI verbs, research_board.py's no-timestamp output is load-bearing for idempotency tests); `research--action-board` prompt (Knowledge_Base vault) confirmed already consuming the deterministic board as primary source, no prompt change needed.
+  Board-sync automation (2026-07-01, PRs #80-82, released in v4.3.0): `obs board refresh/status` wired into `src/obs.zsh` dispatcher (was Python-CLI-only before), added to `obs help --all`; `scripts/board-refresh.sh` + `com.data-wise.obs-board-refresh` launchd (weekly Mon 09:15) confirmed pre-existing (e915a3f7); board vs research-board dedup reviewed — keep both (different CLI verbs, research_board.py's no-timestamp output is load-bearing for idempotency tests); `research--action-board` prompt (Knowledge_Base vault) confirmed already consuming the deterministic board as primary source, no prompt change needed.
