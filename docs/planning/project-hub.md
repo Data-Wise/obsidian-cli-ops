@@ -1,5 +1,8 @@
 # 🎯 Project Control Hub: Obsidian CLI Ops
 
+> [!warning] ARCHIVED (2026-07-01) — historical (v2.1.0-beta era), superseded
+> This hub stopped tracking live state after v2.1.0-beta and predates v3.x–v4.3. For **live state and next steps** see [`.STATUS`](../../.STATUS); for the **active plan** see [`SPEC-merge-nexus-cli-v2-2026-06-21.md`](../../SPEC-merge-nexus-cli-v2-2026-06-21.md). Kept for history only.
+
 > **Last Updated:** 2025-12-15
 > **Current Version:** 2.1.0-beta ✅
 > **Status:** 92% Complete | Active Development
