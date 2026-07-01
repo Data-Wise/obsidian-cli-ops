@@ -213,6 +213,8 @@ Details in schema file and `docs_mkdocs/developer/architecture.md`.
 - Keep commits focused and atomic (conventional commits)
 - Update relevant docs before committing
 - Run tests before pushing
+- `ORCHESTRATE-*.md` files are deleted after merge to `dev` (working artifacts, not history)
+- `SPEC-*.md` files move to `docs/planning/specs-completed/` (not deleted) once their work ships and `.STATUS verified:` confirms it — check at the same time `ORCHESTRATE-*.md` files are deleted, i.e., at merge-to-dev cleanup
 
 ## Additional Resources
 
