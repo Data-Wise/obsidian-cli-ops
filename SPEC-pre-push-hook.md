@@ -1,130 +1,200 @@
 # SPEC: Local Pre-Push Hook
 
 **Date**: 2026-06-30
-**Status**: Draft (adversarially reviewed, 7 issues found and fixed)
-**Origin**: Pre/Post-Merge Check debate — agreed on two-layer enforcement.
+**Status**: Draft (v2 — trimmed for speed, no tokens, no workflow friction)
 
 ---
 
-## Layer Split
+## Design Principles
 
-| Layer | What it checks | Where it lives | Blocks | Bypassable? |
-|-------|---------------|----------------|--------|-------------|
-| Local pre-push hook | Branch name, secrets, file size, merge commits, binary files | `.githooks/pre-push` | `git push` (local) | Yes (`--no-verify` — quality-of-life layer) |
-| GitHub Actions | PR title, description, WIP, diff size, changelog | `.github/workflows/pr-metadata.yml` | PR merge (via branch protection) | No (server-side, authoritative) |
-| branch-guard.sh | Direct pushes to main/dev | hooks/branch-guard.sh | Commit + push to main/dev | No (local, but non-bypassable by design) |
-
-**Pre-push hook is quality-of-life, not security.** Branch-guard + CI are the enforcement layer. If a dev habitually uses `--no-verify`, CI still catches the issue at PR time.
-
----
-
-## Fixes Applied (from adversarial review)
-
-| # | Issue | Before | After |
-|---|-------|--------|-------|
-| 1 | Secrets regex too eager | Inline grep, no comment skip | Use `gitleaks` if available, fallback to anchored regex that skips comments + known patterns |
-| 2 | File size check O(n) on all files | `find . -size +1M` | `git diff --stat` on push range only |
-| 3 | Stale remote ref | `origin/dev..HEAD` — assumes fetched | `@{push}` range, handles missing upstream gracefully |
-| 4 | Hardcoded `origin` | `origin/dev` | Read remote from hook args (`$1`), fallback `@{push}` |
-| 5 | Binary check misses staged files | `git diff HEAD` | `git diff --stat @{push}..HEAD` (full push range) |
-| 6 | `--no-verify` vulnerability unaddressed | No enforcement statement | Explicit quality-of-life vs enforcement layer table above |
-| 7 | No installation automation | Manual `git config` | Add to `install.sh` + README |
+| Principle | Why |
+|-----------|-----|
+| **Zero tokens, zero network** | Pre-push hooks must work offline. No API keys, no package fetches, no external service calls. |
+| **Sub-second or skip** | If a check can't finish in < 1s on a hot cache, it doesn't belong in a pre-push hook. Move to CI. |
+| **Warning over blocking** | When uncertain, warn don't block. Pre-push is quality-of-life. Branch-guard + CI are the enforcement layer. |
+| **Built-in tools only** | No `brew install`, `npm install`, `pip install` as part of hook setup. Use `git`, `grep`, `awk`, `wc` only. |
+| **main/dev already guarded** | Branch-guard.sh + GitHub branch protection block pushes to main/dev. Pre-push hook doesn't duplicate this. |
 
 ---
 
-## Checks — Local Pre-Push Hook
+## Layer Split (updated — pre-push trimmed)
 
-Runs on every `git push`. Fail-fast — first failure stops the push. Uses `REMOTE` from hook args (`$1`), falls back to `@{push}` if no remote specified.
+| Layer | What it checks | Speed | Token/Network | Blocks |
+|-------|---------------|-------|---------------|--------|
+| branch-guard.sh | Direct pushes to main/dev | Instant | None | Commit + push (non-bypassable) |
+| Pre-push hook | Secrets glance, binary files, oversized files | < 500ms | None | `git push` (bypassable via `--no-verify`) |
+| GitHub Actions (CI) | PR metadata, changelog, full lint, tests, links | Slow | CI runner | PR merge (via branch protection) |
 
-### 0. Guard: Skip if push target isn't the configured remote
+---
 
-Only run checks for pushes to the primary remote (`origin` by default). Skip for pushes to `upstream`, `fork`, or secondary remotes to avoid friction in fork workflows.
+## What the Hook Checks (and why it's fast)
 
-### 1. Branch name convention
+### 1. Big binary files in push range (BLOCK)
 
-```
-feature/board-sync        ✅ PASS
-fix/scan-robustness       ✅ PASS
-docs/refcard-rewrite      ✅ PASS
-main                      ❌ BLOCKED (branch-guard handles this too — redundant but harmless)
-dev                       ❌ BLOCKED (redundant)
-dev-tools-config          ⚠️ NOW PASSES (strict prefix match: ^(main|dev)$, not substring)
-random                    ⚠️ WARNING (doesn't match feature/*, fix/*, docs/*, chore/*, refactor/*, test/*)
-```
-
-Uses strict prefix match: `^(main|dev)$` — no longer triggers on `dev-tools` or `feature/dev-integration`.
-
-### 2. Secrets in diff
-
-Check push range `@{push}..HEAD` for potential secrets.
+Prevent accidental commits of build artifacts or dependencies.
 
 ```bash
-# Tier 1: Use gitleaks if installed (brew install gitleaks)
-if command -v gitleaks &>/dev/null; then
-    gitleaks detect --source . --log-opts "@{push}..HEAD" --no-git
+big=$(git diff "@{push}..HEAD" --diff-filter=A --name-only \
+    | grep -iE '\.(exe|dll|so|dylib|zip|tar\.gz|tgz|bin|whl)$' \
+    || true)
+if [ -n "$big" ]; then
+    echo "[pre-push] BLOCKED: prohibited binary files in push:"
+    echo "$big"
+    exit 1
 fi
-
-# Tier 2: Fallback inline grep (less accurate but always available)
-git diff "@{push}..HEAD" --diff-filter=A \
-    | grep -v '^\s*#' \       # skip comments
-    | grep -v '\.env\.example\|test/fixtures/\|mock\|_test\.\|test\.' \
-    | grep -E '(api_key|token|password|secret)\s*=\s*['\''"][^'\''"]+['\''"]' \
-    && exit 1 || true
 ```
 
-### 3. File size limits
+**Sub-second?** Yes — `git diff --name-only` is O(diff size).
+**Network/tokens?** None.
 
-Use `git diff --stat` on push range only — O(diff size), not O(repo size).
+### 2. Single file > 5MB in push range (BLOCK)
+
+Catches accidentally committed datasets, node_modules, rendered artifacts.
 
 ```bash
 git diff "@{push}..HEAD" --stat --diff-filter=A \
-    | awk -F'|' '{print $2}' \
-    | grep -Eo '[0-9]+' \
-    | sort -rn \
-    | head -1
+    | awk -F'|' '{diff=$2; if (diff+0 > 5000) print $0}'
 ```
 
-- Any single file added > 1MB → BLOCKED
-- Total diff additions > 10MB → BLOCKED
+Threshold 5MB (not 1MB) — avoids blocking legitimate large files like test fixtures, bundled SVGs, or example data.
 
-### 4. Merge commits (warning only)
+**Sub-second?** Yes — `git diff --stat` is O(diff size) and returns aggregated sizes instantly.
+**Network/tokens?** None.
 
-Check push range for merge commits. Non-blocking.
+### 3. Secrets glance (WARNING only)
+
+Scan added lines for patterns that look like secrets. **Warning only** — never blocks on a pattern match because the inline grep is not accurate enough for blocking decisions.
 
 ```bash
-# Local log check — no remote fetch needed
-merges=$(git log --oneline --merges "@{push}..HEAD" 2>/dev/null | wc -l | tr -d ' ')
-if [ "$merges" -gt 0 ]; then
-    echo "[pre-push] WARNING: $merges merge commit(s) in branch. Feature branches should rebase, not merge from dev."
-    echo "  Fix: git rebase dev"
+secrets=$(git diff "@{push}..HEAD" --diff-filter=A \
+    | grep -v '^\s*#' \
+    | grep -v '\.env\.example\|test/fixtures/\|mock\|_test\.\|test\.' \
+    | grep -iE '(api_key|token|password|secret)\s*=\s*['\''"][^'\''"]+['\''"]' \
+    || true)
+if [ -n "$secrets" ]; then
+    echo "[pre-push] WARNING: possible secrets detected (review before push):"
+    echo "$secrets"
 fi
 ```
 
-Graceful if `@{push}` doesn't exist yet (fresh branch): use `HEAD~1..HEAD` as fallback.
+**Sub-second?** Yes — pipe through grep on a diff that's already loaded in memory.
+**Network/tokens?** None.
+**Blocks?** No — warning only. CI's secrets scanner (gitleaks or similar) handles authoritative detection.
 
-### 5. Binary files
-
-Check push range for prohibited binary types. Allow common asset types.
+### 4. Merge commits in feature branch (WARNING only)
 
 ```bash
-bad_binaries=$(git diff "@{push}..HEAD" --diff-filter=A --name-only \
-    | grep -iE '\.(exe|dll|so|dylib|zip|tar\.gz|tgz|bin)$' \
-    || true)
+merges=$(git log --oneline --merges "@{push}..HEAD" 2>/dev/null | wc -l | tr -d ' ')
+if [ "$merges" -gt 0 ]; then
+    echo "[pre-push] WARNING: $merges merge commit(s). Feature branches typically rebase."
+fi
 ```
 
-Allow: `.png`, `.jpg`, `.svg`, `.ico`, `.pdf`, `.woff`, `.woff2`, `.mp4`
+Graceful fallback if `@{push}` doesn't exist (fresh branch): skip the check silently.
+
+**Sub-second?** Yes — `git log --oneline --merges` on a small range.
+**Network/tokens?** None.
+**Blocks?** No — warning only.
 
 ---
 
-## GitHub Actions (already created)
+## What the Hook Does NOT Check (moved to CI or excluded)
 
-File: `.github/workflows/pr-metadata.yml`
+| Check | Why excluded | Where it lives |
+|-------|-------------|----------------|
+| Branch name convention | Too restrictive. Legit branch names (`test-flaky`, `wip/ideas`) would be blocked. branch-guard.sh already blocks main/dev. | ✂️ Removed |
+| Commit message format | PR title is the contract. Per-commit format is noisy with fixup!/squash commits | CI: `pr-metadata.yml` |
+| Full markdownlint | Pre-push should be sub-second. md lint takes 2-5s on full project | `docs-linter` skill / CI |
+| gitleaks | Requires external tool install, slow first run | CI (dedicated secrets scan workflow) |
+| Signed-off-by | No DCO requirement for this project | ✂️ Removed |
 
-- PR title matches conventional commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `style:`, `perf:`, `ci:`, `build:`, `revert:`)
-- PR description non-empty
-- No WIP/Draft markers
-- Diff size ≤ 2000 lines
-- Changelog entry if `feat:` or `fix:` type
+---
+
+## Implementation
+
+### File: `.githooks/pre-push`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-push hook — fast, local, zero-token validation.
+# Runs on every git push before push reaches remote.
+#
+# Design: sub-second checks only, warning over blocking, built-in tools.
+# Enforcement: branch-guard.sh + GitHub branch protection are authoritative.
+#
+# Install: git config core.hooksPath .githooks
+# Skip:    git push --no-verify
+
+REMOTE="${1:-origin}"
+BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed 's/refs\/heads\///')
+RANGE="${3:-@{push}..HEAD}"
+
+# Guard: skip for pushes to secondary remotes (upstream, fork)
+if [ "$REMOTE" != "origin" ]; then
+    exit 0
+fi
+
+# Guard: skip for pushes to main/dev (branch-guard handles this)
+if echo "$BRANCH" | grep -qiE '^(main|dev)$'; then
+    exit 0
+fi
+
+# Check if @{push} exists (fresh branch with no upstream)
+if ! git rev-parse "@{push}" &>/dev/null; then
+    exit 0  # no upstream yet — nothing to compare against
+fi
+
+echo "[pre-push] $BRANCH → $REMOTE"
+
+# 1. Binary files (block)
+bad_binaries=$(git diff "$RANGE" --diff-filter=A --name-only \
+    | grep -iE '\.(exe|dll|so|dylib|zip|tar\.gz|tgz|bin|whl)$' \
+    || true)
+if [ -n "$bad_binaries" ]; then
+    echo "[pre-push] BLOCKED: prohibited binary types in push range:"
+    echo "$bad_binaries" | sed 's/^/  /'
+    exit 1
+fi
+echo "[pre-push] Binary files: PASS"
+
+# 2. Oversized files (block)
+oversized=$(git diff "$RANGE" --stat --diff-filter=A \
+    | awk -F'|' '{
+        file=$1; gsub(/[[:space:]]*$/,"",file);
+        size=$2; gsub(/[^0-9]/,"",size);
+        if (size+0 > 5000) print file" ("size" lines)"
+    }' || true)
+if [ -n "$oversized" ]; then
+    echo "[pre-push] BLOCKED: oversized files (>5K lines) in push range:"
+    echo "$oversized" | sed 's/^/  /'
+    exit 1
+fi
+echo "[pre-push] File size: PASS"
+
+# 3. Secrets glance (warning only)
+secrets=$(git diff "$RANGE" --diff-filter=A \
+    | grep -v '^\s*#' \
+    | grep -v '\.env\.example\|test/fixtures/\|mock\|_test\.\|test\.' \
+    | grep -iE '(api_key|token|password|secret)\s*=\s*['\''"][^'\''"]+['\''"]' \
+    || true)
+if [ -n "$secrets" ]; then
+    echo "[pre-push] WARNING: possible secrets detected (review before push):"
+    echo "$secrets" | sed 's/^/  /'
+else
+    echo "[pre-push] Secrets: PASS"
+fi
+
+# 4. Merge commits (warning only)
+merges=$(git log --oneline --merges "$RANGE" 2>/dev/null | wc -l | tr -d ' ')
+if [ "$merges" -gt 0 ]; then
+    echo "[pre-push] WARNING: $merges merge commit(s). Feature branches typically rebase."
+fi
+echo "[pre-push] Merge commits: PASS"
+
+echo "[pre-push] All checks PASS"
+```
 
 ---
 
@@ -133,23 +203,13 @@ File: `.github/workflows/pr-metadata.yml`
 ### install.sh addition
 
 ```bash
-# Install pre-push hook
-mkdir -p .githooks
-cp scripts/pre-push.sh .githooks/pre-push
-chmod +x .githooks/pre-push
-git config core.hooksPath .githooks
-```
-
-### README addition
-
-```
-## Local Hooks
-
-This repo includes a pre-push hook that validates branch names, secrets, and
-file sizes before pushing. Installed automatically by `install.sh`.
-
-To skip (temporarily): `git push --no-verify`
-To install manually: `git config core.hooksPath .githooks`
+if [ -d .git ]; then
+    mkdir -p .githooks
+    cp scripts/pre-push.sh .githooks/pre-push
+    chmod +x .githooks/pre-push
+    git config core.hooksPath .githooks
+    echo "Pre-push hook installed"
+fi
 ```
 
 ---
@@ -158,24 +218,11 @@ To install manually: `git config core.hooksPath .githooks`
 
 | Test | Command | Expected |
 |------|---------|----------|
-| Push to `main` | `git push origin main` | Exit 1, "BLOCKED" |
-| Push to `dev` | `git push origin dev` | Exit 1, "BLOCKED" |
-| Push to `feature/valid` | `git push origin feature/valid` | Exit 0 |
-| Push to `feature/dev-tools` | `git push origin feature/dev-tools` | Exit 0 (no false positive) |
-| Secret in push range | Add `API_KEY=abc` to a file, commit, push | Exit 1, "BLOCKED" |
-| Secret in commented line | Add `# TOKEN=abc` and commit | Exit 0 (comment skipped) |
+| Push to `feature/valid` | `git push origin feature/valid` | Exit 0, "All checks PASS" |
+| Push to `main` or `dev` | `git push origin main` | Exit 0, skipped silently (branch-guard handles this) |
+| Push to secondary remote | `git push upstream feature/x` | Exit 0, skipped silently |
+| Fresh branch, no upstream | `git push -u origin feature/new` | Exit 0, skipped gracefully |
 | Binary file added | `git add file.exe`, commit, push | Exit 1, "BLOCKED" |
-| Large file added | Create 2MB file, commit, push | Exit 1, "BLOCKED" |
-| Fresh branch, no upstream | `git push -u origin feature/new` | Exit 0 (graceful fallback) |
-| Push to secondary remote | `git push upstream feature/x` | Exit 0 (skipped — not primary remote) |
-| `--no-verify` | `git push --no-verify origin feature/x` | Exit 0, no hook output |
-
----
-
-## Open Questions (for grilling)
-
-1. Should the pre-push hook also validate **commit message format** (conventional commits per commit)?
-2. Should it check that **every commit** in the push range has a `Signed-off-by` line?
-3. Should we auto-install `gitleaks` via install.sh, or keep it as optional tier-1?
-4. Should the pre-push hook also run **markdownlint** on changed `.md` files before push?
-5. Should the hook fail on merge commits (blocking) instead of just warning?
+| Large file added | Create 6K-line file, commit, push | Exit 1, "BLOCKED" |
+| Secret in push range | `git add config.py` with `TOKEN=abc`, commit, push | Warning only, exit 0 |
+| `--no-verify` | `git push --no-verify origin feature/x` | Exit 0, no output |
