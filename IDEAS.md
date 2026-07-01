@@ -4,7 +4,7 @@
 >
 > **Last Updated:** 2026-06-23
 >
-> **Current Release:** v4.2.0 (Released 2026-06-26) — vault↔index sync reconciliation (`obs scan --prune/--no-prune`, content-hash short-circuit preserving embeddings, scan-error visibility, `obs doctor --layer sync`, vault-nesting check) + full vault-management docs. Built on v4.1.0 (`rescan_vault` async fix #62, `server_info` #53), v4.0.x (nexus-cli absorption).
+> **Current Release:** v4.3.0 (Shipped 2026-06-30) — Phase 2 nexus-cli absorption (13 commands, 62 total) + pre-push hook + interactive tutorial system (`obs research learn`). Built on v4.2.0 (vault↔index sync reconciliation), v4.1.0 (`rescan_vault` async fix #62, `server_info` #53), v4.0.x (nexus-cli absorption).
 >
 > **Strategic Direction:** "Brain + Hands" — obs analyzes/suggests (graph + AI + temporal), official Obsidian CLI executes (CRUD, move, create)
 > **Install:** `brew install data-wise/tap/obsidian-cli-ops`
