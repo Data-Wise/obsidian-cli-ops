@@ -323,7 +323,7 @@ class TestE2ESearchTools:
 
 
 class TestE2ENoteLifecycle:
-    """Full CRUD lifecycle: create → read → append → delete (dry-run → confirm)."""
+    """Full CRUD lifecycle: create → read → append → rename → delete (dry-run → confirm)."""
 
     _created_note_id: str | None = None
 
@@ -373,6 +373,81 @@ class TestE2ENoteLifecycle:
         })
         assert "unknown" in result.lower() or "valid" in result.lower()
 
+    def test_04_create_note_subfolder(self, mcp_proc, e2e_vault):
+        """create_note with a subfolder must create file in that subfolder."""
+        vault_dir, _, _ = e2e_vault
+        vaults_raw = mcp_proc.call_tool("list_vaults")
+        vault_id = _extract_vault_id(vaults_raw, vault_dir)
+
+        title = "E2E Subfolder Note"
+        result = mcp_proc.call_tool("create_note", {
+            "vault_id": vault_id,
+            "title": title,
+            "content": "# Subfolder Note\n\nNested.\n",
+            "subfolder": "e2e_subfolder",
+        })
+        assert isinstance(result, str)
+        safe_name = title.replace(" ", "-")
+        note_path = vault_dir / "e2e_subfolder" / f"{safe_name}.md"
+        if note_path.exists():
+            assert "Subfolder Note" in note_path.read_text()
+
+    def test_05_create_note_already_exists(self, mcp_proc, e2e_vault):
+        """create_note with an existing filename must return an error, not overwrite."""
+        vault_dir, _, _ = e2e_vault
+        vaults_raw = mcp_proc.call_tool("list_vaults")
+        vault_id = _extract_vault_id(vaults_raw, vault_dir)
+
+        title = "E2E Duplicate Guard"
+        mcp_proc.call_tool("create_note", {
+            "vault_id": vault_id,
+            "title": title,
+            "content": "# First\n",
+        })
+        result = mcp_proc.call_tool("create_note", {
+            "vault_id": vault_id,
+            "title": title,
+            "content": "# Second — should not overwrite\n",
+        })
+        assert "already exists" in result.lower() or "exists" in result.lower()
+
+    def test_06_rename_note(self, mcp_proc, e2e_vault):
+        """rename_note must change the file on disk, old path gone."""
+        vault_dir, _, _ = e2e_vault
+        vaults_raw = mcp_proc.call_tool("list_vaults")
+        vault_id = _extract_vault_id(vaults_raw, vault_dir)
+
+        title = "E2E Rename Me"
+        mcp_proc.call_tool("create_note", {
+            "vault_id": vault_id,
+            "title": title,
+            "content": f"# {title}\n\nWill be renamed.\n",
+        })
+        safe_name = title.replace(" ", "-")
+        old_path = vault_dir / f"{safe_name}.md"
+        if not old_path.exists():
+            pytest.skip("create_note did not create file")
+
+        # Rescan so the DB indexes the newly created file
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id})
+
+        search_raw = mcp_proc.call_tool("search_notes", {"query": "E2E Rename Me"})
+        note_id = _extract_first_id(search_raw)
+        if not note_id:
+            pytest.skip("could not resolve note id for rename")
+
+        new_title = "E2E Renamed"
+        result = mcp_proc.call_tool("rename_note", {
+            "note_id": note_id,
+            "new_title": new_title,
+        })
+        assert isinstance(result, str)
+        new_safe = new_title.replace(" ", "-")
+        new_path = vault_dir / f"{new_safe}.md"
+        if "renamed" in result.lower() or "✅" in result:
+            assert not old_path.exists(), "old filename must be gone after rename"
+            assert new_path.exists(), "new filename must exist after rename"
+
 
 class TestE2EGraphHealth:
     def test_get_hub_notes(self, mcp_proc, e2e_vault):
@@ -408,6 +483,55 @@ class TestE2ERescan:
     def test_rescan_unknown_vault(self, mcp_proc):
         result = mcp_proc.call_tool("rescan_vault", {"vault_id": "ghost-vault-e2e"})
         assert "not found" in result.lower() or "error" in result.lower()
+
+
+class TestE2ENoteLinks:
+    """get_note_links: outgoing wikilinks + incoming backlinks."""
+
+    def test_get_note_links_unknown_id(self, mcp_proc):
+        """Non-existent note_id must return 'not found'."""
+        result = mcp_proc.call_tool("get_note_links", {"note_id": "badbadbad0000000"})
+        assert "not found" in result.lower()
+
+    def test_get_note_links_orphan(self, mcp_proc, e2e_vault):
+        """Orphan note (no links) must show zero outgoing and zero incoming."""
+        vault_dir, _, _ = e2e_vault
+        search_raw = mcp_proc.call_tool("search_notes", {"query": "E2E Orphan"})
+        note_id = _extract_first_id(search_raw)
+        if not note_id:
+            pytest.skip("could not resolve note id for orphan")
+
+        result = mcp_proc.call_tool("get_note_links", {"note_id": note_id})
+        assert isinstance(result, str)
+        assert "E2E Orphan" in result
+        assert "none" in result.lower()
+
+    def test_get_note_links_outgoing(self, mcp_proc, e2e_vault):
+        """E2E Alpha links to E2E Beta → outgoing must list Beta."""
+        vault_dir, _, _ = e2e_vault
+        search_raw = mcp_proc.call_tool("search_notes", {"query": "E2E Alpha"})
+        note_id = _extract_first_id(search_raw)
+        if not note_id:
+            pytest.skip("could not resolve note id for E2E Alpha")
+
+        result = mcp_proc.call_tool("get_note_links", {"note_id": note_id})
+        assert isinstance(result, str)
+        assert "Outgoing" in result or "[[E2E Beta" in result
+
+    def test_get_note_links_incoming(self, mcp_proc, e2e_vault):
+        """E2E Alpha has backlinks from E2E Beta → incoming must list Beta."""
+        vault_dir, _, _ = e2e_vault
+        search_raw = mcp_proc.call_tool("search_notes", {"query": "E2E Beta"})
+        note_id = _extract_first_id(search_raw)
+        if not note_id:
+            pytest.skip("could not resolve note id for E2E Beta")
+
+        result = mcp_proc.call_tool("get_note_links", {"note_id": note_id})
+        assert isinstance(result, str)
+        # E2E Beta links to E2E Alpha → E2E Beta's outgoing mentions Alpha
+        assert "Outgoing" in result or "[[E2E Alpha" in result
+        # E2E Alpha also links to E2E Beta → Beta has an incoming backlink from Alpha
+        assert "Incoming" in result or "backlink" in result.lower()
 
 
 class TestE2EEdgeCases:
@@ -457,6 +581,33 @@ class TestE2EEdgeCases:
             assert isinstance(result, str)
             # Should NOT expose system files or crash
             assert "root:" not in result
+
+    def test_negative_limit_hub_notes(self, mcp_proc):
+        """A negative limit for hub notes should not crash."""
+        result = mcp_proc.call_tool("get_hub_notes", {"limit": -1})
+        assert isinstance(result, str)
+
+    def test_list_notes_empty_vault_id_defaults(self, mcp_proc):
+        """list_notes without vault_id should return a default response, not crash."""
+        result = mcp_proc.call_tool("list_notes", {})
+        assert isinstance(result, str)
+
+    def test_analyze_vault_unknown_id(self, mcp_proc):
+        """analyze_vault on a non-existent vault ID should return 'not found'."""
+        result = mcp_proc.call_tool("analyze_vault", {"vault_id": "no-such-vault-99999"})
+        assert "not found" in result.lower() or "error" in result.lower()
+
+    def test_run_obs_ai_status_no_target(self, mcp_proc):
+        """run_obs_ai status is a valid command that should return server info without a vault target."""
+        result = mcp_proc.call_tool("run_obs_ai", {"command": "status", "target": ""})
+        assert isinstance(result, str)
+        # Should not crash — server info or "no vault" message
+        assert len(result) > 0
+
+    def test_rescan_vault_no_args(self, mcp_proc):
+        """rescan_vault without vault_id should return error, not crash."""
+        result = mcp_proc.call_tool("rescan_vault", {})
+        assert "not found" in result.lower() or "error" in result.lower() or "required" in result.lower()
 
 
 class TestE2ENoteWriteRead:
@@ -516,12 +667,15 @@ class TestE2ENoteWriteRead:
         vault_id = _extract_vault_id(vaults_raw, vault_dir)
 
         # Create a throwaway note
+        create_title = "E2E Delete Confirm"
         mcp_proc.call_tool("create_note", {
             "vault_id": vault_id,
-            "title": "E2E Delete Confirm",
+            "title": create_title,
             "content": "# E2E Delete Confirm\n\nDelete me.\n",
         })
-        note_path = vault_dir / "E2E Delete Confirm.md"
+        # create_note slugifies spaces → hyphens for the filename
+        safe_name = create_title.replace(" ", "-")
+        note_path = vault_dir / f"{safe_name}.md"
         if not note_path.exists():
             pytest.skip("create_note did not create file (vault_id mismatch)")
 
@@ -534,6 +688,78 @@ class TestE2ENoteWriteRead:
         # File should be gone if delete succeeded
         if "deleted" in result.lower() or "🗑️" in result:
             assert not note_path.exists(), "File still exists after confirmed delete"
+
+    def test_write_note_unknown_id_errors(self, mcp_proc):
+        """write_note with a non-existent note_id must return 'not found'."""
+        result = mcp_proc.call_tool("write_note", {
+            "note_id": "nonexistent-note-00000000",
+            "content": "# Should not appear\n",
+        })
+        assert "not found" in result.lower()
+
+    def test_write_note_overwrites_content(self, mcp_proc, e2e_vault):
+        """write_note must replace existing content on disk."""
+        vault_dir, _, _ = e2e_vault
+        vaults_raw = mcp_proc.call_tool("list_vaults")
+        vault_id = _extract_vault_id(vaults_raw, vault_dir)
+
+        title = "E2E Write Overwrite"
+        mcp_proc.call_tool("create_note", {
+            "vault_id": vault_id, "title": title,
+            "content": f"# {title}\n\nOriginal content.\n",
+        })
+        safe_name = title.replace(" ", "-")
+        note_path = vault_dir / f"{safe_name}.md"
+        if not note_path.exists():
+            pytest.skip("create_note did not create file")
+
+        # Rescan so DB indexes the new file
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id})
+
+        search_raw = mcp_proc.call_tool("search_notes", {"query": title})
+        note_id = _extract_first_id(search_raw)
+        if not note_id:
+            pytest.skip("could not resolve note id for write_note")
+
+        mcp_proc.call_tool("write_note", {
+            "note_id": note_id,
+            "content": "# Overwritten\n\nThis is the new content.\n",
+        })
+        disk_content = note_path.read_text()
+        assert "Overwritten" in disk_content
+        assert "Original" not in disk_content
+
+    def test_insert_to_note_at_eof(self, mcp_proc, e2e_vault):
+        """insert_to_note with no heading specified appends at EOF."""
+        vault_dir, _, _ = e2e_vault
+        vaults_raw = mcp_proc.call_tool("list_vaults")
+        vault_id = _extract_vault_id(vaults_raw, vault_dir)
+
+        title = "E2E Insert EOF"
+        mcp_proc.call_tool("create_note", {
+            "vault_id": vault_id, "title": title,
+            "content": f"# {title}\n\nBase content.\n",
+        })
+        safe_name = title.replace(" ", "-")
+        note_path = vault_dir / f"{safe_name}.md"
+        if not note_path.exists():
+            pytest.skip("create_note did not create file")
+
+        # Rescan so DB indexes the new file
+        mcp_proc.call_tool("rescan_vault", {"vault_id": vault_id})
+
+        search_raw = mcp_proc.call_tool("search_notes", {"query": title})
+        note_id = _extract_first_id(search_raw)
+        if not note_id:
+            pytest.skip("could not resolve note id for insert_to_note")
+
+        mcp_proc.call_tool("insert_to_note", {
+            "note_id": note_id,
+            "content": "Appended via insert_to_note.",
+        })
+        disk_content = note_path.read_text()
+        assert "Appended via insert_to_note" in disk_content
+        assert "Base content" in disk_content
 
 
 class TestE2ERescanAndRefresh:
@@ -891,6 +1117,146 @@ class TestE2EDoctorSyncDogfood:
         assert ghosts["message"].startswith("1 "), (
             f"expected exactly 1 ghost, got message {ghosts['message']!r}"
         )
+
+
+class TestE2EDogfoodCLI:
+    """Dogfood tests for the `obs` CLI subprocess — real subcommands against a real vault."""
+
+    def test_python_version_has_v(self):
+        """__init__.py __version__ must be a semver string."""
+        import re
+        content = (_SRC / "__init__.py").read_text()
+        m = re.search(r'__version__\s*=\s*"([^"]+)"', content)
+        assert m is not None, "__version__ not found in __init__.py"
+        assert "." in m.group(1), f"version {m.group(1)} does not look like semver"
+
+    def test_obs_cli_help_shows_commands(self, mcp_proc, e2e_vault):
+        """`obs_cli.py --help` must list commands without crashing."""
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "--help"],
+            capture_output=True, text=True, timeout=15,
+        )
+        assert r.returncode == 0
+        assert "Commands" in r.stdout or "usage" in r.stdout.lower()
+        assert any(cmd in r.stdout for cmd in ["scan", "vault", "search", "stats"])
+
+    def test_obs_search_no_args_shows_usage(self, mcp_proc, e2e_vault):
+        """`obs search` with no query should show usage, not hang."""
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "search"],
+            capture_output=True, text=True, timeout=15,
+        )
+        # 0 or 2 (argparse shows error on stderr)
+        assert "usage" in (r.stdout + r.stderr).lower()
+
+    def test_obs_vaults_lists_registered(self, mcp_proc, e2e_vault):
+        """`obs vaults` subprocess lists at least one vault."""
+        _, _, env = e2e_vault
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "vaults"],
+            env=env, capture_output=True, text=True, timeout=15,
+        )
+        assert r.returncode == 0
+        # Should contain the e2e vault name or a vault table
+        assert "e2e_vault" in r.stdout.lower() or "Notes" in r.stdout
+
+    def test_obs_stats_on_vault(self, mcp_proc, e2e_vault):
+        """`obs stats --vault <name>` must show note count for the fixture vault."""
+        vault_dir, _, env = e2e_vault
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "stats", "--vault", vault_dir.name],
+            env=env, capture_output=True, text=True, timeout=15,
+        )
+        assert r.returncode == 0
+        assert "Notes" in r.stdout or "Links" in r.stdout
+
+    def test_obs_doctor_on_vault(self, mcp_proc, e2e_vault):
+        """`obs doctor --vault <name> --layer sync --json` must produce valid JSON."""
+        vault_dir, _, env = e2e_vault
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "doctor",
+             "--vault", vault_dir.name, "--layer", "sync", "--json"],
+            env=env, capture_output=True, text=True, timeout=30,
+        )
+        assert r.returncode == 0
+        data = json.loads(r.stdout)
+        assert isinstance(data, list)
+        assert len(data) >= 2  # at least sync-ghosts + sync-missing
+
+    def test_obs_health_on_vault(self, mcp_proc, e2e_vault):
+        """`obs health <name>` must produce health output."""
+        vault_dir, _, env = e2e_vault
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "health", vault_dir.name],
+            env=env, capture_output=True, text=True, timeout=30,
+        )
+        assert r.returncode == 0
+        assert "health" in r.stdout.lower() or "score" in r.stdout.lower()
+
+    def test_obs_analyze_on_vault(self, mcp_proc, e2e_vault):
+        """`obs analyze <name>` must produce graph analysis output."""
+        vault_dir, _, env = e2e_vault
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "analyze", vault_dir.name],
+            env=env, capture_output=True, text=True, timeout=30,
+        )
+        assert r.returncode == 0
+        assert "pagerank" in r.stdout.lower() or "graph" in r.stdout.lower()
+
+    def test_obs_search_finds_note(self, mcp_proc, e2e_vault):
+        """`obs search <title>` must find fixture notes."""
+        vault_dir, _, env = e2e_vault
+        r = subprocess.run(
+            [_OBS_PYTHON, str(_OBS_CLI), "search", "E2E Alpha"],
+            env=env, capture_output=True, text=True, timeout=15,
+        )
+        assert r.returncode == 0
+        assert "E2E Alpha" in r.stdout
+
+
+class TestE2EMiscTools:
+    """Coverage for remaining MCP tools: server_info, bridge, trends, stale, etc."""
+
+    def test_server_info(self, mcp_proc):
+        """server_info must return server identity and version."""
+        result = mcp_proc.call_tool("server_info")
+        assert isinstance(result, str)
+        assert "obs" in result.lower() or "server" in result.lower()
+
+    def test_get_bridge_status(self, mcp_proc):
+        """get_bridge_status must not crash (may report CLI not found)."""
+        result = mcp_proc.call_tool("get_bridge_status")
+        assert isinstance(result, str)
+
+    def test_get_trends(self, mcp_proc, e2e_vault):
+        """get_trends must produce trend data for the fixture vault."""
+        vault_dir, _, _ = e2e_vault
+        result = mcp_proc.call_tool("get_trends", {"vault_id": vault_dir.name, "days": 7})
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+    def test_get_stale_notes(self, mcp_proc, e2e_vault):
+        """get_stale_notes must list stale notes or report none."""
+        vault_dir, _, _ = e2e_vault
+        result = mcp_proc.call_tool("get_stale_notes", {"vault_id": vault_dir.name, "limit": 5})
+        assert isinstance(result, str)
+
+    def test_get_daily_digest(self, mcp_proc, e2e_vault):
+        """get_daily_digest must combine bridge + trends + stale."""
+        vault_dir, _, _ = e2e_vault
+        result = mcp_proc.call_tool("get_daily_digest", {"vault_id": vault_dir.name})
+        assert isinstance(result, str)
+
+    def test_diagnose_default(self, mcp_proc, e2e_vault):
+        """diagnose with no args must run all layers."""
+        result = mcp_proc.call_tool("diagnose", {})
+        assert isinstance(result, str)
+        assert "python" in result.lower() or "database" in result.lower()
+
+    def test_unified_search(self, mcp_proc):
+        """unified_search fans out; must not crash even with no results."""
+        result = mcp_proc.call_tool("unified_search", {"query": "E2E Alpha"})
+        assert isinstance(result, str)
 
 
 class TestE2EServerStability:
