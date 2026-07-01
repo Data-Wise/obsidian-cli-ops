@@ -26,6 +26,10 @@ Three sources checked during the /brainstorm session:
 
 **Net:** The `obs research board` renderer is built, idempotent, and marker-bounded. The only missing piece is a cron trigger. The AI action-board prompt does rote work (status tables) that the renderer already handles. The fix touches zero Python code for Phase 1 and only a prompt for Phase 4.
 
+**Converging input:** [`docs/specs/PROPOSAL-unified-research-board-2026-06-30.md`](./PROPOSAL-unified-research-board-2026-06-30.md) — a same-day, independently-written ADHD-friendly brainstorm from a pmed-modern session (4-board audit fatigue: `_ACTION-BOARD.md`, `_RESEARCH-BOARD.md`, `MediationVerse_Dashboard.md`, `RESEARCH_HUB.md`). It arrives at the same root cause (no single canonical board, `.STATUS` narrative dumped verbatim) and the same "truncate at source" fix as Phase 4 here. It adds two presentation ideas not yet in this spec, worth folding into the Phase 2 `BoardRenderer` output format (§3):
+- **Collapsible raw-detail callouts** (`> [!note]- Raw status`) for any full `.STATUS` text that must be preserved verbatim, so the rendered board defaults to scannable.
+- **A single hand-refreshed "RIGHT NOW" headline line** above the deterministic tables — the one highest-leverage action, distinct from the ranked "Act on now" list.
+
 ---
 
 ## 1. Architecture
