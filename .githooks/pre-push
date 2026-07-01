@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Pre-push hook — fast, local, zero-token, purely advisory.
+# Runs on every git push. All checks are WARNING only — never blocks.
+# Enforcement: GitHub Actions + branch protection are authoritative.
+# Install: via install.sh or: git config core.hooksPath .githooks
+# Skip:    git push --no-verify
+set -euo pipefail
+
+REMOTE="${1:-origin}"
+BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed 's/refs\/heads\///')
+RANGE="${3:-@{push}..HEAD}"
+
+# Guard: skip for secondary remotes (upstream, fork)
+[ "$REMOTE" != "origin" ] && exit 0
+
+# Guard: skip for main/dev pushes (branch-guard + GitHub protection cover these)
+echo "$BRANCH" | grep -qiE '^(main|dev)$' && exit 0
+
+# Guard: skip if no upstream yet (fresh branch)
+git rev-parse "@{push}" &>/dev/null || exit 0
+
+warnings=0
+
+# 1. Binary files in push range
+big=$(git diff "$RANGE" --diff-filter=A --name-only \
+    | grep -iE '\.(exe|dll|so|dylib|zip|tar\.gz|tgz|bin|whl)$' \
+    || true)
+if [ -n "$big" ]; then
+    echo "[pre-push] WARNING: binary files — were these intentional?"
+    echo "$big" | sed 's/^/  /'
+    warnings=$((warnings + 1))
+fi
+
+# 2. Oversized files (>5K lines)
+oversized=$(git diff "$RANGE" --stat --diff-filter=A \
+    | awk -F'|' '{
+        file=$1; gsub(/[[:space:]]*$/,"",file);
+        size=$2; gsub(/[^0-9]/,"",size);
+        if (size+0 > 5000) print file" ("size" lines)"
+    }' || true)
+if [ -n "$oversized" ]; then
+    echo "[pre-push] WARNING: oversized files (>5K lines) — intentional?"
+    echo "$oversized" | sed 's/^/  /'
+    warnings=$((warnings + 1))
+fi
+
+# 3. Secrets glance (warning only)
+secrets=$(git diff "$RANGE" --diff-filter=A \
+    | grep -v '^\s*#' \
+    | grep -v '\.env\.example\|test/fixtures/\|mock\|_test\.\|test\.' \
+    | grep -iE '(api_key|token|password|secret)\s*=\s*['\''"][^'\''"]+['\''"]' \
+    || true)
+if [ -n "$secrets" ]; then
+    echo "[pre-push] WARNING: possible secrets detected — review before push"
+    echo "$secrets" | sed 's/^/  /'
+    warnings=$((warnings + 1))
+fi
+
+# 4. Merge commits in feature branch
+merges=$(git log --oneline --merges "$RANGE" 2>/dev/null | wc -l | tr -d ' ')
+if [ "$merges" -gt 0 ]; then
+    echo "[pre-push] WARNING: $merges merge commit(s). Feature branches typically rebase."
+    warnings=$((warnings + 1))
+fi
+
+if [ "$warnings" -eq 0 ]; then
+    echo "[pre-push] Clean"
+fi
+echo "[pre-push] Done ($warnings warnings, 0 blocked)"
