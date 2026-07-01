@@ -1,11 +1,10 @@
 priority: P1
-status: ✅ Phase 2 nexus-cli port complete (dev→main, PR #75, merge 7038cbd): 13 commands, 62 total (unified search, graph, quarto, batch ops, zotero expansion) + pre-push hook. Tests: 573 pytest + 45 E2E passing.
+status: ✅ Tutorial system ported (Interactive learn command)
 progress: 100
 updated: 2026-06-30
 version: 4.3.0
 next: |
-  1. Port tutorial system (low priority)
-  2. Port plugin skills
-  3. Port vault template ops
+  1. Port plugin skills
+  2. Port vault template ops (low priority)
 verified: |
   v4.3.0 SHIPPED 2026-06-30 (PR #75, dev→main, merge 7038cbd): Phase 2 nexus-cli absorption (13 commands, 62 total) + pre-push hook. Tests: 573 pytest + 45 E2E passing.
