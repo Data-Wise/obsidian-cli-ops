@@ -1069,6 +1069,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#monitoring-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1179,10 +1190,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#claude-mcp-tools-v330" class="md-nav__link">
+  <a href="#claude-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Claude / MCP Tools (v3.3.0)
+        Claude / MCP Tools
       
     </span>
   </a>
@@ -1709,6 +1720,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#monitoring-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1819,10 +1841,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#claude-mcp-tools-v330" class="md-nav__link">
+  <a href="#claude-mcp-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Claude / MCP Tools (v3.3.0)
+        Claude / MCP Tools
       
     </span>
   </a>
@@ -1903,6 +1925,21 @@
 <tr>
 <td><code>obs health &lt;vault&gt; [--json]</code></td>
 <td>4-dimension health dashboard</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database"><img alt="💾" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4be.svg" title=":floppy_disk:" /> Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs db init</code></td>
+<td>Initialize or rebuild the SQLite database (<code>~/.config/obs/vault_db.sqlite</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -2033,7 +2070,7 @@
 <td>Zotero library search</td>
 </tr>
 <tr>
-<td><code>obs research zotero get &lt;key&gt;</code></td>
+<td><code>obs research zotero get &lt;key&gt; [--format F]</code></td>
 <td>Item by Zotero key</td>
 </tr>
 <tr>
@@ -2041,8 +2078,28 @@
 <td>Recently modified</td>
 </tr>
 <tr>
+<td><code>obs research zotero cite &lt;key&gt; [--style S]</code></td>
+<td>APA/BibTeX citation</td>
+</tr>
+<tr>
+<td><code>obs research zotero tags [--limit N]</code></td>
+<td>Tags with counts</td>
+</tr>
+<tr>
+<td><code>obs research zotero collections</code></td>
+<td>List collections</td>
+</tr>
+<tr>
+<td><code>obs research zotero by-tag &lt;tag&gt; [--limit N]</code></td>
+<td>Items by tag</td>
+</tr>
+<tr>
 <td><code>obs research pdf search &lt;q&gt; [--limit N]</code></td>
 <td>Full-text PDF search</td>
+</tr>
+<tr>
+<td><code>obs research pdf extract &lt;path&gt; [--pages R] [--layout]</code></td>
+<td>Extract PDF text</td>
 </tr>
 <tr>
 <td><code>obs research course list / show / lectures</code></td>
@@ -2053,8 +2110,44 @@
 <td>Manuscript tracking</td>
 </tr>
 <tr>
+<td><code>obs research manuscript batch-status &lt;n&gt;... --status &lt;s&gt;</code></td>
+<td>Bulk status update</td>
+</tr>
+<tr>
+<td><code>obs research manuscript batch-progress &lt;n&gt;:&lt;p&gt;...</code></td>
+<td>Bulk progress update</td>
+</tr>
+<tr>
+<td><code>obs research manuscript batch-archive &lt;n&gt;...</code></td>
+<td>Archive manuscripts</td>
+</tr>
+<tr>
+<td><code>obs research manuscript export &lt;out&gt; [--format F]</code></td>
+<td>Export metadata</td>
+</tr>
+<tr>
 <td><code>obs research bib check &lt;name&gt;</code></td>
 <td>Citation completeness</td>
+</tr>
+<tr>
+<td><code>obs research search &lt;q&gt; [--source S] [--json]</code></td>
+<td>Cross-source search</td>
+</tr>
+<tr>
+<td><code>obs research graph &lt;v&gt; [--format F] [--output O] [--tags]</code></td>
+<td>Export knowledge graph</td>
+</tr>
+<tr>
+<td><code>obs research quarto build &lt;n&gt; [--format F]</code></td>
+<td>Build Quarto manuscript</td>
+</tr>
+<tr>
+<td><code>obs research quarto preview &lt;n&gt; [--port P]</code></td>
+<td>Preview Quarto manuscript</td>
+</tr>
+<tr>
+<td><code>obs research learn &lt;level&gt; [--step N]</code></td>
+<td>Interactive tutorial (getting-started/medium/advanced)</td>
 </tr>
 </tbody>
 </table>
@@ -2218,7 +2311,7 @@
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>obs<span class="w"> </span>doctor<span class="w"> </span>--json
 </code></pre></div>
 <hr />
-<h2 id="claude-mcp-tools-v330"><img alt="🔗" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f517.svg" title=":link:" /> Claude / MCP Tools (v3.3.0)<a class="headerlink" href="#claude-mcp-tools-v330" title="Permanent link">&para;</a></h2>
+<h2 id="claude-mcp-tools"><img alt="🔗" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f517.svg" title=":link:" /> Claude / MCP Tools<a class="headerlink" href="#claude-mcp-tools" title="Permanent link">&para;</a></h2>
 <p>42 MCP tools in 10 groups. Setup: <a href="../claude-integration/">Claude Integration</a></p>
 <table>
 <thead>
@@ -2230,11 +2323,11 @@
 <tbody>
 <tr>
 <td><strong>Vault</strong></td>
-<td><code>list_vaults</code>, <code>get_vault_stats</code>, <code>discover_vaults</code></td>
+<td><code>list_vaults</code>, <code>get_vault_stats</code>, <code>discover_vaults</code>, <code>delete_vault</code>, <code>rename_vault</code></td>
 </tr>
 <tr>
 <td><strong>Search</strong></td>
-<td><code>search_notes</code>, <code>find_similar_notes</code></td>
+<td><code>search_notes</code>, <code>find_similar_notes</code>, <code>unified_search</code></td>
 </tr>
 <tr>
 <td><strong>Graph</strong></td>
@@ -2254,7 +2347,7 @@
 </tr>
 <tr>
 <td><strong>Bridge</strong></td>
-<td><code>get_bridge_status</code></td>
+<td><code>get_bridge_status</code>, <code>server_info</code></td>
 </tr>
 <tr>
 <td><strong>Temporal</strong></td>
@@ -2266,7 +2359,7 @@
 </tr>
 <tr>
 <td><strong>Research</strong></td>
-<td><code>zotero_search</code>, <code>zotero_get</code>, <code>pdf_search</code>, <code>course_list</code>, <code>course_show</code>, <code>course_lectures</code>, <code>manuscript_list</code>, <code>manuscript_show</code>, <code>manuscript_stats</code>, <code>bib_check</code>, <code>unified_search</code>, <code>server_info</code>, <code>get_note_links</code></td>
+<td><code>zotero_search</code>, <code>zotero_get</code>, <code>zotero_cite</code>, <code>zotero_recent</code>, <code>pdf_search</code>, <code>course_list</code>, <code>course_show</code>, <code>course_lectures</code>, <code>manuscript_list</code>, <code>manuscript_show</code>, <code>manuscript_stats</code>, <code>bib_check</code></td>
 </tr>
 </tbody>
 </table>
@@ -2333,7 +2426,7 @@
 <p>Requires Obsidian running (Settings → General → Command line interface).
 See the <a href="https://help.obsidian.md/cli">official docs</a>.</p>
 <hr />
-<p><strong>Version:</strong> 4.3.0 | <strong>Commands:</strong> 49 | <strong>MCP Tools:</strong> 42 | <strong>AI Providers:</strong> 5</p>
+<p><strong>Version:</strong> 4.3.0 | <strong>Commands:</strong> 63 | <strong>MCP Tools:</strong> 42 | <strong>AI Providers:</strong> 5</p>
 
 
 

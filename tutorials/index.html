@@ -1688,7 +1688,12 @@ copy-paste commands and expected output at every step.</p>
         D2 --&gt; D3[Note CRUD via Claude]
     end
 
-    L1 --&gt; L2 --&gt; L3 --&gt; L4</code></pre>
+    subgraph L5["🟡 Research"]
+        E1[Research Setup] --&gt; E2[Research Board]
+    end
+
+    L1 --&gt; L2 --&gt; L3 --&gt; L4
+    L2 --&gt; L5</code></pre>
 <hr />
 <h2 id="tutorials">Tutorials<a class="headerlink" href="#tutorials" title="Permanent link">&para;</a></h2>
 <table>
@@ -1732,6 +1737,18 @@ copy-paste commands and expected output at every step.</p>
 <td>Connect Claude Desktop, use all 42 MCP tools, note CRUD</td>
 </tr>
 <tr>
+<td><a href="research-setup/">Research Domain Setup</a></td>
+<td>🟡 Intermediate</td>
+<td>~15 min</td>
+<td>Connect Zotero, PDFs, courses, and manuscripts (<code>obs research</code>)</td>
+</tr>
+<tr>
+<td><a href="research-board/">Research Board</a></td>
+<td>🟡 Intermediate</td>
+<td>~10 min</td>
+<td>Render the deterministic manuscript/program dashboard from atlas state</td>
+</tr>
+<tr>
 <td><a href="../cookbook/#board-sync-workflow">Board Sync Workflow</a></td>
 <td>🟡 Intermediate</td>
 <td>~5 min</td>
@@ -1745,6 +1762,12 @@ copy-paste commands and expected output at every step.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Interactive CLI tutorial</p>
+<p>Prefer learning inside the terminal? <code>obs research learn &lt;getting-started|medium|advanced&gt;</code>
+walks you through the same material step-by-step with live commands. See
+<a href="../cli-reference/#obs-research-learn">CLI Reference</a>.</p>
+</div>
 <hr />
 <hr />
 <h2 id="cookbook">Cookbook<a class="headerlink" href="#cookbook" title="Permanent link">&para;</a></h2>
@@ -1762,7 +1785,7 @@ sync, and research workflows — all organized by task.</p>
 <div class="admonition tip">
 <p class="admonition-title">Build up gradually</p>
 <p>The tutorials build on each other. Recommended order:
-Getting Started → Graph Analysis → AI Features → Claude MCP.</p>
+Getting Started → Graph Analysis → AI Features → Claude MCP → Research Setup → Research Board.</p>
 </div>
 
 
