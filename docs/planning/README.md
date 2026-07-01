@@ -10,7 +10,7 @@
 
 - **[.STATUS](../../.STATUS)** - Current state, next steps, and metrics (live, root)
 - **[IDEAS.md](../../IDEAS.md)** - Future features and brainstorming (live, root)
-- **[brainstorm-board-sync-2026-06-30.md](brainstorm-board-sync-2026-06-30.md)** - Live brainstorm doc
+- **[brainstorm-board-sync-2026-06-30.md](brainstorm-board-sync-2026-06-30.md)** - Board-sync brainstorm; core ideas shipped in v4.3.0 (`core/board.py`, `obs board refresh/status`) + PRs #80-82 (zsh dispatcher wiring, help text, board/research-board dedup decision, action-board prompt verified already consuming the deterministic board). `SPEC-board-sync-automation-2026-06-30.md` still carries a DRAFT status header pending a formal close-out.
 
 ---
 
