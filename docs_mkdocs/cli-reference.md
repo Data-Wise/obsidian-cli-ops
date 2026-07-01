@@ -1072,6 +1072,7 @@ obs research learn advanced --step 3
 | `obs research graph <vault>` | Export knowledge graph |
 | `obs research quarto build <name>` | Build Quarto manuscript |
 | `obs research quarto preview <name>` | Preview Quarto manuscript |
+| `obs research learn <level>` | Interactive tutorial (getting-started/medium/advanced) |
 
 ---
 
