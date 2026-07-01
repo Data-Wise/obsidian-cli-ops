@@ -1,6 +1,6 @@
 # ORCHESTRATE: docs-count-completeness
 
-**Status:** Not started
+**Status:** In progress (Phase 1 done)
 **Base:** dev @ 4674317
 **Repo:** obsidian-cli-ops
 
@@ -10,7 +10,7 @@ Fix four doc-gap findings from this session's code review + docs gap analysis, a
 
 ## Phases
 
-- [ ] **Phase 1: Fix command count 62 → 63**
+- [x] **Phase 1: Fix command count 62 → 63** — DONE
   - Verify current count: `cd src/python && python3 -c "from core.doc_counts import _count_obs_commands; print(_count_obs_commands())"` (expect 63)
   - Update the hardcoded "62" prose string to "63" in:
     - `docs_mkdocs/cli-reference.md` (line ~4, "62 `obs` commands")

@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 62 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
+> - **What:** Full reference for all 63 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
