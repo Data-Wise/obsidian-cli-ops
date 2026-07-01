@@ -38,6 +38,19 @@ If no config exists:
 obs config init   # creates ~/.config/obs/config.yaml with defaults
 ```
 
+Upgrading from `nexus-cli`? Migrate its legacy config into the unified file instead:
+
+```bash
+obs config migrate            # converts ~/.config/nexus/config.yaml -> ~/.config/obs/config.yaml
+obs config migrate --dry-run  # preview the merge without writing
+```
+
+Validate the config any time — useful after hand-editing it in Step 2+:
+
+```bash
+obs config validate   # reports missing/malformed keys, exits non-zero on error
+```
+
 ---
 
 ## Step 2: Configure Zotero (optional)
