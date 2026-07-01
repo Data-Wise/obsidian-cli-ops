@@ -1,6 +1,6 @@
 # ORCHESTRATE: board-obs-zsh-dispatcher
 
-**Status:** In progress (Phase 1-2 done)
+**Status:** Complete
 **Base:** dev @ 3903fb3
 **Repo:** obsidian-cli-ops
 
@@ -25,9 +25,10 @@ but `src/obs.zsh`'s dispatcher has no `"board")` case — the feature is unreach
   - Find the help text output in `src/obs.zsh` (near the `obs health` help line mentioned in `docs/planning/BRIEF-board-sync-status.md` — file not present in this worktree; used VAULT MANAGEMENT section as the closest sibling grouping instead)
   - Added a new "RESEARCH BOARD" section with `obs board refresh [--all] [--dry-run]` and `obs board status`, matching existing help entries' format/column alignment
 
-- [ ] **Phase 4: Verify end-to-end**
-  - Run `obs board status` and `obs board refresh --dry-run` from this worktree (use the worktree's own `src/obs.zsh`, not a globally-installed `obs`) — confirm they now route through the shell entrypoint successfully, not falling through to "Unknown command"
-  - Run `obs help | grep -i board` to confirm the new help line appears
+- [x] **Phase 4: Verify end-to-end** — done by orchestrator (dispatched agent was killed before this phase)
+  - `obs board status` via `zsh -c 'source src/obs.zsh; obs board status'`: real output (`Documents: board=✔ last=1d ago`, etc.), not "Unknown command"
+  - `obs board refresh --dry-run`: real output (`dry-run: .../_ACTION-BOARD.md`)
+  - `obs help` (plain, quick reference) does NOT list board — by design, matches this repo's convention (plain `help` = quick ref, `--all` = exhaustive). `obs help --all | grep -i board` correctly shows the new "📋 RESEARCH BOARD" section with both subcommands.
 
 ## Acceptance Criteria
 
