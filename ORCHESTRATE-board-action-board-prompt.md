@@ -1,6 +1,6 @@
 # ORCHESTRATE: board-action-board-prompt
 
-**Status:** Not started
+**Status:** Complete — no code/prompt change needed (already correct)
 **Base:** dev @ 3903fb3
 **Repo:** obsidian-cli-ops
 
@@ -16,46 +16,67 @@ the prompt file was never actually inspected.
 
 ## Phases
 
-- [ ] **Phase 1: Locate the prompt**
-  - Search for `research--action-board` or `action-board` across the repo and any Claude
-    Code plugin/skill directories this project might reference (check `.claude/`, any
-    `commands/` or `skills/` dirs, and the savant/research plugin paths mentioned in the
-    session's system context if relevant — but start with a repo-local grep first:
-    `grep -rln "action-board" . --include="*.md" 2>/dev/null`)
-  - If the prompt genuinely doesn't exist in this repo (it may live in a sibling plugin
-    repo like `savant` or `craft`), STOP here, do not guess a path or invent one — write
-    a blocker note in this file stating where you looked and that it wasn't found, and
-    do not modify anything.
+- [x] **Phase 1: Locate the prompt**
+  - Repo-local grep (`grep -rln "action-board" . --include="*.md"`) found only doc
+    *references* to the prompt (SPEC, brainstorm, mkdocs docs) — never the prompt file
+    itself. The prompt does not live in this repo.
+  - Traced the path via `docs/planning/.../research-automation-and-tasks.md` in the
+    Research vault, which names the canonical location as
+    `_PromptLibrary/research/research--action-board.md`. That subpath does **not** exist
+    under the Research vault. A full `$HOME` find (by-name, so it also matches
+    non-materialized iCloud stubs) located the actual file one vault over:
+    `/Users/dt/Library/Mobile Documents/iCloud~md~obsidian/Documents/Knowledge_Base/_PromptLibrary/research/research--action-board.md`.
+    Confirmed no other copy exists on disk.
 
-- [ ] **Phase 2: Read and assess**
-  - If found, read the prompt file in full
-  - Determine its current data-sourcing logic: does it re-derive status tables from raw
-    `.STATUS`/atlas data itself, or does it already reference `core/board.py`'s output?
-  - Read `core/board.py`'s renderer output format (the `_ACTION-BOARD.md`-style file,
-    including the `*(LLM augments this section on demand)*` placeholders) to understand
-    what "consuming it as primary source" should mean concretely
+- [x] **Phase 2: Read and assess**
+  - Read the prompt in full (v3.0, dated 2026-06-30, `status: active`).
+  - It already treats `00_meta/_ACTION-BOARD.md` (the `obs board refresh` deterministic
+    output) as **PRIMARY source** for status/progress/next columns, explicitly instructs
+    "Keep every table and row exactly as-is," and its OUTPUT TEMPLATE marks
+    `## 📊 Status at a glance` as "DO NOT MODIFY — copied verbatim from the deterministic
+    board." It rewrites only the LLM-thinking sections: TL;DR, Act on now (re-rank only,
+    same columns), Future ideas, Threats/scoop-watch, This week.
+  - Cross-checked against `core/board.py::BoardRenderer.render()` (lines 258-286): the
+    renderer emits placeholder headings `## TL;DR`, `## 💡 Future ideas & new proposals`,
+    `## 🔴 Threats / scoop-watch`, `## ⏭️ This week (sequenced)` each with an
+    `*(LLM augments this section on demand ...)*` stub, plus the deterministic
+    `## 🎯 Act on now` table and `## 📊 Status at a glance`. These headings match the
+    prompt's section list verbatim. Line 266 of `board.py` even names the prompt
+    directly: `"...augment thinking on demand via \`research--action-board\` prompt."`
+  - Conclusion: this is not a stale prompt — it's the **already-updated v3.0** that
+    implements exactly the hybrid architecture (atlas organizes → obs renders
+    deterministically → LLM augments strategically) the brainstorm called for. The
+    "not verified as done" flag from the prior session was a verification gap, not an
+    actual gap in the prompt.
 
-- [ ] **Phase 3: Update (only if genuinely needed)**
-  - If the prompt does NOT yet consume the deterministic board output, update it to read
-    from the board-refresh output first, filling only the LLM-augmented sections
-    (TL;DR, ideas, threats, this-week) rather than regenerating the whole table
-  - If it already does this correctly, leave it alone and just document that in this file
-    — do not make cosmetic changes to a file that's already correct
+- [x] **Phase 3: Update (only if genuinely needed)**
+  - No update needed. The prompt already correctly consumes `_ACTION-BOARD.md` as
+    primary source and only fills LLM-augmented placeholder sections. No cosmetic or
+    substantive change made — leaving the file untouched per the phase's own guidance.
 
 ## Acceptance Criteria
 
-- Clear documented finding: either (a) the prompt already correctly consumes deterministic
-  board output — no change needed, or (b) it was updated to do so, with the specific change
-  described
-- If the prompt file couldn't be located at all, that's an acceptable outcome too — documented
-  as a blocker, not guessed around
+- [x] Clear documented finding: (a) the prompt already correctly consumes deterministic
+  board output — no change needed. See Phase 2 above for the specific evidence
+  (prompt v3.0 text + `core/board.py` renderer cross-check).
+- N/A — prompt file was located (Phase 1), so the "couldn't be located" outcome doesn't apply.
 
 ## Verification
 
-Manual read-check only — this is a prompt/doc-logic change with no automated test gate
-(prompts aren't unit-tested in this repo). If Phase 3 makes a change, re-read the final
-prompt and confirm it references the board-refresh output correctly before committing.
+Manual read-check performed: read `research--action-board.md` in full at
+`/Users/dt/Library/Mobile Documents/iCloud~md~obsidian/Documents/Knowledge_Base/_PromptLibrary/research/research--action-board.md`
+and cross-referenced its SOURCES/PROCEDURE/OUTPUT TEMPLATE sections against
+`src/python/core/board.py`'s `BoardRenderer.render()` output format. They match. No
+Phase 3 change was made, so no re-read-after-edit step was required.
 
 ## Blockers
 
-(none yet)
+(none — prompt located, assessed, and found already correct; no unresolved decisions)
+
+## Note
+
+The prompt file lives in the **Knowledge_Base** Obsidian vault, not the Research vault
+that most of its own SOURCES section prefixes reference
+(`/Users/dt/Library/.../Documents/Research/`). This is a pre-existing vault-organization
+quirk (the prompt is filed under Knowledge_Base's `_PromptLibrary` but reads from
+Research), not something this task's scope covers changing.
