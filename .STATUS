@@ -8,3 +8,4 @@ next: |
   2. Port vault template ops (low priority)
 verified: |
   v4.3.0 SHIPPED 2026-06-30 (PR #75, dev→main, merge 7038cbd): Phase 2 nexus-cli absorption (13 commands, 62 total) + pre-push hook. Tests: 573 pytest + 45 E2E passing.
+  Note: "62 total" was the count at PR #75 shipment (7038cbd). `obs research learn` landed after (commit 2f9839d), bringing the live count to 63 — see _count_obs_commands(). This line is preserved as the historical PR #75 record, not a live count.
