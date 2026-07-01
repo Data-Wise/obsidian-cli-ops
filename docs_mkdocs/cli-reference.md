@@ -979,6 +979,36 @@ obs research quarto preview <name> [--port PORT]
 | `name` | required | Manuscript name or directory name |
 | `--port` | `4848` | Preview server port |
 
+### obs research learn
+
+Interactive, guided tutorials for the `obs` CLI at three difficulty levels: `getting-started`,
+`medium`, and `advanced`.
+
+```bash
+obs research learn <getting-started|medium|advanced> [--step N]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `level` | required | Tutorial level: `getting-started`, `medium`, or `advanced` |
+| `--step` | | Resume from a specific step number |
+
+- **Getting Started** — installation check, config, command structure, first Zotero search,
+  `--json` output.
+- **Medium** — research (Zotero search → get → cite), knowledge (vault search → graph analyze),
+  teaching (course list), and writing (manuscript list) workflows.
+- **Advanced** — batch manuscript operations, graph exports (GraphML/D3), Claude JSON pipelines,
+  bibliography checking, and Quarto automation.
+
+Each step can show a command to try; when interactive, it prompts to confirm before continuing
+and lets you pause and resume later with `--step`.
+
+```bash
+obs research learn getting-started
+obs research learn medium
+obs research learn advanced --step 3
+```
+
 ---
 
 ## :zap: Quick Reference

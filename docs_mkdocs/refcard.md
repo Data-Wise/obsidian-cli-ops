@@ -78,6 +78,7 @@
 | `obs research graph <v> [--format F] [--output O] [--tags]` | Export knowledge graph |
 | `obs research quarto build <n> [--format F]` | Build Quarto manuscript |
 | `obs research quarto preview <n> [--port P]` | Preview Quarto manuscript |
+| `obs research learn <level> [--step N]` | Interactive tutorial (getting-started/medium/advanced) |
 
 ## :wrench: Vault Management
 
