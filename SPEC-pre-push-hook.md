@@ -29,7 +29,7 @@
 
 ## What the Hook Checks (and why it's fast)
 
-### 1. Big binary files in push range (BLOCK)
+### 1. Big binary files in push range (WARNING)
 
 Prevent accidental commits of build artifacts or dependencies.
 
@@ -38,32 +38,41 @@ big=$(git diff "@{push}..HEAD" --diff-filter=A --name-only \
     | grep -iE '\.(exe|dll|so|dylib|zip|tar\.gz|tgz|bin|whl)$' \
     || true)
 if [ -n "$big" ]; then
-    echo "[pre-push] BLOCKED: prohibited binary files in push:"
-    echo "$big"
-    exit 1
+    echo "[pre-push] WARNING: binary files detected — were these intentional?"
+    echo "$big" | sed 's/^/  /'
 fi
 ```
 
 **Sub-second?** Yes — `git diff --name-only` is O(diff size).
 **Network/tokens?** None.
+**Blocks?** No — warning only. CI enforces binary file policy.
 
-### 2. Single file > 5MB in push range (BLOCK)
+### 2. Single file > 5K lines in push range (WARNING)
 
-Catches accidentally committed datasets, node_modules, rendered artifacts.
+Catches accidentally committed datasets, generated files, or rendered artifacts.
 
 ```bash
-git diff "@{push}..HEAD" --stat --diff-filter=A \
-    | awk -F'|' '{diff=$2; if (diff+0 > 5000) print $0}'
+oversized=$(git diff "@{push}..HEAD" --stat --diff-filter=A \
+    | awk -F'|' '{
+        file=$1; gsub(/[[:space:]]*$/,"",file);
+        size=$2; gsub(/[^0-9]/,"",size);
+        if (size+0 > 5000) print file" ("size" lines)"
+    }' || true)
+if [ -n "$oversized" ]; then
+    echo "[pre-push] WARNING: oversized files detected (>5K lines) — was this intentional?"
+    echo "$oversized" | sed 's/^/  /'
+fi
 ```
 
-Threshold 5MB (not 1MB) — avoids blocking legitimate large files like test fixtures, bundled SVGs, or example data.
+Threshold 5K lines (not 1K) — avoids warning on legitimate large files (test fixtures, generated docs, example data).
 
-**Sub-second?** Yes — `git diff --stat` is O(diff size) and returns aggregated sizes instantly.
+**Sub-second?** Yes — `git diff --stat` is O(diff size).
 **Network/tokens?** None.
+**Blocks?** No — warning only.
 
 ### 3. Secrets glance (WARNING only)
 
-Scan added lines for patterns that look like secrets. **Warning only** — never blocks on a pattern match because the inline grep is not accurate enough for blocking decisions.
+Scan added lines for patterns that look like secrets. Warning only — never blocks.
 
 ```bash
 secrets=$(git diff "@{push}..HEAD" --diff-filter=A \
@@ -118,11 +127,9 @@ Graceful fallback if `@{push}` doesn't exist (fresh branch): skip the check sile
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pre-push hook — fast, local, zero-token validation.
-# Runs on every git push before push reaches remote.
-#
-# Design: sub-second checks only, warning over blocking, built-in tools.
-# Enforcement: branch-guard.sh + GitHub branch protection are authoritative.
+# Pre-push hook — fast, local, zero-token, purely advisory.
+# Runs on every git push. All checks are WARNING only — never blocks.
+# Enforcement: GitHub Actions + branch protection are authoritative.
 #
 # Install: git config core.hooksPath .githooks
 # Skip:    git push --no-verify
@@ -131,35 +138,28 @@ REMOTE="${1:-origin}"
 BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed 's/refs\/heads\///')
 RANGE="${3:-@{push}..HEAD}"
 
-# Guard: skip for pushes to secondary remotes (upstream, fork)
-if [ "$REMOTE" != "origin" ]; then
-    exit 0
-fi
+# Guard: skip for secondary remotes (upstream, fork)
+[ "$REMOTE" != "origin" ] && exit 0
 
-# Guard: skip for pushes to main/dev (branch-guard handles this)
-if echo "$BRANCH" | grep -qiE '^(main|dev)$'; then
-    exit 0
-fi
+# Guard: skip for main/dev pushes (branch-guard + GitHub protection cover these)
+echo "$BRANCH" | grep -qiE '^(main|dev)$' && exit 0
 
-# Check if @{push} exists (fresh branch with no upstream)
-if ! git rev-parse "@{push}" &>/dev/null; then
-    exit 0  # no upstream yet — nothing to compare against
-fi
+# Guard: skip if no upstream yet (fresh branch)
+git rev-parse "@{push}" &>/dev/null || exit 0
 
-echo "[pre-push] $BRANCH → $REMOTE"
+warnings=0
 
-# 1. Binary files (block)
-bad_binaries=$(git diff "$RANGE" --diff-filter=A --name-only \
+# 1. Binary files
+big=$(git diff "$RANGE" --diff-filter=A --name-only \
     | grep -iE '\.(exe|dll|so|dylib|zip|tar\.gz|tgz|bin|whl)$' \
     || true)
-if [ -n "$bad_binaries" ]; then
-    echo "[pre-push] BLOCKED: prohibited binary types in push range:"
-    echo "$bad_binaries" | sed 's/^/  /'
-    exit 1
+if [ -n "$big" ]; then
+    echo "[pre-push] WARNING: binary files — were these intentional?"
+    echo "$big" | sed 's/^/  /'
+    warnings=$((warnings + 1))
 fi
-echo "[pre-push] Binary files: PASS"
 
-# 2. Oversized files (block)
+# 2. Oversized files
 oversized=$(git diff "$RANGE" --stat --diff-filter=A \
     | awk -F'|' '{
         file=$1; gsub(/[[:space:]]*$/,"",file);
@@ -167,33 +167,34 @@ oversized=$(git diff "$RANGE" --stat --diff-filter=A \
         if (size+0 > 5000) print file" ("size" lines)"
     }' || true)
 if [ -n "$oversized" ]; then
-    echo "[pre-push] BLOCKED: oversized files (>5K lines) in push range:"
+    echo "[pre-push] WARNING: oversized files (>5K lines) — intentional?"
     echo "$oversized" | sed 's/^/  /'
-    exit 1
+    warnings=$((warnings + 1))
 fi
-echo "[pre-push] File size: PASS"
 
-# 3. Secrets glance (warning only)
+# 3. Secrets glance
 secrets=$(git diff "$RANGE" --diff-filter=A \
     | grep -v '^\s*#' \
     | grep -v '\.env\.example\|test/fixtures/\|mock\|_test\.\|test\.' \
     | grep -iE '(api_key|token|password|secret)\s*=\s*['\''"][^'\''"]+['\''"]' \
     || true)
 if [ -n "$secrets" ]; then
-    echo "[pre-push] WARNING: possible secrets detected (review before push):"
+    echo "[pre-push] WARNING: possible secrets detected — review before push"
     echo "$secrets" | sed 's/^/  /'
-else
-    echo "[pre-push] Secrets: PASS"
+    warnings=$((warnings + 1))
 fi
 
-# 4. Merge commits (warning only)
+# 4. Merge commits
 merges=$(git log --oneline --merges "$RANGE" 2>/dev/null | wc -l | tr -d ' ')
 if [ "$merges" -gt 0 ]; then
     echo "[pre-push] WARNING: $merges merge commit(s). Feature branches typically rebase."
+    warnings=$((warnings + 1))
 fi
-echo "[pre-push] Merge commits: PASS"
 
-echo "[pre-push] All checks PASS"
+if [ "$warnings" -eq 0 ]; then
+    echo "[pre-push] Clean"
+fi
+echo "[pre-push] Done ($warnings warnings, 0 blocked)"
 ```
 
 ---
@@ -218,11 +219,11 @@ fi
 
 | Test | Command | Expected |
 |------|---------|----------|
-| Push to `feature/valid` | `git push origin feature/valid` | Exit 0, "All checks PASS" |
-| Push to `main` or `dev` | `git push origin main` | Exit 0, skipped silently (branch-guard handles this) |
+| Push to `feature/valid` | `git push origin feature/valid` | Exit 0, "Clean" |
+| Push to `main` or `dev` | `git push origin main` | Exit 0, skipped silently |
 | Push to secondary remote | `git push upstream feature/x` | Exit 0, skipped silently |
 | Fresh branch, no upstream | `git push -u origin feature/new` | Exit 0, skipped gracefully |
-| Binary file added | `git add file.exe`, commit, push | Exit 1, "BLOCKED" |
-| Large file added | Create 6K-line file, commit, push | Exit 1, "BLOCKED" |
-| Secret in push range | `git add config.py` with `TOKEN=abc`, commit, push | Warning only, exit 0 |
+| Binary file added | `git add file.exe`, commit, push | Exit 0, warning only |
+| Large file added | Create 6K-line file, commit, push | Exit 0, warning only |
+| Secret in push range | `git add config.py` with `TOKEN=abc`, commit, push | Exit 0, warning only |
 | `--no-verify` | `git push --no-verify origin feature/x` | Exit 0, no output |
