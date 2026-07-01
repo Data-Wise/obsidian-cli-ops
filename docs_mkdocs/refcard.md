@@ -19,6 +19,12 @@
 | `obs analyze <vault> [-v] [--json]` | Graph metrics (PageRank, centrality) |
 | `obs health <vault> [--json]` | 4-dimension health dashboard |
 
+## :floppy_disk: Database
+
+| Command | Description |
+|---------|-------------|
+| `obs db init` | Initialize or rebuild the SQLite database (`~/.config/obs/vault_db.sqlite`) |
+
 ## :stethoscope: Monitoring & Diagnostics
 
 | Command | Description |

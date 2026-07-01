@@ -1,6 +1,6 @@
 # ORCHESTRATE: docs-count-completeness
 
-**Status:** In progress (Phase 1 done)
+**Status:** In progress (Phases 1-2 done)
 **Base:** dev @ 4674317
 **Repo:** obsidian-cli-ops
 
@@ -19,7 +19,7 @@ Fix four doc-gap findings from this session's code review + docs gap analysis, a
     - `.STATUS` (verified: line, "13 commands, 62 total" → confirm whether this needs updating — it's a historical record of the PR #75 shipment, not a live count; if historical, add a note instead of just renumbering, don't silently rewrite history)
   - Root cause note (for context, not action): `obs research learn` (commit 2f9839d) landed after "62 total" was set in PR #75 (7038cbd) — the actual count is 63 as of today.
 
-- [ ] **Phase 2: Add `obs db init` to refcard.md**
+- [x] **Phase 2: Add `obs db init` to refcard.md** — DONE
   - Read `docs_mkdocs/cli-reference.md` for how `obs db init` is documented (search for "db init")
   - Add an equivalent row/section to `docs_mkdocs/refcard.md`'s Core Commands table (there is currently no Database section at all)
 
