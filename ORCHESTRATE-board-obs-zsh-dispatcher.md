@@ -1,6 +1,6 @@
 # ORCHESTRATE: board-obs-zsh-dispatcher
 
-**Status:** Not started
+**Status:** In progress (Phase 1-2 done)
 **Base:** dev @ 3903fb3
 **Repo:** obsidian-cli-ops
 
@@ -13,11 +13,11 @@ but `src/obs.zsh`'s dispatcher has no `"board")` case — the feature is unreach
 
 ## Phases
 
-- [ ] **Phase 1: Add `obs_board()` wrapper**
+- [x] **Phase 1: Add `obs_board()` wrapper**
   - Read `src/obs.zsh` in full — find `obs_research()` and `obs_vault()` as the pattern to mirror (same file structure: resolve python interpreter via `_obs_resolve_python`/`_get_python_cli`, pass args through)
   - Add an `obs_board()` function following that exact pattern, passing all args through to `python3 <cli> board "$@"`
 
-- [ ] **Phase 2: Wire the dispatcher case**
+- [x] **Phase 2: Wire the dispatcher case**
   - Find the dispatch `case` statement in `src/obs.zsh` (where `"research") obs_research "$@" ;;` lives)
   - Add `"board") obs_board "$@" ;;`
 

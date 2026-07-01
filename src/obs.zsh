@@ -777,6 +777,11 @@ obs_vault() {
     $OBS_PYTHON "$python_cli" vault "$@"
 }
 
+obs_board() {
+    local python_cli=$(_get_python_cli) || return 1
+    $OBS_PYTHON "$python_cli" board "$@"
+}
+
 # --- Dispatch ---
 obs() {
     # Parse global flags first
@@ -862,6 +867,9 @@ obs() {
             ;;
         "vault")
             obs_vault "$@"
+            ;;
+        "board")
+            obs_board "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"
