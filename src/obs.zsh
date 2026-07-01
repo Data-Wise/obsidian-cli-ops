@@ -166,6 +166,11 @@ obs_help() {
         echo "  obs vault delete <vault> [--force]  Remove from index (dry-run without --force)"
         echo ""
 
+        echo "📋 RESEARCH BOARD"
+        echo "  obs board refresh [--all] [--dry-run]  Refresh research board from atlas state"
+        echo "  obs board status          Show board refresh status"
+        echo ""
+
         echo "🤖 AI FEATURES"
         echo "  obs ai status             Show AI provider status"
         echo "  obs ai setup              Interactive AI setup wizard"

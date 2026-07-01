@@ -21,9 +21,9 @@ but `src/obs.zsh`'s dispatcher has no `"board")` case — the feature is unreach
   - Find the dispatch `case` statement in `src/obs.zsh` (where `"research") obs_research "$@" ;;` lives)
   - Add `"board") obs_board "$@" ;;`
 
-- [ ] **Phase 3: Add to `obs help`**
-  - Find the help text output in `src/obs.zsh` (near the `obs health` help line mentioned in `docs/planning/BRIEF-board-sync-status.md`)
-  - Add `obs board refresh|status` with a one-line description, matching the existing help entries' format/column alignment
+- [x] **Phase 3: Add to `obs help`**
+  - Find the help text output in `src/obs.zsh` (near the `obs health` help line mentioned in `docs/planning/BRIEF-board-sync-status.md` — file not present in this worktree; used VAULT MANAGEMENT section as the closest sibling grouping instead)
+  - Added a new "RESEARCH BOARD" section with `obs board refresh [--all] [--dry-run]` and `obs board status`, matching existing help entries' format/column alignment
 
 - [ ] **Phase 4: Verify end-to-end**
   - Run `obs board status` and `obs board refresh --dry-run` from this worktree (use the worktree's own `src/obs.zsh`, not a globally-installed `obs`) — confirm they now route through the shell entrypoint successfully, not falling through to "Unknown command"
