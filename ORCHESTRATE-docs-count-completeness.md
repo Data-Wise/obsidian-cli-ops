@@ -1,6 +1,6 @@
 # ORCHESTRATE: docs-count-completeness
 
-**Status:** In progress (Phases 1-2 done)
+**Status:** All phases done
 **Base:** dev @ 4674317
 **Repo:** obsidian-cli-ops
 
@@ -23,12 +23,12 @@ Fix four doc-gap findings from this session's code review + docs gap analysis, a
   - Read `docs_mkdocs/cli-reference.md` for how `obs db init` is documented (search for "db init")
   - Add an equivalent row/section to `docs_mkdocs/refcard.md`'s Core Commands table (there is currently no Database section at all)
 
-- [ ] **Phase 3: Complete MCP Tool Groups section in cli-reference.md**
+- [x] **Phase 3: Complete MCP Tool Groups section in cli-reference.md** — DONE (also fixed refcard.md's own table: added missing delete_vault/rename_vault to Vault, unified_search to Search, server_info to Bridge; ground-truthed all 42 tools against `@mcp.tool` decorators in mcp_server.py)
   - `docs_mkdocs/cli-reference.md` lines ~1085-1098 list only 5 of the 10 MCP tool groups (Vault, Search, Graph, Health, Notes, AI) while claiming "42 MCP tools"
   - Cross-reference `docs_mkdocs/refcard.md` lines ~171-182 for the full 10-group table (includes Bridge, Temporal, Diagnostics, and the rest of Research: `get_bridge_status`, `get_trends`, `get_stale_notes`, `get_daily_digest`, `diagnose`, `zotero_recent`, `zotero_cite`, `manuscript_export`, etc.)
   - Bring cli-reference.md's MCP Tool Groups section up to full parity with refcard.md's group list
 
-- [ ] **Phase 4: Fix stale `(v3.3.0)` label**
+- [x] **Phase 4: Fix stale `(v3.3.0)` label** — DONE (removed version suffix entirely — matches convention of every other section header in refcard.md, none of which are version-pinned)
   - `docs_mkdocs/refcard.md` — section header reads `## Claude / MCP Tools (v3.3.0)`, rest of doc is v4.3.0-current
   - Update the label to reflect current version (or remove the version suffix if the section isn't meant to be version-pinned — check how other section headers in the same file handle this)
 

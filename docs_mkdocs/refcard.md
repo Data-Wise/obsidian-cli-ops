@@ -170,22 +170,22 @@ obs doctor --json
 
 ---
 
-## :link: Claude / MCP Tools (v3.3.0)
+## :link: Claude / MCP Tools
 
 42 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
 
 | Group | Tools |
 |-------|-------|
-| **Vault** | `list_vaults`, `get_vault_stats`, `discover_vaults` |
-| **Search** | `search_notes`, `find_similar_notes` |
+| **Vault** | `list_vaults`, `get_vault_stats`, `discover_vaults`, `delete_vault`, `rename_vault` |
+| **Search** | `search_notes`, `find_similar_notes`, `unified_search` |
 | **Graph** | `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault` |
 | **Health** | `get_vault_health` |
 | **Notes** | `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault` |
 | **AI** | `run_obs_ai` (all 11 subcommands) |
-| **Bridge** | `get_bridge_status` |
+| **Bridge** | `get_bridge_status`, `server_info` |
 | **Temporal** | `get_trends`, `get_stale_notes`, `get_daily_digest` |
 | **Diagnostics** | `diagnose` |
-| **Research** | `zotero_search`, `zotero_get`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check`, `unified_search`, `server_info`, `get_note_links` |
+| **Research** | `zotero_search`, `zotero_get`, `zotero_cite`, `zotero_recent`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check` |
 
 **Example Claude prompts:**
 
