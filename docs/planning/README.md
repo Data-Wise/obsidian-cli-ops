@@ -1,6 +1,6 @@
 # Planning Documentation
 
-> **Note:** Planning documentation has been consolidated into two simple files at the project root for easier access and ADHD-friendly organization.
+> **Note:** `.STATUS` (project root) is the single live source of truth for current state and next steps. This directory holds supporting planning docs — some still live, most archived with banners pointing back to `.STATUS`.
 
 ---
 
@@ -8,22 +8,25 @@
 
 **Use these for day-to-day planning:**
 
-- **[.STATUS](../../.STATUS)** - Current state, next steps, and metrics (live)
-- **[SPEC-merge-nexus-cli-v2-2026-06-21.md](../../SPEC-merge-nexus-cli-v2-2026-06-21.md)** - Active plan (nexus-cli absorption)
-- **[IDEAS.md](../../IDEAS.md)** - Future features and brainstorming
-- **[TODOS.md](TODOS.md)** - ⚠️ archived (historical, pre-v3.1)
+- **[.STATUS](../../.STATUS)** - Current state, next steps, and metrics (live, root)
+- **[IDEAS.md](../../IDEAS.md)** - Future features and brainstorming (live, root)
+- **[brainstorm-board-sync-2026-06-30.md](brainstorm-board-sync-2026-06-30.md)** - Live brainstorm doc
 
 ---
 
-## 📚 Historical/Reference Documentation
+## 🗄️ Archived & Historical Documentation
 
-The following files are kept for historical reference and detailed context:
+### Archived (superseded, ARCHIVED banner → `.STATUS`)
+- **[Implementation Roadmap](IMPLEMENTATION-ROADMAP.md)** - Dec-2025 TUI-removal era, fully delivered
+- **[TODOS.md](TODOS.md)** - Stopped after v3.0.0, predates nexus-cli absorption
+- **[Project Hub](project-hub.md)** - Stopped tracking after v2.1.0-beta
+- **[Project Plan](project-plan.md)** - v2.0 technical roadmap (12 weeks), superseded
 
-### Current Status
-- **[Project Hub](project-hub.md)** - ADHD-friendly control center (updated regularly)
+### Resolved triage
+- **[improvement-suggestions-2026-06-22.md](improvement-suggestions-2026-06-22.md)** - Live-testing triage; RESOLVED banner (4 of 5 issues shipped v4.1–v4.3)
 
-### Roadmap & Planning
-- **[Project Plan](project-plan.md)** - Complete v2.0 technical roadmap (12 weeks)
+### Shipped SPEC files
+- **[specs-completed/](specs-completed/)** - `SPEC-*.md` files move here (not deleted) once their work ships and `.STATUS verified:` confirms it, per the SPEC-lifecycle rule in root `CLAUDE.md`'s Git Workflow section. Each carries an ARCHIVED banner pointing back to `.STATUS`.
 
 ### Phase Completion Summaries
 - **[Phase 1 Complete](phases/phase1-complete.md)** - Foundation (Database, Scanner, Graph)
@@ -43,46 +46,10 @@ The following files are kept for historical reference and detailed context:
 |---------------------|---------------|
 | See what to work on next | [.STATUS](../../.STATUS) |
 | Add a feature idea | [IDEAS.md](../../IDEAS.md) |
-| Check overall progress | [Project Hub](project-hub.md) |
+| Check a past feature-branch proposal | [SPEC-*.md](specs-completed/) or repo root (active specs) |
 | Understand a completed phase | [Phase docs](phases/) |
 | Review a specific session | [Session summaries](sessions/) |
-| See the full technical plan | [Project Plan](project-plan.md) |
-
----
-
-## 💡 Philosophy: Keep It Simple
-
-**Why consolidate?**
-- ✅ **ADHD-Friendly** - Two files to check instead of 9
-- ✅ **Easy Access** - Root directory, always visible
-- ✅ **Clear Separation** - Active work (TODOS) vs future ideas (IDEAS)
-- ✅ **Low Maintenance** - Update in one place
-- ✅ **Quick Reference** - No digging through folders
-
-**Historical docs (in docs/planning/) are kept for:**
-- Detailed phase retrospectives
-- Technical decisions and rationale
-- Session-by-session progress
-- Complete technical roadmap
-
----
-
-## 📊 Current Status (Quick Summary)
-
-**Version:** 2.1.0-beta
-**Status:** 92% Complete
-**Active Development:** Testing & validation
-
-**Completed:**
-- ✅ Phase 1: Foundation (100%)
-- ✅ Phase 2: AI Integration (100%)
-- ✅ Phase 4: TUI/Visualization (100%)
-- ✅ Documentation Organization (100%)
-
-**Next Up:**
-- 🟡 v2.1.0 Release Prep
-- 🟡 Final testing pass
-- 🟡 Remaining Quick Wins
+| See historical v2.0 planning | [Project Plan](project-plan.md) |
 
 ---
 
