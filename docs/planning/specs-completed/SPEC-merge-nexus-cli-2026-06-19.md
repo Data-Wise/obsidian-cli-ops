@@ -1,5 +1,8 @@
 # SPEC — Merge `nexus-cli` into `obsidian-cli-ops`
 
+> [!warning] ARCHIVED (2026-07-01) — superseded by v2
+> This is the original (v1) RFC draft. It was superseded by [`SPEC-merge-nexus-cli-v2-2026-06-21.md`](../../../SPEC-merge-nexus-cli-v2-2026-06-21.md), which carries the active plan. For **live state and next steps** see [`.STATUS`](../../../.STATUS). Kept for history only.
+
 **Status:** Draft / RFC
 **Date:** 2026-06-19
 **Owner:** @dtofighi

@@ -1,5 +1,8 @@
 # SPEC: Harden Docs/Website Skills
 
+> [!warning] ARCHIVED (2026-07-01) — shipped in PR #73
+> This spec's full file manifest (site-lifecycle, docs-linter, lychee.toml, preflight-check, docs-quality.md, nav-sync, mermaid-linter, docs-ops) was implemented in commit `e915a3f` (PR #73). For **live state and next steps** see [`.STATUS`](../../../.STATUS). Kept for history only.
+
 **Date**: 2026-06-30
 **Status**: Planned
 **Origin**: docs-audit session exposed detection gaps in 4 skills; need for 2 new skills + 1 project config file
