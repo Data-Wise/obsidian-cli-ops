@@ -1,6 +1,6 @@
 # ORCHESTRATE: spec-harden-skills-banner-fix
 
-**Status:** Not started
+**Status:** Complete
 **Base:** dev @ 4674317
 **Repo:** obsidian-cli-ops
 
@@ -18,14 +18,14 @@ Verified false on two counts:
 
 ## Phases
 
-- [ ] **Phase 1: Read and confirm**
+- [x] **Phase 1: Read and confirm**
   - Read `docs/planning/specs-completed/SPEC-harden-skills.md` in full to see the current banner text and the original 8-item manifest it references
-  - Confirm the 8-item manifest list matches what the code review described (cross-check against `git show e915a3f --stat` if useful, but don't re-litigate the whole finding — it's already verified)
+  - Confirmed the 8-item manifest list matches the code review: `site-management`(edit), `docs-linter`(create), `lychee.toml`(create), `check`(edit), `docs-quality.md`(create), `navigation`(edit), `mermaid-linter`(edit), `docs-ops`(create). Verified via `git show e915a3f --stat`: only `lychee.toml`, `docs-quality.md`, and `SPEC-harden-skills.md` itself were touched by that commit. Verified via filesystem search: `docs-linter`/`docs-ops` SKILL.md don't exist in this repo or in `craft`; `site-management`, `check`, `navigation`, `mermaid-linter` SKILL.md exist only in `craft`.
 
-- [ ] **Phase 2: Correct the banner**
-  - Rewrite the ARCHIVED banner to accurately state: the spec is mostly (6/8 items) implemented, split across this repo (`e915a3f`/PR #73, 2 items: `docs-quality.md`, `lychee.toml`) and the sibling `craft` repo (4 items), with `docs-linter` and `docs-ops` never built
-  - Keep the banner concise — one paragraph, matching the style/length of the other 5 archived files' banners (don't turn it into a full changelog)
-  - Do not alter the rest of the file's content, only the banner
+- [x] **Phase 2: Correct the banner**
+  - Rewrote the ARCHIVED banner to state: 6/8 manifest items implemented, split across this repo (`e915a3f`/PR #73, 2 items: `docs-quality.md`, `lychee.toml`) and the sibling `craft` repo (4 items: `site-lifecycle`, `preflight-check`, `nav-sync`, `mermaid-linter`), with `docs-linter` and `docs-ops` never built
+  - Banner stayed one paragraph, consistent length with the other archived files in this dir (only 3 siblings exist, not 5 as the original phase text estimated — non-blocking, cosmetic note only)
+  - No other content in the file was touched (verified via `git diff` — only the banner two lines changed)
 
 ## Acceptance Criteria
 
@@ -39,4 +39,4 @@ Manual read-check only — this is a docs-only correction with no automated test
 
 ## Blockers
 
-(none yet)
+(none — completed)

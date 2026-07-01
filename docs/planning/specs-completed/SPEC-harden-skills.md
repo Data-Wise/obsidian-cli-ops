@@ -1,7 +1,7 @@
 # SPEC: Harden Docs/Website Skills
 
-> [!warning] ARCHIVED (2026-07-01) — shipped in PR #73
-> This spec's full file manifest (site-lifecycle, docs-linter, lychee.toml, preflight-check, docs-quality.md, nav-sync, mermaid-linter, docs-ops) was implemented in commit `e915a3f` (PR #73). For **live state and next steps** see [`.STATUS`](../../../.STATUS). Kept for history only.
+> [!warning] ARCHIVED (2026-07-01) — mostly shipped (6/8), split across repos
+> Of the 8-item manifest, only `lychee.toml` and `docs-quality.md` shipped here (commit `e915a3f`, PR #73); `site-lifecycle`, `preflight-check`, `nav-sync`, and `mermaid-linter` were implemented as skill edits in the sibling `craft` repo, not this one. `docs-linter` and `docs-ops` were never built. For **live state and next steps** see [`.STATUS`](../../../.STATUS). Kept for history only.
 
 **Date**: 2026-06-30
 **Status**: Planned
