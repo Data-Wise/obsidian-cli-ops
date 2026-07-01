@@ -29,7 +29,12 @@ flowchart TD
         D2 --> D3[Note CRUD via Claude]
     end
 
+    subgraph L5["🟡 Research"]
+        E1[Research Setup] --> E2[Research Board]
+    end
+
     L1 --> L2 --> L3 --> L4
+    L2 --> L5
 ```
 
 ---
@@ -43,8 +48,15 @@ flowchart TD
 | [Graph Analysis](graph-analysis.md) | 🟡 Intermediate | ~15 min | Analyze graph, interpret metrics, find hubs & orphans |
 | [AI Features](ai-features.md) | 🔵 Advanced | ~30 min | Setup AI providers, similar notes, refactor, quality |
 | [Claude / MCP Integration](claude-mcp.md) | 🟣 Integration | ~20 min | Connect Claude Desktop, use all 42 MCP tools, note CRUD |
+| [Research Domain Setup](research-setup.md) | 🟡 Intermediate | ~15 min | Connect Zotero, PDFs, courses, and manuscripts (`obs research`) |
+| [Research Board](research-board.md) | 🟡 Intermediate | ~10 min | Render the deterministic manuscript/program dashboard from atlas state |
 | [Board Sync Workflow](../cookbook.md#board-sync-workflow) | 🟡 Intermediate | ~5 min | Weekly action board, launchd automation |
 | [Workflow Decision Guide](../cookbook.md#which-workflow-should-you-use) | 🟢 Beginner | ~2 min | Pick the right workflow for your task |
+
+!!! tip "Interactive CLI tutorial"
+    Prefer learning inside the terminal? `obs research learn <getting-started|medium|advanced>`
+    walks you through the same material step-by-step with live commands. See
+    [CLI Reference](../cli-reference.md#obs-research-learn).
 
 ---
 
@@ -66,4 +78,4 @@ sync, and research workflows — all organized by task.
 
 !!! tip "Build up gradually"
     The tutorials build on each other. Recommended order:
-    Getting Started → Graph Analysis → AI Features → Claude MCP.
+    Getting Started → Graph Analysis → AI Features → Claude MCP → Research Setup → Research Board.
