@@ -66,7 +66,7 @@ python3 src/python/obs_cli.py db init
 
 ### Essential Commands
 
-**v3.4.0** - 49 commands (17 top-level + subcommands):
+**v3.4.0** - 62 commands (17 top-level + subcommands):
 
 ```bash
 # PRIMARY COMMANDS
