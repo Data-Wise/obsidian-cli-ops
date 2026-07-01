@@ -326,6 +326,30 @@ class ZoteroClient:
         finally:
             conn.close()
 
+    def collections(self, limit: int = 100) -> list[tuple[str, int]]:
+        """List all collections with item counts.
+
+        Args:
+            limit: Max collections to return (default: 100).
+
+        Returns:
+            List of ``(collection_name, item_count)`` tuples sorted by name.
+        """
+        if not self.exists():
+            return []
+        conn = self._connect()
+        try:
+            cursor = conn.execute(
+                "SELECT c.collectionName, COUNT(ci.itemID) as cnt "
+                "FROM collections c "
+                "LEFT JOIN collectionItems ci ON c.collectionID = ci.collectionID "
+                "GROUP BY c.collectionID ORDER BY c.collectionName LIMIT ?",
+                (limit,),
+            )
+            return [(row["collectionName"], row["cnt"]) for row in cursor]
+        finally:
+            conn.close()
+
     def get_attachment_path(self, key: str) -> Path | None:
         """Resolve the filesystem path of the attachment for the item with ``key``.
 

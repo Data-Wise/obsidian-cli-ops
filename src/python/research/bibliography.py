@@ -200,6 +200,8 @@ class BibliographyManager:
             cited), and ``all_good`` (True when nothing is missing).
         """
         manuscript_path = Path(manuscript_path).expanduser()
+        if not manuscript_path.exists():
+            return None
         bib_entries = self.get_manuscript_bibliography(manuscript_path)
         bib_keys = {e.key for e in bib_entries}
         cited_keys: set[str] = set()

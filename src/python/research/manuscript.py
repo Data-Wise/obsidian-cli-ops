@@ -335,3 +335,152 @@ class ManuscriptManager:
             stats["by_format"][m.format_type] = stats["by_format"].get(m.format_type, 0) + 1
             stats["total_words"] += m.word_count
         return stats
+
+    def _lookup_path(self, name: str) -> Path | None:
+        """Resolve a manuscript name to its directory path (fuzzy match)."""
+        ms_path = self.manuscripts_dir / name
+        if ms_path.exists():
+            return ms_path
+        for p in self.manuscripts_dir.iterdir():
+            if p.name.lower() == name.lower() or name.lower() in p.name.lower():
+                return p
+        return None
+
+    def batch_update_status(self, manuscripts: list[str], new_status: str) -> dict[str, Any]:
+        """Update status for multiple manuscripts at once.
+
+        Args:
+            manuscripts: List of manuscript names (fuzzy-matched).
+            new_status: New status value to write into each ``.STATUS`` file.
+
+        Returns:
+            A dict with ``success``, ``failed`` count and ``errors`` list.
+        """
+        result: dict[str, Any] = {"success": 0, "failed": 0, "errors": []}
+        for name in manuscripts:
+            ms_path = self._lookup_path(name)
+            if ms_path is None:
+                result["failed"] += 1
+                result["errors"].append(f"Manuscript not found: {name}")
+                continue
+            status_path = ms_path / ".STATUS"
+            if not status_path.exists():
+                status_path.write_text(f"status: {new_status}\n")
+            else:
+                lines = status_path.read_text().split("\n")
+                new_lines: list[str] = []
+                found = False
+                for line in lines:
+                    if line.strip().startswith("status:"):
+                        new_lines.append(f"status: {new_status}")
+                        found = True
+                    else:
+                        new_lines.append(line)
+                if not found:
+                    new_lines.insert(0, f"status: {new_status}")
+                status_path.write_text("\n".join(new_lines))
+            result["success"] += 1
+        return result
+
+    def batch_update_progress(self, updates: dict[str, int]) -> dict[str, Any]:
+        """Update progress for multiple manuscripts at once.
+
+        Args:
+            updates: Mapping of manuscript name to new progress value (0-100).
+
+        Returns:
+            A dict with ``success``, ``failed`` count and ``errors`` list.
+        """
+        result: dict[str, Any] = {"success": 0, "failed": 0, "errors": []}
+        for name, progress in updates.items():
+            ms_path = self._lookup_path(name)
+            if ms_path is None:
+                result["failed"] += 1
+                result["errors"].append(f"Manuscript not found: {name}")
+                continue
+            status_path = ms_path / ".STATUS"
+            if not status_path.exists():
+                status_path.write_text(f"progress: {progress}\n")
+            else:
+                lines = status_path.read_text().split("\n")
+                new_lines: list[str] = []
+                found = False
+                for line in lines:
+                    if line.strip().startswith("progress:"):
+                        new_lines.append(f"progress: {progress}")
+                        found = True
+                    else:
+                        new_lines.append(line)
+                if not found:
+                    new_lines.append(f"progress: {progress}")
+                status_path.write_text("\n".join(new_lines))
+            result["success"] += 1
+        return result
+
+    def batch_archive(self, manuscripts: list[str]) -> dict[str, Any]:
+        """Archive multiple manuscripts by moving them to an Archive/
+        subdirectory and updating status.
+
+        Args:
+            manuscripts: List of manuscript names to archive.
+
+        Returns:
+            A dict with ``success``, ``failed`` counts, ``archived_to`` paths,
+            and ``errors`` list.
+        """
+        result: dict[str, Any] = {"success": 0, "failed": 0, "archived_to": [], "errors": []}
+        archive_dir = self.manuscripts_dir / "Archive"
+        for name in manuscripts:
+            ms_path = self._lookup_path(name)
+            if ms_path is None:
+                result["failed"] += 1
+                result["errors"].append(f"Manuscript not found: {name}")
+                continue
+            status_path = ms_path / ".STATUS"
+            if status_path.exists():
+                lines = status_path.read_text().split("\n")
+                new_lines: list[str] = []
+                found = False
+                for line in lines:
+                    if line.strip().startswith("status:"):
+                        new_lines.append("status: archived")
+                        found = True
+                    else:
+                        new_lines.append(line)
+                if not found:
+                    new_lines.insert(0, "status: archived")
+                status_path.write_text("\n".join(new_lines))
+            archive_dir.mkdir(exist_ok=True)
+            dest = archive_dir / ms_path.name
+            ms_path.rename(dest)
+            result["success"] += 1
+            result["archived_to"].append(str(dest))
+        return result
+
+    def batch_export_metadata(self, output_path: Path | str, format: str = "json") -> None:
+        """Export metadata for all manuscripts to a file.
+
+        Args:
+            output_path: Destination file path.
+            format: Export format (``"json"`` or ``"csv"``).
+
+        Raises:
+            ValueError: If the format is unsupported.
+        """
+        output_path = Path(output_path) if isinstance(output_path, str) else output_path
+        manuscripts = self.list_manuscripts(include_archived=True)
+        data = [m.to_dict() for m in manuscripts]
+        if format == "json":
+            import json
+            output_path.write_text(json.dumps(data, indent=2, default=str))
+        elif format == "csv":
+            import csv
+            with open(output_path, "w", newline="") as f:
+                if data:
+                    writer = csv.DictWriter(f, fieldnames=list(data[0].keys()))
+                    writer.writeheader()
+                    writer.writerows(data)
+                else:
+                    f.write("")
+        else:
+            raise ValueError(f"Unsupported export format: {format}")

@@ -2,9 +2,10 @@
 #
 # install.sh — non-Homebrew installer for obsidian-cli-ops (obs)
 #
-# Two responsibilities:
+# Three responsibilities:
 #   1. Symlink the zsh launcher into ~/.config/zsh/functions.
-#   2. Provision the core Python deps into an ISOLATED venv
+#   2. Wire the pre-push git hook from .githooks/.
+#   3. Provision the core Python deps into an ISOLATED venv
 #      (~/.local/share/obs/venv) from requirements.lock — so obs runs with
 #      zero manual `pip install` and survives system-python upgrades.
 #
@@ -49,6 +50,12 @@ if [[ -f "$PROJECT_DIR/man/man1/obs.1" ]]; then
         *":${MAN_DIR%/man1}:"*) ;;
         *) log "  (add ${MAN_DIR%/man1} to MANPATH if 'man obs' is not found)" ;;
     esac
+fi
+
+# --- 1c. Wire the pre-push hook via git config ---
+if [[ -f "$PROJECT_DIR/.githooks/pre-push" ]]; then
+    git config core.hooksPath "$PROJECT_DIR/.githooks"
+    log "Wired pre-push hook from .githooks/pre-push (advisory only, never blocks)"
 fi
 
 # --- 2. Provision the isolated dependency environment ---

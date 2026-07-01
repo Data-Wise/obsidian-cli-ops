@@ -59,12 +59,25 @@
 | Command | Description |
 |---------|-------------|
 | `obs research zotero search <q> [--limit N] [--type T] [--tag T]` | Zotero library search |
-| `obs research zotero get <key>` | Item by Zotero key |
+| `obs research zotero get <key> [--format F]` | Item by Zotero key |
 | `obs research zotero recent [--limit N]` | Recently modified |
+| `obs research zotero cite <key> [--style S]` | APA/BibTeX citation |
+| `obs research zotero tags [--limit N]` | Tags with counts |
+| `obs research zotero collections` | List collections |
+| `obs research zotero by-tag <tag> [--limit N]` | Items by tag |
 | `obs research pdf search <q> [--limit N]` | Full-text PDF search |
+| `obs research pdf extract <path> [--pages R] [--layout]` | Extract PDF text |
 | `obs research course list / show / lectures` | Course management |
 | `obs research manuscript list / show / stats` | Manuscript tracking |
+| `obs research manuscript batch-status <n>... --status <s>` | Bulk status update |
+| `obs research manuscript batch-progress <n>:<p>...` | Bulk progress update |
+| `obs research manuscript batch-archive <n>...` | Archive manuscripts |
+| `obs research manuscript export <out> [--format F]` | Export metadata |
 | `obs research bib check <name>` | Citation completeness |
+| `obs research search <q> [--source S] [--json]` | Cross-source search |
+| `obs research graph <v> [--format F] [--output O] [--tags]` | Export knowledge graph |
+| `obs research quarto build <n> [--format F]` | Build Quarto manuscript |
+| `obs research quarto preview <n> [--port P]` | Preview Quarto manuscript |
 
 ## :wrench: Vault Management
 
@@ -201,4 +214,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.3.0 | **Commands:** 49 | **MCP Tools:** 42 | **AI Providers:** 5
+**Version:** 4.3.0 | **Commands:** 62 | **MCP Tools:** 42 | **AI Providers:** 5
