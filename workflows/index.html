@@ -292,7 +292,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../refcard/" class="md-tabs__link">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -970,6 +970,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../refcard/" class="md-nav__link">
         
   
@@ -977,7 +1005,7 @@
   <span class="md-ellipsis">
     
   
-    Quick Reference
+    Quick Reference Card
   
 
     
@@ -1114,6 +1142,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#which-workflow-should-you-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Workflow Should You Use?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#onboarding-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1173,6 +1212,28 @@
     <span class="md-ellipsis">
       
         Claude / MCP Workflow (v3.3.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#board-management-workflow-v430" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Board Management Workflow (v4.3.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#research-pipeline-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Pipeline Workflow
       
     </span>
   </a>
@@ -1604,6 +1665,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#which-workflow-should-you-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Workflow Should You Use?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#onboarding-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1670,6 +1742,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#board-management-workflow-v430" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Board Management Workflow (v4.3.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#research-pipeline-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Pipeline Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1708,6 +1802,22 @@
 - <strong>How:</strong> Follow the flowcharts — each box is a command you can run</p>
 </blockquote>
 <hr />
+<h2 id="which-workflow-should-you-use"><img alt="🧭" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f9ed.svg" title=":compass:" /> Which Workflow Should You Use?<a class="headerlink" href="#which-workflow-should-you-use" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A{"What's your goal?"}
+    A --&gt;|"First time setup"| B["↓ Onboarding Workflow\nInstall → discover → scan → analyze"]
+    A --&gt;|"Daily check-in"| C["↓ Daily Usage\nobs → stats → health"]
+    A --&gt;|"Vault health &amp; cleanup"| D["↓ Vault Health Check\nhealth → analyze → refactor"]
+    A --&gt;|"AI deep analysis"| E["↓ AI Analysis Pipeline\nduplicates → gaps → refactor"]
+    A --&gt;|"Weekly planning"| F["↓ Board Management\nboard refresh → action board"]
+    A --&gt;|"Research pipeline"| G["↓ Research Workflow\nzotero → pdf → manuscript"]
+    A --&gt;|"Single note deep-dive"| H["↓ Note-Level Analysis\nanalyze → similar → suggest-links"]
+    A --&gt;|"Claude natural language"| I["↓ Claude / MCP Workflow\nMCP tools → ask Claude"]
+
+    style A fill:#6366f1,color:#fff
+    style F fill:#a855f7,color:#fff
+    style G fill:#ec4899,color:#fff</code></pre>
+<hr />
 <h2 id="onboarding-workflow"><img alt="👋" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f44b.svg" title=":wave:" /> Onboarding Workflow<a class="headerlink" href="#onboarding-workflow" title="Permanent link">&para;</a></h2>
 <p>First time using <code>obs</code>? Follow this path:</p>
 <pre class="mermaid"><code>graph TD
@@ -1745,6 +1855,12 @@
 <p class="admonition-title">Make it a habit</p>
 <p>Run <code>obs health MyVault</code> once a week to catch issues early. Add it to your weekly review workflow.</p>
 </div>
+<details class="tip">
+<summary>Monday morning: board refresh</summary>
+<p>Already set up launchd? The board refreshes automatically at 09:15 every Monday.
+Just open <code>_ACTION-BOARD.md</code> and review the action items.<br />
+First time: <code>obs board refresh &amp;&amp; obs board status</code></p>
+</details>
 <hr />
 <h2 id="ai-analysis-pipeline"><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> AI Analysis Pipeline<a class="headerlink" href="#ai-analysis-pipeline" title="Permanent link">&para;</a></h2>
 <p>How AI features work together for deep vault analysis:</p>
@@ -1829,6 +1945,49 @@
 <p>See <a href="../claude-integration/">Claude Integration</a> to connect <code>obs</code> to Claude Desktop.
 Once connected, all 42 MCP tools are available in every Claude conversation.</p>
 </div>
+<hr />
+<hr />
+<h2 id="board-management-workflow-v430"><img alt="📋" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4cb.svg" title=":clipboard:" /> Board Management Workflow (v4.3.0)<a class="headerlink" href="#board-management-workflow-v430" title="Permanent link">&para;</a></h2>
+<p>Weekly action-board refresh for research planning:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[obs board status] --&gt; B{Board exists?}
+    B --&gt;|"No"| C[obs board refresh --dry-run]
+    B --&gt;|"Yes, stale"| C
+    B --&gt;|"Fresh"| D[Open _ACTION-BOARD.md]
+    C --&gt; E[obs board refresh]
+    E --&gt; D
+    D --&gt; F[Review status tables &amp; ranked actions]
+    F --&gt; G{"Need LLM?"}
+    G --&gt;|"Yes"| H[Run research--action-board prompt]
+    G --&gt;|"No"| I[Work through Act on now items]
+    H --&gt; I
+    I --&gt; J[Next week: auto-refresh via launchd]
+    style A fill:#6366f1,color:#fff
+    style H fill:#a855f7,color:#fff
+    style I fill:#22c55e,color:#fff</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">launchd automation</p>
+<p>The launchd plist <code>com.data-wise.obs-board-refresh</code> fires every Monday at 09:15.
+Manual trigger: <code>launchctl kickstart gui/$(id -u)/com.data-wise.obs-board-refresh</code>
+or <code>scripts/board-refresh.sh</code>.</p>
+</div>
+<hr />
+<h2 id="research-pipeline-workflow"><img alt="🔬" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f52c.svg" title=":microscope:" /> Research Pipeline Workflow<a class="headerlink" href="#research-pipeline-workflow" title="Permanent link">&para;</a></h2>
+<p>End-to-end research workflow combining Zotero, PDF search, and vault:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[obs research zotero search] --&gt; B[Review results]
+    B --&gt; C[obs research zotero get KEY]
+    B --&gt; D[obs research pdf search]
+    D --&gt; E[obs search in vault]
+    E --&gt; F[obs research manuscript stats]
+    F --&gt; G[obs research bib check NAME]
+    style A fill:#6366f1,color:#fff
+    style G fill:#22c55e,color:#fff</code></pre>
+<details class="tip">
+<summary>unified search via Claude</summary>
+<p>From Claude Desktop, ask: <em>"Search my vault and Zotero for papers on collider bias"</em> —<br />
+<code>unified_search</code> fans out to vault, Zotero, and PDF in one call.</p>
+</details>
 <hr />
 <h2 id="next-steps"><img alt="➡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/27a1.svg" title=":arrow_right:" /> Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <table>

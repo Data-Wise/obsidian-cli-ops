@@ -292,7 +292,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../refcard/" class="md-tabs__link">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -970,6 +970,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../refcard/" class="md-nav__link">
         
   
@@ -977,7 +1005,7 @@
   <span class="md-ellipsis">
     
   
-    Quick Reference
+    Quick Reference Card
   
 
     
@@ -1628,6 +1656,45 @@
     <span class="md-ellipsis">
       
         obs config edit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#board-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Board Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Board Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obs-board-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs board refresh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obs-board-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs board status
       
     </span>
   </a>
@@ -2846,6 +2913,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#board-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Board Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Board Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obs-board-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs board refresh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obs-board-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs board status
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#research-domain" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3023,12 +3129,12 @@
 <h1 id="cli-command-reference">CLI Command Reference<a class="headerlink" href="#cli-command-reference" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p class="tldr"><strong>TL;DR</strong> (30 seconds)
-- <strong>What:</strong> Full reference for all 48 <code>obs</code> commands (17 top-level groups, incl. the config &amp; research families absorbed from nexus-cli in v4.0.0) + 42 MCP tools for Claude
+- <strong>What:</strong> Full reference for all 49 <code>obs</code> commands (18 top-level groups, incl. the board, config &amp; research families) + 42 MCP tools for Claude
 - <strong>Why:</strong> One-stop lookup for exact syntax and options
 - <strong>How:</strong> <code>obs help --all</code> — see this in your terminal
 - <strong>Next:</strong> <a href="../refcard/">Quick Reference</a> for a printable cheat sheet</p>
 </blockquote>
-<p><strong>Version:</strong> 4.2.0</p>
+<p><strong>Version:</strong> 4.3.0</p>
 <hr />
 <h2 id="global-options"><img alt="⚙" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2699.svg" title=":gear:" /> Global Options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h2>
 <table>
@@ -3800,6 +3906,96 @@ catch whole bug classes before release:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
 </code></pre></div>
 <hr />
+<h2 id="board-management"><img alt="📋" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4cb.svg" title=":clipboard:" /> Board Management<a class="headerlink" href="#board-management" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">New in v4.3.0</p>
+<p><code>obs board</code> ships in <strong>v4.3.0</strong> (board-sync automation) — deterministic action-board
+refresh from atlas, vault, and <code>.STATUS</code> files. The LLM augments thinking sections
+on demand via the <code>research--action-board</code> prompt.</p>
+</div>
+<h3 id="obs-board-refresh">obs board refresh<a class="headerlink" href="#obs-board-refresh" title="Permanent link">&para;</a></h3>
+<p>Refresh the <code>_ACTION-BOARD.md</code> file from atlas project state, vault stats, and
+<code>.STATUS</code> files.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--vault</code></td>
+<td>first research vault</td>
+<td>Vault name or ID</td>
+</tr>
+<tr>
+<td><code>--all</code></td>
+<td></td>
+<td>Refresh boards in all vaults</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td></td>
+<td>Show what would change without writing</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td></td>
+<td>Machine-readable JSON output</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w">                            </span><span class="c1"># Refresh first research vault</span>
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">           </span><span class="c1"># Specific vault</span>
+<a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--all<span class="w">                      </span><span class="c1"># All vaults</span>
+<a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--dry-run<span class="w">                  </span><span class="c1"># Preview changes</span>
+</code></pre></div>
+<h3 id="obs-board-status">obs board status<a class="headerlink" href="#obs-board-status" title="Permanent link">&para;</a></h3>
+<p>Show whether <code>_ACTION-BOARD.md</code> exists, when it was last refreshed, and
+whether the vault has ghost drift.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--vault</code></td>
+<td>all vaults</td>
+<td>Vault name or ID</td>
+</tr>
+<tr>
+<td><code>--all</code></td>
+<td></td>
+<td>Show status for all vaults</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td></td>
+<td>Machine-readable JSON output</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w">                 </span><span class="c1"># Status for all vaults</span>
+<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w"> </span><span class="c1"># Single vault</span>
+<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span>--json<span class="w">          </span><span class="c1"># JSON output</span>
+</code></pre></div>
+<p><strong>Output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>  Research: board=✔ last=0d ago
+<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>  Documents: board=✘ last=never
+</code></pre></div>
+<hr />
 <h2 id="research-domain"><img alt="🔬" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f52c.svg" title=":microscope:" /> Research Domain<a class="headerlink" href="#research-domain" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Shipped in v4.0.0</p>
@@ -3808,7 +4004,7 @@ catch whole bug classes before release:</p>
 <p>Research commands absorbed from nexus-cli. Requires configured paths in <code>obs config</code>.</p>
 <h3 id="obs-research-zotero-search">obs research zotero search<a class="headerlink" href="#obs-research-zotero-search" title="Permanent link">&para;</a></h3>
 <p>Search the local Zotero SQLite database.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--type<span class="w"> </span>TYPE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag<span class="w"> </span>TAG<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--type<span class="w"> </span>TYPE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag<span class="w"> </span>TAG<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -3843,31 +4039,31 @@ catch whole bug classes before release:</p>
 </table>
 <h3 id="obs-research-zotero-get">obs research zotero get<a class="headerlink" href="#obs-research-zotero-get" title="Permanent link">&para;</a></h3>
 <p>Fetch a Zotero item by its library key.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>FORMAT<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>FORMAT<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-zotero-recent">obs research zotero recent<a class="headerlink" href="#obs-research-zotero-recent" title="Permanent link">&para;</a></h3>
 <p>List recently modified Zotero items.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-pdf-search">obs research pdf search<a class="headerlink" href="#obs-research-pdf-search" title="Permanent link">&para;</a></h3>
 <p>Search full-text content of indexed PDFs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-course-list-show-lectures">obs research course list / show / lectures<a class="headerlink" href="#obs-research-course-list-show-lectures" title="Permanent link">&para;</a></h3>
 <p>Course management commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>list<span class="w">                      </span><span class="c1"># List all courses</span>
-<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">               </span><span class="c1"># Show course details</span>
-<a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>lectures<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># List lectures for a course</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>list<span class="w">                      </span><span class="c1"># List all courses</span>
+<a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">               </span><span class="c1"># Show course details</span>
+<a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>lectures<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># List lectures for a course</span>
 </code></pre></div>
 <h3 id="obs-research-manuscript-list-show-stats">obs research manuscript list / show / stats<a class="headerlink" href="#obs-research-manuscript-list-show-stats" title="Permanent link">&para;</a></h3>
 <p>Manuscript tracking commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>--archived<span class="o">]</span><span class="w">     </span><span class="c1"># List manuscripts</span>
-<a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># Show manuscript details</span>
-<a id="__codelineno-54-3" name="__codelineno-54-3" href="#__codelineno-54-3"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats<span class="w">                 </span><span class="c1"># Aggregate statistics</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>--archived<span class="o">]</span><span class="w">     </span><span class="c1"># List manuscripts</span>
+<a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># Show manuscript details</span>
+<a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats<span class="w">                 </span><span class="c1"># Aggregate statistics</span>
 </code></pre></div>
 <h3 id="obs-research-bib-check">obs research bib check<a class="headerlink" href="#obs-research-bib-check" title="Permanent link">&para;</a></h3>
 <p>Check citations in a manuscript's bibliography file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>&lt;name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>&lt;name&gt;
 </code></pre></div>
 <hr />
 <h2 id="quick-reference"><img alt="⚡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a1.svg" title=":zap:" /> Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
@@ -3922,6 +4118,14 @@ catch whole bug classes before release:</p>
 <tr>
 <td><code>obs doctor</code></td>
 <td>Self-diagnostic checks</td>
+</tr>
+<tr>
+<td><code>obs board refresh</code></td>
+<td>Refresh research action board</td>
+</tr>
+<tr>
+<td><code>obs board status</code></td>
+<td>Show board refresh status</td>
 </tr>
 <tr>
 <td><code>obs analyze &lt;vault&gt;</code></td>
@@ -4063,11 +4267,11 @@ you can ask Claude natural-language questions about your vaults.</p>
 <code>insert_to_note</code>, <code>rename_note</code>, <code>delete_note</code>, <code>get_note_links</code>, <code>rescan_vault</code></p>
 <p><strong>AI</strong> — <code>run_obs_ai</code> (bridges all <code>obs ai</code> subcommands)</p>
 <h3 id="example-claude-prompts">Example Claude prompts<a class="headerlink" href="#example-claude-prompts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a>&quot;List orphaned notes in MyVault&quot;
-<a id="__codelineno-56-3" name="__codelineno-56-3" href="#__codelineno-56-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
-<a id="__codelineno-56-4" name="__codelineno-56-4" href="#__codelineno-56-4"></a>&quot;Read the note on causal mediation&quot;
-<a id="__codelineno-56-5" name="__codelineno-56-5" href="#__codelineno-56-5"></a>&quot;Run a quality check on MyVault&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>&quot;Search my research vault for causal inference&quot;
+<a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a>&quot;List orphaned notes in MyVault&quot;
+<a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
+<a id="__codelineno-61-4" name="__codelineno-61-4" href="#__codelineno-61-4"></a>&quot;Read the note on causal mediation&quot;
+<a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a>&quot;Run a quality check on MyVault&quot;
 </code></pre></div>
 <p>See <a href="../claude-integration/">Claude Integration</a> for full setup instructions and all 42 tools.</p>
 <hr />

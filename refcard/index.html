@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/refcard/">
       
       
-        <link rel="prev" href="../cookbook/">
+        <link rel="prev" href="../reference/">
       
       
         <link rel="next" href="../cli-reference/">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Quick Reference - Obsidian CLI Ops</title>
+        <title>Quick Reference Card - Obsidian CLI Ops</title>
       
     
     
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quick Reference
+              Quick Reference Card
             
           </span>
         </div>
@@ -292,7 +292,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -967,6 +967,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -986,7 +1014,7 @@
   <span class="md-ellipsis">
     
   
-    Quick Reference
+    Quick Reference Card
   
 
     
@@ -1004,7 +1032,7 @@
   <span class="md-ellipsis">
     
   
-    Quick Reference
+    Quick Reference Card
   
 
     
@@ -1063,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-commands" class="md-nav__link">
+  <a href="#config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config Commands
+        Config
       
     </span>
   </a>
@@ -1085,10 +1113,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#utilities" class="md-nav__link">
+  <a href="#vault-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Utilities
+        Vault Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other
       
     </span>
   </a>
@@ -1107,10 +1146,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-refactor-flags" class="md-nav__link">
+  <a href="#ai-provider-priority" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Refactor Flags
+        AI Provider Priority
       
     </span>
   </a>
@@ -1122,17 +1161,6 @@
     <span class="md-ellipsis">
       
         Vault Lookup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ai-provider-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Provider Priority
       
     </span>
   </a>
@@ -1703,10 +1731,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-commands" class="md-nav__link">
+  <a href="#config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config Commands
+        Config
       
     </span>
   </a>
@@ -1725,10 +1753,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#utilities" class="md-nav__link">
+  <a href="#vault-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Utilities
+        Vault Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other
       
     </span>
   </a>
@@ -1747,10 +1786,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-refactor-flags" class="md-nav__link">
+  <a href="#ai-provider-priority" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Refactor Flags
+        AI Provider Priority
       
     </span>
   </a>
@@ -1762,17 +1801,6 @@
     <span class="md-ellipsis">
       
         Vault Lookup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ai-provider-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Provider Priority
       
     </span>
   </a>
@@ -1834,14 +1862,12 @@
 
 <h1 id="quick-reference-card">Quick Reference Card<a class="headerlink" href="#quick-reference-card" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p class="tldr"><strong>TL;DR</strong> (30 seconds)
-- <strong>What:</strong> Printable cheat sheet — every command on one page
-- <strong>Why:</strong> Pin it, bookmark it, keep it open while you work
-- <strong>How:</strong> <code>obs</code> to start, <code>obs help --all</code> for full details
-- <strong>Next:</strong> <a href="../cookbook/">Cookbook</a> for task-based recipes</p>
+<p class="tldr"><strong>TL;DR</strong> — Printable cheat sheet: every command, flag, provider, MCP tool.
+<strong>How:</strong> <code>obs</code> to start, <code>obs help --all</code> for full details.
+<strong>Next:</strong> <a href="../cookbook/">Cookbook</a> for task-based recipes · <a href="../reference/">Reference Index</a></p>
 </blockquote>
 <hr />
-<h2 id="core-commands">Core Commands<a class="headerlink" href="#core-commands" title="Permanent link">&para;</a></h2>
+<h2 id="core-commands"><img alt="📁" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4c1.svg" title=":file_folder:" /> Core Commands<a class="headerlink" href="#core-commands" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1855,44 +1881,32 @@
 <td>List all registered vaults</td>
 </tr>
 <tr>
-<td><code>obs search &lt;query&gt;</code></td>
-<td>Search notes by title (all vaults)</td>
+<td><code>obs search &lt;q&gt; [--vault V] [--limit N] [--json]</code></td>
+<td>Search notes by title</td>
 </tr>
 <tr>
-<td><code>obs search &lt;query&gt; --vault &lt;name&gt;</code></td>
-<td>Limit title search to one vault</td>
+<td><code>obs stats [--vault V] [--json]</code></td>
+<td>Vault or global statistics</td>
 </tr>
 <tr>
-<td><code>obs search &lt;query&gt; --limit N</code></td>
-<td>Cap results (default 20)</td>
+<td><code>obs discover &lt;path&gt; [--scan]</code></td>
+<td>Find Obsidian vaults</td>
 </tr>
 <tr>
-<td><code>obs search &lt;query&gt; --json</code></td>
-<td>Machine-readable JSON output</td>
+<td><code>obs scan &lt;path&gt; [--name N] [--analyze] [--prune]</code></td>
+<td>Scan &amp; register a vault</td>
 </tr>
 <tr>
-<td><code>obs stats [vault]</code></td>
-<td>Show vault or global statistics</td>
+<td><code>obs analyze &lt;vault&gt; [-v] [--json]</code></td>
+<td>Graph metrics (PageRank, centrality)</td>
 </tr>
 <tr>
-<td><code>obs discover &lt;path&gt;</code></td>
-<td>Find Obsidian vaults in a directory</td>
-</tr>
-<tr>
-<td><code>obs scan &lt;path&gt;</code></td>
-<td>Scan and register a vault</td>
-</tr>
-<tr>
-<td><code>obs analyze &lt;vault&gt;</code></td>
-<td>Analyze vault graph metrics</td>
-</tr>
-<tr>
-<td><code>obs health &lt;vault&gt;</code></td>
-<td>Vault health dashboard (scores + recommendations)</td>
+<td><code>obs health &lt;vault&gt; [--json]</code></td>
+<td>4-dimension health dashboard</td>
 </tr>
 </tbody>
 </table>
-<h2 id="monitoring-diagnostics">Monitoring &amp; Diagnostics<a class="headerlink" href="#monitoring-diagnostics" title="Permanent link">&para;</a></h2>
+<h2 id="monitoring-diagnostics"><img alt="🩺" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1fa7a.svg" title=":stethoscope:" /> Monitoring &amp; Diagnostics<a class="headerlink" href="#monitoring-diagnostics" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1906,24 +1920,32 @@
 <td>Obsidian CLI bridge status</td>
 </tr>
 <tr>
-<td><code>obs trends &lt;vault&gt;</code></td>
+<td><code>obs trends &lt;vault&gt; [--days N] [--json]</code></td>
 <td>Weekly activity trends</td>
 </tr>
 <tr>
-<td><code>obs stale &lt;vault&gt;</code></td>
-<td>Find stale high-importance notes</td>
+<td><code>obs stale &lt;vault&gt; [--limit N] [--json]</code></td>
+<td>Stale high-importance notes</td>
 </tr>
 <tr>
-<td><code>obs daily-digest &lt;vault&gt;</code></td>
-<td>Bridge + trends + stale summary</td>
+<td><code>obs daily-digest &lt;vault&gt; [--days N] [--limit N] [--json]</code></td>
+<td>Bridge + trends + stale</td>
 </tr>
 <tr>
-<td><code>obs doctor</code></td>
-<td>Self-diagnostic checks</td>
+<td><code>obs doctor [--vault V] [--layer L] [--json]</code></td>
+<td>7-layer self-diagnostic</td>
+</tr>
+<tr>
+<td><code>obs board refresh [--vault V] [--all] [--dry-run] [--json]</code></td>
+<td>Generate <code>_ACTION-BOARD.md</code></td>
+</tr>
+<tr>
+<td><code>obs board status [--vault V] [--all] [--json]</code></td>
+<td>Board refresh status</td>
 </tr>
 </tbody>
 </table>
-<h2 id="ai-commands">AI Commands<a class="headerlink" href="#ai-commands" title="Permanent link">&para;</a></h2>
+<h2 id="ai-commands"><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> AI Commands<a class="headerlink" href="#ai-commands" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1933,60 +1955,52 @@
 </thead>
 <tbody>
 <tr>
-<td><code>obs ai status</code></td>
-<td>Show AI provider availability</td>
+<td><code>obs ai status</code> / <code>setup</code> / <code>test</code></td>
+<td>Provider management</td>
 </tr>
 <tr>
-<td><code>obs ai setup</code></td>
-<td>Interactive provider setup wizard</td>
+<td><code>obs ai similar &lt;note&gt; [--limit N] [--provider P]</code></td>
+<td>Semantically similar notes</td>
 </tr>
 <tr>
-<td><code>obs ai test</code></td>
-<td>Test all AI provider connections</td>
+<td><code>obs ai analyze &lt;note&gt; [--provider P]</code></td>
+<td>Deep note analysis</td>
 </tr>
 <tr>
-<td><code>obs ai similar &lt;note_id&gt;</code></td>
-<td>Find semantically similar notes</td>
+<td><code>obs ai duplicates &lt;vault&gt; [--threshold F]</code></td>
+<td>Potential duplicates</td>
 </tr>
 <tr>
-<td><code>obs ai analyze &lt;note_id&gt;</code></td>
-<td>Deep AI analysis of a note</td>
-</tr>
-<tr>
-<td><code>obs ai duplicates &lt;vault&gt;</code></td>
-<td>Detect potential duplicate notes</td>
-</tr>
-<tr>
-<td><code>obs ai suggest-links &lt;note_id&gt;</code></td>
-<td>Suggest new links based on similarity</td>
+<td><code>obs ai suggest-links &lt;note&gt; [--limit N]</code></td>
+<td>New link suggestions</td>
 </tr>
 <tr>
 <td><code>obs ai gaps &lt;vault&gt;</code></td>
-<td>Find knowledge gaps in the vault</td>
+<td>Knowledge gaps (stubs, orphans)</td>
 </tr>
 <tr>
-<td><code>obs ai summarize &lt;vault&gt;</code></td>
-<td>Summarize vault themes and stats</td>
+<td><code>obs ai summarize &lt;vault&gt; [--folder F] [--tag T]</code></td>
+<td>Vault-wide themes</td>
 </tr>
 <tr>
-<td><code>obs ai refactor &lt;vault&gt;</code></td>
-<td>AI-powered vault reorganization suggestions</td>
+<td><code>obs ai refactor &lt;vault&gt; [--dry-run] [--json]</code></td>
+<td>Reorganization plan</td>
 </tr>
 <tr>
-<td><code>obs ai merge-suggest &lt;vault&gt;</code></td>
-<td>Find note pairs that may be merge candidates</td>
+<td><code>obs ai merge-suggest &lt;vault&gt; [--threshold F] [--json]</code></td>
+<td>Merge candidates</td>
 </tr>
 <tr>
-<td><code>obs ai tag-suggest &lt;target&gt;</code></td>
-<td>Suggest tags for untagged notes (vault or single note)</td>
+<td><code>obs ai tag-suggest &lt;target&gt; [--apply] [--json]</code></td>
+<td>Tag suggestions</td>
 </tr>
 <tr>
-<td><code>obs ai quality &lt;target&gt;</code></td>
-<td>Score notes on quality (completeness, connectivity, metadata, freshness)</td>
+<td><code>obs ai quality &lt;target&gt; [--json]</code></td>
+<td>Note quality scoring</td>
 </tr>
 </tbody>
 </table>
-<h2 id="config-commands">Config Commands<a class="headerlink" href="#config-commands" title="Permanent link">&para;</a></h2>
+<h2 id="config"><img alt="⚙" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2699.svg" title=":gear:" /> Config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1996,28 +2010,16 @@
 </thead>
 <tbody>
 <tr>
-<td><code>obs config show</code></td>
-<td>Print current config and its source file</td>
+<td><code>obs config show</code> / <code>validate</code> / <code>init</code> / <code>edit</code></td>
+<td>YAML config management</td>
 </tr>
 <tr>
-<td><code>obs config validate</code></td>
-<td>Validate config and report errors</td>
-</tr>
-<tr>
-<td><code>obs config migrate</code></td>
-<td>Convert legacy obs/nexus config to unified YAML</td>
-</tr>
-<tr>
-<td><code>obs config init</code></td>
-<td>Interactive wizard to create a fresh config</td>
-</tr>
-<tr>
-<td><code>obs config edit</code></td>
-<td>Open config file in <code>$EDITOR</code></td>
+<td><code>obs config migrate [--dry-run]</code></td>
+<td>Convert legacy config</td>
 </tr>
 </tbody>
 </table>
-<h2 id="research-commands">Research Commands<a class="headerlink" href="#research-commands" title="Permanent link">&para;</a></h2>
+<h2 id="research-commands"><img alt="📚" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4da.svg" title=":books:" /> Research Commands<a class="headerlink" href="#research-commands" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2027,52 +2029,36 @@
 </thead>
 <tbody>
 <tr>
-<td><code>obs research zotero search &lt;query&gt;</code></td>
-<td>Search Zotero library (<code>--limit N</code>, <code>--type T</code>, <code>--tag T</code>)</td>
+<td><code>obs research zotero search &lt;q&gt; [--limit N] [--type T] [--tag T]</code></td>
+<td>Zotero library search</td>
 </tr>
 <tr>
 <td><code>obs research zotero get &lt;key&gt;</code></td>
-<td>Get a Zotero item by key (<code>--format F</code>)</td>
+<td>Item by Zotero key</td>
 </tr>
 <tr>
-<td><code>obs research zotero recent</code></td>
-<td>List recently modified Zotero items (<code>--limit N</code>)</td>
+<td><code>obs research zotero recent [--limit N]</code></td>
+<td>Recently modified</td>
 </tr>
 <tr>
-<td><code>obs research pdf search &lt;query&gt;</code></td>
-<td>Search PDF content (<code>--limit N</code>)</td>
+<td><code>obs research pdf search &lt;q&gt; [--limit N]</code></td>
+<td>Full-text PDF search</td>
 </tr>
 <tr>
-<td><code>obs research course list</code></td>
-<td>List all courses</td>
+<td><code>obs research course list / show / lectures</code></td>
+<td>Course management</td>
 </tr>
 <tr>
-<td><code>obs research course show &lt;name&gt;</code></td>
-<td>Show course details</td>
-</tr>
-<tr>
-<td><code>obs research course lectures &lt;name&gt;</code></td>
-<td>List lectures for a course</td>
-</tr>
-<tr>
-<td><code>obs research manuscript list</code></td>
-<td>List all manuscripts (<code>--archived</code>)</td>
-</tr>
-<tr>
-<td><code>obs research manuscript show &lt;name&gt;</code></td>
-<td>Show manuscript details</td>
-</tr>
-<tr>
-<td><code>obs research manuscript stats</code></td>
-<td>Show manuscript statistics</td>
+<td><code>obs research manuscript list / show / stats</code></td>
+<td>Manuscript tracking</td>
 </tr>
 <tr>
 <td><code>obs research bib check &lt;name&gt;</code></td>
-<td>Check citations in a manuscript</td>
+<td>Citation completeness</td>
 </tr>
 </tbody>
 </table>
-<h2 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h2>
+<h2 id="vault-management"><img alt="🔧" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f527.svg" title=":wrench:" /> Vault Management<a class="headerlink" href="#vault-management" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2082,12 +2068,39 @@
 </thead>
 <tbody>
 <tr>
-<td><code>obs help</code></td>
-<td>Quick help (essential commands)</td>
+<td><code>obs vault info &lt;vault&gt; [--json]</code></td>
+<td>Single vault metadata</td>
 </tr>
 <tr>
-<td><code>obs help --all</code></td>
-<td>Full command reference</td>
+<td><code>obs vault rename &lt;vault&gt; &lt;new-name&gt; [--json]</code></td>
+<td>Rename display name</td>
+</tr>
+<tr>
+<td><code>obs vault delete &lt;vault&gt; [--force] [--json]</code></td>
+<td>Remove from index (dry-run by default)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="other"><img alt="🔗" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f517.svg" title=":link:" /> Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obs link [dir] [--vault-root P] [--mirror M]</code></td>
+<td>Create <code>.obs/sync.yml</code> mirror map</td>
+</tr>
+<tr>
+<td><code>obs research board [--out F] [--kind K] [--dry-run]</code></td>
+<td>Legacy research board renderer</td>
+</tr>
+<tr>
+<td><code>obs help [--all]</code></td>
+<td>Show help</td>
 </tr>
 <tr>
 <td><code>obs version</code></td>
@@ -2095,204 +2108,178 @@
 </tr>
 </tbody>
 </table>
-<h2 id="global-flags">Global Flags<a class="headerlink" href="#global-flags" title="Permanent link">&para;</a></h2>
+<h2 id="global-flags"><img alt="⚡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a1.svg" title=":zap:" /> Global Flags<a class="headerlink" href="#global-flags" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Flag</th>
-<th>Description</th>
+<th>Used with</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>--json</code></td>
+<td><code>stats</code>, <code>health</code>, <code>analyze</code>, <code>doctor</code>, <code>board</code>, all AI subcommands</td>
+</tr>
 <tr>
 <td><code>--verbose</code> / <code>-v</code></td>
-<td>Enable verbose output</td>
+<td><code>scan</code>, <code>analyze</code>, <code>discover</code></td>
 </tr>
-<tr>
-<td><code>--json</code></td>
-<td>Output as JSON (where supported)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ai-refactor-flags">AI Refactor Flags<a class="headerlink" href="#ai-refactor-flags" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td><code>--dry-run</code></td>
-<td>Show scope without AI calls</td>
-</tr>
-<tr>
-<td><code>--provider NAME</code></td>
-<td>Force a specific AI provider</td>
-</tr>
-<tr>
-<td><code>--json</code></td>
-<td>Machine-readable JSON output</td>
+<td><code>ai refactor</code>, <code>board refresh</code>, <code>research board</code>, <code>config migrate</code>, <code>vault delete</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="vault-lookup">Vault Lookup<a class="headerlink" href="#vault-lookup" title="Permanent link">&para;</a></h2>
-<p>Commands accepting <code>&lt;vault&gt;</code> support flexible lookup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault<span class="w">        </span><span class="c1"># By name</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>a812<span class="w">           </span><span class="c1"># By ID prefix</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Research_Lab<span class="w"> </span><span class="c1"># By name</span>
-</code></pre></div>
-<h2 id="ai-provider-priority">AI Provider Priority<a class="headerlink" href="#ai-provider-priority" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="ai-provider-priority"><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot_face:" /> AI Provider Priority<a class="headerlink" href="#ai-provider-priority" title="Permanent link">&para;</a></h2>
 <p>Auto-selection order (first available wins):</p>
-<ol>
-<li><code>gemini-api</code> (fastest, needs API key)</li>
-<li><code>anthropic-api</code> (highest quality, needs API key)</li>
-<li><code>ollama</code> (local, private)</li>
-<li><code>gemini-cli</code> (free, no API key)</li>
-<li><code>claude-cli</code> (free, no API key)</li>
-</ol>
-<p>Override with <code>--provider</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span>&lt;note_id&gt;<span class="w"> </span>--provider<span class="w"> </span>ollama
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--provider<span class="w"> </span>anthropic-api
-</code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Start here</p>
-<p>New to <code>obs</code>? Run these 3 commands: <code>obs</code> → <code>obs stats MyVault</code> → <code>obs analyze MyVault</code>. That's it.</p>
-</div>
-<h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># First-time setup (isolated venv, no manual pip)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>./install.sh
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Daily check</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>obs
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># AI analysis</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Quality features (v3.2.0)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w">              </span><span class="c1"># Find merge candidates</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">        </span><span class="c1"># Suggest + auto-apply tags</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w">                    </span><span class="c1"># Score all notes</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Export for scripting</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<hr />
-<details class="info">
-<summary>Vault lookup shortcut</summary>
-<p>Any command accepting <code>&lt;vault&gt;</code> also accepts an ID prefix — type just the first 4 characters instead of the full name.</p>
-</details>
-<hr />
-<h2 id="claude-mcp-tools-v330">Claude / MCP Tools (v3.3.0)<a class="headerlink" href="#claude-mcp-tools-v330" title="Permanent link">&para;</a></h2>
-<p>Ask Claude natural-language questions about your vaults. Requires one-time Claude Desktop setup
-— see <a href="../claude-integration/">Claude Integration</a>.</p>
 <table>
 <thead>
 <tr>
-<th>MCP Tool</th>
-<th>Description</th>
+<th>#</th>
+<th>Provider</th>
+<th>Speed</th>
+<th>Privacy</th>
+<th>Setup</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>list_vaults()</code></td>
-<td>List all registered vaults</td>
+<td>1</td>
+<td><code>gemini-api</code></td>
+<td>Fast</td>
+<td>API key</td>
+<td><code>obs ai setup</code></td>
 </tr>
 <tr>
-<td><code>get_vault_stats(vault_id)</code></td>
-<td>Vault statistics</td>
+<td>2</td>
+<td><code>anthropic-api</code></td>
+<td>Best quality</td>
+<td>API key</td>
+<td><code>obs ai setup</code></td>
 </tr>
 <tr>
-<td><code>discover_vaults(path)</code></td>
-<td>Find vaults in a directory</td>
+<td>3</td>
+<td><code>ollama</code></td>
+<td>Medium</td>
+<td>100% local</td>
+<td>Local install</td>
 </tr>
 <tr>
-<td><code>search_notes(query, vault_id)</code></td>
-<td>Full-text search</td>
+<td>4</td>
+<td><code>gemini-cli</code></td>
+<td>Fast</td>
+<td>API call</td>
+<td>Pre-installed</td>
 </tr>
 <tr>
-<td><code>find_similar_notes(note_id)</code></td>
-<td>Semantically similar notes</td>
+<td>5</td>
+<td><code>claude-cli</code></td>
+<td>Fast</td>
+<td>API call</td>
+<td>Pre-installed</td>
+</tr>
+</tbody>
+</table>
+<p>Override: <code>obs ai similar &lt;note&gt; --provider ollama</code></p>
+<h2 id="vault-lookup"><img alt="🔍" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f50d.svg" title=":mag:" /> Vault Lookup<a class="headerlink" href="#vault-lookup" title="Permanent link">&para;</a></h2>
+<p>Commands accepting <code>&lt;vault&gt;</code> support flexible lookup:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>stats<span class="w"> </span>MyVault<span class="w">        </span><span class="c1"># By display name</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>a812<span class="w">           </span><span class="c1"># By ID prefix (first 4+ chars)</span>
+</code></pre></div>
+<h2 id="common-workflows"><img alt="📝" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4dd.svg" title=":memo:" /> Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># First-time setup</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>brew<span class="w"> </span>install<span class="w"> </span>data-wise/tap/obsidian-cli-ops
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Weekly board refresh</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>obs<span class="w"> </span>board<span class="w"> </span>refresh
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Full health pipeline</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>obs<span class="w"> </span>doctor<span class="w">                            </span><span class="c1"># diagnose</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>obs<span class="w"> </span>ai<span class="w"> </span>refactor<span class="w"> </span>MyVault<span class="w">               </span><span class="c1"># plan</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>obs<span class="w"> </span>ai<span class="w"> </span>merge-suggest<span class="w"> </span>MyVault<span class="w">          </span><span class="c1"># merge candidates</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>obs<span class="w"> </span>ai<span class="w"> </span>tag-suggest<span class="w"> </span>MyVault<span class="w"> </span>--apply<span class="w">    </span><span class="c1"># auto-tag</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>obs<span class="w"> </span>scan<span class="w"> </span>MyVault<span class="w"> </span>--prune<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>obs<span class="w"> </span>analyze<span class="w"> </span>MyVault<span class="w">  </span><span class="c1"># re-check</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Research pipeline</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;topic&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;topic&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>my-paper
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Export everything as JSON</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w"> </span>--json
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>obs<span class="w"> </span>health<span class="w"> </span>MyVault<span class="w"> </span>--json
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>MyVault<span class="w"> </span>--json
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>obs<span class="w"> </span>doctor<span class="w"> </span>--json
+</code></pre></div>
+<hr />
+<h2 id="claude-mcp-tools-v330"><img alt="🔗" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f517.svg" title=":link:" /> Claude / MCP Tools (v3.3.0)<a class="headerlink" href="#claude-mcp-tools-v330" title="Permanent link">&para;</a></h2>
+<p>42 MCP tools in 10 groups. Setup: <a href="../claude-integration/">Claude Integration</a></p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vault</strong></td>
+<td><code>list_vaults</code>, <code>get_vault_stats</code>, <code>discover_vaults</code></td>
 </tr>
 <tr>
-<td><code>get_hub_notes(vault_id)</code></td>
-<td>Most-connected notes</td>
+<td><strong>Search</strong></td>
+<td><code>search_notes</code>, <code>find_similar_notes</code></td>
 </tr>
 <tr>
-<td><code>get_orphaned_notes(vault_id)</code></td>
-<td>Notes with no links</td>
+<td><strong>Graph</strong></td>
+<td><code>get_hub_notes</code>, <code>get_orphaned_notes</code>, <code>get_broken_links</code>, <code>analyze_vault</code></td>
 </tr>
 <tr>
-<td><code>get_broken_links(vault_id)</code></td>
-<td>Unresolved wikilinks</td>
+<td><strong>Health</strong></td>
+<td><code>get_vault_health</code></td>
 </tr>
 <tr>
-<td><code>analyze_vault(vault_id)</code></td>
-<td>Graph metrics</td>
+<td><strong>Notes</strong></td>
+<td><code>list_notes</code>, <code>read_note</code>, <code>write_note</code>, <code>create_note</code>, <code>append_to_note</code>, <code>insert_to_note</code>, <code>rename_note</code>, <code>delete_note</code>, <code>get_note_links</code>, <code>rescan_vault</code></td>
 </tr>
 <tr>
-<td><code>get_vault_health(vault_id)</code></td>
-<td>4-dimension health score</td>
+<td><strong>AI</strong></td>
+<td><code>run_obs_ai</code> (all 11 subcommands)</td>
 </tr>
 <tr>
-<td><code>list_notes(vault_id)</code></td>
-<td>Paginated note listing</td>
+<td><strong>Bridge</strong></td>
+<td><code>get_bridge_status</code></td>
 </tr>
 <tr>
-<td><code>read_note(note_id)</code></td>
-<td>Read note content</td>
+<td><strong>Temporal</strong></td>
+<td><code>get_trends</code>, <code>get_stale_notes</code>, <code>get_daily_digest</code></td>
 </tr>
 <tr>
-<td><code>write_note(note_id, content)</code></td>
-<td>Overwrite note (auto-backup)</td>
+<td><strong>Diagnostics</strong></td>
+<td><code>diagnose</code></td>
 </tr>
 <tr>
-<td><code>create_note(vault_id, title, content)</code></td>
-<td>Create new note</td>
-</tr>
-<tr>
-<td><code>append_to_note(note_id, content)</code></td>
-<td>Append to note</td>
-</tr>
-<tr>
-<td><code>insert_to_note(note_id, content, after_heading=...)</code></td>
-<td>Insert at heading position</td>
-</tr>
-<tr>
-<td><code>rename_note(note_id, new_title)</code></td>
-<td>Rename note</td>
-</tr>
-<tr>
-<td><code>delete_note(note_id, confirm=True)</code></td>
-<td>Delete note (dry-run by default)</td>
-</tr>
-<tr>
-<td><code>run_obs_ai(command, target)</code></td>
-<td>All <code>obs ai</code> subcommands</td>
+<td><strong>Research</strong></td>
+<td><code>zotero_search</code>, <code>zotero_get</code>, <code>pdf_search</code>, <code>course_list</code>, <code>course_show</code>, <code>course_lectures</code>, <code>manuscript_list</code>, <code>manuscript_show</code>, <code>manuscript_stats</code>, <code>bib_check</code>, <code>unified_search</code>, <code>server_info</code>, <code>get_note_links</code></td>
 </tr>
 </tbody>
 </table>
 <p><strong>Example Claude prompts:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>&quot;List orphaned notes in MyVault&quot;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&quot;Create a note called &#39;Meeting 2026-06-15&#39;&quot;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>&quot;Check vault health for Research&quot;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>&quot;Run a quality check on all notes in MyVault&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&quot;Search my research vault for causal inference&quot;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>&quot;List orphaned notes in MyVault&quot;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>&quot;Create a note called &#39;Meeting 2026-06-15&#39; in Research&quot;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>&quot;Check vault health and list top 3 issues&quot;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>&quot;Find notes that might be merged&quot;
 </code></pre></div>
 <hr />
-<h2 id="native-obsidian-cli-v1124">Native Obsidian CLI (v1.12.4+)<a class="headerlink" href="#native-obsidian-cli-v1124" title="Permanent link">&para;</a></h2>
-<p>Obsidian ships its own CLI for note-level operations. Use it alongside <code>obs</code> for a complete workflow.</p>
-<div class="admonition tip">
-<p class="admonition-title">Two tools, zero overlap</p>
-<p><code>obs</code> = graph analysis + AI insights. <code>obsidian</code> = note CRUD + search + tags. They complement each other.</p>
-</div>
+<h2 id="native-obsidian-cli-v1124"><img alt="🔖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f516.svg" title=":bookmark:" /> Native Obsidian CLI (v1.12.4+)<a class="headerlink" href="#native-obsidian-cli-v1124" title="Permanent link">&para;</a></h2>
+<p><code>obs</code> (graph + AI) + <code>obsidian</code> (note CRUD) = complete terminal workflow.</p>
 <table>
 <thead>
 <tr>
@@ -2307,61 +2294,46 @@
 </tr>
 <tr>
 <td><code>obsidian files</code></td>
-<td>List all files in vault</td>
+<td>List all files</td>
 </tr>
 <tr>
 <td><code>obsidian read file="NAME"</code></td>
-<td>Read a note by wikilink</td>
+<td>Read by wikilink</td>
 </tr>
 <tr>
 <td><code>obsidian create name="TITLE"</code></td>
-<td>Create a new note</td>
+<td>Create note</td>
 </tr>
 <tr>
 <td><code>obsidian search query="TEXT"</code></td>
 <td>Full-text search</td>
 </tr>
 <tr>
-<td><code>obsidian daily</code></td>
-<td>Open today's daily note</td>
+<td><code>obsidian daily</code> / <code>daily:append</code></td>
+<td>Daily note</td>
 </tr>
 <tr>
-<td><code>obsidian daily:append content="TEXT"</code></td>
-<td>Quick capture to daily note</td>
-</tr>
-<tr>
-<td><code>obsidian tags</code></td>
-<td>List all tags</td>
-</tr>
-<tr>
-<td><code>obsidian tags:rename old=X new=Y</code></td>
-<td>Rename tags vault-wide</td>
+<td><code>obsidian tags</code> / <code>tags:rename</code></td>
+<td>Tag management</td>
 </tr>
 <tr>
 <td><code>obsidian backlinks file="NAME"</code></td>
-<td>Find incoming links</td>
+<td>Incoming links</td>
 </tr>
 <tr>
 <td><code>obsidian orphans</code></td>
-<td>Notes with zero links</td>
+<td>Zero-link notes</td>
 </tr>
 <tr>
 <td><code>obsidian properties file="NAME"</code></td>
-<td>Read YAML frontmatter</td>
-</tr>
-<tr>
-<td><code>obsidian properties:set file="NAME" key=val</code></td>
-<td>Set a property</td>
+<td>Read frontmatter</td>
 </tr>
 </tbody>
 </table>
-<details class="info">
-<summary>Requires Obsidian running</summary>
-<p>The native CLI communicates with a running Obsidian instance. Enable it in Settings → General → Command line interface.</p>
-</details>
-<p>See the <a href="https://help.obsidian.md/cli">official docs</a> for the full command list.</p>
+<p>Requires Obsidian running (Settings → General → Command line interface).
+See the <a href="https://help.obsidian.md/cli">official docs</a>.</p>
 <hr />
-<p><strong>Version:</strong> 4.2.0 | <strong>Commands:</strong> 48 (17 top-level; incl. config + research families from nexus-cli) | <strong>MCP Tools:</strong> 42 | <strong>AI Providers:</strong> 5</p>
+<p><strong>Version:</strong> 4.3.0 | <strong>Commands:</strong> 49 | <strong>MCP Tools:</strong> 42 | <strong>AI Providers:</strong> 5</p>
 
 
 
