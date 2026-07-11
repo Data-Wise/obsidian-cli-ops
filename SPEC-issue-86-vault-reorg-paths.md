@@ -39,10 +39,10 @@ fallback_path = vault_root / "Engineering" / "_ACTION-BOARD.md"
 * **Never do:** Commit production releases or tag main branch without explicit user sign-off.
 
 ## Success Criteria
-- [ ] No occurrences of `Software_Engineering` or `Research_Lab` remain in `config/` or `src/`.
-- [ ] `config/example.project_map.json` maps packages to `Engineering/packages/` and research projects to `Research/`.
-- [ ] `src/python/core/board.py` resolves fallback paths to `Engineering/_ACTION-BOARD.md` instead of `00_meta/_ACTION-BOARD.md`.
-- [ ] All `pytest` tests pass successfully.
+- [x] No occurrences of `Software_Engineering` or `Research_Lab` remain in `config/` or `src/`.
+- [x] `config/example.project_map.json` maps packages to `Engineering/packages/` and research projects to `Research/`.
+- [x] `src/python/core/board.py` resolves fallback paths to `Engineering/_ACTION-BOARD.md` instead of `00_meta/_ACTION-BOARD.md`.
+- [x] All `pytest` tests pass successfully (520 passed).
 
 ## Open Questions
-1. Do you agree with using `Engineering/_ACTION-BOARD.md` as the default fallback dashboard path when `Research/00_meta/_ACTION-BOARD.md` is not present?
+1. ~~Do you agree with using `Engineering/_ACTION-BOARD.md` as the default fallback dashboard path when `Research/00_meta/_ACTION-BOARD.md` is not present?~~ Resolved: yes, implemented as the new default.
