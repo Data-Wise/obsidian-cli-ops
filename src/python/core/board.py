@@ -487,7 +487,7 @@ class BoardEngine:
 
         # Prefer known sub-vaults (e.g. Research/ inside Documents/) if the directory exists.
         for sub in ("Research",):
-            candidate = vault_root / sub / "00_meta" / "_ACTION-BOARD.md"
+            candidate = vault_root / sub / "Engineering" / "_ACTION-BOARD.md"
             if candidate.exists() or (vault_root / sub).is_dir():
                 return candidate
 

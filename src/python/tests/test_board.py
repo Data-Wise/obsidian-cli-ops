@@ -371,7 +371,7 @@ def test_engine_resolve_prefers_research_subdirectory(tmp_path):
     research.mkdir()
     engine = BoardEngine(vault_manager=MagicMock())
     resolved = engine._resolve_board_path(vault)
-    assert resolved == tmp_path / "Research" / "00_meta" / "_ACTION-BOARD.md"
+    assert resolved == tmp_path / "Research" / "Engineering" / "_ACTION-BOARD.md"
 
 
 def test_engine_resolve_falls_back_to_vault_root(tmp_path):
