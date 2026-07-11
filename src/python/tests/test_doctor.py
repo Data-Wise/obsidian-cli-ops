@@ -349,6 +349,31 @@ class TestCheckIcloud:
         assert detect.status == "pass"
         assert len(results) == 1
 
+    def test_icloud_offload_commands(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+        db_path.parent.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT)")
+        icloud_path = tmp_path / "Library" / "Mobile Documents" / "iCloud~md~obsidian" / "Documents" / "Vault1"
+        icloud_path.mkdir(parents=True)
+        (icloud_path / "test.md").touch()
+        conn.execute("INSERT INTO vaults VALUES ('v1', 'Vault1', ?)", (str(icloud_path),))
+        conn.commit()
+        conn.close()
+
+        from unittest.mock import patch as mock_patch
+        with mock_patch("platform.system", return_value="Darwin"), \
+             mock_patch("fs_utils.is_icloud_path", return_value=True), \
+             mock_patch("fs_utils.is_dataless", return_value=True), \
+             mock_patch("fs_utils.fs_op", side_effect=TimeoutError):
+            results = _check_icloud()
+
+        offload = next(r for r in results if r.id == "icloud-offload")
+        assert offload.status in ("warn", "fail")
+        assert f'brctl download "{icloud_path}"' in offload.fix_hint
+
+
 
 # ---------------------------------------------------------------------------
 # Layer: sync (content-based vault↔DB drift)
@@ -357,15 +382,15 @@ class TestCheckIcloud:
 class TestCheckSync:
     """sync layer: ghosts (DB rows gone from disk), missing (*.md absent from
     DB), errors (last scan recorded failures), drift (info summary)."""
-
     def _make_db(self, tmp_path, vault_path: Path, *, disk_files, db_paths,
-                 last_scan_status="completed", notes_failed=0):
+                 last_scan_status="completed", notes_failed=0, failed_paths=None):
         """Build a vault on disk + a matching/mismatching DB index.
 
         disk_files: list of relative paths to materialize as real .md files.
         db_paths:   list of relative paths to insert as notes rows.
         The set difference between the two yields ghosts/missing.
         """
+        import json
         # Materialize disk files
         for rel in disk_files:
             fp = vault_path / rel
@@ -387,13 +412,13 @@ class TestCheckSync:
         conn.execute(
             "CREATE TABLE scan_history (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             "vault_id TEXT, started_at TIMESTAMP, completed_at TIMESTAMP, "
-            "notes_scanned INTEGER, notes_failed INTEGER, status TEXT)"
+            "notes_scanned INTEGER, notes_failed INTEGER, failed_paths TEXT, status TEXT)"
         )
         conn.execute(
             "INSERT INTO scan_history (vault_id, started_at, completed_at, "
-            "notes_scanned, notes_failed, status) "
-            "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, ?, ?)",
-            (len(db_paths), notes_failed, last_scan_status),
+            "notes_scanned, notes_failed, failed_paths, status) "
+            "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, ?, ?, ?)",
+            (len(db_paths), notes_failed, json.dumps(failed_paths) if failed_paths is not None else None, last_scan_status),
         )
         conn.commit()
         conn.close()
@@ -529,6 +554,21 @@ class TestCheckSync:
         results = run_checks(layers=["sync"])
         layers = {r.layer for r in results}
         assert layers == {"sync"}
+
+    def test_errors_inlines_failing_paths(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"], db_paths=["a.md"],
+                      last_scan_status="completed", notes_failed=2,
+                      failed_paths=["error_note1.md", "error_note2.md"])
+        results = _check_sync()
+        errors = next(r for r in results if r.id.startswith("sync-errors:"))
+        assert errors.status == "warn"
+        assert "error_note1.md" in errors.message
+        assert "error_note2.md" in errors.message
+
 
 
 # ---------------------------------------------------------------------------

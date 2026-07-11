@@ -498,25 +498,47 @@ def _sync_errors_result(conn: sqlite3.Connection, vid: str, prefix: str) -> Doct
     label = f"{prefix}: Last scan errors"
     try:
         row = conn.execute(
-            "SELECT status, notes_failed FROM scan_history "
+            "SELECT status, notes_failed, failed_paths FROM scan_history "
             "WHERE vault_id = ? ORDER BY started_at DESC, id DESC LIMIT 1",
             (vid,),
         ).fetchone()
     except sqlite3.OperationalError as e:
-        return DoctorResult(f"sync-errors:{vid}", "sync", label, "error", f"Query failed: {e}")
+        # Fall back to trying without failed_paths in case it's a pre-migration DB
+        try:
+            row = conn.execute(
+                "SELECT status, notes_failed FROM scan_history "
+                "WHERE vault_id = ? ORDER BY started_at DESC, id DESC LIMIT 1",
+                (vid,),
+            ).fetchone()
+        except sqlite3.OperationalError:
+            return DoctorResult(f"sync-errors:{vid}", "sync", label, "error", f"Query failed: {e}")
 
     if row is None:
         return DoctorResult(f"sync-errors:{vid}", "sync", label, "skip", "no scan history")
 
     status = row["status"]
     failed = row["notes_failed"] or 0
+    
+    # Safely retrieve failed_paths
+    failed_paths = []
+    if "failed_paths" in row.keys() and row["failed_paths"]:
+        try:
+            failed_paths = json.loads(row["failed_paths"])
+        except Exception:
+            pass
+
     if status == "failed":
         return DoctorResult(f"sync-errors:{vid}", "sync", label, "fail",
                             "last scan aborted (status=failed)",
                             f"Run: obs scan {vid} --verbose  to see the error")
     if failed > 0:
+        paths_str = ""
+        if failed_paths:
+            paths_str = ":\n  - " + "\n  - ".join(failed_paths[:5])
+            if len(failed_paths) > 5:
+                paths_str += f"\n  - ... and {len(failed_paths) - 5} more"
         return DoctorResult(f"sync-errors:{vid}", "sync", label, "warn",
-                            f"last scan recorded {failed} per-note error(s)",
+                            f"last scan recorded {failed} per-note error(s){paths_str}",
                             "inspect failing paths in the scan log")
     return DoctorResult(f"sync-errors:{vid}", "sync", label, "pass", "last scan had no errors")
 
@@ -838,15 +860,27 @@ def _check_icloud() -> list[DoctorResult]:
                                     f"Write latency {latency:.2f}s"))
 
     # icloud-offload — check if Optimize Mac Storage is likely active
-    offloaded = sum(1 for v in icloud_vaults for f in v.rglob("*.md") if is_dataless(f))
-    if offloaded > 50:
-        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "fail",
-                                    f"{offloaded} vault files are offloaded (dataless placeholders)",
-                                    "System Settings → Apple ID → iCloud → disable 'Optimize Mac Storage'"))
-    elif offloaded > 0:
-        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "warn",
-                                    f"{offloaded} files are offloaded placeholders",
-                                    f'Run: brctl download "{probe_vault}"'))
+    vault_offloads = {}
+    for v in icloud_vaults:
+        try:
+            count = sum(1 for f in v.rglob("*.md") if is_dataless(f))
+            if count > 0:
+                vault_offloads[v] = count
+        except Exception:
+            pass
+
+    total_offloaded = sum(vault_offloads.values())
+    if total_offloaded > 0:
+        cmds = [f'brctl download "{v}"' for v in vault_offloads.keys()]
+        recs_str = " && ".join(cmds)
+        if total_offloaded > 50:
+            results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "fail",
+                                        f"{total_offloaded} vault files are offloaded (dataless placeholders) across {len(vault_offloads)} vault(s)",
+                                        recs_str + "  or  System Settings → Apple ID → iCloud → disable 'Optimize Mac Storage'"))
+        else:
+            results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "warn",
+                                        f"{total_offloaded} files are offloaded placeholders across {len(vault_offloads)} vault(s)",
+                                        recs_str))
     else:
         results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "pass",
                                     "No offloaded files detected"))
