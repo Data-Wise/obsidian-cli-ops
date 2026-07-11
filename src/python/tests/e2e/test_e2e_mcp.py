@@ -1253,6 +1253,15 @@ class TestE2EMiscTools:
         assert isinstance(result, str)
         assert "python" in result.lower() or "database" in result.lower()
 
+    def test_diagnose_specific_layers(self, mcp_proc):
+        """diagnose with specific layers must run only those layers."""
+        result = mcp_proc.call_tool("diagnose", {"layers": "python,database"})
+        assert isinstance(result, str)
+        report = json.loads(result)
+        assert len(report) > 0
+        for item in report:
+            assert item["layer"] in ("python", "database")
+
     def test_unified_search(self, mcp_proc):
         """unified_search fans out; must not crash even with no results."""
         result = mcp_proc.call_tool("unified_search", {"query": "E2E Alpha"})
