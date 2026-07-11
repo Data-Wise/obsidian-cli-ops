@@ -4,12 +4,12 @@
 **Description:** Update `config/example.project_map.json` to repoint mappings from the retired `Research_Lab/` directory to `Engineering/packages/` or `Research/`.
 
 **Acceptance criteria:**
-- [ ] No references to `Research_Lab` or `Software_Engineering` remain in `config/example.project_map.json`.
-- [ ] RMediation and CausalMed packages map under `Engineering/packages/`.
-- [ ] Sequential Mediation maps under `Research/`.
+- [x] No references to `Research_Lab` or `Software_Engineering` remain in `config/example.project_map.json`.
+- [x] RMediation and CausalMed packages map under `Engineering/packages/`.
+- [x] Sequential Mediation maps under `Research/`.
 
 **Verification:**
-- [ ] Manual check: Inspect content of `config/example.project_map.json`.
+- [x] Manual check: Inspect content of `config/example.project_map.json`.
 
 **Dependencies:** None
 
@@ -24,11 +24,11 @@
 **Description:** Update `src/python/core/board.py` fallback path resolution to fall back to `Engineering/_ACTION-BOARD.md` instead of `00_meta/_ACTION-BOARD.md` when no explicit directory is found.
 
 **Acceptance criteria:**
-- [ ] Fallback path resolved returns `vault_root / "Engineering" / "_ACTION-BOARD.md"`.
-- [ ] The logic still checks for `Research/00_meta/_ACTION-BOARD.md` as an active option first.
+- [x] Fallback path resolved returns `vault_root / "Engineering" / "_ACTION-BOARD.md"`.
+- [x] The logic still checks for `Research/00_meta/_ACTION-BOARD.md` as an active option first.
 
 **Verification:**
-- [ ] Python unit tests pass (after updating test assertions).
+- [x] Python unit tests pass (after updating test assertions).
 
 **Dependencies:** None
 
@@ -43,10 +43,10 @@
 **Description:** Update unit test assertions in `src/python/tests/test_board.py` that check the fallback paths to assert they match `Engineering/_ACTION-BOARD.md`.
 
 **Acceptance criteria:**
-- [ ] Unit tests assert `resolved == tmp_path / "Engineering" / "_ACTION-BOARD.md"`.
+- [x] Unit tests assert `resolved == tmp_path / "Engineering" / "_ACTION-BOARD.md"`.
 
 **Verification:**
-- [ ] Running tests passes: `pytest src/python/tests/test_board.py`
+- [x] Running tests passes: `pytest src/python/tests/test_board.py`
 
 **Dependencies:** Task 2
 
@@ -58,5 +58,5 @@
 ---
 
 ## Checkpoint: Final Integration
-- [ ] All unit tests pass cleanly: `pytest`
-- [ ] Dry-run command executes successfully: `obs board refresh --dry-run`
+- [x] All unit tests pass cleanly: `pytest`
+- [x] Dry-run command executes successfully: `obs board refresh --dry-run`

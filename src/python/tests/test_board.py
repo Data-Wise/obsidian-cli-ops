@@ -322,7 +322,7 @@ def test_engine_refresh_writes_board(tmp_path, monkeypatch):
     result = engine.refresh("v1")
     assert "error" not in result
     assert result["changed"] is True
-    board_path = tmp_path / "00_meta" / "_ACTION-BOARD.md"
+    board_path = tmp_path / "Engineering" / "_ACTION-BOARD.md"
     assert board_path.exists()
     text = board_path.read_text(encoding="utf-8")
     assert "# 🎯 Research Action Board" in text
@@ -339,7 +339,7 @@ def test_engine_refresh_unknown_vault():
 
 def test_engine_status_existing_board(tmp_path, monkeypatch):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
-    board_path = tmp_path / "00_meta" / "_ACTION-BOARD.md"
+    board_path = tmp_path / "Engineering" / "_ACTION-BOARD.md"
     board_path.parent.mkdir(parents=True)
     board_path.write_text("<!-- obs:board:start -->\n> generated: 2026-01-01\n<!-- obs:board:end -->", encoding="utf-8")
 
@@ -378,4 +378,4 @@ def test_engine_resolve_falls_back_to_vault_root(tmp_path):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
     engine = BoardEngine(vault_manager=MagicMock())
     resolved = engine._resolve_board_path(vault)
-    assert resolved == tmp_path / "00_meta" / "_ACTION-BOARD.md"
+    assert resolved == tmp_path / "Engineering" / "_ACTION-BOARD.md"

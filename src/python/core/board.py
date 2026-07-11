@@ -492,7 +492,7 @@ class BoardEngine:
                 return candidate
 
         # Fall back to vault-root path
-        return vault_root / "00_meta" / "_ACTION-BOARD.md"
+        return vault_root / "Engineering" / "_ACTION-BOARD.md"
 
     def _collect_projects(self) -> list[ProjectStatus]:
         sources: list[list[ProjectStatus]] = []
