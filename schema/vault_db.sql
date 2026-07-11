@@ -138,6 +138,7 @@ CREATE TABLE IF NOT EXISTS scan_history (
     notes_updated INTEGER DEFAULT 0,
     notes_deleted INTEGER DEFAULT 0,
     notes_failed INTEGER DEFAULT 0,         -- v2: per-note scan errors (S4)
+    failed_paths TEXT,                      -- JSON list of failing note paths (S4)
     duration_seconds REAL,
     status TEXT DEFAULT 'running',          -- running, completed, failed
     error_message TEXT,
