@@ -51,6 +51,7 @@ flowchart TD
 | [Research Domain Setup](research-setup.md) | 🟡 Intermediate | ~15 min | Connect Zotero, PDFs, courses, and manuscripts (`obs research`) |
 | [Research Board](research-board.md) | 🟡 Intermediate | ~10 min | Render the deterministic manuscript/program dashboard from atlas state |
 | [Vault↔Repo Mirroring](flow-init.md) | 🟡 Intermediate | ~10 min | Create `.flow/obsidian-sync.yml` vault↔repo mirror map |
+| [Diagnostics](doctor.md) | 🟡 Intermediate | ~10 min | Run `obs doctor`, read layers, heal ghost notes with `scan --prune` |
 | [Board Sync Workflow](../cookbook.md#board-sync-workflow) | 🟡 Intermediate | ~5 min | Weekly action board, launchd automation |
 | [Workflow Decision Guide](../cookbook.md#which-workflow-should-you-use) | 🟢 Beginner | ~2 min | Pick the right workflow for your task |
 

@@ -857,9 +857,61 @@ obs flow init --vault-root ~/vaults/Research --pairs '[{"vault":"atlas","repo":"
 
 ---
 
+## Diagnose & Heal a Vault
+
+`obs doctor` runs self-diagnostic checks; `obs scan --prune` clears ghost notes that
+a plain scan leaves behind.
+
+### Full diagnostic
+
+```bash
+obs doctor                                  # All 7 layers + flow
+obs doctor --vault Research                 # Scope to one vault
+obs doctor --layer sync                     # Vault↔index drift only
+```
+
+### Find ghost notes
+
+```bash
+obs doctor --vault Research --layer sync
+# sync-ghosts: warn  DB rows whose file is gone (deleted/renamed)
+# sync-drift:   info disk=120 db=118 (2 ghost)
+```
+
+### Heal (clear ghosts)
+
+A plain `obs scan` is additive — it never removes rows. Re-scan with `--prune` to
+sweep rows whose file is gone from disk:
+
+```bash
+obs scan Research --prune                   # --prune is skipped if zero files found
+obs doctor --vault Research --layer sync    # verify drift is gone
+```
+
+!!! warning "Safety guard"
+    `--prune` is skipped (with a warning) if the scan sees zero files — a mis-pointed
+    path or un-materialised iCloud vault won't wipe the index.
+
+### Machine-readable checks (CI)
+
+```bash
+obs doctor --layer database --json | python3 -c "
+import json, sys
+r = json.load(sys.stdin)
+print(f\"{sum(1 for c in r['checks'] if c['status']=='fail')} failing checks\")
+"
+```
+
+!!! tip "Full walkthrough"
+    See the [Diagnostics tutorial](tutorials/doctor.md) for every layer, the sync
+    check table, and the common-scenarios matrix.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
 - [Claude Integration](claude-integration.md) -- MCP server setup
 - [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) -- Step-by-step setup
+- [Diagnostics tutorial](tutorials/doctor.md) -- `obs doctor` walkthrough
