@@ -183,4 +183,26 @@ every box is checked:
 - [ ] **Tests**: unit + (where it writes files) dogfood/e2e covering invalid input,
       overwrite refusal, and atomic write.
 - [ ] **Verification**: `mkdocs build --strict` and
-      `python3 -m pytest src/python/tests/test_doc_counts.py` pass.
+       `python3 -m pytest src/python/tests/test_doc_counts.py` pass.
+
+---
+
+## 6. Website & Brand
+
+The published documentation site and the project's visual identity follow the same
+discipline as the code surfaces above: validated, deliberate, and free of generic
+"AI slop" (no purple gradient washes, no uniform rounded corners, no default Inter).
+
+- **Palette** — ink `#15161a`, paper `#f7f6f2`, teal `#0d9488` (single accent that marks
+  the active node). Implemented in `docs_mkdocs/stylesheets/redesign.css` and wired into
+  `mkdocs.yml` via `theme.logo` / `theme.favicon` / `extra_css`.
+- **Logo** — a faceted obsidian diamond as the graph hub ringed by note nodes, documented
+  in `docs/proposals/brand/PHILOSOPHY.md`; the full mark/lockup/favicon set and a one-page
+  spec sheet are in [brand/logo-sheet.pdf](proposals/brand/logo-sheet.pdf).
+- **Redesign proposal** — the interactive audit + before/after mockup that motivated the
+  palette is preserved as a self-contained artifact:
+  [proposals/docs-redesign.html](proposals/docs-redesign.html) (opens standalone; the
+  mark is embedded, no external assets).
+
+> The artifact and brand sheet live under `docs/proposals/` (source of truth) and are
+> mirrored into `docs_mkdocs/proposals/` so they are served by the site.
