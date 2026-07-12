@@ -114,7 +114,7 @@ obs version                     # Show version
 pytest src/python/tests/        # 764 pytest tests passing
 pytest src/python/tests/test_mcp_server.py # 113 MCP unit tests
 E2E=1 pytest src/python/tests/e2e/ -v  # 48 E2E tests (requires real env)
-npx jest                        # 69 Jest tests passing
+npx jest                        # 70 Jest tests passing (2 skipped)
 obs --verbose <command>         # Run any command with verbose output
 ```
 

@@ -226,14 +226,36 @@ The warning is helpful, not noisy. Users who don't care about `.flow/` can ignor
 
 ## Success Criteria
 
-- [ ] `schema/obsidian-sync.schema.json` exists and validates existing configs
-- [ ] `obs doctor --layer flow` runs 6 checks per vault
-- [ ] `obs flow init` creates valid `.flow/obsidian-sync.yml` interactively
-- [ ] `savant:restore` warns about missing/stale configs
-- [ ] `craft:recap` warns about missing configs (no staleness)
-- [ ] MCP `diagnose()` includes flow checks in default output
-- [ ] All existing pytest tests still pass
-- [ ] New tests for `obs flow init` pass
+- [x] `schema/obsidian-sync.schema.json` exists and validates existing configs
+- [x] `obs doctor --layer flow` runs 6 checks per vault
+- [x] `obs flow init` creates valid `.flow/obsidian-sync.yml` interactively
+- [x] `savant:restore` warns about missing/stale configs
+- [x] `craft:recap` warns about missing configs (no staleness)
+- [x] MCP `diagnose()` includes flow checks in default output
+- [x] All existing pytest tests still pass
+- [x] New tests for `obs flow init` pass
+
+## Adversarial Fixes (2026-07-12, 52e5a46)
+
+17 issues fixed across 3 files:
+
+| # | Severity | Fix | File |
+|---|----------|-----|------|
+| 1 | Critical | `_infer_pairs` returns empty (prevents vault==repo pairs) | flow_init.py |
+| 2 | Critical | Variable shadowing `key` → `pair_key` in `validate_config` | flow_init.py |
+| 3 | Critical | `conn = None` before try (no NameError in finally block) | doctor.py |
+| 4 | Critical | Misleading error message fixed | obs_cli.py |
+| 5 | Security | Path traversal (`..`) blocked in pair validation | flow_init.py |
+| 6 | Security | `pairs_json` structure validated (array of objects with vault/repo) | flow_init.py |
+| 7 | Correctness | Pass check includes `warn` status | doctor.py |
+| 8 | Correctness | Duplicate `DoctorResult` IDs get `:{idx}` suffix | doctor.py |
+| 9 | Correctness | Comma parsing for include/exclude patterns | flow_init.py |
+| 10 | Design | Atomic write (temp + rename) prevents corruption | flow_init.py |
+| 11 | Design | Backup before `--force` overwrite (`.bak`) | flow_init.py |
+| 12 | Design | `_SCHEMA_PATH` uses 4 parents (correct path) | flow_init.py |
+| 13-17 | Tests | 13 new tests (path traversal, infer, corrupted YAML, etc.) | test_flow_init.py |
+
+---
 
 ## Files Touched
 
@@ -242,17 +264,19 @@ The warning is helpful, not noisy. Users who don't care about `.flow/` can ignor
 | `schema/obsidian-sync.schema.json` | **New** | ✅ Done |
 | `src/python/core/doctor.py` | Edit — `_check_obsidian_sync` | ✅ Done |
 | `src/python/tests/test_doctor.py` | Edit — 10 test cases | ✅ Done |
-| `src/python/obs_cli.py` | Edit — `--layer flow` choice | ✅ Done |
-| `src/python/obs_cli.py` | Edit — `flow init` subcommand | 📋 Proposed |
-| `src/python/core/flow_init.py` | **New** — init wizard logic | 📋 Proposed |
-| `src/python/tests/test_flow_init.py` | **New** — init tests | 📋 Proposed |
+| `src/python/obs_cli.py` | Edit — `--layer flow` choice + `flow init` subcommand | ✅ Done |
+| `src/python/core/flow_init.py` | **New** — init wizard logic (36 unit tests) | ✅ Done |
+| `src/python/tests/test_flow_init.py` | **New** — 36 tests (unit + adversarial) | ✅ Done |
+| `src/python/tests/test_flow_dogfood.py` | **New** — 19 dogfood tests | ✅ Done |
+| `src/python/tests/e2e/test_e2e_flow.py` | **New** — 16 e2e tests | ✅ Done |
 
 ## Implementation Order
 
 | Phase | What | Effort | Status |
 |-------|------|--------|--------|
 | 1 | JSON Schema + doctor validation | S | ✅ Done |
-| 2 | `obs flow init` command | M | 📋 Next |
-| 3 | savant:restore hook | S | 📋 After Phase 2 |
-| 4 | craft:recap hook | S | 📋 After Phase 3 |
-| 5 | Verify + commit | S | 📋 Final |
+| 2 | `obs flow init` command | M | ✅ Done |
+| 3 | savant:restore hook | S | ✅ Done |
+| 4 | craft:recap hook | S | ✅ Done |
+| 5 | Verify + commit | S | ✅ Done |
+| 6 | Adversarial review + fixes | M | ✅ Done |
