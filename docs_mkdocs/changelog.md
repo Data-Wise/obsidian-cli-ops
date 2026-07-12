@@ -15,6 +15,13 @@ All notable changes to Obsidian CLI Ops.
 - **Removed `.obs/sync.yml` / `obs link` (ADR-001)** — deleted `research/obs_link.py`, `tests/test_obs_link.py`, `docs_mkdocs/obs-sync-yml.md`; removed `obs link` CLI subcommand and zsh dispatcher; `.flow/obsidian-sync.yml` is now the sole vault↔repo mirror-map contract.
 - **New `design-standards.md`** — contributor-facing reference for the three convention-driven surfaces: local config file contracts (`.flow/obsidian-sync.yml`), their create/validate command pairs (`obs flow init` / `obs doctor --layer flow`), and Obsidian dashboards (`obs research board` / `obs board refresh`); wired into `mkdocs.yml` Reference nav with a "new surface" PR checklist.
 
+### Docs website redesign & brand system (2026-07-12)
+
+- **Palette + typography** — replaced Material's default indigo/purple with a fixed ink `#15161a` / paper `#f7f6f2` / teal `#0d9488` system via `docs_mkdocs/stylesheets/redesign.css` (Space Grotesk + JetBrains Mono, no Inter, 4px radii).
+- **Logo & favicon** — new "Node Cartography" mark (faceted obsidian diamond hub + note nodes) wired into `mkdocs.yml` `theme.logo` / `theme.favicon` (transparent mark so it reads on the ink header); assets in `docs/proposals/brand/` + `docs_mkdocs/assets/`.
+- **Proposal artifact** — the interactive audit + before/after mockup is preserved as a self-contained `docs_mkdocs/proposals/docs-redesign.html` (JS+CSS inlined, mark embedded as a base64 data URI, zero external refs), linked from `design-standards.md` §6.
+- **Planning record** — `docs/specs/SPEC-docs-redesign-2026-07-12.md` documents the decisions and the bundle-rebuild workflow for future redesign passes.
+
 ## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
 
 ### Board sync automation

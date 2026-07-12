@@ -31,6 +31,11 @@ Architecture, testing guides, and contribution documentation for Obsidian CLI Op
   - Industry best practices
   - Implementation status
 
+### [Brand & Design](../../specs/SPEC-docs-redesign-2026-07-12.md)
+
+- **[Docs Redesign Spec](../../specs/SPEC-docs-redesign-2026-07-12.md)** - site palette, logo, and proposal-artifact workflow
+- **[Brand assets](../../proposals/brand/)** - logo marks, lockups, favicon, `logo-sheet.pdf`
+
 ---
 
 ## 🎯 For New Contributors

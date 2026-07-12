@@ -206,3 +206,23 @@ discipline as the code surfaces above: validated, deliberate, and free of generi
 
 > The artifact and brand sheet live under `docs/proposals/` (source of truth) and are
 > mirrored into `docs_mkdocs/proposals/` so they are served by the site.
+
+### Reproducing the proposal artifact
+
+The proposal (`proposals/docs-redesign.html`) is a **single self-contained file** — JS + CSS
+inlined, the logo mark embedded as a base64 data URI, **zero external references** — so it
+opens from `file://` or when served. Use this same flow for any future interactive docs
+redesign:
+
+1. Scaffold a React 18 + TS + Vite + Tailwind 3.4 + shadcn/ui app (persist the source under
+   `docs/proposals/redesign-src/` if you want it version-controlled).
+2. Drop the mark you want inline at `src/assets/brand-mark.png` and `import` it in `App.tsx`
+   (Parcel turns the import into an importmap URL).
+3. Build: `npx parcel build index.html --dist-dir dist --no-cache`
+4. Inline: run `inline.py` — it rewrites the importmap PNG URL to a `data:image/png;base64,…`
+   URI and writes a single `bundle.html` with JS+CSS inlined. Do **not** commit
+   `node_modules` / `.parcel-cache`.
+5. Copy `bundle.html` → `docs_mkdocs/proposals/docs-redesign.html` and link it from a doc.
+
+The full decision record and asset list are in
+[docs/specs/SPEC-docs-redesign-2026-07-12.md](https://github.com/Data-Wise/obsidian-cli-ops/blob/dev/docs/specs/SPEC-docs-redesign-2026-07-12.md).
