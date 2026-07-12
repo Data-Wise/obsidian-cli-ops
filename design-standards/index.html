@@ -12,27 +12,31 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/archive/v3.0.0/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/design-standards/">
       
       
+        <link rel="prev" href="../cli-reference/">
+      
+      
+        <link rel="next" href="../workflows/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Release Notes v3.0.0 - Obsidian CLI Ops</title>
+        <title>Design Standards - Obsidian CLI Ops</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/adhd.css">
+      <link rel="stylesheet" href="../stylesheets/adhd.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-notes-v300" class="md-skip">
+        <a href="#design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href=".." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release Notes v3.0.0
+              Design Standards
             
           </span>
         </div>
@@ -225,7 +229,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -246,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../adhd-quick-start/" class="md-tabs__link">
+        <a href="../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -266,7 +270,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../tutorials/" class="md-tabs__link">
+        <a href="../tutorials/" class="md-tabs__link">
           
   
   
@@ -282,11 +286,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../reference/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -306,7 +312,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../developer/architecture/" class="md-tabs__link">
+        <a href="../developer/architecture/" class="md-tabs__link">
           
   
   
@@ -340,7 +346,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href=".." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -370,7 +376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -449,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adhd-quick-start/" class="md-nav__link">
+      <a href="../adhd-quick-start/" class="md-nav__link">
         
   
   
@@ -477,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -505,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -533,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -620,7 +626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/" class="md-nav__link">
+      <a href="../tutorials/" class="md-nav__link">
         
   
   
@@ -648,7 +654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/getting-started/" class="md-nav__link">
+      <a href="../tutorials/getting-started/" class="md-nav__link">
         
   
   
@@ -676,7 +682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/vault-management/" class="md-nav__link">
+      <a href="../tutorials/vault-management/" class="md-nav__link">
         
   
   
@@ -704,7 +710,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/graph-analysis/" class="md-nav__link">
+      <a href="../tutorials/graph-analysis/" class="md-nav__link">
         
   
   
@@ -732,7 +738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/ai-features/" class="md-nav__link">
+      <a href="../tutorials/ai-features/" class="md-nav__link">
         
   
   
@@ -760,7 +766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/claude-mcp/" class="md-nav__link">
+      <a href="../tutorials/claude-mcp/" class="md-nav__link">
         
   
   
@@ -788,7 +794,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/research-setup/" class="md-nav__link">
+      <a href="../tutorials/research-setup/" class="md-nav__link">
         
   
   
@@ -816,7 +822,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/research-board/" class="md-nav__link">
+      <a href="../tutorials/research-board/" class="md-nav__link">
         
   
   
@@ -844,7 +850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/monitoring-and-health/" class="md-nav__link">
+      <a href="../tutorials/monitoring-and-health/" class="md-nav__link">
         
   
   
@@ -872,7 +878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cookbook/" class="md-nav__link">
+      <a href="../cookbook/" class="md-nav__link">
         
   
   
@@ -904,26 +910,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -941,7 +952,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -959,7 +970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
@@ -987,7 +998,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../refcard/" class="md-nav__link">
+      <a href="../refcard/" class="md-nav__link">
         
   
   
@@ -1015,7 +1026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli-reference/" class="md-nav__link">
+      <a href="../cli-reference/" class="md-nav__link">
         
   
   
@@ -1040,10 +1051,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../design-standards/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Standards
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1059,6 +1097,187 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-local-config-file-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Local Config File Contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Local Config File Contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#location-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Location &amp; ownership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#must" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#must-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must not
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-related-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Related Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Related Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obs-doctor-layer-flow-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        obs doctor --layer flow checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-obsidian-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Obsidian Dashboards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Obsidian Dashboards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#must_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#must-not_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must not
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-checklist-for-new-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Checklist for new surfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1071,7 +1290,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workflows/" class="md-nav__link">
+      <a href="../workflows/" class="md-nav__link">
         
   
   
@@ -1099,7 +1318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../ai-setup/" class="md-nav__link">
+      <a href="../ai-setup/" class="md-nav__link">
         
   
   
@@ -1127,7 +1346,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../claude-integration/" class="md-nav__link">
+      <a href="../claude-integration/" class="md-nav__link">
         
   
   
@@ -1155,7 +1374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1242,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/architecture/" class="md-nav__link">
+      <a href="../developer/architecture/" class="md-nav__link">
         
   
   
@@ -1270,7 +1489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/api-reference/" class="md-nav__link">
+      <a href="../developer/api-reference/" class="md-nav__link">
         
   
   
@@ -1350,7 +1569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/testing/overview/" class="md-nav__link">
+      <a href="../developer/testing/overview/" class="md-nav__link">
         
   
   
@@ -1378,7 +1597,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/testing/core-tests/" class="md-nav__link">
+      <a href="../developer/testing/core-tests/" class="md-nav__link">
         
   
   
@@ -1406,7 +1625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer/testing/sandbox/" class="md-nav__link">
+      <a href="../developer/testing/sandbox/" class="md-nav__link">
         
   
   
@@ -1442,7 +1661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
@@ -1497,10 +1716,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#1-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        1. Overview
       
     </span>
   </a>
@@ -1508,22 +1727,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-new" class="md-nav__link">
+  <a href="#2-local-config-file-contracts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's New
+        2. Local Config File Contracts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What&#39;s New">
+    <nav class="md-nav" aria-label="2. Local Config File Contracts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#simplified-cli-phase-71" class="md-nav__link">
+  <a href="#location-ownership" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Simplified CLI (Phase 7.1)
+        Location &amp; ownership
       
     </span>
   </a>
@@ -1531,38 +1750,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#multi-provider-ai-system-phase-72" class="md-nav__link">
+  <a href="#must" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-Provider AI System (Phase 7.2)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Multi-Provider AI System (Phase 7.2)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#new-ai-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        New AI Commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vault-health-dashboard-phase-73" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vault Health Dashboard (Phase 7.3)
+        Must
       
     </span>
   </a>
@@ -1570,10 +1761,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#vault-nameprefix-lookup" class="md-nav__link">
+  <a href="#must-not" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vault Name/Prefix Lookup
+        Must not
       
     </span>
   </a>
@@ -1581,10 +1772,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cli-polish" class="md-nav__link">
+  <a href="#worked-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI Polish
+        Worked example
       
     </span>
   </a>
@@ -1597,44 +1788,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#breaking-changes" class="md-nav__link">
+  <a href="#3-related-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Breaking Changes
+        3. Related Commands
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Breaking Changes">
+    <nav class="md-nav" aria-label="3. Related Commands">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#removed-commands" class="md-nav__link">
+  <a href="#obs-doctor-layer-flow-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Removed Commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migration
+        obs doctor --layer flow checks
       
     </span>
   </a>
@@ -1647,22 +1816,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#technical-details" class="md-nav__link">
+  <a href="#4-obsidian-dashboards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Technical Details
+        4. Obsidian Dashboards
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Technical Details">
+    <nav class="md-nav" aria-label="4. Obsidian Dashboards">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#must_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture
+        Must
       
     </span>
   </a>
@@ -1670,10 +1839,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-suite" class="md-nav__link">
+  <a href="#must-not_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Test Suite
+        Must not
       
     </span>
   </a>
@@ -1681,10 +1850,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
+  <a href="#worked-example_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dependencies
+        Worked example
       
     </span>
   </a>
@@ -1697,32 +1866,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#development-history" class="md-nav__link">
+  <a href="#5-checklist-for-new-surfaces" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development History
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrading" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrading
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contributors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Contributors
+        5. Checklist for new surfaces
       
     </span>
   </a>
@@ -1749,194 +1896,247 @@
   
 
 
-<h1 id="release-notes-v300">Release Notes v3.0.0<a class="headerlink" href="#release-notes-v300" title="Permanent link">&para;</a></h1>
-<p><strong>Release Date:</strong> 2026-03-05
-<strong>Previous Release:</strong> v2.2.0 (2025-12-20)</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>v3.0.0 is a major release that transforms Obsidian CLI Ops into a laser-focused vault management tool with AI-powered graph analysis. The codebase was simplified from 11,500 to ~7,400 lines (36% reduction) while adding powerful new capabilities.</p>
-<p><strong>Philosophy:</strong> "Do one thing exceptionally well — manage Obsidian vaults."</p>
-<h2 id="whats-new">What's New<a class="headerlink" href="#whats-new" title="Permanent link">&para;</a></h2>
-<h3 id="simplified-cli-phase-71">Simplified CLI (Phase 7.1)<a class="headerlink" href="#simplified-cli-phase-71" title="Permanent link">&para;</a></h3>
+<h1 id="design-standards">Design Standards<a class="headerlink" href="#design-standards" title="Permanent link">&para;</a></h1>
+<p>Contributor-facing conventions for the three first-class, convention-driven surfaces in <code>obs</code>:</p>
+<ol>
+<li><strong>Local config file contracts</strong> — vault-rooted YAML maps that another command reads.</li>
+<li><strong>Their related commands</strong> — the CLI verbs that create, validate, and consume a contract.</li>
+<li><strong>Obsidian dashboards</strong> — deterministic, marker-bounded markdown rendered <em>into</em> a vault.</li>
+</ol>
+<p>This is <strong>not</strong> a user tutorial. End users should read
+<a href="../cli-reference/">CLI Reference</a> and <a href="../tutorials/research-board/">The Research Board tutorial</a>.
+The <a href="../developer/architecture/#config-file-contracts">Architecture → Config File Contracts</a>
+section is the code-level companion to §2 below.</p>
+<hr />
+<h2 id="1-overview">1. Overview<a class="headerlink" href="#1-overview" title="Permanent link">&para;</a></h2>
+<p>A "design standard" here means: when you add a new local config contract, a config/sync
+command, or a vault dashboard, it must follow the patterns below. They exist so that every
+surface is <strong>validated</strong>, <strong>atomic</strong>, <strong>idempotent</strong>, and <strong>scriptable</strong> (non-interactive
+path + <code>--dry-run</code> where it writes). Deviations need an explicit ADR.</p>
+<p>The canonical example of all three working together is <code>.flow/obsidian-sync.yml</code>:</p>
 <ul>
-<li><strong>20+ commands → 15 focused commands</strong> — eliminated feature overlap with other tools</li>
-<li><strong>ZSH-First Architecture</strong> — fast shell integration with Python core</li>
-<li><strong>Removed TUI</strong> (1,701 lines) — CLI-only for simplicity and maintainability</li>
-<li><strong>Removed R-Dev integration</strong> (307 lines) — belongs in R package ecosystem</li>
-<li><strong>Removed legacy v1.x commands</strong> (126 lines) — plugin install, sync, audit</li>
+<li>the <strong>contract</strong> (§2) is a vault-rooted mirror map,</li>
+<li><strong><code>obs flow init</code></strong> creates it and <strong><code>obs doctor --layer flow</code></strong> validates it (§3),</li>
+<li>and the research/action <strong>dashboards</strong> (§4) are the same shape of vault-writing surface.</li>
 </ul>
-<h3 id="multi-provider-ai-system-phase-72">Multi-Provider AI System (Phase 7.2)<a class="headerlink" href="#multi-provider-ai-system-phase-72" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="2-local-config-file-contracts">2. Local Config File Contracts<a class="headerlink" href="#2-local-config-file-contracts" title="Permanent link">&para;</a></h2>
+<p>A <em>config contract</em> is a small YAML file <code>obs</code> reads to drive a sync or mirror operation.
+There is exactly <strong>one</strong> today: <code>.flow/obsidian-sync.yml</code>.</p>
+<h3 id="location-ownership">Location &amp; ownership<a class="headerlink" href="#location-ownership" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path</td>
+<td><code>&lt;vault_dir&gt;/.flow/obsidian-sync.yml</code> — <strong>vault-rooted</strong>, one per vault directory</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td><code>obs flow init</code> (v4.3.0)</td>
+</tr>
+<tr>
+<td>Validator</td>
+<td><code>obs doctor --layer flow</code> (JSON Schema)</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td><code>schema/obsidian-sync.schema.json</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>A config contract is <strong>vault-rooted</strong>, not project-rooted. Do not put repo/settings
+state in a vault file, and do not invent a second <code>.obs/*</code> or <code>.flow/*</code> map without
+extending this standard.</p>
+</blockquote>
+<h3 id="must">Must<a class="headerlink" href="#must" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>5 AI providers</strong>: Gemini API, Anthropic API, Ollama, Gemini CLI, Claude CLI</li>
-<li><strong>Smart routing</strong>: auto-selects best provider for each operation type</li>
-<li><strong>Modern SDKs</strong>: migrated to <code>google-genai</code> (replacing deprecated <code>google-generativeai</code>), added <code>anthropic</code> SDK</li>
-<li><strong>Shared models</strong>: <code>AnalysisResult</code>, <code>ComparisonResult</code>, <code>SimilarNote</code> dataclasses with <code>from_json()</code> validation</li>
-<li><strong>Embedding cache</strong>: SQLite-backed <code>note_embeddings</code> table with mtime invalidation</li>
-<li><strong>Retry with backoff</strong>: exponential backoff decorator on all API methods</li>
-<li><strong>Obsidian CLI bridge</strong>: integrates with Obsidian's native CLI for backlinks and orphan data</li>
+<li>Validate the file against a JSON Schema (<code>schema/obsidian-sync.schema.json</code>) before use.</li>
+<li>Use a <strong>bare</strong> <code>vault_root</code> + <code>pairs</code> shape — no <code>schema:</code> / <code>mirror:</code> envelope.</li>
+<li>Reject pair paths that start with <code>/</code> <strong>or</strong> contain <code>..</code> (path-traversal guard).</li>
+<li>Reject a <code>vault</code>/<code>repo</code> pair that is identical (no-op mirror).</li>
+<li>Refuse to overwrite an existing file unless <code>--force</code> is passed.</li>
+<li>Write atomically via <code>os.replace(tmp, target)</code> (never a bare <code>open("w")</code>).</li>
+<li>On <code>--force</code>, back up the prior file to <code>&lt;file&gt;.bak</code> before replacing.</li>
 </ul>
-<h4 id="new-ai-commands">New AI Commands<a class="headerlink" href="#new-ai-commands" title="Permanent link">&para;</a></h4>
+<h3 id="must-not">Must not<a class="headerlink" href="#must-not" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Emit a <code>vault == repo</code> identity pair.</li>
+<li>Allow duplicate <code>vault→repo</code> mappings.</li>
+<li>Read or write outside the vault tree (no <code>..</code>, no absolute paths in pairs).</li>
+<li>Trust unvalidated YAML — a parse failure must surface as a clear error, not a crash.</li>
+</ul>
+<h3 id="worked-example">Worked example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h3>
+<p>A minimal valid <code>.flow/obsidian-sync.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">vault_root</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;~/Library/Mobile</span><span class="nv"> </span><span class="s">Documents/iCloud~md~obsidian/Documents/Research&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">pairs</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> vault</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;teaching&quot;</span><span class="p p-Indicator">,</span><span class="nt"> repo</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;teaching&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> vault</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;04_gauge/teaching&quot;</span><span class="p p-Indicator">,</span><span class="nt"> repo</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;01-gauge-pmed/teaching&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*.md&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;_archive&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p>Produced non-interactively by:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>~/vaults/MyVault<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--vault-root<span class="w"> </span><span class="s2">&quot;~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Research&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--pairs<span class="w"> </span><span class="s1">&#39;[{&quot;vault&quot;:&quot;teaching&quot;,&quot;repo&quot;:&quot;teaching&quot;}]&#39;</span><span class="w"> </span>--json
+</code></pre></div>
+<hr />
+<h2 id="3-related-commands">3. Related Commands<a class="headerlink" href="#3-related-commands" title="Permanent link">&para;</a></h2>
+<p>Every contract ships <strong>two</strong> commands: one to <em>create</em> it, one to <em>validate</em> it. This pair
+is the standard — do not add a contract without both.</p>
 <table>
 <thead>
 <tr>
 <th>Command</th>
-<th>Description</th>
+<th>Purpose</th>
+<th>Key flags</th>
+<th>Convention it enforces</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>obs ai suggest-links &lt;note&gt;</code></td>
-<td>Find unlinked related notes using embeddings</td>
+<td><code>obs flow init [directory]</code></td>
+<td>Create <code>.flow/obsidian-sync.yml</code></td>
+<td><code>--vault-root</code>, <code>--pairs</code> (JSON), <code>--force</code>, <code>--json</code></td>
+<td>Interactive <strong>and</strong> non-interactive mode; refuses overwrite without <code>--force</code>; atomic write + <code>.bak</code> backup</td>
 </tr>
 <tr>
-<td><code>obs ai gaps &lt;vault&gt;</code></td>
-<td>Detect stub notes, orphans, and knowledge gaps</td>
-</tr>
-<tr>
-<td><code>obs ai summarize &lt;vault&gt;</code></td>
-<td>Generate theme analysis across entire vault</td>
-</tr>
-<tr>
-<td><code>obs ai refactor &lt;vault&gt;</code></td>
-<td>AI-powered vault reorganization suggestions</td>
+<td><code>obs doctor --layer flow [--vault X]</code></td>
+<td>Validate every vault's config</td>
+<td><code>--layer flow</code>, <code>--json</code></td>
+<td>6 checks (below); <code>warn</code>/<code>fail</code> levels; part of default <code>all_layers</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="vault-health-dashboard-phase-73">Vault Health Dashboard (Phase 7.3)<a class="headerlink" href="#vault-health-dashboard-phase-73" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><code>obs health &lt;vault&gt;</code></strong> — comprehensive health scores with 4 dimensions:</li>
-<li><strong>Connectivity</strong> (orphan ratio)</li>
-<li><strong>Link Integrity</strong> (broken link count)</li>
-<li><strong>Structure</strong> (tag coverage, hub balance)</li>
-<li><strong>Freshness</strong> (stale note detection)</li>
-<li><strong>Rich progress bar visualization</strong> in terminal</li>
-<li><strong><code>--json</code> flag</strong> on all 10 data-outputting commands for scripting</li>
-</ul>
-<h3 id="vault-nameprefix-lookup">Vault Name/Prefix Lookup<a class="headerlink" href="#vault-nameprefix-lookup" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Use vault names directly</strong>: <code>obs analyze Knowledge_Base</code> instead of hex IDs</li>
-<li><strong>Prefix matching</strong>: <code>obs analyze e947</code> resolves to the matching vault</li>
-<li><strong>Ambiguous prefix feedback</strong>: clear error when multiple vaults match</li>
-</ul>
-<h3 id="cli-polish">CLI Polish<a class="headerlink" href="#cli-polish" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong><code>--verbose</code> flag</strong> wired to all AI commands (suggest-links, gaps, summarize)</li>
-<li><strong>Better error messages</strong> with tips: "Run 'obs discover <path>' to find new vaults"</li>
-<li><strong>Version consistency</strong> enforced across 5 files via automated tests</li>
-</ul>
-<h2 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
-<h3 id="removed-commands">Removed Commands<a class="headerlink" href="#removed-commands" title="Permanent link">&para;</a></h3>
+<h3 id="obs-doctor-layer-flow-checks"><code>obs doctor --layer flow</code> checks<a class="headerlink" href="#obs-doctor-layer-flow-checks" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Removed</th>
-<th>Replacement</th>
+<th>Check ID</th>
+<th>Level</th>
+<th>Triggers when</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>obs switch &lt;vault&gt;</code></td>
-<td>Use <code>obs analyze &lt;vault&gt;</code> directly</td>
+<td><code>flow-sync-missing</code></td>
+<td>warn</td>
+<td>Vault has no <code>.flow/obsidian-sync.yml</code></td>
 </tr>
 <tr>
-<td><code>obs open</code>, <code>obs sync</code></td>
-<td>Use Obsidian app directly</td>
+<td><code>flow-sync-schema</code></td>
+<td>fail</td>
+<td>File fails JSON Schema validation</td>
 </tr>
 <tr>
-<td><code>obs tui</code></td>
-<td>Removed — CLI-only interface</td>
+<td><code>flow-sync-stale</code></td>
+<td>warn</td>
+<td>Config is &gt; 90 days old</td>
 </tr>
 <tr>
-<td><code>obs r-dev *</code></td>
-<td>Use R package tools directly</td>
+<td><code>flow-sync-vault-root</code></td>
+<td>warn</td>
+<td><code>vault_root</code> path not found on disk</td>
 </tr>
 <tr>
-<td><code>obs install</code>, <code>obs audit</code></td>
-<td>Removed — v1.x legacy</td>
+<td><code>flow-sync-pair-dup</code></td>
+<td>warn</td>
+<td>Duplicate <code>vault→repo</code> mapping</td>
+</tr>
+<tr>
+<td><code>flow-sync-pair-identity</code></td>
+<td>fail</td>
+<td><code>vault</code> and <code>repo</code> are identical</td>
 </tr>
 </tbody>
 </table>
-<h3 id="configuration-changes">Configuration Changes<a class="headerlink" href="#configuration-changes" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>textual</code> dependency removed (was required for TUI)</li>
-<li><code>google-generativeai</code> replaced by <code>google-genai</code> (Gemini SDK migration)</li>
-<li><code>anthropic</code> added as optional dependency</li>
-</ul>
-<h3 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h3>
-<p>See <a href="../../migration/">Migration Guide</a> for step-by-step upgrade instructions from v2.x.</p>
-<h2 id="technical-details">Technical Details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h2>
-<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Presentation (obs.zsh, 386 lines)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        ↓
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Application (core/, 931 lines)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        ↓
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Data (db_manager, scanner, ai/, schema)
-</code></pre></div>
-<p><strong>AI Router priority</strong>: gemini-api &gt; anthropic-api &gt; ollama &gt; gemini-cli &gt; claude-cli</p>
-<h3 id="test-suite">Test Suite<a class="headerlink" href="#test-suite" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>202 tests</strong> passing (pytest)</li>
-<li><strong>30 JS tests</strong> (Jest, ZSH wrapper validation)</li>
-<li><strong>CI</strong>: GitHub Actions on push/PR to <code>main</code> and <code>dev</code></li>
-<li><strong>Coverage</strong>: Python coverage reporting via <code>pytest-cov</code></li>
-</ul>
-<h3 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h3>
-<p><strong>Core:</strong>
-- python-frontmatter, PyYAML, networkx, rich, requests, click</p>
-<p><strong>Optional AI:</strong>
-- <code>google-genai&gt;=1.0.0</code> (Gemini API)
-- <code>anthropic&gt;=0.40.0</code> (Anthropic API)
-- <code>numpy&gt;=1.24.0</code> (Ollama embeddings)</p>
-<h2 id="development-history">Development History<a class="headerlink" href="#development-history" title="Permanent link">&para;</a></h2>
+<p><strong>Why two commands:</strong> creation is interactive-for-humans but scriptable-for-CI
+(<code>--pairs</code> JSON + <code>--json</code>); validation is what hooks into <code>savant:restore</code>,
+<code>craft:recap</code>, and MCP <code>diagnose()</code> so drift is caught at session start, not at sync time.</p>
+<hr />
+<h2 id="4-obsidian-dashboards">4. Obsidian Dashboards<a class="headerlink" href="#4-obsidian-dashboards" title="Permanent link">&para;</a></h2>
+<p>A <em>dashboard</em> is a deterministic markdown view <code>obs</code> renders <strong>into</strong> a vault file. There
+are two, both following the same marker-bounded, atomic, zero-diff-on-unchanged standard.</p>
 <table>
 <thead>
 <tr>
-<th>Phase</th>
-<th>Description</th>
-<th>PR(s)</th>
+<th>Command</th>
+<th>Output file</th>
+<th>Source</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>7.1</td>
-<td>Simplification — TUI/R-Dev removal, CLI consolidation</td>
-<td>#3</td>
+<td><code>obs research board [--out F] [--kind K]</code></td>
+<td><code>_RESEARCH-BOARD.md</code></td>
+<td>atlas <code>project list --json</code></td>
 </tr>
 <tr>
-<td>—</td>
-<td>Async fix, vault name/prefix lookup</td>
-<td>#2</td>
-</tr>
-<tr>
-<td>7.2</td>
-<td>AI Enhancement — modern SDKs, 3 new commands</td>
-<td>#4, #5</td>
-</tr>
-<tr>
-<td>7.3</td>
-<td>Vault Health — <code>--json</code> export, health dashboard, CLI polish</td>
-<td>#7, #8, #10</td>
-</tr>
-<tr>
-<td>7.4</td>
-<td>Release Prep — version sync, CI hardening, release notes</td>
-<td>#11, #12</td>
+<td><code>obs board refresh [--vault V] [--all]</code></td>
+<td><code>_ACTION-BOARD.md</code></td>
+<td>atlas + vault DB (ghost drift) + <code>.STATUS</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="upgrading">Upgrading<a class="headerlink" href="#upgrading" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Update from v2.x</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>src/python/requirements.txt
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Optional: install new AI providers</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pip3<span class="w"> </span>install<span class="w"> </span>google-genai<span class="w"> </span>anthropic
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>obs<span class="w"> </span>version<span class="w">         </span><span class="c1"># Should show 3.0.0</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">       </span><span class="c1"># Check provider availability</span>
+<h3 id="must_1">Must<a class="headerlink" href="#must_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Wrap all generated content in <code>&lt;!-- obs:board:start --&gt;</code> … <code>&lt;!-- obs:board:end --&gt;</code>
+  markers; only the region between markers is replaced.</li>
+<li>Write atomically via <code>os.replace</code> (marker-bounded region only).</li>
+<li>Be <strong>deterministic</strong>: re-running on unchanged source state produces <strong>zero diff</strong>.</li>
+<li>Support <code>--dry-run</code>: show what would change and <strong>exit non-zero when the file would
+  change</strong> — this is the drift guard for cron/launchd.</li>
+<li>Support <code>--out &lt;file&gt;</code> (write) vs. stdout (print) — stdout is the default.</li>
+</ul>
+<h3 id="must-not_1">Must not<a class="headerlink" href="#must-not_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Touch hand-written prose outside the markers.</li>
+<li>Mutate the vault database or notes other than the single target file.</li>
+<li>Embed non-deterministic content (timestamps in the body, sorted-by-time tables) that
+  would break the zero-diff guarantee.</li>
+</ul>
+<h3 id="worked-example_1">Worked example<a class="headerlink" href="#worked-example_1" title="Permanent link">&para;</a></h3>
+<p>The marker block in the target file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&lt;!-- obs:board:start --&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>| Manuscript | Venue | Status | Progress |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>|------------|-------|--------|----------|
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| Bridge calibration | JASA  | 🟢    | ████████░░ |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>&lt;!-- obs:board:end --&gt;
 </code></pre></div>
-<h2 id="contributors">Contributors<a class="headerlink" href="#contributors" title="Permanent link">&para;</a></h2>
-<p>Built with Claude Code by <a href="https://github.com/Data-Wise">Data-Wise</a>.</p>
+<p>Schedule a drift guard (exits non-zero if the board would change):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># crontab — nightly staleness check</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>obs<span class="w"> </span>research<span class="w"> </span>board<span class="w"> </span>--out<span class="w"> </span>~/vault/00_meta/_RESEARCH-BOARD.md<span class="w"> </span>--dry-run<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;RESEARCH-BOARD drift detected&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="5-checklist-for-new-surfaces">5. Checklist for new surfaces<a class="headerlink" href="#5-checklist-for-new-surfaces" title="Permanent link">&para;</a></h2>
+<p>Copy this into a PR description. A new contract / command / dashboard is <strong>not</strong> done until
+every box is checked:</p>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Contract</strong> validates against a JSON Schema in <code>schema/</code> (not ad-hoc dict access).</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Create command</strong> has both interactive and non-interactive (<code>--json</code> / <code>--pairs</code>)
+      modes; refuses overwrite without <code>--force</code>; writes via <code>os.replace</code>; backs up on
+      <code>--force</code>.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Validate command</strong> exists (<code>obs doctor --layer flow</code> style) with <code>warn</code>/<code>fail</code>
+      levels and is wired into the default <code>all_layers</code> set.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Dashboard</strong> (if any) is marker-bounded, atomic, deterministic (zero diff on
+      unchanged state), and supports <code>--dry-run</code> with non-zero exit on drift.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Path safety</strong>: no <code>..</code> or leading <code>/</code> in any user-supplied path; no writes outside
+      the intended tree.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Docs</strong>: this page updated; <a href="../cli-reference/">CLI Reference</a> lists the command;
+      <a href="../developer/architecture/#config-file-contracts">Architecture → Config File Contracts</a>
+      lists the contract; <code>mkdocs.yml</code> nav includes any new page.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Tests</strong>: unit + (where it writes files) dogfood/e2e covering invalid input,
+      overwrite refusal, and atomic write.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Verification</strong>: <code>mkdocs build --strict</code> and
+      <code>python3 -m pytest src/python/tests/test_doc_counts.py</code> pass.</li>
+</ul>
 
 
 
@@ -1996,10 +2196,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

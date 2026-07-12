@@ -1054,6 +1054,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../design-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../workflows/" class="md-nav__link">
         
   
@@ -3417,6 +3445,7 @@
 <li><strong>Architecture testing section fixed</strong> — 450+ pytest → 764 pytest; 69 Jest → 70 Jest.</li>
 <li><strong>refcard.md updated</strong> — added <code>obs flow init</code> and <code>obs doctor --layer flow</code> to the "Other" section.</li>
 <li><strong>Removed <code>.obs/sync.yml</code> / <code>obs link</code> (ADR-001)</strong> — deleted <code>research/obs_link.py</code>, <code>tests/test_obs_link.py</code>, <code>docs_mkdocs/obs-sync-yml.md</code>; removed <code>obs link</code> CLI subcommand and zsh dispatcher; <code>.flow/obsidian-sync.yml</code> is now the sole vault↔repo mirror-map contract.</li>
+<li><strong>New <code>design-standards.md</code></strong> — contributor-facing reference for the three convention-driven surfaces: local config file contracts (<code>.flow/obsidian-sync.yml</code>), their create/validate command pairs (<code>obs flow init</code> / <code>obs doctor --layer flow</code>), and Obsidian dashboards (<code>obs research board</code> / <code>obs board refresh</code>); wired into <code>mkdocs.yml</code> Reference nav with a "new surface" PR checklist.</li>
 </ul>
 <h2 id="v430-2026-07-01-board-sync-automation-e2e-dogfood">v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood<a class="headerlink" href="#v430-2026-07-01-board-sync-automation-e2e-dogfood" title="Permanent link">&para;</a></h2>
 <h3 id="board-sync-automation">Board sync automation<a class="headerlink" href="#board-sync-automation" title="Permanent link">&para;</a></h3>
