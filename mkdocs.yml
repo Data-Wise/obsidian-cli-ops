@@ -75,18 +75,24 @@ nav:
       - Usage: usage.md
   - Tutorials & Cookbook:
       - Overview: tutorials/index.md
-      - Getting Started: tutorials/getting-started.md
-      - Vault Management: tutorials/vault-management.md
-      - Graph Analysis: tutorials/graph-analysis.md
-      - AI Features: tutorials/ai-features.md
-      - Claude / MCP Integration: tutorials/claude-mcp.md
-      - Research Setup: tutorials/research-setup.md
-      - Research Board: tutorials/research-board.md
-      - Monitoring & Health: tutorials/monitoring-and-health.md
-      - Vault↔Repo Mirroring: tutorials/flow-init.md
-      - Diagnostics: tutorials/doctor.md
-      - Configuration: tutorials/config.md
-      - Search: tutorials/search.md
+      - Getting Started:
+          - Quick Start: tutorials/getting-started.md
+      - Vault:
+          - Vault Management: tutorials/vault-management.md
+          - Monitoring & Health: tutorials/monitoring-and-health.md
+          - Search: tutorials/search.md
+      - Graph:
+          - Graph Analysis: tutorials/graph-analysis.md
+      - AI:
+          - AI Features: tutorials/ai-features.md
+          - Claude / MCP Integration: tutorials/claude-mcp.md
+      - Research:
+          - Research Setup: tutorials/research-setup.md
+          - Research Board: tutorials/research-board.md
+      - Flow & Diagnostics:
+          - Vault↔Repo Mirroring: tutorials/flow-init.md
+          - Diagnostics: tutorials/doctor.md
+          - Configuration: tutorials/config.md
       - Cookbook: cookbook.md
   - Reference:
       - Overview: reference/index.md
@@ -94,8 +100,9 @@ nav:
       - CLI Reference: cli-reference.md
       - Design Standards: design-standards.md
       - Visual Workflows: workflows.md
-      - AI Setup Guide: ai-setup.md
-      - Claude Integration: claude-integration.md
+      - AI & MCP:
+          - AI Setup Guide: ai-setup.md
+          - Claude Integration: claude-integration.md
       - Changelog: changelog.md
   - Developer:
       - Architecture: developer/architecture.md

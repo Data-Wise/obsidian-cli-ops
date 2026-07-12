@@ -21,6 +21,7 @@ All notable changes to Obsidian CLI Ops.
 - **Logo & favicon** — new "Node Cartography" mark (faceted obsidian diamond hub + note nodes) wired into `mkdocs.yml` `theme.logo` / `theme.favicon` (transparent mark so it reads on the ink header); assets in `docs/proposals/brand/` + `docs_mkdocs/assets/`.
 - **Proposal artifact** — the interactive audit + before/after mockup is preserved as a self-contained `docs_mkdocs/proposals/docs-redesign.html` (JS+CSS inlined, mark embedded as a base64 data URI, zero external refs), linked from `design-standards.md` §6.
 - **Planning record** — `docs/specs/SPEC-docs-redesign-2026-07-12.md` documents the decisions and the bundle-rebuild workflow for future redesign passes.
+- **Navigation regroup** — the 13-item "Tutorials & Cookbook" menu is now split into sub-sections (Getting Started, Vault, Graph, AI, Research, Flow & Diagnostics) with Cookbook kept top-level; Reference's AI Setup Guide + Claude Integration are grouped under "AI & MCP". No pages added or removed.
 
 ## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
 
