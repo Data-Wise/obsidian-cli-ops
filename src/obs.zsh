@@ -764,11 +764,6 @@ obs_config() {
     $OBS_PYTHON "$python_cli" config "$@"
 }
 
-obs_link() {
-    local python_cli=$(_get_python_cli) || return 1
-    $OBS_PYTHON "$python_cli" link "$@"
-}
-
 obs_research() {
     local python_cli=$(_get_python_cli) || return 1
     $OBS_PYTHON "$python_cli" research "$@"
@@ -860,9 +855,6 @@ obs() {
             ;;
         "config")
             obs_config "$@"
-            ;;
-        "link")
-            obs_link "$@"
             ;;
         "research")
             obs_research "$@"

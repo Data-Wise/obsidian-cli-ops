@@ -152,16 +152,13 @@ flowchart LR
 
 ## Config File Contracts
 
-`obs` reads two distinct local YAML config files. They serve different purposes and live at different paths:
+`obs` reads one local YAML config file for vault↔repo mirroring:
 
 | File | Owner | Purpose | Created by | Validated by |
 |------|-------|---------|------------|--------------|
-| `.obs/sync.yml` | `obs link` (ADR-001) | Per-project mirror map (vault↔repo sync for research/teaching) | `obs link [dir]` | `atlas doctor` |
 | `.flow/obsidian-sync.yml` | `obs flow init` (v4.3.0) | Vault↔repo mirror map for `savant plan:obsidian-sync` | `obs flow init [dir]` | `obs doctor --layer flow` |
 
-**Key difference:** `.obs/sync.yml` is project-rooted (one per repo, ADR-001 settings contract). `.flow/obsidian-sync.yml` is vault-rooted (one per vault directory). They are NOT interchangeable — `.obs/sync.yml` has a `schema: 1` + `mirror: none|mirror` envelope; `.flow/obsidian-sync.yml` is a bare `vault_root` + `pairs` map validated against `schema/obsidian-sync.schema.json`.
-
-See [`.obs/sync.yml Schema`](../obs-sync-yml.md) and [`obs doctor --layer flow`](../cli-reference.md) for details.
+`.flow/obsidian-sync.yml` is a vault-rooted (one per vault directory) bare `vault_root` + `pairs` map validated against `schema/obsidian-sync.schema.json`. See [`obs doctor --layer flow`](../cli-reference.md) for details.
 
 ---
 

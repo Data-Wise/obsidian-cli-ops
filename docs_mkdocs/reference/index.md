@@ -30,7 +30,6 @@ and workflow — all on one page.
 | [Visual Workflows](../workflows.md) | Decision flowcharts — which command to run for each task |
 | [AI Setup Guide](../ai-setup.md) | Provider installation, API keys, and configuration |
 | [Claude Integration](../claude-integration.md) | MCP server setup for Claude Desktop, Claude Code, and Cowork |
-| [.obs/sync.yml Schema](../obs-sync-yml.md) | Mirror-map schema for research project sync |
 | [Changelog](../changelog.md) | Version history with all additions, fixes, and changes |
 
 ---

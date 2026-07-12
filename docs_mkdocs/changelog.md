@@ -8,11 +8,11 @@ All notable changes to Obsidian CLI Ops.
 
 ### Docs gap audit (2026-07-12)
 
-- **Architecture docs updated** — added Config File Contracts section clarifying the two local YAML configs: `.obs/sync.yml` (project-rooted, ADR-001) vs `.flow/obsidian-sync.yml` (vault-rooted, v4.3.0).
-- **Testing overview fixed** — added 5 missing test files to the inventory table (`flow_init` 36, `flow_dogfood` 19, `obs_link` 5, `research_board` 8, `db_manager` 8); unit subtotal 342 → 418; Jest subtotal 69 → 70.
+- **Architecture docs updated** — added Config File Contracts section documenting the `.flow/obsidian-sync.yml` vault↔repo mirror map (vault-rooted, v4.3.0).
+- **Testing overview fixed** — added 5 missing test files to the inventory table (`flow_init` 36, `flow_dogfood` 19, `research_board` 8, `db_manager` 8, `obs_link` 5→removed); unit subtotal 342 → 413; Jest subtotal 69 → 70.
 - **Architecture testing section fixed** — 450+ pytest → 764 pytest; 69 Jest → 70 Jest.
 - **refcard.md updated** — added `obs flow init` and `obs doctor --layer flow` to the "Other" section.
-- **obs-sync-yml.md clarified** — added a warning box distinguishing `.obs/sync.yml` from `.flow/obsidian-sync.yml`.
+- **Removed `.obs/sync.yml` / `obs link` (ADR-001)** — deleted `research/obs_link.py`, `tests/test_obs_link.py`, `docs_mkdocs/obs-sync-yml.md`; removed `obs link` CLI subcommand and zsh dispatcher; `.flow/obsidian-sync.yml` is now the sole vault↔repo mirror-map contract.
 
 ## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
 
@@ -159,7 +159,7 @@ Follow-up pass closing gaps found before the v4.3.0 GitHub release was cut.
 
 ### Added
 
-- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. [Schema](obs-sync-yml.md).
+- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. *(Removed in v4.3.1 — superseded by `obs flow init` / `.flow/obsidian-sync.yml`.)*
 - **`obs research board`** — deterministic atlas → vault dashboard renderer (manuscripts + programs); marker-bounded atomic write; `--out`, `--kind`, `--dry-run`. [Tutorial](tutorials/research-board.md).
 - **`server_info` MCP tool** (#53) — reports the running server's
   `server_version`, `installed_version`, `started_at`, and

@@ -29,7 +29,6 @@
 | Flow Init (Dogfood) | 19 | pytest | `test_flow_dogfood.py` |
 | Research Board | 8 | pytest | `test_research_board.py` |
 | DB Manager | 8 | pytest | `test_db_manager.py` |
-| Obs Link | 5 | pytest | `test_obs_link.py` |
 | Vault Lookup | 7 | pytest | `test_vault_lookup.py` |
 | CLI Polish | 6 | pytest | `test_cli_polish.py` |
 | CLI Rich Output | 6 | pytest | `test_cli_rich.py` |
@@ -41,7 +40,7 @@
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
 | Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
 | Search API | 1 | pytest | `test_search_api.py` |
-| **Unit Subtotal** | **418** | **pytest** | |
+| **Unit Subtotal** | **413** | **pytest** | |
 
 ### MCP Unit Tests (pytest)
 

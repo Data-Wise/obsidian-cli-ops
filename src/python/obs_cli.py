@@ -1054,13 +1054,6 @@ def main():
     flow_init_parser.add_argument('--force', action='store_true', help='Overwrite existing config')
     flow_init_parser.add_argument('--json', action='store_true', help='Output result as JSON')
 
-    link_parser = subparsers.add_parser('link', help='Create the per-project .obs/sync.yml mirror map (ADR-001)')
-    link_parser.add_argument('project_dir', nargs='?', default='.', help='Project directory (default: cwd)')
-    link_parser.add_argument('--vault-root', default=None, help='Vault root for an active mirror')
-    link_parser.add_argument('--mirror', choices=['auto', 'mirror', 'none'], default='auto', help='Mirror mode (default: auto)')
-    link_parser.add_argument('--force', action='store_true', help='Overwrite an existing map')
-    link_parser.add_argument('--json', action='store_true', help='Output result as JSON')
-
     # --- v4.3.0: Board refresh subcommand (SPEC-board-sync-automation) ---
     board_parser = subparsers.add_parser('board', help='Research board management')
     board_subparsers = board_parser.add_subparsers(dest='board_command', help='Board subcommands')
@@ -1932,16 +1925,6 @@ def main():
             else:
                 print("Usage: obs flow <command>\nCommands: init", file=sys.stderr)
                 sys.exit(1)
-
-        elif args.command == 'link':
-            from research.obs_link import write_link
-            mirror = None if args.mirror == 'auto' else args.mirror
-            res = write_link(args.project_dir, vault_root=args.vault_root, mirror=mirror, force=args.force)
-            if args.json:
-                print(json.dumps(res))
-            else:
-                verb = 'Created' if res['created'] else 'Exists'
-                print(f"{verb}: {res['path']} (mirror: {res['mirror']})")
 
         elif args.command == 'board':
             from core.board import BoardEngine

@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 64 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
+> - **What:** Full reference for all 63 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
@@ -614,22 +614,6 @@ obs version
 ---
 
 ## :books: Research Registry
-
-### obs link
-
-Create the per-project `.obs/sync.yml` mirror map ([schema](obs-sync-yml.md)). Idempotent.
-
-```bash
-obs link [project_dir] [--vault-root <path>] [--mirror auto|mirror|none] [--force] [--json]
-```
-
-- `--vault-root` — vault path for an active mirror (defaults to `mirror: none` when omitted).
-- `--mirror` — force the mode; `--force` overwrites an existing map.
-
-```bash
-obs link                                  # mirror: none (non-vault project)
-obs link --vault-root ~/vault/Research/x  # active mirror
-```
 
 ### obs research board
 
