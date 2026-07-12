@@ -1406,6 +1406,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-website-brand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Website &amp; Brand
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2235,6 +2246,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-website-brand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Website &amp; Brand
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2494,8 +2516,29 @@ every box is checked:</p>
 <li class="task-list-item"><input type="checkbox" disabled/> <strong>Tests</strong>: unit + (where it writes files) dogfood/e2e covering invalid input,
       overwrite refusal, and atomic write.</li>
 <li class="task-list-item"><input type="checkbox" disabled/> <strong>Verification</strong>: <code>mkdocs build --strict</code> and
-      <code>python3 -m pytest src/python/tests/test_doc_counts.py</code> pass.</li>
+       <code>python3 -m pytest src/python/tests/test_doc_counts.py</code> pass.</li>
 </ul>
+<hr />
+<h2 id="6-website-brand">6. Website &amp; Brand<a class="headerlink" href="#6-website-brand" title="Permanent link">&para;</a></h2>
+<p>The published documentation site and the project's visual identity follow the same
+discipline as the code surfaces above: validated, deliberate, and free of generic
+"AI slop" (no purple gradient washes, no uniform rounded corners, no default Inter).</p>
+<ul>
+<li><strong>Palette</strong> — ink <code>#15161a</code>, paper <code>#f7f6f2</code>, teal <code>#0d9488</code> (single accent that marks
+  the active node). Implemented in <code>docs_mkdocs/stylesheets/redesign.css</code> and wired into
+  <code>mkdocs.yml</code> via <code>theme.logo</code> / <code>theme.favicon</code> / <code>extra_css</code>.</li>
+<li><strong>Logo</strong> — a faceted obsidian diamond as the graph hub ringed by note nodes, documented
+  in <code>docs/proposals/brand/PHILOSOPHY.md</code>; the full mark/lockup/favicon set and a one-page
+  spec sheet are in <a href="../proposals/brand/logo-sheet.pdf">brand/logo-sheet.pdf</a>.</li>
+<li><strong>Redesign proposal</strong> — the interactive audit + before/after mockup that motivated the
+  palette is preserved as a self-contained artifact:
+  <a href="../proposals/docs-redesign.html">proposals/docs-redesign.html</a> (opens standalone; the
+  mark is embedded, no external assets).</li>
+</ul>
+<blockquote>
+<p>The artifact and brand sheet live under <code>docs/proposals/</code> (source of truth) and are
+mirrored into <code>docs_mkdocs/proposals/</code> so they are served by the site.</p>
+</blockquote>
 
 
 
