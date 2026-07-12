@@ -809,8 +809,57 @@ obs research bib check me-mediator   # catches missing refs before submission
 
 ---
 
+## Vault↔Repo Mirroring
+
+`obs flow init` writes `.flow/obsidian-sync.yml` — the single vault↔repo mirror map
+for savant `plan:obsidian-sync`. It validates against the JSON Schema before writing.
+
+### Create a mirror map (interactive)
+
+```bash
+cd ~/code/my-repo
+obs flow init
+```
+
+The wizard infers `vault_root` from a `.obsidian` folder up the tree (else the iCloud
+Research default), then prompts for `vault → repo` pairs and `include`/`exclude` globs.
+
+### Create a mirror map (non-interactive / CI)
+
+```bash
+obs flow init \
+  --vault-root ~/vaults/Research \
+  --pairs '[{"vault":"projects/atlas","repo":"atlas"},{"vault":"notes","repo":"docs/notes"}]' \
+  --json
+```
+
+`vault` / `repo` are **relative** paths (no leading `/`, no `..`) and must differ.
+
+### Validate the config
+
+```bash
+obs doctor --layer flow
+```
+
+Six checks run: missing, schema, stale (>90d), vault-root exists, pair-duplicate,
+pair-identity. A missing config is a **warning**, not a failure.
+
+### Overwrite safely
+
+```bash
+# Previous file is backed up to .flow/obsidian-sync.yml.bak
+obs flow init --vault-root ~/vaults/Research --pairs '[{"vault":"atlas","repo":"atlas"}]' --force
+```
+
+!!! tip "Full walkthrough"
+    See the [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) for the
+    step-by-step guide, generated-config anatomy, and the full error table.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
 - [Claude Integration](claude-integration.md) -- MCP server setup
+- [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) -- Step-by-step setup

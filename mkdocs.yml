@@ -81,6 +81,7 @@ nav:
       - Research Setup: tutorials/research-setup.md
       - Research Board: tutorials/research-board.md
       - Monitoring & Health: tutorials/monitoring-and-health.md
+      - Vault↔Repo Mirroring: tutorials/flow-init.md
       - Cookbook: cookbook.md
   - Reference:
       - Overview: reference/index.md

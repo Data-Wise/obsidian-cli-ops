@@ -47,6 +47,7 @@ and workflow — all on one page.
 | `obs vault info` | [Metadata](../refcard.md#vault-lookup) | [Details](../cli-reference.md#obs-vault-info) |
 | `obs vault rename` | — | [Rename rules](../cli-reference.md#obs-vault-rename) |
 | `obs vault delete` | — | [Safety notes](../cli-reference.md#obs-vault-delete) |
+| `obs flow init` | — | [Mirror map](../cli-reference.md#obs-flow-init) |
 
 ### Graph & Health
 
@@ -83,4 +84,4 @@ and workflow — all on one page.
 
 ---
 
-**Version:** 4.3.0 | **Last updated:** 2026-07-01
+**Version:** 4.3.0 | **Last updated:** 2026-07-11
