@@ -6,7 +6,7 @@ Every reference page in one place — commands, flags, providers, MCP tools, sch
 
 ## Quick Reference Card
 
-[![Quick Reference Card](../refcard.md)](../refcard.md){ .md-button }
+[:material/book-open-page-variant: Quick Reference Card](../refcard.md){ .md-button }
 A printable cheat sheet covering every `obs` command, MCP tool, AI provider,
 and workflow — all on one page.
 
