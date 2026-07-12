@@ -13,6 +13,7 @@ All notable changes to Obsidian CLI Ops.
 - **Architecture testing section fixed** — 450+ pytest → 764 pytest; 69 Jest → 70 Jest.
 - **refcard.md updated** — added `obs flow init` and `obs doctor --layer flow` to the "Other" section.
 - **Removed `.obs/sync.yml` / `obs link` (ADR-001)** — deleted `research/obs_link.py`, `tests/test_obs_link.py`, `docs_mkdocs/obs-sync-yml.md`; removed `obs link` CLI subcommand and zsh dispatcher; `.flow/obsidian-sync.yml` is now the sole vault↔repo mirror-map contract.
+- **New `design-standards.md`** — contributor-facing reference for the three convention-driven surfaces: local config file contracts (`.flow/obsidian-sync.yml`), their create/validate command pairs (`obs flow init` / `obs doctor --layer flow`), and Obsidian dashboards (`obs research board` / `obs board refresh`); wired into `mkdocs.yml` Reference nav with a "new surface" PR checklist.
 
 ## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
 

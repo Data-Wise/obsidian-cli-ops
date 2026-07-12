@@ -86,6 +86,7 @@ nav:
       - Overview: reference/index.md
       - Quick Reference Card: refcard.md
       - CLI Reference: cli-reference.md
+      - Design Standards: design-standards.md
       - Visual Workflows: workflows.md
       - AI Setup Guide: ai-setup.md
       - Claude Integration: claude-integration.md
