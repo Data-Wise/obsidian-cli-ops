@@ -11,7 +11,7 @@ A laser-focused CLI for Obsidian vault management with AI-powered graph analysis
 Claude / MCP integration so you can query your vaults in natural language.
 
 [Install Now](installation.md){ .md-button .md-button--primary }
-[Quick Reference](refcard.md){ .md-button }
+[:material/book-open-page-variant: Quick Reference](refcard.md){ .md-button }
 [Claude Integration](claude-integration.md){ .md-button }
 
 ---
