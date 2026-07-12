@@ -21,6 +21,7 @@ from core.doctor import (
     DoctorResult, run_checks, _check_python, _check_database, _check_mcp,
     _check_icloud, _find_bad_vault_resolvers, _check_mcp_tool_resolvers,
     _find_async_run_offenders, _check_mcp_async_run, _check_sync,
+    _check_obsidian_sync,
 )
 
 _VersionInfo = namedtuple("version_info", ["major", "minor", "micro", "releaselevel", "serial"])
@@ -800,3 +801,156 @@ class TestCheckVaultNesting:
             results = _check_vaults()
         r = next(r for r in results if r.id == "vault-nesting")
         assert r.status == "pass"
+
+
+# ---------------------------------------------------------------------------
+# Layer: flow (obsidian-sync.yml validation)
+# ---------------------------------------------------------------------------
+
+class TestCheckObsidianSync:
+    """Tests for _check_obsidian_sync — .flow/obsidian-sync.yml validation."""
+
+    def _make_db(self, tmp_path, vaults):
+        """Create a minimal vault_db.sqlite with the given vaults."""
+        db_path = tmp_path / ".config" / "obs"
+        db_path.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path / "vault_db.sqlite"))
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (1)")
+        for vid, name, path in vaults:
+            conn.execute("INSERT INTO vaults VALUES (?, ?, ?, NULL)", (vid, name, path))
+        conn.commit()
+        conn.close()
+
+    def test_missing_flow_dir(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-missing" in r.id)
+        assert r.status == "warn"
+        assert "sync config missing" in r.message
+
+    def test_valid_config_passes(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        vault_root = tmp_path / "obsidian-vault"; vault_root.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            f"vault_root: {vault_root}\n"
+            "pairs:\n"
+            "  - { vault: teaching, repo: teaching-repo }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-ok" in r.id)
+        assert r.status == "pass"
+        assert "1 pair(s)" in r.message
+
+    def test_invalid_yaml_parse_error(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text("{{invalid yaml: [")
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-schema" in r.id)
+        assert r.status == "fail"
+        assert "YAML parse error" in r.message
+
+    def test_missing_required_field(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text("vault_root: ~/test\n")
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-schema" in r.id)
+        assert r.status == "fail"
+        assert "pairs" in r.message.lower() or "required" in r.message.lower()
+
+    def test_vault_root_missing_warn(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: /nonexistent/path\n"
+            "pairs:\n"
+            "  - { vault: a, repo: b }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-vault-root" in r.id)
+        assert r.status == "warn"
+        assert "/nonexistent/path" in r.message
+
+    def test_pair_identity_fail(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: ~/test\n"
+            "pairs:\n"
+            "  - { vault: teaching, repo: teaching }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-pair-identity" in r.id)
+        assert r.status == "fail"
+        assert "identical" in r.message
+
+    def test_pair_duplicate_warn(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: ~/test\n"
+            "pairs:\n"
+            "  - { vault: a, repo: b }\n"
+            "  - { vault: a, repo: b }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-pair-dup" in r.id)
+        assert r.status == "warn"
+        assert "Duplicate" in r.message
+
+    def test_non_dict_yaml_fail(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text("- item1\n- item2\n")
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-schema" in r.id)
+        assert r.status == "fail"
+        assert "mapping" in r.message.lower()
+
+    def test_db_missing_skip(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        assert any(r.status == "skip" for r in results)
+
+    def test_no_vaults_skip(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        db_path = tmp_path / ".config" / "obs"
+        db_path.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path / "vault_db.sqlite"))
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (1)")
+        conn.commit()
+        conn.close()
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        assert any(r.status == "skip" for r in results)

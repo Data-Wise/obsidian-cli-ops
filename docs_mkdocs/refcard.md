@@ -221,4 +221,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.3.0 | **Commands:** 63 | **MCP Tools:** 42 | **AI Providers:** 5
+**Version:** 4.3.0 | **Commands:** 64 | **MCP Tools:** 42 | **AI Providers:** 5

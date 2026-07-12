@@ -1041,9 +1041,18 @@ def main():
     doctor_parser = subparsers.add_parser('doctor', help='Run self-diagnostic checks')
     doctor_parser.add_argument('--vault', default=None, help='Limit vault checks to this vault ID or name')
     doctor_parser.add_argument('--layer', action='append', dest='layers',
-                               choices=['python', 'database', 'vault', 'sync', 'mcp', 'docs', 'icloud'],
+                               choices=['python', 'database', 'vault', 'sync', 'flow', 'mcp', 'docs', 'icloud'],
                                help='Run only specified layer(s) (repeatable)')
     doctor_parser.add_argument('--json', action='store_true', help='Output results as JSON')
+
+    flow_parser = subparsers.add_parser('flow', help='Manage .flow/obsidian-sync.yml config')
+    flow_subparsers = flow_parser.add_subparsers(dest='flow_command', help='Flow subcommands')
+    flow_init_parser = flow_subparsers.add_parser('init', help='Create .flow/obsidian-sync.yml')
+    flow_init_parser.add_argument('directory', nargs='?', default='.', help='Target directory (default: cwd)')
+    flow_init_parser.add_argument('--vault-root', default=None, help='Vault root path')
+    flow_init_parser.add_argument('--pairs', default=None, help='JSON array of vault→repo pairs')
+    flow_init_parser.add_argument('--force', action='store_true', help='Overwrite existing config')
+    flow_init_parser.add_argument('--json', action='store_true', help='Output result as JSON')
 
     link_parser = subparsers.add_parser('link', help='Create the per-project .obs/sync.yml mirror map (ADR-001)')
     link_parser.add_argument('project_dir', nargs='?', default='.', help='Project directory (default: cwd)')
@@ -1885,6 +1894,44 @@ def main():
                 _print_doctor_results(results)
             has_fail = any(r.status == 'fail' for r in results)
             sys.exit(1 if has_fail else 0)
+
+        elif args.command == 'flow':
+            import json as _json
+            from core.flow_init import init_flow_config
+            if args.flow_command == 'init':
+                try:
+                    config = init_flow_config(
+                        directory=args.directory,
+                        vault_root=args.vault_root,
+                        pairs_json=args.pairs,
+                        force=args.force,
+                        non_interactive=bool(args.vault_root or args.pairs),
+                    )
+                    if getattr(args, 'json', False):
+                        print(_json.dumps({
+                            "status": "created",
+                            "vault_root": config.vault_root,
+                            "pairs": config.pairs,
+                        }))
+                    else:
+                        print(f"✓ Created .flow/obsidian-sync.yml")
+                        print(f"  vault_root: {config.vault_root}")
+                        print(f"  pairs: {len(config.pairs)}")
+                except FileExistsError as e:
+                    if getattr(args, 'json', False):
+                        print(_json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
+                    sys.exit(1)
+                except ValueError as e:
+                    if getattr(args, 'json', False):
+                        print(_json.dumps({"error": str(e)}), file=sys.stderr)
+                    else:
+                        print(f"❌ {e}")
+                    sys.exit(1)
+            else:
+                print("Usage: obs flow init [directory]", file=sys.stderr)
+                sys.exit(1)
 
         elif args.command == 'link':
             from research.obs_link import write_link

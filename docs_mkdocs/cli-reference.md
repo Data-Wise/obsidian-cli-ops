@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 63 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
+> - **What:** Full reference for all 64 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
@@ -379,6 +379,35 @@ obs doctor --layer database --json   # DB checks as JSON
       exact-ID-only `db.get_vault()` instead of name/ID/prefix resolution.
     - **`mcp-async-run`** — fails if a **sync** `@mcp.tool` calls `asyncio.run()`,
       which crashes inside FastMCP's running event loop (regression guard for #62).
+
+---
+
+### obs flow init
+
+Create `.flow/obsidian-sync.yml` — the vault↔repo mirror map for savant `plan:obsidian-sync`.
+
+```bash
+obs flow init [directory] [--vault-root PATH] [--pairs JSON] [--force] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `directory` | `.` | Target directory to create config in |
+| `--vault-root` | (required for non-interactive) | Absolute path to Obsidian vault root |
+| `--pairs` | (required for non-interactive) | JSON array of vault→repo pairs, e.g. `[{"vault":"a","repo":"b"}]` |
+| `--force` | | Overwrite existing config |
+| `--json` | | Machine-readable output |
+
+**Examples:**
+
+```bash
+obs flow init                                    # Interactive wizard
+obs flow init --vault-root ~/vault --pairs '[{"vault":"a","repo":"b"}]'  # Non-interactive
+obs flow init --vault-root ~/vault --pairs '[...]' --json  # JSON output
+```
+
+!!! info "Flow layer in doctor"
+    `obs doctor --layer flow` validates existing configs against the JSON Schema (6 checks: missing, schema, stale, vault-root, pair-duplicate, pair-identity).
 
 ---
 
