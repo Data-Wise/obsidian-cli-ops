@@ -12,31 +12,31 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/config/">
       
       
-        <link rel="prev" href="../usage/">
+        <link rel="prev" href="../doctor/">
       
       
-        <link rel="next" href="getting-started/">
+        <link rel="next" href="../../cookbook/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Overview - Obsidian CLI Ops</title>
+        <title>Configuration - Obsidian CLI Ops</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/adhd.css">
+      <link rel="stylesheet" href="../../stylesheets/adhd.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorials-cookbook" class="md-skip">
+        <a href="#managing-configuration-with-obs-config" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href="../.." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Configuration
             
           </span>
         </div>
@@ -229,7 +229,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -250,7 +250,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../adhd-quick-start/" class="md-tabs__link">
+        <a href="../../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -272,7 +272,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -292,7 +292,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/" class="md-tabs__link">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   
@@ -312,7 +312,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../developer/architecture/" class="md-tabs__link">
+        <a href="../../developer/architecture/" class="md-tabs__link">
           
   
   
@@ -346,7 +346,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href="../.." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -376,7 +376,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -455,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adhd-quick-start/" class="md-nav__link">
+      <a href="../../adhd-quick-start/" class="md-nav__link">
         
   
   
@@ -483,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   
@@ -511,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -539,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+      <a href="../../usage/" class="md-nav__link">
         
   
   
@@ -628,37 +628,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -674,70 +647,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#learning-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Learning Path
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tutorials" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tutorials
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cookbook" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cookbook
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -750,7 +659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -778,7 +687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="vault-management/" class="md-nav__link">
+      <a href="../vault-management/" class="md-nav__link">
         
   
   
@@ -806,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="graph-analysis/" class="md-nav__link">
+      <a href="../graph-analysis/" class="md-nav__link">
         
   
   
@@ -834,7 +743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ai-features/" class="md-nav__link">
+      <a href="../ai-features/" class="md-nav__link">
         
   
   
@@ -862,7 +771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="claude-mcp/" class="md-nav__link">
+      <a href="../claude-mcp/" class="md-nav__link">
         
   
   
@@ -890,7 +799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="research-setup/" class="md-nav__link">
+      <a href="../research-setup/" class="md-nav__link">
         
   
   
@@ -918,7 +827,7 @@
   
   
     <li class="md-nav__item">
-      <a href="research-board/" class="md-nav__link">
+      <a href="../research-board/" class="md-nav__link">
         
   
   
@@ -946,7 +855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="monitoring-and-health/" class="md-nav__link">
+      <a href="../monitoring-and-health/" class="md-nav__link">
         
   
   
@@ -974,7 +883,7 @@
   
   
     <li class="md-nav__item">
-      <a href="flow-init/" class="md-nav__link">
+      <a href="../flow-init/" class="md-nav__link">
         
   
   
@@ -1002,7 +911,7 @@
   
   
     <li class="md-nav__item">
-      <a href="doctor/" class="md-nav__link">
+      <a href="../doctor/" class="md-nav__link">
         
   
   
@@ -1027,10 +936,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="config/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1046,6 +982,125 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-show-the-current-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Show the current config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Validate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-create-a-fresh-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Create a fresh config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-migrate-a-legacy-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Migrate a legacy config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-edit-in-your-editor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Edit in your editor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1058,7 +1113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cookbook/" class="md-nav__link">
+      <a href="../../cookbook/" class="md-nav__link">
         
   
   
@@ -1145,7 +1200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+      <a href="../../reference/" class="md-nav__link">
         
   
   
@@ -1173,7 +1228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../refcard/" class="md-nav__link">
+      <a href="../../refcard/" class="md-nav__link">
         
   
   
@@ -1201,7 +1256,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-reference/" class="md-nav__link">
+      <a href="../../cli-reference/" class="md-nav__link">
         
   
   
@@ -1229,7 +1284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../design-standards/" class="md-nav__link">
+      <a href="../../design-standards/" class="md-nav__link">
         
   
   
@@ -1257,7 +1312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workflows/" class="md-nav__link">
+      <a href="../../workflows/" class="md-nav__link">
         
   
   
@@ -1285,7 +1340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ai-setup/" class="md-nav__link">
+      <a href="../../ai-setup/" class="md-nav__link">
         
   
   
@@ -1313,7 +1368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../claude-integration/" class="md-nav__link">
+      <a href="../../claude-integration/" class="md-nav__link">
         
   
   
@@ -1341,7 +1396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -1428,7 +1483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/architecture/" class="md-nav__link">
+      <a href="../../developer/architecture/" class="md-nav__link">
         
   
   
@@ -1456,7 +1511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/api-reference/" class="md-nav__link">
+      <a href="../../developer/api-reference/" class="md-nav__link">
         
   
   
@@ -1536,7 +1591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/testing/overview/" class="md-nav__link">
+      <a href="../../developer/testing/overview/" class="md-nav__link">
         
   
   
@@ -1564,7 +1619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/testing/core-tests/" class="md-nav__link">
+      <a href="../../developer/testing/core-tests/" class="md-nav__link">
         
   
   
@@ -1592,7 +1647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/testing/sandbox/" class="md-nav__link">
+      <a href="../../developer/testing/sandbox/" class="md-nav__link">
         
   
   
@@ -1628,7 +1683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migration/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
@@ -1683,32 +1738,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#learning-path" class="md-nav__link">
+  <a href="#what-youll-learn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Learning Path
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tutorials" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tutorials
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cookbook" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cookbook
+        What You'll Learn
       
     </span>
   </a>
@@ -1720,6 +1753,83 @@
     <span class="md-ellipsis">
       
         Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-show-the-current-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Show the current config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Validate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-create-a-fresh-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Create a fresh config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-migrate-a-legacy-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Migrate a legacy config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-edit-in-your-editor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Edit in your editor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
       
     </span>
   </a>
@@ -1746,149 +1856,115 @@
   
 
 
-<h1 id="tutorials-cookbook">Tutorials &amp; Cookbook<a class="headerlink" href="#tutorials-cookbook" title="Permanent link">&para;</a></h1>
-<p>Step-by-step guides that take you from zero to expert — with
-copy-paste commands and expected output at every step.</p>
+<h1 id="managing-configuration-with-obs-config">Managing Configuration with <code>obs config</code><a class="headerlink" href="#managing-configuration-with-obs-config" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>TL;DR</strong> (30 seconds)</p>
+<ul>
+<li><strong>What:</strong> Inspect, validate, migrate, create, and edit the <code>obs</code> config (unified YAML)</li>
+<li><strong>Why:</strong> One place for AI provider keys, paths, and preferences — no more scattered dotfiles</li>
+<li><strong>How:</strong> <code>obs config show</code> · <code>obs config validate</code> · <code>obs config init</code> · <code>obs config migrate</code> · <code>obs config edit</code></li>
+<li class="tldr"><strong>Next:</strong> see <a href="../../cookbook/#manage-configuration">Cookbook → Manage Configuration</a></li>
+</ul>
+</blockquote>
+<p><strong>Level:</strong> 🟢 Beginner | <strong>Time:</strong> ~10 min | <strong>Commands:</strong> <code>obs config show|validate|migrate|init|edit</code></p>
 <hr />
-<h2 id="learning-path">Learning Path<a class="headerlink" href="#learning-path" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    subgraph L1["🟢 Beginner"]
-        A1[Install] --&gt; A2[Discover Vaults]
-        A2 --&gt; A3[Scan &amp; Stats]
-    end
-
-    subgraph L2["🟡 Intermediate"]
-        B1[Graph Analysis] --&gt; B2[Health Scoring]
-        B2 --&gt; B3[Hub &amp; Orphan Detection]
-    end
-
-    subgraph L3["🔵 Advanced"]
-        C1[AI Setup] --&gt; C2[Similar Notes]
-        C2 --&gt; C3[Refactor &amp; Quality]
-    end
-
-    subgraph L4["🟣 Integration"]
-        D1[Claude Desktop] --&gt; D2[MCP Tools]
-        D2 --&gt; D3[Note CRUD via Claude]
-    end
-
-    subgraph L5["🟡 Research"]
-        E1[Research Setup] --&gt; E2[Research Board]
-    end
-
-    L1 --&gt; L2 --&gt; L3 --&gt; L4
-    L2 --&gt; L5</code></pre>
+<h2 id="what-youll-learn">What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Print the active config and see which file it loaded from</li>
+<li>Validate the config file and surface errors</li>
+<li>Create a fresh config interactively (<code>init</code>)</li>
+<li>Migrate a legacy <code>obs</code> / <code>nexus-cli</code> config to the unified YAML format</li>
+<li>Open the config in your editor (<code>edit</code>)</li>
+</ul>
 <hr />
-<h2 id="tutorials">Tutorials<a class="headerlink" href="#tutorials" title="Permanent link">&para;</a></h2>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>obs</code> v4.0.0+ (shipped with the nexus-cli absorption; available to Homebrew users)</li>
+<li>Config lives at <code>~/.config/obs/</code> by default</li>
+</ul>
+<hr />
+<h2 id="step-1-show-the-current-config">Step 1 — Show the current config<a class="headerlink" href="#step-1-show-the-current-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>config<span class="w"> </span>show
+</code></pre></div>
+<p>Prints the merged config and the path of the file it was loaded from, so you always
+know which source is active.</p>
+<hr />
+<h2 id="step-2-validate">Step 2 — Validate<a class="headerlink" href="#step-2-validate" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>config<span class="w"> </span>validate
+</code></pre></div>
+<p>Reports any schema or structure errors in the config file. Run this after a manual
+edit or before reporting a bug.</p>
+<hr />
+<h2 id="step-3-create-a-fresh-config">Step 3 — Create a fresh config<a class="headerlink" href="#step-3-create-a-fresh-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>config<span class="w"> </span>init
+</code></pre></div>
+<p>Interactive wizard that writes a new unified config from scratch. Use it on a fresh
+install or to reset a corrupted file.</p>
+<hr />
+<h2 id="step-4-migrate-a-legacy-config">Step 4 — Migrate a legacy config<a class="headerlink" href="#step-4-migrate-a-legacy-config" title="Permanent link">&para;</a></h2>
+<p>If you have an old <code>obs</code> or <code>nexus-cli</code> config, convert it to the unified format:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>config<span class="w"> </span>migrate<span class="w">                  </span><span class="c1"># writes to ~/.config/obs/ by default</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>obs<span class="w"> </span>config<span class="w"> </span>migrate<span class="w"> </span>--target-dir<span class="w"> </span>~/my-config<span class="w">   </span><span class="c1"># write elsewhere</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Tutorial</th>
-<th>Level</th>
-<th>Time</th>
-<th>What You'll Learn</th>
+<th>Argument</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="getting-started/">Getting Started</a></td>
-<td>🟢 Beginner</td>
-<td>~15 min</td>
-<td>Install, discover, scan, health, board, AI, research, Claude MCP</td>
-</tr>
-<tr>
-<td><a href="vault-management/">Vault Management</a></td>
-<td>🟢 Beginner</td>
-<td>~10 min</td>
-<td>Inspect, rename, and safely delete vaults (index-only)</td>
-</tr>
-<tr>
-<td><a href="graph-analysis/">Graph Analysis</a></td>
-<td>🟡 Intermediate</td>
-<td>~15 min</td>
-<td>Analyze graph, interpret metrics, find hubs &amp; orphans</td>
-</tr>
-<tr>
-<td><a href="ai-features/">AI Features</a></td>
-<td>🔵 Advanced</td>
-<td>~30 min</td>
-<td>Setup AI providers, similar notes, refactor, quality</td>
-</tr>
-<tr>
-<td><a href="claude-mcp/">Claude / MCP Integration</a></td>
-<td>🟣 Integration</td>
-<td>~20 min</td>
-<td>Connect Claude Desktop, use all 42 MCP tools, note CRUD</td>
-</tr>
-<tr>
-<td><a href="research-setup/">Research Domain Setup</a></td>
-<td>🟡 Intermediate</td>
-<td>~15 min</td>
-<td>Connect Zotero, PDFs, courses, and manuscripts (<code>obs research</code>)</td>
-</tr>
-<tr>
-<td><a href="research-board/">Research Board</a></td>
-<td>🟡 Intermediate</td>
-<td>~10 min</td>
-<td>Render the deterministic manuscript/program dashboard from atlas state</td>
-</tr>
-<tr>
-<td><a href="flow-init/">Vault↔Repo Mirroring</a></td>
-<td>🟡 Intermediate</td>
-<td>~10 min</td>
-<td>Create <code>.flow/obsidian-sync.yml</code> vault↔repo mirror map</td>
-</tr>
-<tr>
-<td><a href="doctor/">Diagnostics</a></td>
-<td>🟡 Intermediate</td>
-<td>~10 min</td>
-<td>Run <code>obs doctor</code>, read layers, heal ghost notes with <code>scan --prune</code></td>
-</tr>
-<tr>
-<td><a href="config/">Configuration</a></td>
-<td>🟢 Beginner</td>
-<td>~10 min</td>
-<td>Inspect, validate, migrate, init, edit the unified config</td>
-</tr>
-<tr>
-<td><a href="../cookbook/#board-sync-workflow">Board Sync Workflow</a></td>
-<td>🟡 Intermediate</td>
-<td>~5 min</td>
-<td>Weekly action board, launchd automation</td>
-</tr>
-<tr>
-<td><a href="../cookbook/#which-workflow-should-you-use">Workflow Decision Guide</a></td>
-<td>🟢 Beginner</td>
-<td>~2 min</td>
-<td>Pick the right workflow for your task</td>
+<td><code>--target-dir</code></td>
+<td>Where to write the unified config (default: <code>~/.config/obs/</code>)</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition tip">
-<p class="admonition-title">Interactive CLI tutorial</p>
-<p>Prefer learning inside the terminal? <code>obs research learn &lt;getting-started|medium|advanced&gt;</code>
-walks you through the same material step-by-step with live commands. See
-<a href="../cli-reference/#obs-research-learn">CLI Reference</a>.</p>
-</div>
 <hr />
+<h2 id="step-5-edit-in-your-editor">Step 5 — Edit in your editor<a class="headerlink" href="#step-5-edit-in-your-editor" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<p>Opens the config file in <code>$EDITOR</code>. After saving and closing, run
+<code>obs config validate</code> to confirm the change is well-formed.</p>
 <hr />
-<h2 id="cookbook">Cookbook<a class="headerlink" href="#cookbook" title="Permanent link">&para;</a></h2>
-<p>For task-based recipes, copy-paste commands, and automation patterns, see
-the <a href="../cookbook/">Cookbook</a>. It covers first-time setup, AI analysis,
-vault management, graph analysis, scripting, Claude integration, board
-sync, and research workflows — all organized by task.</p>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h2 id="common-tasks">Common tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where is my config?</td>
+<td><code>obs config show</code></td>
+</tr>
+<tr>
+<td>Did my edit break anything?</td>
+<td><code>obs config validate</code></td>
+</tr>
+<tr>
+<td>Fresh start</td>
+<td><code>obs config init</code></td>
+</tr>
+<tr>
+<td>Move an old <code>nexus-cli</code> config over</td>
+<td><code>obs config migrate --target-dir ~/.config/obs</code></td>
+</tr>
+<tr>
+<td>Tweak a value by hand</td>
+<td><code>obs config edit</code> → <code>obs config validate</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li>macOS or Linux, Python 3.9+</li>
-<li>An Obsidian vault (any size)</li>
-<li>For AI tutorials: at least one AI provider — see <a href="../ai-setup/">AI Setup Guide</a></li>
-<li>For Claude MCP tutorial: Claude Desktop installed</li>
+<li><a href="../../cli-reference/#obs-config-show">CLI Reference → <code>obs config</code></a> — all subcommands</li>
+<li><a href="../../ai-setup/">AI Setup Guide</a> — configure AI providers</li>
+<li><a href="../../cookbook/#manage-configuration">Cookbook → Manage Configuration</a> — copy-paste recipes</li>
 </ul>
-<div class="admonition tip">
-<p class="admonition-title">Build up gradually</p>
-<p>The tutorials build on each other. Recommended order:
-Getting Started → Graph Analysis → AI Features → Claude MCP → Research Setup → Research Board.</p>
-</div>
 
 
 
@@ -1948,10 +2024,10 @@ Getting Started → Graph Analysis → AI Features → Claude MCP → Research S
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
