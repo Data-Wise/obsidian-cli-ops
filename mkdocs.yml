@@ -9,6 +9,8 @@ repo_url: https://github.com/Data-Wise/obsidian-cli-ops
 
 theme:
   name: material
+  logo: assets/logo.png
+  favicon: assets/favicon.png
   palette:
     # Dark mode (default)
     - media: "(prefers-color-scheme: dark)"
@@ -113,5 +115,6 @@ nav:
 
 extra_css:
   - stylesheets/adhd.css
+  - stylesheets/redesign.css
 
 copyright: Copyright &copy; 2025 Data-Wise
