@@ -2107,7 +2107,7 @@
 </tbody>
 </table>
 <p><strong>Key difference:</strong> <code>.obs/sync.yml</code> is project-rooted (one per repo, ADR-001 settings contract). <code>.flow/obsidian-sync.yml</code> is vault-rooted (one per vault directory). They are NOT interchangeable — <code>.obs/sync.yml</code> has a <code>schema: 1</code> + <code>mirror: none|mirror</code> envelope; <code>.flow/obsidian-sync.yml</code> is a bare <code>vault_root</code> + <code>pairs</code> map validated against <code>schema/obsidian-sync.schema.json</code>.</p>
-<p>See <a href="../../obs-sync-yml/"><code>.obs/sync.yml Schema</code></a> and <a href="cli-reference.md"><code>obs doctor --layer flow</code></a> for details.</p>
+<p>See <a href="../../obs-sync-yml/"><code>.obs/sync.yml Schema</code></a> and <a href="../../cli-reference/"><code>obs doctor --layer flow</code></a> for details.</p>
 <hr />
 <h2 id="key-data-flows">Key Data Flows<a class="headerlink" href="#key-data-flows" title="Permanent link">&para;</a></h2>
 <h3 id="vault-scan">Vault Scan<a class="headerlink" href="#vault-scan" title="Permanent link">&para;</a></h3>
