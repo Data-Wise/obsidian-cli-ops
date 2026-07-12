@@ -12,31 +12,31 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/configuration/">
+        <link rel="canonical" href="https://data-wise.github.io/obsidian-cli-ops/tutorials/flow-init/">
       
       
-        <link rel="prev" href="../installation/">
+        <link rel="prev" href="../monitoring-and-health/">
       
       
-        <link rel="next" href="../usage/">
+        <link rel="next" href="../../cookbook/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Configuration - Obsidian CLI Ops</title>
+        <title>Vault↔Repo Mirroring - Obsidian CLI Ops</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/adhd.css">
+      <link rel="stylesheet" href="../../stylesheets/adhd.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuration" class="md-skip">
+        <a href="#vaultrepo-mirroring-with-obs-flow-init" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href="../.." title="Obsidian CLI Ops" class="md-header__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuration
+              Vault↔Repo Mirroring
             
           </span>
         </div>
@@ -229,7 +229,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -246,13 +246,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adhd-quick-start/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../adhd-quick-start/" class="md-tabs__link">
           
   
   
@@ -268,11 +266,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../tutorials/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -292,7 +292,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/" class="md-tabs__link">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   
@@ -312,7 +312,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../developer/architecture/" class="md-tabs__link">
+        <a href="../../developer/architecture/" class="md-tabs__link">
           
   
   
@@ -346,7 +346,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
+    <a href="../.." title="Obsidian CLI Ops" class="md-nav__button md-logo" aria-label="Obsidian CLI Ops" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -376,7 +376,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -392,6 +392,177 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adhd-quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADHD Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -421,17 +592,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    Getting Started
+    Tutorials & Cookbook
   
 
     
@@ -442,12 +613,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Getting Started
+    Tutorials & Cookbook
   
 
           </label>
@@ -460,14 +631,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../adhd-quick-start/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    ADHD Quick Start
+    Overview
   
 
     
@@ -488,14 +659,210 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Installation
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vault-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vault Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graph-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude / MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../research-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../research-board/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Board
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring-and-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring & Health
   
 
     
@@ -532,7 +899,7 @@
   <span class="md-ellipsis">
     
   
-    Configuration
+    Vault↔Repo Mirroring
   
 
     
@@ -550,7 +917,7 @@
   <span class="md-ellipsis">
     
   
-    Configuration
+    Vault↔Repo Mirroring
   
 
     
@@ -576,10 +943,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#database-location" class="md-nav__link">
+  <a href="#what-youll-learn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Database Location
+        What You'll Learn
       
     </span>
   </a>
@@ -587,110 +954,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-provider-configuration" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Provider Configuration
+        Prerequisites
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="AI Provider Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#setting-api-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setting API Keys
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-ollama-100-local-private" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using Ollama (100% Local, Private)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-provider-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check Provider Status
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#shell-integration" class="md-nav__link">
+  <a href="#step-1-run-the-interactive-wizard" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Shell Integration
+        Step 1 — Run the interactive wizard
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Shell Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verbose-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verbose Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#python-interpreter-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Interpreter Resolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#icloud-vault-auto-detection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        iCloud Vault Auto-Detection
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-lookup-order" class="md-nav__link">
+  <a href="#step-2-non-interactive-mode-ci-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config Lookup Order
+        Step 2 — Non-interactive mode (CI / scripts)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-inspect-the-generated-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Inspect the generated config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-validate-with-obs-doctor-layer-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Validate with obs doctor --layer flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-overwrite-safely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Overwrite safely
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common validation errors
       
     </span>
   </a>
@@ -724,374 +1057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Usage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tutorials & Cookbook
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Tutorials & Cookbook
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/getting-started/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Getting Started
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/vault-management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Vault Management
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/graph-analysis/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Graph Analysis
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/ai-features/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    AI Features
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/claude-mcp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Claude / MCP Integration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/research-setup/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Research Setup
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/research-board/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Research Board
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/monitoring-and-health/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Monitoring & Health
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/flow-init/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Vault↔Repo Mirroring
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cookbook/" class="md-nav__link">
+      <a href="../../cookbook/" class="md-nav__link">
         
   
   
@@ -1178,7 +1144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+      <a href="../../reference/" class="md-nav__link">
         
   
   
@@ -1206,7 +1172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../refcard/" class="md-nav__link">
+      <a href="../../refcard/" class="md-nav__link">
         
   
   
@@ -1234,7 +1200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-reference/" class="md-nav__link">
+      <a href="../../cli-reference/" class="md-nav__link">
         
   
   
@@ -1262,7 +1228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../design-standards/" class="md-nav__link">
+      <a href="../../design-standards/" class="md-nav__link">
         
   
   
@@ -1290,7 +1256,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workflows/" class="md-nav__link">
+      <a href="../../workflows/" class="md-nav__link">
         
   
   
@@ -1318,7 +1284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ai-setup/" class="md-nav__link">
+      <a href="../../ai-setup/" class="md-nav__link">
         
   
   
@@ -1346,7 +1312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../claude-integration/" class="md-nav__link">
+      <a href="../../claude-integration/" class="md-nav__link">
         
   
   
@@ -1374,7 +1340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -1461,7 +1427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/architecture/" class="md-nav__link">
+      <a href="../../developer/architecture/" class="md-nav__link">
         
   
   
@@ -1489,7 +1455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/api-reference/" class="md-nav__link">
+      <a href="../../developer/api-reference/" class="md-nav__link">
         
   
   
@@ -1569,7 +1535,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/testing/overview/" class="md-nav__link">
+      <a href="../../developer/testing/overview/" class="md-nav__link">
         
   
   
@@ -1597,7 +1563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/testing/core-tests/" class="md-nav__link">
+      <a href="../../developer/testing/core-tests/" class="md-nav__link">
         
   
   
@@ -1625,7 +1591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer/testing/sandbox/" class="md-nav__link">
+      <a href="../../developer/testing/sandbox/" class="md-nav__link">
         
   
   
@@ -1661,7 +1627,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migration/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
@@ -1716,10 +1682,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#database-location" class="md-nav__link">
+  <a href="#what-youll-learn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Database Location
+        What You'll Learn
       
     </span>
   </a>
@@ -1727,110 +1693,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-provider-configuration" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Provider Configuration
+        Prerequisites
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="AI Provider Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#setting-api-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setting API Keys
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-ollama-100-local-private" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using Ollama (100% Local, Private)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-provider-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check Provider Status
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#shell-integration" class="md-nav__link">
+  <a href="#step-1-run-the-interactive-wizard" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Shell Integration
+        Step 1 — Run the interactive wizard
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Shell Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verbose-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verbose Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#python-interpreter-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Interpreter Resolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#icloud-vault-auto-detection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        iCloud Vault Auto-Detection
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-lookup-order" class="md-nav__link">
+  <a href="#step-2-non-interactive-mode-ci-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config Lookup Order
+        Step 2 — Non-interactive mode (CI / scripts)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-inspect-the-generated-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Inspect the generated config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-validate-with-obs-doctor-layer-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Validate with obs doctor --layer flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-overwrite-safely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Overwrite safely
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common validation errors
       
     </span>
   </a>
@@ -1868,131 +1800,245 @@
   
 
 
-<h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
+<h1 id="vaultrepo-mirroring-with-obs-flow-init">Vault↔Repo Mirroring with <code>obs flow init</code><a class="headerlink" href="#vaultrepo-mirroring-with-obs-flow-init" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p class="tldr"><strong>TL;DR</strong> (30 seconds)
-- <strong>What:</strong> Optional settings for database, AI providers, and shell integration
-- <strong>Why:</strong> <code>obs</code> works out of the box — configure only what you need
-- <strong>How:</strong> iCloud auto-detected; set <code>OBS_ROOT</code> to override vault location
-- <strong>Next:</strong> <a href="../ai-setup/">AI Setup Guide</a> for AI provider configuration</p>
+<p><strong>TL;DR</strong> (30 seconds)</p>
+<ul>
+<li><strong>What:</strong> Create <code>.flow/obsidian-sync.yml</code> — the single vault↔repo mirror map for savant <code>plan:obsidian-sync</code></li>
+<li><strong>Why:</strong> Declare which vault folders sync to which repo folders so planning tools can bridge them</li>
+<li><strong>How:</strong> <code>obs flow init</code> (wizard) or <code>obs flow init --vault-root ~/vault --pairs '[{"vault":"a","repo":"b"}]'</code></li>
+<li class="tldr"><strong>Next:</strong> <code>obs doctor --layer flow</code> to validate the config</li>
+</ul>
 </blockquote>
-<p><strong>Time:</strong> ~3 minutes | <strong>Level:</strong> Beginner | <strong>Steps:</strong> 3 sections</p>
+<p><strong>Level:</strong> 🟡 Intermediate | <strong>Time:</strong> ~10 min | <strong>Commands:</strong> <code>obs flow init</code>, <code>obs doctor --layer flow</code></p>
 <hr />
-<h2 id="database-location"><img alt="💾" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4be.svg" title=":floppy_disk:" /> Database Location<a class="headerlink" href="#database-location" title="Permanent link">&para;</a></h2>
-<p>The SQLite database is stored at:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>~/.config/obs/vault_db.sqlite
+<h2 id="what-youll-learn">What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Create a <code>.flow/obsidian-sync.yml</code> interactively (wizard) or non-interactively (flags/CI)</li>
+<li>Understand the four config fields: <code>vault_root</code>, <code>pairs</code>, <code>include</code>, <code>exclude</code></li>
+<li>Validate the config against the JSON Schema with <code>obs doctor --layer flow</code></li>
+<li>Overwrite an existing config safely (automatic <code>.bak</code> backup)</li>
+</ul>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>obs</code> installed (Homebrew or manual venv)</li>
+<li>A target <strong>repo</strong> directory (where the <code>.flow/</code> folder will live)</li>
+<li>The path to your Obsidian <strong>vault</strong> root (the folder containing <code>.obsidian/</code>)</li>
+<li>Optional: <code>obs doctor</code> available for the validation step</li>
+</ul>
+<hr />
+<h2 id="step-1-run-the-interactive-wizard">Step 1 — Run the interactive wizard<a class="headerlink" href="#step-1-run-the-interactive-wizard" title="Permanent link">&para;</a></h2>
+<p>From inside your repo, run <code>obs flow init</code>. The wizard infers a default <code>vault_root</code>
+by walking up to five directories looking for a <code>.obsidian</code> folder; if none is found
+it falls back to the iCloud Research path.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>~/code/my-repo
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>flow<span class="w"> </span>init
 </code></pre></div>
-<p>To reinitialize:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python3<span class="w"> </span>src/python/obs_cli.py<span class="w"> </span>db<span class="w"> </span>init
+<p>Sample session:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Initializing obsidian-sync.yml for: my-repo
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vault_root [~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Research]: ~/vaults/Research
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pairs (vault → repo):
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Add pair? [Y/n]: y
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    vault (relative to vault_root): projects/atlas
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    repo (relative to repo root): atlas
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Add another pair? [N]: n
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>include [*.md]:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>exclude [_archive]:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>✓ Wrote .flow/obsidian-sync.yml
 </code></pre></div>
-<h2 id="ai-provider-configuration"><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> AI Provider Configuration<a class="headerlink" href="#ai-provider-configuration" title="Permanent link">&para;</a></h2>
-<p><code>obs</code> supports multiple AI providers with automatic fallback routing:</p>
+<div class="admonition tip">
+<p class="admonition-title">Empty pairs are allowed (with a warning)</p>
+<p>If you skip pairs, the wizard writes the file but warns it is incomplete.
+<code>pairs</code> is <strong>required</strong> by the schema, so <code>obs doctor --layer flow</code> will flag it later.</p>
+</div>
+<hr />
+<h2 id="step-2-non-interactive-mode-ci-scripts">Step 2 — Non-interactive mode (CI / scripts)<a class="headerlink" href="#step-2-non-interactive-mode-ci-scripts" title="Permanent link">&para;</a></h2>
+<p>For automation, supply <code>--vault-root</code> and <code>--pairs</code> (a JSON array of
+<code>{"vault": ..., "repo": ...}</code> objects). Both are required in non-interactive mode.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--vault-root<span class="w"> </span>~/vaults/Research<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--pairs<span class="w"> </span><span class="s1">&#39;[{&quot;vault&quot;:&quot;projects/atlas&quot;,&quot;repo&quot;:&quot;atlas&quot;},{&quot;vault&quot;:&quot;notes&quot;,&quot;repo&quot;:&quot;docs/notes&quot;}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--json
+</code></pre></div>
+<p><code>--json</code> returns the written config as machine-readable output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;vault_root&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/you/vaults/Research&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;pairs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;vault&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;projects/atlas&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;repo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;atlas&quot;</span><span class="p">},</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;vault&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notes&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;repo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;docs/notes&quot;</span><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.md&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">&quot;exclude&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;_archive&quot;</span><span class="p">]</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="step-3-inspect-the-generated-config">Step 3 — Inspect the generated config<a class="headerlink" href="#step-3-inspect-the-generated-config" title="Permanent link">&para;</a></h2>
+<p><code>obs flow init</code> writes <code>.flow/obsidian-sync.yml</code> atomically (temp file + <code>os.replace</code>)
+and stamps a created date. The default contents:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Vault↔repo mirror map for savant `plan:obsidian-sync`</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Created: 2026-07-11</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">vault_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/vaults/Research</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">pairs</span><span class="p">:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">projects/atlas</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">atlas</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notes</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/notes</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">include</span><span class="p">:</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*.md&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nt">exclude</span><span class="p">:</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_archive</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Priority</th>
-<th>Provider</th>
-<th>Type</th>
-<th>Setup</th>
+<th>Field</th>
+<th>Required</th>
+<th>Default</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1</td>
-<td>Gemini API</td>
-<td>Cloud</td>
-<td><code>GEMINI_API_KEY</code> env var</td>
+<td><code>vault_root</code></td>
+<td>yes</td>
+<td>—</td>
+<td>Absolute (or <code>~</code>-expanded) path to the vault root; must exist on disk</td>
 </tr>
 <tr>
-<td>2</td>
-<td>Anthropic API</td>
-<td>Cloud</td>
-<td><code>ANTHROPIC_API_KEY</code> env var</td>
+<td><code>pairs</code></td>
+<td>yes</td>
+<td>—</td>
+<td>Non-empty list of <code>{vault, repo}</code> objects</td>
 </tr>
 <tr>
-<td>3</td>
-<td>Ollama</td>
-<td>Local</td>
-<td>Install <a href="https://ollama.com">Ollama</a>, pull a model</td>
+<td><code>include</code></td>
+<td>no</td>
+<td><code>["*.md"]</code></td>
+<td>Glob filters for files to mirror (omitted from file if default)</td>
 </tr>
 <tr>
-<td>4</td>
-<td>Gemini CLI</td>
-<td>Local</td>
-<td>Install <code>gemini</code> CLI tool</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Claude CLI</td>
-<td>Local</td>
-<td>Install <code>claude</code> CLI tool</td>
+<td><code>exclude</code></td>
+<td>no</td>
+<td><code>["_archive"]</code></td>
+<td>Glob filters to skip (omitted from file if default)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="setting-api-keys">Setting API Keys<a class="headerlink" href="#setting-api-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add to ~/.zshrc or ~/.zshenv</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-key-here&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-key-here&quot;</span>
+<ul>
+<li><code>vault</code> / <code>repo</code> are <strong>relative</strong> paths (no leading <code>/</code>, no <code>..</code>)</li>
+<li><code>vault</code> and <code>repo</code> must differ (a <code>vault == repo</code> pair is a no-op)</li>
+<li>Duplicate <code>vault → repo</code> mappings are rejected</li>
+</ul>
+<p>See <a href="../../design-standards/">Design Standards → Config File Contracts</a> and the
+<a href="../../cli-reference/#obs-flow-init">CLI Reference</a> for the full schema contract.</p>
+<hr />
+<h2 id="step-4-validate-with-obs-doctor-layer-flow">Step 4 — Validate with <code>obs doctor --layer flow</code><a class="headerlink" href="#step-4-validate-with-obs-doctor-layer-flow" title="Permanent link">&para;</a></h2>
+<p><code>obs doctor --layer flow</code> runs six checks against every <code>.flow/obsidian-sync.yml</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>flow-sync-missing</code></td>
+<td>No config found in the target repo (warn)</td>
+</tr>
+<tr>
+<td><code>flow-sync-schema</code></td>
+<td>Config fails JSON Schema validation</td>
+</tr>
+<tr>
+<td><code>flow-sync-stale</code></td>
+<td>Config unchanged for &gt; 90 days</td>
+</tr>
+<tr>
+<td><code>flow-sync-vault-root</code></td>
+<td><code>vault_root</code> path does not exist</td>
+</tr>
+<tr>
+<td><code>flow-sync-pair-duplicate</code></td>
+<td>Two pairs map the same <code>vault → repo</code></td>
+</tr>
+<tr>
+<td><code>flow-sync-pair-identity</code></td>
+<td>A pair where <code>vault == repo</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>doctor<span class="w"> </span>--layer<span class="w"> </span>flow
 </code></pre></div>
-<h3 id="using-ollama-100-local-private">Using Ollama (100% Local, Private)<a class="headerlink" href="#using-ollama-100-local-private" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install Ollama</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>brew<span class="w"> </span>install<span class="w"> </span>ollama
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Pull a model</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
+<p>A clean config reports no <code>flow-sync-*</code> errors. The <code>flow</code> layer is part of the
+default <code>all_layers</code> set, so a plain <code>obs doctor</code> covers it too.</p>
+<hr />
+<h2 id="step-5-overwrite-safely">Step 5 — Overwrite safely<a class="headerlink" href="#step-5-overwrite-safely" title="Permanent link">&para;</a></h2>
+<p><code>obs flow init</code> refuses to clobber an existing config unless you pass <code>--force</code>.
+With <code>--force</code>, the previous file is copied to <code>.flow/obsidian-sync.yml.bak</code> first.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vaults/Research<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">&#39;[{&quot;vault&quot;:&quot;projects/atlas&quot;,&quot;repo&quot;:&quot;atlas&quot;}]&#39;</span><span class="w"> </span>--force
 </code></pre></div>
-<h3 id="check-provider-status">Check Provider Status<a class="headerlink" href="#check-provider-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># See which providers are available</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Interactive setup wizard</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test all configured providers</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span>
-</code></pre></div>
-<h2 id="shell-integration"><img alt="🐚" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f41a.svg" title=":shell:" /> Shell Integration<a class="headerlink" href="#shell-integration" title="Permanent link">&para;</a></h2>
-<h3 id="verbose-mode">Verbose Mode<a class="headerlink" href="#verbose-mode" title="Permanent link">&para;</a></h3>
-<p>Add <code>--verbose</code> to any command for detailed output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Knowledge_Base<span class="w"> </span>--verbose
-</code></pre></div>
-<h3 id="python-interpreter-resolution">Python Interpreter Resolution<a class="headerlink" href="#python-interpreter-resolution" title="Permanent link">&para;</a></h3>
-<p>As of <strong>v3.2.1</strong>, <code>obs</code> runs against an interpreter that has its core deps provisioned in an <strong>isolated venv</strong> — it never silently trusts a bare <code>python3</code>. The launcher (<code>_obs_resolve_python</code>) resolves in priority order:</p>
-<ol>
-<li><strong><code>$OBS_PYTHON</code></strong> — explicit override (below), or set by the Homebrew formula</li>
-<li><strong>install.sh user venv</strong> — <code>~/.local/share/obs/venv</code></li>
-<li><strong>Homebrew formula venv</strong> — <code>libexec/venv</code></li>
-<li><strong>ambient <code>python3</code></strong> — last resort, with a warning that deps may be missing</li>
-</ol>
-<p>To force a specific interpreter (non-standard location, or a venv you manage):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/path/to/python3
-</code></pre></div>
-<p>If you ever see <code>[obs] WARN: ... ambient python3 ... deps may be missing</code>, provision an isolated env with <code>./install.sh</code> (or <code>brew reinstall obsidian-cli-ops</code>). See <a href="../installation/#how-dependencies-are-provisioned">Installation</a> for the full model.</p>
-<h3 id="icloud-vault-auto-detection">iCloud Vault Auto-Detection<a class="headerlink" href="#icloud-vault-auto-detection" title="Permanent link">&para;</a></h3>
-<p><code>obs</code> automatically checks the standard Obsidian iCloud path:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>~/Library/Mobile Documents/iCloud~md~obsidian/Documents
-</code></pre></div>
-<p>To discover vaults elsewhere:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>obs<span class="w"> </span>discover<span class="w"> </span>~/Documents<span class="w"> </span>--scan
-</code></pre></div>
-<h2 id="config-lookup-order"><img alt="🔍" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f50d.svg" title=":mag:" /> Config Lookup Order<a class="headerlink" href="#config-lookup-order" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    A[obs starts] --&gt; B{OBS_ROOT set?}
-    B --&gt;|Yes| C[Use OBS_ROOT path]
-    B --&gt;|No| D{iCloud path exists?}
-    D --&gt;|Yes| E[Use iCloud auto-detect]
-    D --&gt;|No| F[Use ~/.config/obs/ default]
-    style C fill:#6366f1,color:#fff
-    style E fill:#22c55e,color:#fff
-    style F fill:#f59e0b,color:#000</code></pre>
+<hr />
+<h2 id="common-validation-errors">Common validation errors<a class="headerlink" href="#common-validation-errors" title="Permanent link">&para;</a></h2>
+<p><code>obs flow init</code> validates before writing and prints every problem:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vault_root path not found</code></td>
+<td>Path doesn't exist on disk</td>
+<td>Use the real vault root</td>
+</tr>
+<tr>
+<td><code>pairs must be a non-empty list</code></td>
+<td>No pairs supplied</td>
+<td>Add at least one pair</td>
+</tr>
+<tr>
+<td><code>pairs[i] missing required field: vault</code></td>
+<td>Pair lacks <code>vault</code> or <code>repo</code></td>
+<td>Include both keys</td>
+</tr>
+<tr>
+<td><code>pairs[i].vault must not start with /</code></td>
+<td>Absolute path in a pair</td>
+<td>Use a path relative to <code>vault_root</code></td>
+</tr>
+<tr>
+<td><code>pairs[i].repo must not contain ..</code></td>
+<td>Path-traversal in a pair</td>
+<td>Use a plain relative path</td>
+</tr>
+<tr>
+<td><code>pairs[i]: vault and repo are identical</code></td>
+<td>No-op mapping</td>
+<td>Point repo somewhere else</td>
+</tr>
+<tr>
+<td><code>pairs[i]: duplicate vault→repo mapping</code></td>
+<td>Same pair twice</td>
+<td>Remove the duplicate</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../ai-setup/">AI Setup Guide</a> -- Detailed provider configuration</li>
-<li><a href="../usage/">Usage</a> -- Core commands and workflows</li>
+<li><a href="../../design-standards/">Design Standards → Config File Contracts</a> — the full contract for <code>.flow/obsidian-sync.yml</code></li>
+<li><a href="../../cli-reference/#obs-flow-init">CLI Reference → <code>obs flow init</code></a> — all flags and examples</li>
+<li><a href="../../cli-reference/#obs-doctor">Doctor &amp; Diagnostics</a> — all seven doctor layers</li>
+<li><a href="../../cookbook/#vaultrepo-mirroring">Cookbook → Vault↔Repo Mirroring</a> — copy-paste recipes</li>
 </ul>
 
 
@@ -2053,10 +2099,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
