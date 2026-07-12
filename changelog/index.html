@@ -1380,6 +1380,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#docs-website-redesign-brand-system-2026-07-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docs website redesign &amp; brand system (2026-07-12)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2866,6 +2877,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#docs-website-redesign-brand-system-2026-07-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docs website redesign &amp; brand system (2026-07-12)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3805,6 +3827,13 @@
 <li><strong>refcard.md updated</strong> — added <code>obs flow init</code> and <code>obs doctor --layer flow</code> to the "Other" section.</li>
 <li><strong>Removed <code>.obs/sync.yml</code> / <code>obs link</code> (ADR-001)</strong> — deleted <code>research/obs_link.py</code>, <code>tests/test_obs_link.py</code>, <code>docs_mkdocs/obs-sync-yml.md</code>; removed <code>obs link</code> CLI subcommand and zsh dispatcher; <code>.flow/obsidian-sync.yml</code> is now the sole vault↔repo mirror-map contract.</li>
 <li><strong>New <code>design-standards.md</code></strong> — contributor-facing reference for the three convention-driven surfaces: local config file contracts (<code>.flow/obsidian-sync.yml</code>), their create/validate command pairs (<code>obs flow init</code> / <code>obs doctor --layer flow</code>), and Obsidian dashboards (<code>obs research board</code> / <code>obs board refresh</code>); wired into <code>mkdocs.yml</code> Reference nav with a "new surface" PR checklist.</li>
+</ul>
+<h3 id="docs-website-redesign-brand-system-2026-07-12">Docs website redesign &amp; brand system (2026-07-12)<a class="headerlink" href="#docs-website-redesign-brand-system-2026-07-12" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Palette + typography</strong> — replaced Material's default indigo/purple with a fixed ink <code>#15161a</code> / paper <code>#f7f6f2</code> / teal <code>#0d9488</code> system via <code>docs_mkdocs/stylesheets/redesign.css</code> (Space Grotesk + JetBrains Mono, no Inter, 4px radii).</li>
+<li><strong>Logo &amp; favicon</strong> — new "Node Cartography" mark (faceted obsidian diamond hub + note nodes) wired into <code>mkdocs.yml</code> <code>theme.logo</code> / <code>theme.favicon</code> (transparent mark so it reads on the ink header); assets in <code>docs/proposals/brand/</code> + <code>docs_mkdocs/assets/</code>.</li>
+<li><strong>Proposal artifact</strong> — the interactive audit + before/after mockup is preserved as a self-contained <code>docs_mkdocs/proposals/docs-redesign.html</code> (JS+CSS inlined, mark embedded as a base64 data URI, zero external refs), linked from <code>design-standards.md</code> §6.</li>
+<li><strong>Planning record</strong> — <code>docs/specs/SPEC-docs-redesign-2026-07-12.md</code> documents the decisions and the bundle-rebuild workflow for future redesign passes.</li>
 </ul>
 <h2 id="v430-2026-07-01-board-sync-automation-e2e-dogfood">v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood<a class="headerlink" href="#v430-2026-07-01-board-sync-automation-e2e-dogfood" title="Permanent link">&para;</a></h2>
 <h3 id="board-sync-automation">Board sync automation<a class="headerlink" href="#board-sync-automation" title="Permanent link">&para;</a></h3>

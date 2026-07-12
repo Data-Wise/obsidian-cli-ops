@@ -1415,6 +1415,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="6. Website &amp; Brand">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reproducing-the-proposal-artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducing the proposal artifact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2255,6 +2272,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="6. Website &amp; Brand">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reproducing-the-proposal-artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducing the proposal artifact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2539,6 +2573,24 @@ discipline as the code surfaces above: validated, deliberate, and free of generi
 <p>The artifact and brand sheet live under <code>docs/proposals/</code> (source of truth) and are
 mirrored into <code>docs_mkdocs/proposals/</code> so they are served by the site.</p>
 </blockquote>
+<h3 id="reproducing-the-proposal-artifact">Reproducing the proposal artifact<a class="headerlink" href="#reproducing-the-proposal-artifact" title="Permanent link">&para;</a></h3>
+<p>The proposal (<code>proposals/docs-redesign.html</code>) is a <strong>single self-contained file</strong> — JS + CSS
+inlined, the logo mark embedded as a base64 data URI, <strong>zero external references</strong> — so it
+opens from <code>file://</code> or when served. Use this same flow for any future interactive docs
+redesign:</p>
+<ol>
+<li>Scaffold a React 18 + TS + Vite + Tailwind 3.4 + shadcn/ui app (persist the source under
+   <code>docs/proposals/redesign-src/</code> if you want it version-controlled).</li>
+<li>Drop the mark you want inline at <code>src/assets/brand-mark.png</code> and <code>import</code> it in <code>App.tsx</code>
+   (Parcel turns the import into an importmap URL).</li>
+<li>Build: <code>npx parcel build index.html --dist-dir dist --no-cache</code></li>
+<li>Inline: run <code>inline.py</code> — it rewrites the importmap PNG URL to a <code>data:image/png;base64,…</code>
+   URI and writes a single <code>bundle.html</code> with JS+CSS inlined. Do <strong>not</strong> commit
+   <code>node_modules</code> / <code>.parcel-cache</code>.</li>
+<li>Copy <code>bundle.html</code> → <code>docs_mkdocs/proposals/docs-redesign.html</code> and link it from a doc.</li>
+</ol>
+<p>The full decision record and asset list are in
+<a href="https://github.com/Data-Wise/obsidian-cli-ops/blob/dev/docs/specs/SPEC-docs-redesign-2026-07-12.md">docs/specs/SPEC-docs-redesign-2026-07-12.md</a>.</p>
 
 
 
