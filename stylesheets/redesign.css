@@ -68,10 +68,18 @@
   background: transparent;
   padding: 0;
   height: 2rem;
+  display: flex;
+  align-items: center;
 }
 .md-header__button.md-logo img {
   height: 2rem;
   width: 2rem;
+}
+
+/* brand seam: a thin teal rule ties the accent into the ink banner and gives a
+   clean, deliberate edge against the paper body (works in light + dark modes) */
+.md-header {
+  border-bottom: 2px solid var(--md-accent-fg-color);
 }
 
 /* subtle surface separation for admonitions / tabs instead of heavy shadows */
