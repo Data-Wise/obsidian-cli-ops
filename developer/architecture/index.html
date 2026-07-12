@@ -1049,34 +1049,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../obs-sync-yml/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    .obs/sync.yml Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../workflows/" class="md-nav__link">
         
   
@@ -2078,7 +2050,7 @@
     SQ --- T6[note_embeddings]</code></pre>
 <hr />
 <h2 id="config-file-contracts">Config File Contracts<a class="headerlink" href="#config-file-contracts" title="Permanent link">&para;</a></h2>
-<p><code>obs</code> reads two distinct local YAML config files. They serve different purposes and live at different paths:</p>
+<p><code>obs</code> reads one local YAML config file for vault↔repo mirroring:</p>
 <table>
 <thead>
 <tr>
@@ -2091,13 +2063,6 @@
 </thead>
 <tbody>
 <tr>
-<td><code>.obs/sync.yml</code></td>
-<td><code>obs link</code> (ADR-001)</td>
-<td>Per-project mirror map (vault↔repo sync for research/teaching)</td>
-<td><code>obs link [dir]</code></td>
-<td><code>atlas doctor</code></td>
-</tr>
-<tr>
 <td><code>.flow/obsidian-sync.yml</code></td>
 <td><code>obs flow init</code> (v4.3.0)</td>
 <td>Vault↔repo mirror map for <code>savant plan:obsidian-sync</code></td>
@@ -2106,8 +2071,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Key difference:</strong> <code>.obs/sync.yml</code> is project-rooted (one per repo, ADR-001 settings contract). <code>.flow/obsidian-sync.yml</code> is vault-rooted (one per vault directory). They are NOT interchangeable — <code>.obs/sync.yml</code> has a <code>schema: 1</code> + <code>mirror: none|mirror</code> envelope; <code>.flow/obsidian-sync.yml</code> is a bare <code>vault_root</code> + <code>pairs</code> map validated against <code>schema/obsidian-sync.schema.json</code>.</p>
-<p>See <a href="../../obs-sync-yml/"><code>.obs/sync.yml Schema</code></a> and <a href="../../cli-reference/"><code>obs doctor --layer flow</code></a> for details.</p>
+<p><code>.flow/obsidian-sync.yml</code> is a vault-rooted (one per vault directory) bare <code>vault_root</code> + <code>pairs</code> map validated against <code>schema/obsidian-sync.schema.json</code>. See <a href="../../cli-reference/"><code>obs doctor --layer flow</code></a> for details.</p>
 <hr />
 <h2 id="key-data-flows">Key Data Flows<a class="headerlink" href="#key-data-flows" title="Permanent link">&para;</a></h2>
 <h3 id="vault-scan">Vault Scan<a class="headerlink" href="#vault-scan" title="Permanent link">&para;</a></h3>

@@ -18,7 +18,7 @@
         <link rel="prev" href="../refcard/">
       
       
-        <link rel="next" href="../obs-sync-yml/">
+        <link rel="next" href="../workflows/">
       
       
         
@@ -1580,17 +1580,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obs-link" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs link
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#obs-research-board" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2030,34 +2019,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../obs-sync-yml/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    .obs/sync.yml Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2990,17 +2951,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obs-link" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        obs link
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#obs-research-board" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3459,7 +3409,7 @@
 <h1 id="cli-command-reference">CLI Command Reference<a class="headerlink" href="#cli-command-reference" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p class="tldr"><strong>TL;DR</strong> (30 seconds)
-- <strong>What:</strong> Full reference for all 64 <code>obs</code> commands (18 top-level groups, incl. the board, config &amp; research families) + 42 MCP tools for Claude
+- <strong>What:</strong> Full reference for all 63 <code>obs</code> commands (18 top-level groups, incl. the board, config &amp; research families) + 42 MCP tools for Claude
 - <strong>Why:</strong> One-stop lookup for exact syntax and options
 - <strong>How:</strong> <code>obs help --all</code> — see this in your terminal
 - <strong>Next:</strong> <a href="../refcard/">Quick Reference</a> for a printable cheat sheet</p>
@@ -4221,29 +4171,18 @@ catch whole bug classes before release:</p>
 </code></pre></div>
 <hr />
 <h2 id="research-registry"><img alt="📚" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4da.svg" title=":books:" /> Research Registry<a class="headerlink" href="#research-registry" title="Permanent link">&para;</a></h2>
-<h3 id="obs-link">obs link<a class="headerlink" href="#obs-link" title="Permanent link">&para;</a></h3>
-<p>Create the per-project <code>.obs/sync.yml</code> mirror map (<a href="../obs-sync-yml/">schema</a>). Idempotent.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>obs<span class="w"> </span>link<span class="w"> </span><span class="o">[</span>project_dir<span class="o">]</span><span class="w"> </span><span class="o">[</span>--vault-root<span class="w"> </span>&lt;path&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--mirror<span class="w"> </span>auto<span class="p">|</span>mirror<span class="p">|</span>none<span class="o">]</span><span class="w"> </span><span class="o">[</span>--force<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</code></pre></div>
-<ul>
-<li><code>--vault-root</code> — vault path for an active mirror (defaults to <code>mirror: none</code> when omitted).</li>
-<li><code>--mirror</code> — force the mode; <code>--force</code> overwrites an existing map.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>obs<span class="w"> </span>link<span class="w">                                  </span><span class="c1"># mirror: none (non-vault project)</span>
-<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>obs<span class="w"> </span>link<span class="w"> </span>--vault-root<span class="w"> </span>~/vault/Research/x<span class="w">  </span><span class="c1"># active mirror</span>
-</code></pre></div>
 <h3 id="obs-research-board">obs research board<a class="headerlink" href="#obs-research-board" title="Permanent link">&para;</a></h3>
 <p>Render a deterministic dashboard of manuscripts + programs from atlas state into the vault
 (<a href="../tutorials/research-board/">tutorial</a>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>obs<span class="w"> </span>research<span class="w"> </span>board<span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>&lt;vault<span class="w"> </span>file&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--kind<span class="w"> </span>manuscript<span class="p">|</span>program<span class="p">|</span>package<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>obs<span class="w"> </span>research<span class="w"> </span>board<span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>&lt;vault<span class="w"> </span>file&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--kind<span class="w"> </span>manuscript<span class="p">|</span>program<span class="p">|</span>package<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span>
 </code></pre></div>
 <ul>
 <li>No <code>--out</code> → prints to stdout. <code>--out</code> → marker-bounded atomic update of the file.</li>
 <li><code>--dry-run</code> → shows changes, writes nothing (non-zero exit on drift — a scheduling guard).</li>
 <li>No <code>--kind</code> → manuscripts + programs; <code>--kind</code> narrows to one.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>obs<span class="w"> </span>research<span class="w"> </span>board
-<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>obs<span class="w"> </span>research<span class="w"> </span>board<span class="w"> </span>--out<span class="w"> </span>~/vault/00_meta/_RESEARCH-BOARD.md
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>obs<span class="w"> </span>research<span class="w"> </span>board
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>obs<span class="w"> </span>research<span class="w"> </span>board<span class="w"> </span>--out<span class="w"> </span>~/vault/00_meta/_RESEARCH-BOARD.md
 </code></pre></div>
 <h2 id="config-management"><img alt="⚙" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2699.svg" title=":gear:" /> Config Management<a class="headerlink" href="#config-management" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
@@ -4253,15 +4192,15 @@ catch whole bug classes before release:</p>
 <p>Unified configuration at <code>~/.config/obs/config.yaml</code> — shared between <code>obs</code> and previously nexus-cli.</p>
 <h3 id="obs-config-show">obs config show<a class="headerlink" href="#obs-config-show" title="Permanent link">&para;</a></h3>
 <p>Print the current config and which file it was loaded from.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>obs<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>obs<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <h3 id="obs-config-validate">obs config validate<a class="headerlink" href="#obs-config-validate" title="Permanent link">&para;</a></h3>
 <p>Validate the config file and report any errors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>obs<span class="w"> </span>config<span class="w"> </span>validate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>obs<span class="w"> </span>config<span class="w"> </span>validate
 </code></pre></div>
 <h3 id="obs-config-migrate">obs config migrate<a class="headerlink" href="#obs-config-migrate" title="Permanent link">&para;</a></h3>
 <p>Convert a legacy <code>obs</code> or <code>nexus-cli</code> config to the unified YAML format.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>obs<span class="w"> </span>config<span class="w"> </span>migrate<span class="w"> </span><span class="o">[</span>--target-dir<span class="w"> </span>DIR<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>obs<span class="w"> </span>config<span class="w"> </span>migrate<span class="w"> </span><span class="o">[</span>--target-dir<span class="w"> </span>DIR<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4279,11 +4218,11 @@ catch whole bug classes before release:</p>
 </table>
 <h3 id="obs-config-init">obs config init<a class="headerlink" href="#obs-config-init" title="Permanent link">&para;</a></h3>
 <p>Interactive wizard to create a fresh config from scratch.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>obs<span class="w"> </span>config<span class="w"> </span>init
+<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>obs<span class="w"> </span>config<span class="w"> </span>init
 </code></pre></div>
 <h3 id="obs-config-edit">obs config edit<a class="headerlink" href="#obs-config-edit" title="Permanent link">&para;</a></h3>
 <p>Open the config file in <code>$EDITOR</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>obs<span class="w"> </span>config<span class="w"> </span>edit
 </code></pre></div>
 <hr />
 <h2 id="board-management"><img alt="📋" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4cb.svg" title=":clipboard:" /> Board Management<a class="headerlink" href="#board-management" title="Permanent link">&para;</a></h2>
@@ -4296,7 +4235,7 @@ on demand via the <code>research--action-board</code> prompt.</p>
 <h3 id="obs-board-refresh">obs board refresh<a class="headerlink" href="#obs-board-refresh" title="Permanent link">&para;</a></h3>
 <p>Refresh the <code>_ACTION-BOARD.md</code> file from atlas project state, vault stats, and
 <code>.STATUS</code> files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4330,15 +4269,15 @@ on demand via the <code>research--action-board</code> prompt.</p>
 </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w">                            </span><span class="c1"># Refresh first research vault</span>
-<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">           </span><span class="c1"># Specific vault</span>
-<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--all<span class="w">                      </span><span class="c1"># All vaults</span>
-<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--dry-run<span class="w">                  </span><span class="c1"># Preview changes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w">                            </span><span class="c1"># Refresh first research vault</span>
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">           </span><span class="c1"># Specific vault</span>
+<a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--all<span class="w">                      </span><span class="c1"># All vaults</span>
+<a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--dry-run<span class="w">                  </span><span class="c1"># Preview changes</span>
 </code></pre></div>
 <h3 id="obs-board-status">obs board status<a class="headerlink" href="#obs-board-status" title="Permanent link">&para;</a></h3>
 <p>Show whether <code>_ACTION-BOARD.md</code> exists, when it was last refreshed, and
 whether the vault has ghost drift.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4367,13 +4306,13 @@ whether the vault has ghost drift.</p>
 </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w">                 </span><span class="c1"># Status for all vaults</span>
-<a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w"> </span><span class="c1"># Single vault</span>
-<a id="__codelineno-54-3" name="__codelineno-54-3" href="#__codelineno-54-3"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span>--json<span class="w">          </span><span class="c1"># JSON output</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w">                 </span><span class="c1"># Status for all vaults</span>
+<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w"> </span><span class="c1"># Single vault</span>
+<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>obs<span class="w"> </span>board<span class="w"> </span>status<span class="w"> </span>--json<span class="w">          </span><span class="c1"># JSON output</span>
 </code></pre></div>
 <p><strong>Output:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>  Research: board=✔ last=0d ago
-<a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>  Documents: board=✘ last=never
+<div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>  Research: board=✔ last=0d ago
+<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>  Documents: board=✘ last=never
 </code></pre></div>
 <hr />
 <h2 id="research-domain"><img alt="🔬" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f52c.svg" title=":microscope:" /> Research Domain<a class="headerlink" href="#research-domain" title="Permanent link">&para;</a></h2>
@@ -4384,7 +4323,7 @@ whether the vault has ghost drift.</p>
 <p>Research commands absorbed from nexus-cli. Requires configured paths in <code>obs config</code>.</p>
 <h3 id="obs-research-zotero-search">obs research zotero search<a class="headerlink" href="#obs-research-zotero-search" title="Permanent link">&para;</a></h3>
 <p>Search the local Zotero SQLite database.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--type<span class="w"> </span>TYPE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag<span class="w"> </span>TAG<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--type<span class="w"> </span>TYPE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag<span class="w"> </span>TAG<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4419,15 +4358,15 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-zotero-get">obs research zotero get<a class="headerlink" href="#obs-research-zotero-get" title="Permanent link">&para;</a></h3>
 <p>Fetch a Zotero item by its library key.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>FORMAT<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>FORMAT<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-zotero-recent">obs research zotero recent<a class="headerlink" href="#obs-research-zotero-recent" title="Permanent link">&para;</a></h3>
 <p>List recently modified Zotero items.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-zotero-cite">obs research zotero cite<a class="headerlink" href="#obs-research-zotero-cite" title="Permanent link">&para;</a></h3>
 <p>Generate an APA or BibTeX citation for a Zotero item.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>cite<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="o">[</span>--style<span class="w"> </span>apa<span class="p">|</span>bibtex<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>cite<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="o">[</span>--style<span class="w"> </span>apa<span class="p">|</span>bibtex<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4452,7 +4391,7 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-zotero-tags">obs research zotero tags<a class="headerlink" href="#obs-research-zotero-tags" title="Permanent link">&para;</a></h3>
 <p>List all tags with item counts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>tags<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>tags<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4477,11 +4416,11 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-zotero-collections">obs research zotero collections<a class="headerlink" href="#obs-research-zotero-collections" title="Permanent link">&para;</a></h3>
 <p>List all collections with item counts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>collections<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>collections<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-zotero-by-tag">obs research zotero by-tag<a class="headerlink" href="#obs-research-zotero-by-tag" title="Permanent link">&para;</a></h3>
 <p>Get all items tagged with a specific tag.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>by-tag<span class="w"> </span>&lt;tag&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>by-tag<span class="w"> </span>&lt;tag&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4511,11 +4450,11 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-pdf-search">obs research pdf search<a class="headerlink" href="#obs-research-pdf-search" title="Permanent link">&para;</a></h3>
 <p>Search full-text content of indexed PDFs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-pdf-extract">obs research pdf extract<a class="headerlink" href="#obs-research-pdf-extract" title="Permanent link">&para;</a></h3>
 <p>Extract text from a PDF file using <code>pdftotext</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>extract<span class="w"> </span>&lt;path&gt;<span class="w"> </span><span class="o">[</span>--pages<span class="w"> </span>RANGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--layout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>extract<span class="w"> </span>&lt;path&gt;<span class="w"> </span><span class="o">[</span>--pages<span class="w"> </span>RANGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--layout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4551,19 +4490,19 @@ whether the vault has ghost drift.</p>
 <p>Requires <code>pdftotext</code> (<code>brew install poppler</code>).</p>
 <h3 id="obs-research-course-list-show-lectures">obs research course list / show / lectures<a class="headerlink" href="#obs-research-course-list-show-lectures" title="Permanent link">&para;</a></h3>
 <p>Course management commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>list<span class="w">                      </span><span class="c1"># List all courses</span>
-<a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">               </span><span class="c1"># Show course details</span>
-<a id="__codelineno-65-3" name="__codelineno-65-3" href="#__codelineno-65-3"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>lectures<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># List lectures for a course</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>list<span class="w">                      </span><span class="c1"># List all courses</span>
+<a id="__codelineno-63-2" name="__codelineno-63-2" href="#__codelineno-63-2"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">               </span><span class="c1"># Show course details</span>
+<a id="__codelineno-63-3" name="__codelineno-63-3" href="#__codelineno-63-3"></a>obs<span class="w"> </span>research<span class="w"> </span>course<span class="w"> </span>lectures<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># List lectures for a course</span>
 </code></pre></div>
 <h3 id="obs-research-manuscript-list-show-stats">obs research manuscript list / show / stats<a class="headerlink" href="#obs-research-manuscript-list-show-stats" title="Permanent link">&para;</a></h3>
 <p>Manuscript tracking commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>--archived<span class="o">]</span><span class="w">     </span><span class="c1"># List manuscripts</span>
-<a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># Show manuscript details</span>
-<a id="__codelineno-66-3" name="__codelineno-66-3" href="#__codelineno-66-3"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats<span class="w">                 </span><span class="c1"># Aggregate statistics</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>--archived<span class="o">]</span><span class="w">     </span><span class="c1"># List manuscripts</span>
+<a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w">           </span><span class="c1"># Show manuscript details</span>
+<a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats<span class="w">                 </span><span class="c1"># Aggregate statistics</span>
 </code></pre></div>
 <h3 id="obs-research-manuscript-batch-status">obs research manuscript batch-status<a class="headerlink" href="#obs-research-manuscript-batch-status" title="Permanent link">&para;</a></h3>
 <p>Update status for multiple manuscripts at once.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>batch-status<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>&lt;name&gt;...<span class="o">]</span><span class="w"> </span>--status<span class="w"> </span>&lt;value&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>batch-status<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>&lt;name&gt;...<span class="o">]</span><span class="w"> </span>--status<span class="w"> </span>&lt;value&gt;
 </code></pre></div>
 <table>
 <thead>
@@ -4585,16 +4524,16 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-manuscript-batch-progress">obs research manuscript batch-progress<a class="headerlink" href="#obs-research-manuscript-batch-progress" title="Permanent link">&para;</a></h3>
 <p>Update progress for multiple manuscripts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>batch-progress<span class="w"> </span>&lt;name&gt;:&lt;progress&gt;<span class="w"> </span><span class="o">[</span>&lt;name&gt;:&lt;progress&gt;...<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>batch-progress<span class="w"> </span>&lt;name&gt;:&lt;progress&gt;<span class="w"> </span><span class="o">[</span>&lt;name&gt;:&lt;progress&gt;...<span class="o">]</span>
 </code></pre></div>
 <p>Each argument is <code>name:progress</code> (e.g. <code>paper1:75</code>). Progress is 0-100.</p>
 <h3 id="obs-research-manuscript-batch-archive">obs research manuscript batch-archive<a class="headerlink" href="#obs-research-manuscript-batch-archive" title="Permanent link">&para;</a></h3>
 <p>Archive multiple manuscripts by moving them to an <code>Archive/</code> subdirectory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>batch-archive<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>&lt;name&gt;...<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>batch-archive<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>&lt;name&gt;...<span class="o">]</span>
 </code></pre></div>
 <h3 id="obs-research-manuscript-export">obs research manuscript export<a class="headerlink" href="#obs-research-manuscript-export" title="Permanent link">&para;</a></h3>
 <p>Export all manuscript metadata to a JSON or CSV file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;output&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>json<span class="p">|</span>csv<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;output&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>json<span class="p">|</span>csv<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4619,11 +4558,11 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-bib-check">obs research bib check<a class="headerlink" href="#obs-research-bib-check" title="Permanent link">&para;</a></h3>
 <p>Check citations in a manuscript's bibliography file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>&lt;name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>obs<span class="w"> </span>research<span class="w"> </span>bib<span class="w"> </span>check<span class="w"> </span>&lt;name&gt;
 </code></pre></div>
 <h3 id="obs-research-search">obs research search<a class="headerlink" href="#obs-research-search" title="Permanent link">&para;</a></h3>
 <p>Unified cross-source search across vault notes, Zotero, and PDF sources.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>obs<span class="w"> </span>research<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--source<span class="w"> </span>vault<span class="p">|</span>zotero<span class="p">|</span>pdf<span class="p">|</span>all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>obs<span class="w"> </span>research<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--source<span class="w"> </span>vault<span class="p">|</span>zotero<span class="p">|</span>pdf<span class="p">|</span>all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4659,7 +4598,7 @@ whether the vault has ghost drift.</p>
 <p>Fans out to all configured research backends and returns a merged, scored result list.</p>
 <h3 id="obs-research-graph">obs research graph<a class="headerlink" href="#obs-research-graph" title="Permanent link">&para;</a></h3>
 <p>Export a vault's knowledge graph for use in visualization tools.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>obs<span class="w"> </span>research<span class="w"> </span>graph<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>graphml<span class="p">|</span>d3<span class="p">|</span>json<span class="o">]</span><span class="w"> </span><span class="o">[</span>--output<span class="w"> </span>FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tags<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>obs<span class="w"> </span>research<span class="w"> </span>graph<span class="w"> </span>&lt;vault&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>graphml<span class="p">|</span>d3<span class="p">|</span>json<span class="o">]</span><span class="w"> </span><span class="o">[</span>--output<span class="w"> </span>FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--limit<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tags<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4699,7 +4638,7 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-quarto-build">obs research quarto build<a class="headerlink" href="#obs-research-quarto-build" title="Permanent link">&para;</a></h3>
 <p>Build a Quarto manuscript.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>obs<span class="w"> </span>research<span class="w"> </span>quarto<span class="w"> </span>build<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>FORMAT<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>obs<span class="w"> </span>research<span class="w"> </span>quarto<span class="w"> </span>build<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>FORMAT<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4724,7 +4663,7 @@ whether the vault has ghost drift.</p>
 </table>
 <h3 id="obs-research-quarto-preview">obs research quarto preview<a class="headerlink" href="#obs-research-quarto-preview" title="Permanent link">&para;</a></h3>
 <p>Preview a Quarto manuscript in the browser.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>obs<span class="w"> </span>research<span class="w"> </span>quarto<span class="w"> </span>preview<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--port<span class="w"> </span>PORT<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>obs<span class="w"> </span>research<span class="w"> </span>quarto<span class="w"> </span>preview<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--port<span class="w"> </span>PORT<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4750,7 +4689,7 @@ whether the vault has ghost drift.</p>
 <h3 id="obs-research-learn">obs research learn<a class="headerlink" href="#obs-research-learn" title="Permanent link">&para;</a></h3>
 <p>Interactive, guided tutorials for the <code>obs</code> CLI at three difficulty levels: <code>getting-started</code>,
 <code>medium</code>, and <code>advanced</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>&lt;getting-started<span class="p">|</span>medium<span class="p">|</span>advanced&gt;<span class="w"> </span><span class="o">[</span>--step<span class="w"> </span>N<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>&lt;getting-started<span class="p">|</span>medium<span class="p">|</span>advanced&gt;<span class="w"> </span><span class="o">[</span>--step<span class="w"> </span>N<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4783,9 +4722,9 @@ whether the vault has ghost drift.</p>
 </ul>
 <p>Each step can show a command to try; when interactive, it prompts to confirm before continuing
 and lets you pause and resume later with <code>--step</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>getting-started
-<a id="__codelineno-77-2" name="__codelineno-77-2" href="#__codelineno-77-2"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>medium
-<a id="__codelineno-77-3" name="__codelineno-77-3" href="#__codelineno-77-3"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>advanced<span class="w"> </span>--step<span class="w"> </span><span class="m">3</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>getting-started
+<a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>medium
+<a id="__codelineno-75-3" name="__codelineno-75-3" href="#__codelineno-75-3"></a>obs<span class="w"> </span>research<span class="w"> </span>learn<span class="w"> </span>advanced<span class="w"> </span>--step<span class="w"> </span><span class="m">3</span>
 </code></pre></div>
 <hr />
 <h2 id="quick-reference"><img alt="⚡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/26a1.svg" title=":zap:" /> Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
@@ -5051,11 +4990,11 @@ you can ask Claude natural-language questions about your vaults.</p>
 <code>course_list</code>, <code>course_show</code>, <code>course_lectures</code>, <code>manuscript_list</code>, <code>manuscript_show</code>,
 <code>manuscript_stats</code>, <code>bib_check</code></p>
 <h3 id="example-claude-prompts">Example Claude prompts<a class="headerlink" href="#example-claude-prompts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-78-2" name="__codelineno-78-2" href="#__codelineno-78-2"></a>&quot;List orphaned notes in MyVault&quot;
-<a id="__codelineno-78-3" name="__codelineno-78-3" href="#__codelineno-78-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
-<a id="__codelineno-78-4" name="__codelineno-78-4" href="#__codelineno-78-4"></a>&quot;Read the note on causal mediation&quot;
-<a id="__codelineno-78-5" name="__codelineno-78-5" href="#__codelineno-78-5"></a>&quot;Run a quality check on MyVault&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>&quot;Search my research vault for causal inference&quot;
+<a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>&quot;List orphaned notes in MyVault&quot;
+<a id="__codelineno-76-3" name="__codelineno-76-3" href="#__codelineno-76-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
+<a id="__codelineno-76-4" name="__codelineno-76-4" href="#__codelineno-76-4"></a>&quot;Read the note on causal mediation&quot;
+<a id="__codelineno-76-5" name="__codelineno-76-5" href="#__codelineno-76-5"></a>&quot;Run a quality check on MyVault&quot;
 </code></pre></div>
 <p>See <a href="../claude-integration/">Claude Integration</a> for full setup instructions and all 42 tools.</p>
 <hr />

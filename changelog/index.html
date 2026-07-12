@@ -1054,34 +1054,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../obs-sync-yml/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    .obs/sync.yml Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../workflows/" class="md-nav__link">
         
   
@@ -3440,11 +3412,11 @@
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="docs-gap-audit-2026-07-12">Docs gap audit (2026-07-12)<a class="headerlink" href="#docs-gap-audit-2026-07-12" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Architecture docs updated</strong> — added Config File Contracts section clarifying the two local YAML configs: <code>.obs/sync.yml</code> (project-rooted, ADR-001) vs <code>.flow/obsidian-sync.yml</code> (vault-rooted, v4.3.0).</li>
-<li><strong>Testing overview fixed</strong> — added 5 missing test files to the inventory table (<code>flow_init</code> 36, <code>flow_dogfood</code> 19, <code>obs_link</code> 5, <code>research_board</code> 8, <code>db_manager</code> 8); unit subtotal 342 → 418; Jest subtotal 69 → 70.</li>
+<li><strong>Architecture docs updated</strong> — added Config File Contracts section documenting the <code>.flow/obsidian-sync.yml</code> vault↔repo mirror map (vault-rooted, v4.3.0).</li>
+<li><strong>Testing overview fixed</strong> — added 5 missing test files to the inventory table (<code>flow_init</code> 36, <code>flow_dogfood</code> 19, <code>research_board</code> 8, <code>db_manager</code> 8, <code>obs_link</code> 5→removed); unit subtotal 342 → 413; Jest subtotal 69 → 70.</li>
 <li><strong>Architecture testing section fixed</strong> — 450+ pytest → 764 pytest; 69 Jest → 70 Jest.</li>
 <li><strong>refcard.md updated</strong> — added <code>obs flow init</code> and <code>obs doctor --layer flow</code> to the "Other" section.</li>
-<li><strong>obs-sync-yml.md clarified</strong> — added a warning box distinguishing <code>.obs/sync.yml</code> from <code>.flow/obsidian-sync.yml</code>.</li>
+<li><strong>Removed <code>.obs/sync.yml</code> / <code>obs link</code> (ADR-001)</strong> — deleted <code>research/obs_link.py</code>, <code>tests/test_obs_link.py</code>, <code>docs_mkdocs/obs-sync-yml.md</code>; removed <code>obs link</code> CLI subcommand and zsh dispatcher; <code>.flow/obsidian-sync.yml</code> is now the sole vault↔repo mirror-map contract.</li>
 </ul>
 <h2 id="v430-2026-07-01-board-sync-automation-e2e-dogfood">v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood<a class="headerlink" href="#v430-2026-07-01-board-sync-automation-e2e-dogfood" title="Permanent link">&para;</a></h2>
 <h3 id="board-sync-automation">Board sync automation<a class="headerlink" href="#board-sync-automation" title="Permanent link">&para;</a></h3>
@@ -3582,7 +3554,7 @@
 </ul>
 <h3 id="added_4">Added<a class="headerlink" href="#added_4" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong><code>obs link</code></strong> — create the per-project <code>.obs/sync.yml</code> mirror map (docs-standards ADR-001); idempotent. <a href="../obs-sync-yml/">Schema</a>.</li>
+<li><strong><code>obs link</code></strong> — create the per-project <code>.obs/sync.yml</code> mirror map (docs-standards ADR-001); idempotent. <em>(Removed in v4.3.1 — superseded by <code>obs flow init</code> / <code>.flow/obsidian-sync.yml</code>.)</em></li>
 <li><strong><code>obs research board</code></strong> — deterministic atlas → vault dashboard renderer (manuscripts + programs); marker-bounded atomic write; <code>--out</code>, <code>--kind</code>, <code>--dry-run</code>. <a href="../tutorials/research-board/">Tutorial</a>.</li>
 <li><strong><code>server_info</code> MCP tool</strong> (#53) — reports the running server's
   <code>server_version</code>, <code>installed_version</code>, <code>started_at</code>, and
