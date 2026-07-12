@@ -6,6 +6,14 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Docs gap audit (2026-07-12)
+
+- **Architecture docs updated** — added Config File Contracts section clarifying the two local YAML configs: `.obs/sync.yml` (project-rooted, ADR-001) vs `.flow/obsidian-sync.yml` (vault-rooted, v4.3.0).
+- **Testing overview fixed** — added 5 missing test files to the inventory table (`flow_init` 36, `flow_dogfood` 19, `obs_link` 5, `research_board` 8, `db_manager` 8); unit subtotal 342 → 418; Jest subtotal 69 → 70.
+- **Architecture testing section fixed** — 450+ pytest → 764 pytest; 69 Jest → 70 Jest.
+- **refcard.md updated** — added `obs flow init` and `obs doctor --layer flow` to the "Other" section.
+- **obs-sync-yml.md clarified** — added a warning box distinguishing `.obs/sync.yml` from `.flow/obsidian-sync.yml`.
+
 ## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
 
 ### Board sync automation

@@ -5,6 +5,12 @@ Every project carries a `.obs/sync.yml` (docs-standards **ADR-001** settings con
 teaching) declare a `vault_root` + `pairs`; everything else uses `mirror: none` so the file exists but
 is a no-op.
 
+> [!warning] Not the same as `.flow/obsidian-sync.yml`
+> `.obs/sync.yml` is **project-rooted** (one per repo) and uses a `schema: 1` + `mirror` envelope.
+> `.flow/obsidian-sync.yml` is **vault-rooted** (one per vault) and is a bare `vault_root` + `pairs`
+> map created by `obs flow init` (v4.3.0), validated by `obs doctor --layer flow`. They are **not
+> interchangeable** — see [Config File Contracts](developer/architecture.md#config-file-contracts).
+
 ## Schema
 
 Placeholder (non-vault project):

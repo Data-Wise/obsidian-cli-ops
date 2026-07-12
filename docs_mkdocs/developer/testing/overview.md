@@ -23,20 +23,25 @@
 | Vault Fixtures | 15 | pytest | `test_vault_fixtures.py` |
 | JSON Output | 13 | pytest | `test_json_output.py` |
 | Vault Scanner | 13 | pytest | `test_vault_scanner.py` |
+| Flow Init (Core) | 36 | pytest | `test_flow_init.py` |
 | CLI Edge Cases | 11 | pytest | `test_cli_edge_cases.py` |
+| Board Engine | 28 | pytest | `test_board.py` |
+| Flow Init (Dogfood) | 19 | pytest | `test_flow_dogfood.py` |
+| Research Board | 8 | pytest | `test_research_board.py` |
+| DB Manager | 8 | pytest | `test_db_manager.py` |
+| Obs Link | 5 | pytest | `test_obs_link.py` |
 | Vault Lookup | 7 | pytest | `test_vault_lookup.py` |
 | CLI Polish | 6 | pytest | `test_cli_polish.py` |
 | CLI Rich Output | 6 | pytest | `test_cli_rich.py` |
 | Embedding Cache | 6 | pytest | `test_embedding_cache.py` |
 | Vault Manager | 6 | pytest | `test_vault_manager.py` |
 | Version Consistency | 6 | pytest | `test_version_consistency.py` |
-| Board Engine | 28 | pytest | `test_board.py` |
 | Doc Count Gate | 5 | pytest | `test_doc_counts.py` |
 | DB Metrics | 1 | pytest | `test_db_metrics.py` |
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
 | Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
 | Search API | 1 | pytest | `test_search_api.py` |
-| **Unit Subtotal** | **342** | **pytest** | |
+| **Unit Subtotal** | **418** | **pytest** | |
 
 ### MCP Unit Tests (pytest)
 
@@ -64,7 +69,7 @@ E2E tests spin up the real MCP server as a subprocess and exercise the JSON-RPC 
 | Dependency Bootstrapping | 29 | Jest | `dep_bootstrap.test.js` (2 network-gated, run in CI) |
 | Man-page version sync | 6 | Jest | `man-page-version-sync.test.js` |
 | Flag-routing regression | 4 | Jest | *(in cli.test.js)* |
-| **Jest Subtotal** | **69** | **Jest** | |
+| **Jest Subtotal** | **70** | **Jest** | |
 
 ---
 

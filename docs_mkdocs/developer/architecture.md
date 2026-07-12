@@ -150,6 +150,21 @@ flowchart LR
 
 ---
 
+## Config File Contracts
+
+`obs` reads two distinct local YAML config files. They serve different purposes and live at different paths:
+
+| File | Owner | Purpose | Created by | Validated by |
+|------|-------|---------|------------|--------------|
+| `.obs/sync.yml` | `obs link` (ADR-001) | Per-project mirror map (vault↔repo sync for research/teaching) | `obs link [dir]` | `atlas doctor` |
+| `.flow/obsidian-sync.yml` | `obs flow init` (v4.3.0) | Vault↔repo mirror map for `savant plan:obsidian-sync` | `obs flow init [dir]` | `obs doctor --layer flow` |
+
+**Key difference:** `.obs/sync.yml` is project-rooted (one per repo, ADR-001 settings contract). `.flow/obsidian-sync.yml` is vault-rooted (one per vault directory). They are NOT interchangeable — `.obs/sync.yml` has a `schema: 1` + `mirror: none|mirror` envelope; `.flow/obsidian-sync.yml` is a bare `vault_root` + `pairs` map validated against `schema/obsidian-sync.schema.json`.
+
+See [`.obs/sync.yml Schema`](../obs-sync-yml.md) and [`obs doctor --layer flow`](cli-reference.md) for details.
+
+---
+
 ## Key Data Flows
 
 ### Vault Scan
@@ -276,6 +291,8 @@ src/python/
     exceptions.py            # Custom exceptions
     note_inserter.py         # Heading-aware Markdown insertion (markdown-it-py AST)
     board.py                 # Board sync engine — 5 connectors, merger, renderer, vault writer
+    doctor.py                # Diagnostics: doctor checks (incl. flow-sync validation)
+    flow_init.py             # Flow init wizard: create .flow/obsidian-sync.yml (v4.3.0)
 
   ai/                        # AI FEATURES LAYER
     features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
@@ -300,10 +317,11 @@ schema/vault_db.sql          # Database schema
 
 ## Testing
 
-- **450+ pytest tests** covering core, AI, vault features, data layer, and MCP server (+71 E2E gated behind `E2E=1`)
-- **69 Jest tests** for ZSH wrapper + dependency-bootstrapping validation
+- **764 pytest tests** covering core, AI, vault features, data layer, flow init, MCP server, and E2E (+71 E2E gated behind `E2E=1`)
+- **70 Jest tests** (2 skipped) for ZSH wrapper + dependency-bootstrapping validation
 - Core layer tested independently with mocked dependencies
 - AI providers mocked for deterministic tests
 - MCP tools tested via FastMCP test client
+- Flow sync (`obs flow init`, `obs doctor --layer flow`) tested via unit, dogfood, and E2E suites
 
 See [Testing Overview](testing/overview.md) for full details.
