@@ -35,6 +35,12 @@ Claude / MCP integration so you can query your vaults in natural language.
 !!! tip "Claude Integration (v4.0.0)"
     42 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
 
+!!! tip "Diagnostics & Doctor"
+    `obs doctor` runs self-checks across 7 layers (runtime, DB, vault, sync, MCP, docs, iCloud) plus `flow`. Clear ghost notes with `obs scan --prune`. [Diagnostics tutorial →](tutorials/doctor.md)
+
+!!! tip "Vault↔Repo Mirroring (v4.3.1)"
+    `obs flow init` writes `.flow/obsidian-sync.yml` — the single vault↔repo mirror map for savant planning. [Mirroring tutorial →](tutorials/flow-init.md)
+
 ---
 
 ## Quick Start

@@ -84,6 +84,7 @@ nav:
       - Vault↔Repo Mirroring: tutorials/flow-init.md
       - Diagnostics: tutorials/doctor.md
       - Configuration: tutorials/config.md
+      - Search: tutorials/search.md
       - Cookbook: cookbook.md
   - Reference:
       - Overview: reference/index.md
@@ -102,6 +103,13 @@ nav:
           - Core Tests: developer/testing/core-tests.md
           - Sandbox: developer/testing/sandbox.md
       - Migration Guide: migration.md
+  - Archive:
+      - v1.1.0: archive/v1.1.0.md
+      - v2.0: archive/v2.0.md
+      - v2.2.0: archive/v2.2.0.md
+      - v2.x: archive/v2.x.md
+      - v3.0.0: archive/v3.0.0.md
+      - R-Dev: archive/r-dev.md
 
 extra_css:
   - stylesheets/adhd.css

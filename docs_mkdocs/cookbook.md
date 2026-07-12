@@ -940,6 +940,32 @@ obs config validate      # confirm the edit is well-formed
 
 ---
 
+## Initialize or Rebuild the Database
+
+All vault data lives in a SQLite database at `~/.config/obs/vault_db.sqlite`.
+`obs db init` creates it (with all tables and views) or rebuilds it from scratch.
+
+```bash
+obs db init
+```
+
+When to use it:
+
+- **Fresh install** — the database is created automatically on first `obs scan`,
+  but `obs db init` makes the location explicit.
+- **Corruption / reset** — if queries misbehave, `obs db init` rebuilds the schema.
+  Re-scan your vaults afterward to repopulate notes, links, and metrics.
+
+!!! warning "Rebuild wipes indexed data"
+    `obs db init` resets the schema. Your markdown files on disk are untouched, but
+    the index (notes/links/tags/metrics) is cleared — re-run `obs scan` to refill it.
+
+!!! tip "Full walkthrough"
+    See the [Search tutorial](tutorials/search.md) for finding notes once the DB is
+    populated.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
@@ -948,3 +974,4 @@ obs config validate      # confirm the edit is well-formed
 - [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) -- Step-by-step setup
 - [Diagnostics tutorial](tutorials/doctor.md) -- `obs doctor` walkthrough
 - [Configuration tutorial](tutorials/config.md) -- `obs config` walkthrough
+- [Search tutorial](tutorials/search.md) -- power-user search
