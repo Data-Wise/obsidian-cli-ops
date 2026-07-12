@@ -1396,6 +1396,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#config-file-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config File Contracts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-data-flows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1818,6 +1829,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#config-file-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config File Contracts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-data-flows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2055,6 +2077,38 @@
     SQ --- T5[graph_metrics]
     SQ --- T6[note_embeddings]</code></pre>
 <hr />
+<h2 id="config-file-contracts">Config File Contracts<a class="headerlink" href="#config-file-contracts" title="Permanent link">&para;</a></h2>
+<p><code>obs</code> reads two distinct local YAML config files. They serve different purposes and live at different paths:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Owner</th>
+<th>Purpose</th>
+<th>Created by</th>
+<th>Validated by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.obs/sync.yml</code></td>
+<td><code>obs link</code> (ADR-001)</td>
+<td>Per-project mirror map (vault↔repo sync for research/teaching)</td>
+<td><code>obs link [dir]</code></td>
+<td><code>atlas doctor</code></td>
+</tr>
+<tr>
+<td><code>.flow/obsidian-sync.yml</code></td>
+<td><code>obs flow init</code> (v4.3.0)</td>
+<td>Vault↔repo mirror map for <code>savant plan:obsidian-sync</code></td>
+<td><code>obs flow init [dir]</code></td>
+<td><code>obs doctor --layer flow</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key difference:</strong> <code>.obs/sync.yml</code> is project-rooted (one per repo, ADR-001 settings contract). <code>.flow/obsidian-sync.yml</code> is vault-rooted (one per vault directory). They are NOT interchangeable — <code>.obs/sync.yml</code> has a <code>schema: 1</code> + <code>mirror: none|mirror</code> envelope; <code>.flow/obsidian-sync.yml</code> is a bare <code>vault_root</code> + <code>pairs</code> map validated against <code>schema/obsidian-sync.schema.json</code>.</p>
+<p>See <a href="../../obs-sync-yml/"><code>.obs/sync.yml Schema</code></a> and <a href="cli-reference.md"><code>obs doctor --layer flow</code></a> for details.</p>
+<hr />
 <h2 id="key-data-flows">Key Data Flows<a class="headerlink" href="#key-data-flows" title="Permanent link">&para;</a></h2>
 <h3 id="vault-scan">Vault Scan<a class="headerlink" href="#vault-scan" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>sequenceDiagram
@@ -2189,33 +2243,36 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    exceptions.py            # Custom exceptions
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    note_inserter.py         # Heading-aware Markdown insertion (markdown-it-py AST)
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    board.py                 # Board sync engine — 5 connectors, merger, renderer, vault writer
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ai/                        # AI FEATURES LAYER
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    features_vault.py        # Vault AI: merge-suggest, tag-suggest, quality (v3.2.0)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    features_refactor.py     # Refactor pipeline (extracted v3.2.0)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    router.py                # Smart provider selection + fallback chain
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    models.py                # AI dataclasses: AnalysisResult, SimilarNote, MergeCandidate, TagSuggestion, NoteQuality...
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    obsidian_bridge.py       # Null Object bridge to Obsidian CLI
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    providers/               # 5 provider implementations
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  mcp_server.py              # MCP INTEGRATION LAYER (v3.3.0, 956 lines)
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  obs_cli.py                 # PRESENTATION LAYER (985 lines)
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  db_manager.py              # DATA LAYER: SQLite CRUD
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  vault_scanner.py           # DATA LAYER: .md file parsing
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  graph_builder.py           # DATA LAYER: NetworkX graph construction
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>src/obs.zsh                  # PRESENTATION LAYER: ZSH dispatcher (501 lines)
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>schema/vault_db.sql          # Database schema
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    doctor.py                # Diagnostics: doctor checks (incl. flow-sync validation)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    flow_init.py             # Flow init wizard: create .flow/obsidian-sync.yml (v4.3.0)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  ai/                        # AI FEATURES LAYER
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    features.py              # Core AI: similar, analyze, duplicates, suggest-links, gaps, summarize
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    features_vault.py        # Vault AI: merge-suggest, tag-suggest, quality (v3.2.0)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    features_refactor.py     # Refactor pipeline (extracted v3.2.0)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    router.py                # Smart provider selection + fallback chain
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    models.py                # AI dataclasses: AnalysisResult, SimilarNote, MergeCandidate, TagSuggestion, NoteQuality...
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    obsidian_bridge.py       # Null Object bridge to Obsidian CLI
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    providers/               # 5 provider implementations
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  mcp_server.py              # MCP INTEGRATION LAYER (v3.3.0, 956 lines)
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  obs_cli.py                 # PRESENTATION LAYER (985 lines)
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  db_manager.py              # DATA LAYER: SQLite CRUD
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  vault_scanner.py           # DATA LAYER: .md file parsing
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  graph_builder.py           # DATA LAYER: NetworkX graph construction
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>src/obs.zsh                  # PRESENTATION LAYER: ZSH dispatcher (501 lines)
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>schema/vault_db.sql          # Database schema
 </code></pre></div>
 <hr />
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>450+ pytest tests</strong> covering core, AI, vault features, data layer, and MCP server (+71 E2E gated behind <code>E2E=1</code>)</li>
-<li><strong>69 Jest tests</strong> for ZSH wrapper + dependency-bootstrapping validation</li>
+<li><strong>764 pytest tests</strong> covering core, AI, vault features, data layer, flow init, MCP server, and E2E (+71 E2E gated behind <code>E2E=1</code>)</li>
+<li><strong>70 Jest tests</strong> (2 skipped) for ZSH wrapper + dependency-bootstrapping validation</li>
 <li>Core layer tested independently with mocked dependencies</li>
 <li>AI providers mocked for deterministic tests</li>
 <li>MCP tools tested via FastMCP test client</li>
+<li>Flow sync (<code>obs flow init</code>, <code>obs doctor --layer flow</code>) tested via unit, dogfood, and E2E suites</li>
 </ul>
 <p>See <a href="../testing/overview/">Testing Overview</a> for full details.</p>
 

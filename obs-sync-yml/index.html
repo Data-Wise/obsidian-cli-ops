@@ -1645,6 +1645,13 @@
 <strong>obs-owned</strong> and created by <a href="../cli-reference/"><code>obs link</code></a>. Vault-mirroring projects (research /
 teaching) declare a <code>vault_root</code> + <code>pairs</code>; everything else uses <code>mirror: none</code> so the file exists but
 is a no-op.</p>
+<blockquote>
+<p>[!warning] Not the same as <code>.flow/obsidian-sync.yml</code>
+<code>.obs/sync.yml</code> is <strong>project-rooted</strong> (one per repo) and uses a <code>schema: 1</code> + <code>mirror</code> envelope.
+<code>.flow/obsidian-sync.yml</code> is <strong>vault-rooted</strong> (one per vault) and is a bare <code>vault_root</code> + <code>pairs</code>
+map created by <code>obs flow init</code> (v4.3.0), validated by <code>obs doctor --layer flow</code>. They are <strong>not
+interchangeable</strong> — see <a href="../developer/architecture/#config-file-contracts">Config File Contracts</a>.</p>
+</blockquote>
 <h2 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h2>
 <p>Placeholder (non-vault project):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
