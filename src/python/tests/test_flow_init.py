@@ -18,7 +18,10 @@ from core.flow_init import (
     FlowConfig,
     validate_config,
     init_flow_config,
+    get_config_for_vault,
     _load_schema,
+    _infer_vault_root,
+    _infer_pairs,
     _SCHEMA_PATH,
 )
 
@@ -233,3 +236,115 @@ class TestInitFlowConfig:
                 pairs_json='[{"vault": "a", "repo": "a"}]',  # identity
                 non_interactive=True,
             )
+
+    def test_non_interactive_pairs_not_array(self, tmp_path):
+        with pytest.raises(ValueError, match="must be a JSON array"):
+            init_flow_config(
+                directory=str(tmp_path),
+                vault_root="~/vault",
+                pairs_json='{"vault": "a", "repo": "b"}',
+                non_interactive=True,
+            )
+
+    def test_non_interactive_pair_not_object(self, tmp_path):
+        with pytest.raises(ValueError, match="must be a JSON object"):
+            init_flow_config(
+                directory=str(tmp_path),
+                vault_root="~/vault",
+                pairs_json='["not an object"]',
+                non_interactive=True,
+            )
+
+    def test_non_interactive_pair_missing_keys(self, tmp_path):
+        with pytest.raises(ValueError, match="must have 'vault' and 'repo'"):
+            init_flow_config(
+                directory=str(tmp_path),
+                vault_root="~/vault",
+                pairs_json='[{"vault": "a"}]',
+                non_interactive=True,
+            )
+
+
+# ---------------------------------------------------------------------------
+# Path traversal validation (Fix #5)
+# ---------------------------------------------------------------------------
+
+class TestPathTraversal:
+    def test_vault_traversal(self):
+        c = FlowConfig(vault_root="~/vault", pairs=[{"vault": "../../etc", "repo": "b"}])
+        errors = validate_config(c)
+        assert any(".." in e for e in errors)
+
+    def test_repo_traversal(self):
+        c = FlowConfig(vault_root="~/vault", pairs=[{"vault": "a", "repo": "../secret"}])
+        errors = validate_config(c)
+        assert any(".." in e for e in errors)
+
+    def test_traversal_in_middle(self):
+        c = FlowConfig(vault_root="~/vault", pairs=[{"vault": "a/../../b", "repo": "c"}])
+        errors = validate_config(c)
+        assert any(".." in e for e in errors)
+
+
+# ---------------------------------------------------------------------------
+# _infer_vault_root (Fix #13)
+# ---------------------------------------------------------------------------
+
+class TestInferVaultRoot:
+    def test_finds_obsidian_dir(self, tmp_path):
+        (tmp_path / ".obsidian").mkdir()
+        assert _infer_vault_root(tmp_path) == str(tmp_path)
+
+    def test_finds_parent_obsidian(self, tmp_path):
+        nested = tmp_path / "subdir"
+        nested.mkdir()
+        (tmp_path / ".obsidian").mkdir()
+        assert _infer_vault_root(nested) == str(tmp_path)
+
+    def test_default_fallback(self, tmp_path):
+        result = _infer_vault_root(tmp_path)
+        assert "iCloud" in result or "Research" in result
+
+
+# ---------------------------------------------------------------------------
+# _infer_pairs (Fix #14)
+# ---------------------------------------------------------------------------
+
+class TestInferPairs:
+    def test_returns_empty(self, tmp_path):
+        # After fix #1, inference returns empty
+        assert _infer_pairs(tmp_path) == []
+
+
+# ---------------------------------------------------------------------------
+# get_config_for_vault corrupted YAML (Fix #15)
+# ---------------------------------------------------------------------------
+
+class TestGetConfigCorrupted:
+    def test_corrupted_yaml_returns_none(self, tmp_path):
+        flow_dir = tmp_path / ".flow"
+        flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(": invalid: yaml: {{{}}}")
+        config = get_config_for_vault(str(tmp_path))
+        assert config is None
+
+    def test_missing_file_returns_none(self, tmp_path):
+        config = get_config_for_vault(str(tmp_path))
+        assert config is None
+
+
+# ---------------------------------------------------------------------------
+# get_config_for_vault with valid file
+# ---------------------------------------------------------------------------
+
+class TestGetConfigValid:
+    def test_loads_valid_config(self, tmp_path):
+        flow_dir = tmp_path / ".flow"
+        flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: ~/vault\npairs:\n- vault: a\n  repo: b\n"
+        )
+        config = get_config_for_vault(str(tmp_path))
+        assert config is not None
+        assert config.vault_root == "~/vault"
+        assert config.pairs == [{"vault": "a", "repo": "b"}]

@@ -1930,7 +1930,7 @@ def main():
                         print(f"❌ {e}")
                     sys.exit(1)
             else:
-                print("Usage: obs flow init [directory]", file=sys.stderr)
+                print("Usage: obs flow <command>\nCommands: init", file=sys.stderr)
                 sys.exit(1)
 
         elif args.command == 'link':

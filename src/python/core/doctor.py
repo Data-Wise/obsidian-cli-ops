@@ -593,6 +593,7 @@ def _check_obsidian_sync(vault_id: Optional[str] = None) -> list[DoctorResult]:
     if not db_path.exists():
         return [DoctorResult("flow-skip", "flow", "Flow checks", "skip", "skipped: DB missing")]
 
+    conn = None
     try:
         conn = sqlite3.connect(str(db_path))
         conn.row_factory = sqlite3.Row
@@ -603,10 +604,11 @@ def _check_obsidian_sync(vault_id: Optional[str] = None) -> list[DoctorResult]:
     except Exception as e:
         return [DoctorResult("flow-skip", "flow", "Flow checks", "skip", f"skipped: {e}")]
     finally:
-        try:
-            conn.close()
-        except Exception:
-            pass
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass
 
     if not rows:
         return [DoctorResult("flow-skip", "flow", "Flow checks", "skip",
@@ -650,9 +652,9 @@ def _check_obsidian_sync(vault_id: Optional[str] = None) -> list[DoctorResult]:
         # JSON Schema validation
         if schema:
             errors = _validate_against_schema(data, schema)
-            for err in errors:
+            for idx, err in enumerate(errors):
                 results.append(DoctorResult(
-                    f"flow-sync-schema:{vid}", "flow", f"{prefix}: obsidian-sync.yml", "fail",
+                    f"flow-sync-schema:{vid}:{idx}", "flow", f"{prefix}: obsidian-sync.yml", "fail",
                     f"Schema violation: {err}",
                     f"Fix {sync_file}"))
             if errors:
@@ -703,7 +705,8 @@ def _check_obsidian_sync(vault_id: Optional[str] = None) -> list[DoctorResult]:
             seen.add(key)
 
         # If no issues, report pass
-        if not any(r.status == "fail" for r in results if r.id.endswith(f":{vid}")):
+        vault_results = [r for r in results if r.id.endswith(f":{vid}")]
+        if not any(r.status in ("fail", "warn") for r in vault_results):
             results.append(DoctorResult(
                 f"flow-sync-ok:{vid}", "flow", f"{prefix}: obsidian-sync.yml", "pass",
                 f"{len(pairs)} pair(s), vault_root OK" if vault_root and vault_root.exists()

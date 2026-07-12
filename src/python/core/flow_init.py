@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,7 +18,7 @@ from typing import Any, Optional
 
 import yaml
 
-_SCHEMA_PATH = Path(__file__).parent.parent.parent.parent / "schema" / "obsidian-sync.schema.json"
+_SCHEMA_PATH = Path(__file__).resolve().parent.parent.parent.parent / "schema" / "obsidian-sync.schema.json"
 _FLOW_DIR = ".flow"
 _FLOW_FILE = "obsidian-sync.yml"
 
@@ -96,13 +98,15 @@ def validate_config(config: FlowConfig) -> list[str]:
                         errors.append(f"pairs[{i}].{key} must be a non-empty string")
                     elif pair[key].startswith("/"):
                         errors.append(f"pairs[{i}].{key} must not start with /")
+                    elif ".." in pair[key]:
+                        errors.append(f"pairs[{i}].{key} must not contain ..")
                 if "vault" in pair and "repo" in pair:
                     if pair["vault"] == pair["repo"]:
                         errors.append(f"pairs[{i}]: vault and repo are identical (no-op)")
-                    key = (pair.get("vault", ""), pair.get("repo", ""))
-                    if key in seen:
+                    pair_key = (pair.get("vault", ""), pair.get("repo", ""))
+                    if pair_key in seen:
                         errors.append(f"pairs[{i}]: duplicate vault→repo mapping")
-                    seen.add(key)
+                    seen.add(pair_key)
 
     return errors
 
@@ -123,14 +127,12 @@ def _infer_vault_root(cwd: Path) -> str:
 
 
 def _infer_pairs(cwd: Path) -> list[dict[str, str]]:
-    """Try to infer pairs from repo structure (look for matching vault dirs)."""
-    pairs: list[dict[str, str]] = []
-    # Simple heuristic: if repo has subdirs that look like vault paths
-    for item in cwd.iterdir():
-        if item.is_dir() and not item.name.startswith("."):
-            # Check if there's a matching vault dir
-            pairs.append({"vault": item.name, "repo": item.name})
-    return pairs[:5]  # Limit to 5 suggestions
+    """Try to infer pairs from repo structure.
+
+    Returns empty list — inference is unreliable and creates invalid configs.
+    Users should specify pairs explicitly via --pairs or interactive prompts.
+    """
+    return []
 
 
 def init_flow_config(
@@ -168,6 +170,11 @@ def init_flow_config(
             "Use --force to overwrite"
         )
 
+    # Backup before overwrite
+    if flow_file.exists() and force:
+        backup = flow_file.with_suffix(".yml.bak")
+        shutil.copy2(flow_file, backup)
+
     # Build config
     if non_interactive:
         if not vault_root:
@@ -175,6 +182,13 @@ def init_flow_config(
         if not pairs_json:
             raise ValueError("--pairs required in non-interactive mode")
         pairs = json.loads(pairs_json)
+        if not isinstance(pairs, list):
+            raise ValueError("--pairs must be a JSON array")
+        for i, pair in enumerate(pairs):
+            if not isinstance(pair, dict):
+                raise ValueError(f"--pairs[{i}] must be a JSON object")
+            if "vault" not in pair or "repo" not in pair:
+                raise ValueError(f"--pairs[{i}] must have 'vault' and 'repo' keys")
         config = FlowConfig(vault_root=vault_root, pairs=pairs)
     else:
         config = _interactive_init(target)
@@ -184,12 +198,21 @@ def init_flow_config(
     if errors:
         raise ValueError(f"Validation failed:\n" + "\n".join(f"  - {e}" for e in errors))
 
-    # Write
+    # Write (atomic via temp + rename)
     flow_dir.mkdir(parents=True, exist_ok=True)
-    with open(flow_file, "w") as f:
-        f.write("# Vault↔repo mirror map for savant `plan:obsidian-sync`\n")
-        f.write(f"# Created: {datetime.now(timezone.utc).strftime('%Y-%m-%d')}\n")
-        f.write(config.to_yaml())
+    fd, tmp_path = tempfile.mkstemp(dir=flow_dir, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            f.write("# Vault↔repo mirror map for savant `plan:obsidian-sync`\n")
+            f.write(f"# Created: {datetime.now(timezone.utc).strftime('%Y-%m-%d')}\n")
+            f.write(config.to_yaml())
+        os.replace(tmp_path, flow_file)
+    except BaseException:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
     return config
 
@@ -234,10 +257,10 @@ def _interactive_init(target: Path) -> FlowConfig:
 
     # Include/exclude
     include_input = input("\ninclude [*.md]: ").strip()
-    include = [include_input] if include_input else ["*.md"]
+    include = [s.strip() for s in include_input.split(",")] if include_input else ["*.md"]
 
     exclude_input = input("exclude [_archive]: ").strip()
-    exclude = [exclude_input] if exclude_input else ["_archive"]
+    exclude = [s.strip() for s in exclude_input.split(",")] if exclude_input else ["_archive"]
 
     return FlowConfig(
         vault_root=vault_root,
@@ -252,13 +275,16 @@ def get_config_for_vault(vault_path: str) -> Optional[FlowConfig]:
     flow_file = Path(vault_path) / _FLOW_DIR / _FLOW_FILE
     if not flow_file.exists():
         return None
-    with open(flow_file) as f:
-        data = yaml.safe_load(f)
-    if not data:
+    try:
+        with open(flow_file) as f:
+            data = yaml.safe_load(f)
+        if not isinstance(data, dict):
+            return None
+        return FlowConfig(
+            vault_root=data.get("vault_root", ""),
+            pairs=data.get("pairs", []),
+            include=data.get("include", ["*.md"]),
+            exclude=data.get("exclude", ["_archive"]),
+        )
+    except (yaml.YAMLError, OSError, KeyError):
         return None
-    return FlowConfig(
-        vault_root=data.get("vault_root", ""),
-        pairs=data.get("pairs", []),
-        include=data.get("include", ["*.md"]),
-        exclude=data.get("exclude", ["_archive"]),
-    )
