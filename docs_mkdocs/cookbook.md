@@ -908,6 +908,38 @@ print(f\"{sum(1 for c in r['checks'] if c['status']=='fail')} failing checks\")
 
 ---
 
+## Manage Configuration
+
+`obs config` is the unified YAML config (v4.0.0+, Homebrew). One place for AI
+provider keys, paths, and preferences.
+
+### Inspect and validate
+
+```bash
+obs config show          # active config + which file loaded it
+obs config validate       # surface schema/structure errors
+```
+
+### Create or migrate
+
+```bash
+obs config init                              # interactive fresh config
+obs config migrate --target-dir ~/.config/obs  # legacy obs/nexus-cli → unified
+```
+
+### Edit by hand
+
+```bash
+obs config edit          # opens config in $EDITOR
+obs config validate      # confirm the edit is well-formed
+```
+
+!!! tip "Full walkthrough"
+    See the [Configuration tutorial](tutorials/config.md) for every subcommand and
+    the common-tasks matrix.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
@@ -915,3 +947,4 @@ print(f\"{sum(1 for c in r['checks'] if c['status']=='fail')} failing checks\")
 - [Claude Integration](claude-integration.md) -- MCP server setup
 - [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) -- Step-by-step setup
 - [Diagnostics tutorial](tutorials/doctor.md) -- `obs doctor` walkthrough
+- [Configuration tutorial](tutorials/config.md) -- `obs config` walkthrough
