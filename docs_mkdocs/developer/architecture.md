@@ -161,7 +161,7 @@ flowchart LR
 
 **Key difference:** `.obs/sync.yml` is project-rooted (one per repo, ADR-001 settings contract). `.flow/obsidian-sync.yml` is vault-rooted (one per vault directory). They are NOT interchangeable — `.obs/sync.yml` has a `schema: 1` + `mirror: none|mirror` envelope; `.flow/obsidian-sync.yml` is a bare `vault_root` + `pairs` map validated against `schema/obsidian-sync.schema.json`.
 
-See [`.obs/sync.yml Schema`](../obs-sync-yml.md) and [`obs doctor --layer flow`](cli-reference.md) for details.
+See [`.obs/sync.yml Schema`](../obs-sync-yml.md) and [`obs doctor --layer flow`](../cli-reference.md) for details.
 
 ---
 
