@@ -1,8 +1,18 @@
 """Tests for obs research board — the deterministic renderer + marker writer (SPEC-obs)."""
+import json
+import subprocess
+from unittest.mock import patch
+
+import pytest
+
 from research.research_board import (
     MARKER_END,
     MARKER_START,
+    AtlasIntegrationError,
     build_block,
+    format_warnings,
+    load_projects,
+    load_research_projects,
     progress_bar,
     rank,
     render_action_board,
@@ -80,3 +90,68 @@ def test_dry_run_writes_nothing(tmp_path):
     assert res["action"] == "dry-run"
     assert res["changed"] is True
     assert not f.exists()
+
+
+# ── atlas integration error handling (SPEC-cross-repo-research-ops-integration-2026-07-16, item 4) ──
+
+def _completed(stdout: str) -> subprocess.CompletedProcess:
+    return subprocess.CompletedProcess(args=["atlas"], returncode=0, stdout=stdout, stderr="")
+
+
+def test_load_projects_returns_data_on_success():
+    with patch("subprocess.run", return_value=_completed(json.dumps(FIX))):
+        assert load_projects(kind="manuscript") == FIX
+
+
+def test_load_projects_raises_atlas_integration_error_on_missing_binary():
+    with patch("subprocess.run", side_effect=FileNotFoundError("no such file")):
+        with pytest.raises(AtlasIntegrationError, match="atlas binary not found"):
+            load_projects(kind="manuscript")
+
+
+def test_load_projects_raises_atlas_integration_error_on_nonzero_exit():
+    err = subprocess.CalledProcessError(returncode=1, cmd=["atlas"], stderr="boom")
+    with patch("subprocess.run", side_effect=err):
+        with pytest.raises(AtlasIntegrationError, match="exited 1"):
+            load_projects(kind="manuscript")
+
+
+def test_load_projects_raises_atlas_integration_error_on_malformed_json():
+    with patch("subprocess.run", return_value=_completed("not json {{{")):
+        with pytest.raises(AtlasIntegrationError, match="invalid JSON"):
+            load_projects(kind="manuscript")
+
+
+def test_load_research_projects_degrades_to_partial_data_on_one_kind_failure():
+    """One kind's atlas call fails (deliberately broken, per spec acceptance) — the
+    other kind's data still comes back, with a warning naming the failure."""
+    def side_effect(cmd, **kwargs):
+        if "manuscript" in cmd:
+            raise subprocess.CalledProcessError(returncode=1, cmd=cmd, stderr="atlas is down")
+        return _completed(json.dumps([FIX[2]]))  # pmed-modern, kind=program
+
+    with patch("subprocess.run", side_effect=side_effect):
+        items, warnings = load_research_projects()
+
+    assert items == [FIX[2]]
+    assert len(warnings) == 1
+    assert "manuscript" in warnings[0]
+    assert "atlas is down" in warnings[0]
+
+
+def test_load_research_projects_no_warnings_on_full_success():
+    with patch("subprocess.run", return_value=_completed("[]")):
+        items, warnings = load_research_projects()
+    assert items == []
+    assert warnings == []
+
+
+def test_format_warnings_empty_when_no_warnings():
+    assert format_warnings([]) == ""
+
+
+def test_format_warnings_banner_lists_each_warning():
+    out = format_warnings(["manuscript: atlas is down", "program: bad json"])
+    assert "atlas is down" in out
+    assert "bad json" in out
+    assert out.startswith("⚠️")

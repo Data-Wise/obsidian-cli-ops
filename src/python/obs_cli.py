@@ -2015,9 +2015,20 @@ def main():
             sub = getattr(args, 'research_command', None)
 
             if sub == 'board':
-                from research.research_board import load_projects, load_research_projects, build_block, write_marked_block
+                from research.research_board import (
+                    AtlasIntegrationError, load_projects, load_research_projects,
+                    build_block, format_warnings, write_marked_block,
+                )
                 kind = getattr(args, 'kind', None)
-                projects = load_projects(kind=kind) if kind else load_research_projects()
+                if kind:
+                    try:
+                        projects, warnings = load_projects(kind=kind), []
+                    except AtlasIntegrationError as exc:
+                        projects, warnings = [], [f"{kind}: {exc}"]
+                else:
+                    projects, warnings = load_research_projects()
+                if warnings:
+                    print(format_warnings(warnings), file=sys.stderr)
                 block = build_block(projects)
                 out = getattr(args, 'out', None)
                 if out:
@@ -2025,7 +2036,7 @@ def main():
                     print(f"{res['action']}: {res['path']} (changed={res['changed']})")
                 else:
                     print(block)
-                sys.exit(0)
+                sys.exit(1 if warnings else 0)
 
             if sub == 'zotero':
                 if cfg is None or cfg.research is None or cfg.research.zotero is None:
