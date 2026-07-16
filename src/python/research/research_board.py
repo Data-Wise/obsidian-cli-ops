@@ -95,6 +95,17 @@ def build_block(projects: list[dict]) -> str:
     return f"{MARKER_START}\n{render_action_board(projects)}{MARKER_END}\n"
 
 
+def format_warnings(warnings: list[str]) -> str:
+    """Format integration warnings as a banner for CLI/stderr output — NOT for the
+    marker block (which must stay a pure, timestamp-free function of project data
+    for the golden-file/idempotency guarantee). Empty string if no warnings."""
+    if not warnings:
+        return ""
+    lines = ["⚠️  research board rendered with partial data — atlas integration issue(s):"]
+    lines.extend(f"   - {w}" for w in warnings)
+    return "\n".join(lines) + "\n"
+
+
 def write_marked_block(path: str | Path, block: str, dry_run: bool = False) -> dict:
     """Atomically replace the marker-bounded region in ``path`` with ``block``.
 
@@ -120,18 +131,49 @@ def write_marked_block(path: str | Path, block: str, dry_run: bool = False) -> d
     return {"path": str(p), "changed": changed, "action": "dry-run" if dry_run else "write"}
 
 
+class AtlasIntegrationError(RuntimeError):
+    """Raised when the `atlas` CLI integration fails — binary missing/non-zero exit,
+    or its stdout isn't valid JSON. Carries a human-readable message; callers decide
+    whether to degrade (partial board + warning) or propagate."""
+
+
 def load_projects(kind: str | None = None, atlas_bin: str = "atlas") -> list[dict]:
-    """Load projects from atlas (`atlas project list [--kind] --format json`)."""
+    """Load projects from atlas (`atlas project list [--kind] --format json`).
+
+    Raises `AtlasIntegrationError` (not the raw subprocess/json exception) on any
+    integration failure, so callers get one exception type to catch regardless of
+    whether atlas is missing, exits non-zero, or returns malformed JSON.
+    """
     cmd = [atlas_bin, "project", "list", "--format", "json"]
     if kind:
         cmd += ["--kind", kind]
-    out = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
-    return json.loads(out)
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    except FileNotFoundError as exc:
+        raise AtlasIntegrationError(f"atlas binary not found ({atlas_bin!r}): {exc}") from exc
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip()
+        raise AtlasIntegrationError(
+            f"`{' '.join(cmd)}` exited {exc.returncode}" + (f": {stderr}" if stderr else "")
+        ) from exc
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise AtlasIntegrationError(f"`{' '.join(cmd)}` returned invalid JSON: {exc}") from exc
 
 
-def load_research_projects(atlas_bin: str = "atlas") -> list[dict]:
-    """Load research items (manuscripts + programs) from atlas — the default board scope."""
+def load_research_projects(atlas_bin: str = "atlas") -> tuple[list[dict], list[str]]:
+    """Load research items (manuscripts + programs) from atlas — the default board scope.
+
+    Degrades per-kind: if one kind's `atlas` call fails, the other kind's data is
+    still returned rather than losing the whole board to a single hiccup. Returns
+    `(items, warnings)` — `warnings` is empty on full success.
+    """
     items: list[dict] = []
+    warnings: list[str] = []
     for k in ("manuscript", "program"):
-        items.extend(load_projects(kind=k, atlas_bin=atlas_bin))
-    return items
+        try:
+            items.extend(load_projects(kind=k, atlas_bin=atlas_bin))
+        except AtlasIntegrationError as exc:
+            warnings.append(f"{k}: {exc}")
+    return items, warnings
