@@ -28,7 +28,7 @@ FIX = [
     {"name": "pmed-modern", "kind": "program", "status": "active",
      "progress": 92, "target": "Epidemiology", "next": "advance 05", "priority": "P1", "taskCount": 5},
     {"name": "medfit", "kind": "package", "status": "active",
-     "progress": 100, "target": None, "next": "CRAN", "priority": "P0"},
+     "progress": 100, "target": None, "next": "CRAN", "priority": "P0", "cranState": "planned"},
 ]
 
 
@@ -41,10 +41,32 @@ def test_render_has_sections_and_no_timestamp():
     assert "## 🎯 Research Action Board" in out
     assert "### Manuscripts" in out
     assert "### Programs" in out
-    assert "### Packages & other" in out
+    assert "### Packages" in out
     assert "🔴 revise & resubmit" in out
     assert "AMPPS" in out
     assert "generated" not in out.lower()
+
+
+# ── package-kind rows: CRAN-state column instead of venue (item 3) ──
+
+def test_package_row_uses_cran_column_not_venue():
+    out = render_action_board(FIX)
+    assert "| Package | CRAN | Status | Progress | Next |" in out
+    assert "🔜 planned" in out  # medfit's cranState badge
+
+
+def test_package_with_no_cran_state_shows_em_dash():
+    projects = FIX + [{"name": "missingmed", "kind": "package", "status": "active", "progress": 100}]
+    out = render_action_board(projects)
+    lines = [ln for ln in out.splitlines() if ln.startswith("| missingmed")]
+    assert lines and "| — |" in lines[0]
+
+
+def test_other_kind_still_gets_its_own_section():
+    projects = FIX + [{"name": "some-tool", "kind": "tool", "status": "active", "progress": 50}]
+    out = render_action_board(projects)
+    assert "### Other" in out
+    assert "| Project | Venue | Status | Progress | Next |" in out
 
 
 def test_progress_bar():
@@ -124,19 +146,36 @@ def test_load_projects_raises_atlas_integration_error_on_malformed_json():
 
 def test_load_research_projects_degrades_to_partial_data_on_one_kind_failure():
     """One kind's atlas call fails (deliberately broken, per spec acceptance) — the
-    other kind's data still comes back, with a warning naming the failure."""
+    other kinds' data still comes back, with a warning naming the failure."""
     def side_effect(cmd, **kwargs):
         if "manuscript" in cmd:
             raise subprocess.CalledProcessError(returncode=1, cmd=cmd, stderr="atlas is down")
-        return _completed(json.dumps([FIX[2]]))  # pmed-modern, kind=program
+        if "program" in cmd:
+            return _completed(json.dumps([FIX[2]]))  # pmed-modern, kind=program
+        return _completed(json.dumps([FIX[3]]))  # medfit, kind=package
 
     with patch("subprocess.run", side_effect=side_effect):
         items, warnings = load_research_projects()
 
-    assert items == [FIX[2]]
+    assert items == [FIX[2], FIX[3]]
     assert len(warnings) == 1
     assert "manuscript" in warnings[0]
     assert "atlas is down" in warnings[0]
+
+
+def test_load_research_projects_fetches_package_kind_too():
+    """Item 3 acceptance: load_research_projects is no longer hardcoded to
+    manuscript+program only — package-kind projects reach the renderer."""
+    def side_effect(cmd, **kwargs):
+        if "package" in cmd:
+            return _completed(json.dumps([FIX[3]]))
+        return _completed("[]")
+
+    with patch("subprocess.run", side_effect=side_effect):
+        items, warnings = load_research_projects()
+
+    assert items == [FIX[3]]
+    assert warnings == []
 
 
 def test_load_research_projects_no_warnings_on_full_success():
