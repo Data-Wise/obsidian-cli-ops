@@ -17,14 +17,14 @@ function stripAnsi(str) {
 function runCli(args, env = {}) {
   const envCopy = { ...process.env };
   delete envCopy.VERBOSE;
-  
+
   const result = spawnSync('zsh', ['-f', CLI_PATH, ...args], {
-    env: { 
-      ...envCopy, 
+    env: {
+      ...envCopy,
       HOME: TEMP_HOME,
       // Force test mode to use a dedicated test db path
       OBS_DB_PATH: path.join(TEMP_HOME, '.config/obs/vaults.db'),
-      ...env 
+      ...env,
     },
     encoding: 'utf-8',
   });
@@ -41,11 +41,20 @@ beforeAll(() => {
 
   // Create mock Claude Desktop directories & config files to pass doctor check
   const claudeDir1 = path.join(TEMP_HOME, 'Library/Application Support/Claude');
-  const claudeDir2 = path.join(TEMP_HOME, 'Library/Application Support/Claude-3p');
+  const claudeDir2 = path.join(
+    TEMP_HOME,
+    'Library/Application Support/Claude-3p'
+  );
   fs.mkdirSync(claudeDir1, { recursive: true });
   fs.mkdirSync(claudeDir2, { recursive: true });
-  fs.writeFileSync(path.join(claudeDir1, 'claude_desktop_config.json'), JSON.stringify({ mcpServers: {} }));
-  fs.writeFileSync(path.join(claudeDir2, 'claude_desktop_config.json'), JSON.stringify({ mcpServers: {} }));
+  fs.writeFileSync(
+    path.join(claudeDir1, 'claude_desktop_config.json'),
+    JSON.stringify({ mcpServers: {} })
+  );
+  fs.writeFileSync(
+    path.join(claudeDir2, 'claude_desktop_config.json'),
+    JSON.stringify({ mcpServers: {} })
+  );
 });
 
 afterAll(() => {
@@ -59,7 +68,7 @@ describe('Obsidian CLI Ops E2E - Diagnostics, Nesting Guard, and Config Helper',
   beforeEach(() => {
     tempVaultDir1 = fs.mkdtempSync(path.join(os.tmpdir(), 'obs-vault-1-'));
     fs.mkdirSync(path.join(tempVaultDir1, '.obsidian'), { recursive: true });
-    
+
     tempVaultDir2 = path.join(tempVaultDir1, 'nested-vault');
     fs.mkdirSync(path.join(tempVaultDir2, '.obsidian'), { recursive: true });
   });
@@ -84,7 +93,13 @@ describe('Obsidian CLI Ops E2E - Diagnostics, Nesting Guard, and Config Helper',
   });
 
   test('should run doctor successfully', () => {
-    const result = runCli(['doctor', '--layer', 'python', '--layer', 'database']);
+    const result = runCli([
+      'doctor',
+      '--layer',
+      'python',
+      '--layer',
+      'database',
+    ]);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('PYTHON');
     expect(result.stdout).toContain('DATABASE');
