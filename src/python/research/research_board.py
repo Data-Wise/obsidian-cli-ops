@@ -70,23 +70,57 @@ def _row(p: dict) -> str:
     )
 
 
+# cran_state -> icon (matches the informal convention already used across
+# ~/projects/r-packages/active/*/.STATUS — planned/dev/hold/submitted/accepted/on_cran)
+_CRAN_ICONS = {
+    "on_cran": "✅", "accepted": "✅",
+    "submitted": "🟡",
+    "hold": "⏸️", "blocked": "⏸️",
+    "planned": "🔜",
+    "dev": "⚪",
+}
+
+
+def _cran_badge(cran_state: str | None) -> str:
+    if not cran_state:
+        return "—"
+    icon = _CRAN_ICONS.get(str(cran_state).lower(), "⚪")
+    return f"{icon} {cran_state}"
+
+
+def _package_row(p: dict) -> str:
+    return (
+        f"| {p.get('name', '—')} "
+        f"| {_cran_badge(p.get('cranState'))} "
+        f"| {status_icon(p.get('status'))} {p.get('status') or '—'} "
+        f"| {progress_bar(p.get('progress'))} "
+        f"| {p.get('next') or '—'} |"
+    )
+
+
 def render_action_board(projects: list[dict]) -> str:
     """Render the marker-block body (no enclosing markers, no timestamps)."""
     ranked = rank(projects)
     lines: list[str] = ["## 🎯 Research Action Board", ""]
     sections = [
-        ("Manuscripts", lambda k: k == "manuscript"),
-        ("Programs", lambda k: k == "program"),
-        ("Packages & other", lambda k: k not in ("manuscript", "program")),
+        ("Manuscripts", lambda k: k == "manuscript", _row, "| Project | Venue | Status | Progress | Next |"),
+        ("Programs", lambda k: k == "program", _row, "| Project | Venue | Status | Progress | Next |"),
+        ("Packages", lambda k: k == "package", _package_row, "| Package | CRAN | Status | Progress | Next |"),
+        (
+            "Other",
+            lambda k: k not in ("manuscript", "program", "package"),
+            _row,
+            "| Project | Venue | Status | Progress | Next |",
+        ),
     ]
-    for label, pred in sections:
+    for label, pred, row_fn, header in sections:
         sel = [p for p in ranked if pred(p.get("kind"))]
         if not sel:
             continue
         lines.append(f"### {label}")
-        lines.append("| Project | Venue | Status | Progress | Next |")
+        lines.append(header)
         lines.append("|---|---|---|---|---|")
-        lines.extend(_row(p) for p in sel)
+        lines.extend(row_fn(p) for p in sel)
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
@@ -163,15 +197,16 @@ def load_projects(kind: str | None = None, atlas_bin: str = "atlas") -> list[dic
 
 
 def load_research_projects(atlas_bin: str = "atlas") -> tuple[list[dict], list[str]]:
-    """Load research items (manuscripts + programs) from atlas — the default board scope.
+    """Load research items (manuscripts + programs + packages) from atlas — the
+    default board scope.
 
-    Degrades per-kind: if one kind's `atlas` call fails, the other kind's data is
+    Degrades per-kind: if one kind's `atlas` call fails, the other kinds' data is
     still returned rather than losing the whole board to a single hiccup. Returns
     `(items, warnings)` — `warnings` is empty on full success.
     """
     items: list[dict] = []
     warnings: list[str] = []
-    for k in ("manuscript", "program"):
+    for k in ("manuscript", "program", "package"):
         try:
             items.extend(load_projects(kind=k, atlas_bin=atlas_bin))
         except AtlasIntegrationError as exc:
