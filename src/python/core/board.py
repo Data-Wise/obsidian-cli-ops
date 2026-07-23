@@ -524,11 +524,10 @@ class BoardEngine:
 
     def _has_drift(self, vault_id: str) -> bool:
         try:
-            from core.doctor import Doctor  # noqa: E402
-            doc = Doctor()
-            results = doc.run_check("sync", vault_id=vault_id)
+            from core.doctor import run_checks  # noqa: E402
+            results = run_checks(vault_id=vault_id, layers=["sync"])
             for r in results:
-                if r.level in ("fail", "warn") and "sync-ghost" in r.check_id:
+                if r.status in ("fail", "warn") and "sync-ghosts" in r.id:
                     return True
         except Exception:
             pass

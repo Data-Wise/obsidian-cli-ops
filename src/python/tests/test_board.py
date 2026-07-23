@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -363,6 +364,68 @@ def test_engine_status_missing_board(tmp_path, monkeypatch):
     result = engine.status("v1")
     assert result["board_exists"] is False
     assert result["drift"] is True
+
+
+def _make_sync_db(tmp_path, vault_path, *, disk_files, db_paths):
+    """Mirrors test_doctor.py's TestCheckSync._make_db — a vault_db.sqlite
+    at the (monkeypatched) home dir, with disk files vs. indexed notes rows
+    that can agree (no drift) or disagree (ghost rows -> drift)."""
+    for rel in disk_files:
+        fp = vault_path / rel
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        fp.write_text(f"# {rel}\n")
+
+    db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("CREATE TABLE schema_version (version INTEGER)")
+    conn.execute("INSERT INTO schema_version VALUES (2)")
+    conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+    conn.execute("INSERT INTO vaults VALUES ('v1', 'SyncVault', ?, '2026-06-25T00:00:00')",
+                 (str(vault_path),))
+    conn.execute("CREATE TABLE notes (id TEXT, vault_id TEXT, path TEXT, title TEXT, content_hash TEXT)")
+    for i, rel in enumerate(db_paths):
+        conn.execute("INSERT INTO notes VALUES (?, 'v1', ?, ?, 'h')", (f"n{i}", rel, rel))
+    conn.execute(
+        "CREATE TABLE scan_history (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "vault_id TEXT, started_at TIMESTAMP, completed_at TIMESTAMP, "
+        "notes_scanned INTEGER, notes_failed INTEGER, failed_paths TEXT, status TEXT)"
+    )
+    conn.execute(
+        "INSERT INTO scan_history (vault_id, started_at, completed_at, "
+        "notes_scanned, notes_failed, failed_paths, status) "
+        "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, 0, NULL, 'completed')",
+        (len(db_paths),),
+    )
+    conn.commit()
+    conn.close()
+
+
+class TestHasDrift:
+    """Regression: _has_drift previously imported a nonexistent `Doctor` class
+    with a wrong API (run_check/.level/.check_id) — the ImportError was
+    swallowed by a bare `except Exception`, so it silently always returned
+    False. Exercises the real core.doctor.run_checks() path instead of
+    monkeypatching _has_drift itself (as the status() tests above do)."""
+
+    def test_false_when_in_sync(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md"], db_paths=["a.md"])
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is False
+
+    def test_true_when_ghost_rows_present(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md"],
+                      db_paths=["a.md", "gone.md"])
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is True
 
 
 def test_engine_resolve_prefers_research_subdirectory(tmp_path):
