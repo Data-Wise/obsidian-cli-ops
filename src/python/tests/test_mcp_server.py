@@ -356,13 +356,15 @@ class TestGraphTools:
             "# Dangling Note\n\n[[Nonexistent Target]]\n"
         )
 
-        vault_id = "broken-link-vault"
-        asyncio.run(VaultScanner(mcp_mod.db).scan_vault(str(vault_dir), vault_id))
-        mcp_mod.analyze_vault(vault_id)  # resolves links, marking unresolved ones 'broken'
+        vault_name = "broken-link-vault"
+        asyncio.run(VaultScanner(mcp_mod.db).scan_vault(str(vault_dir), vault_name))
+        mcp_mod.analyze_vault(vault_name)  # resolves links, marking unresolved ones 'broken'
 
-        result = mcp_mod.get_broken_links(vault_id)
+        result = mcp_mod.get_broken_links(vault_name)
         assert "Dangling Note" in result
-        assert str(vault_dir / "Dangling Note.md") in result or "Dangling Note.md" in result
+        # notes.path is stored relative to the vault root (vault_scanner.py's
+        # relative_to(vault_path)), never absolute — only the relative form matches.
+        assert "Dangling Note.md" in result
         assert "Unknown" not in result
         assert "Path: ?" not in result
 
