@@ -381,7 +381,8 @@ class VaultScanner:
             self.db.complete_scan(
                 scan_id, stats['notes_scanned'], stats['notes_added'],
                 stats['notes_updated'], notes_deleted=stats['notes_pruned'],
-                notes_failed=stats['notes_failed']
+                notes_failed=stats['notes_failed'],
+                failed_paths=stats.get('failed_paths', [])
             )
 
             return stats

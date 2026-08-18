@@ -33,6 +33,12 @@ Release notes and changelogs.
 
 - **[v1.1.0](releases/v1.1.0.md)** - Quick wins release
 
+### [Brand & Design](specs/SPEC-docs-redesign-2026-07-12.md)
+The published docs site's visual identity and proposal workflow.
+
+- **[Docs Redesign Spec](specs/SPEC-docs-redesign-2026-07-12.md)** - ink/paper/teal palette, logo "Node Cartography", and how to rebuild the proposal artifact
+- **[Brand assets](proposals/brand/)** - logo marks, lockups, favicon, and `logo-sheet.pdf`
+
 ---
 
 ## 🚀 Quick Links

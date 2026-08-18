@@ -809,8 +809,171 @@ obs research bib check me-mediator   # catches missing refs before submission
 
 ---
 
+## Vault↔Repo Mirroring
+
+`obs flow init` writes `.flow/obsidian-sync.yml` — the single vault↔repo mirror map
+for savant `plan:obsidian-sync`. It validates against the JSON Schema before writing.
+
+### Create a mirror map (interactive)
+
+```bash
+cd ~/code/my-repo
+obs flow init
+```
+
+The wizard infers `vault_root` from a `.obsidian` folder up the tree (else the iCloud
+Research default), then prompts for `vault → repo` pairs and `include`/`exclude` globs.
+
+### Create a mirror map (non-interactive / CI)
+
+```bash
+obs flow init \
+  --vault-root ~/vaults/Research \
+  --pairs '[{"vault":"projects/atlas","repo":"atlas"},{"vault":"notes","repo":"docs/notes"}]' \
+  --json
+```
+
+`vault` / `repo` are **relative** paths (no leading `/`, no `..`) and must differ.
+
+### Validate the config
+
+```bash
+obs doctor --layer flow
+```
+
+Six checks run: missing, schema, stale (>90d), vault-root exists, pair-duplicate,
+pair-identity. A missing config is a **warning**, not a failure.
+
+### Overwrite safely
+
+```bash
+# Previous file is backed up to .flow/obsidian-sync.yml.bak
+obs flow init --vault-root ~/vaults/Research --pairs '[{"vault":"atlas","repo":"atlas"}]' --force
+```
+
+!!! tip "Full walkthrough"
+    See the [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) for the
+    step-by-step guide, generated-config anatomy, and the full error table.
+
+---
+
+## Diagnose & Heal a Vault
+
+`obs doctor` runs self-diagnostic checks; `obs scan --prune` clears ghost notes that
+a plain scan leaves behind.
+
+### Full diagnostic
+
+```bash
+obs doctor                                  # All 7 layers + flow
+obs doctor --vault Research                 # Scope to one vault
+obs doctor --layer sync                     # Vault↔index drift only
+```
+
+### Find ghost notes
+
+```bash
+obs doctor --vault Research --layer sync
+# sync-ghosts: warn  DB rows whose file is gone (deleted/renamed)
+# sync-drift:   info disk=120 db=118 (2 ghost)
+```
+
+### Heal (clear ghosts)
+
+A plain `obs scan` is additive — it never removes rows. Re-scan with `--prune` to
+sweep rows whose file is gone from disk:
+
+```bash
+obs scan Research --prune                   # --prune is skipped if zero files found
+obs doctor --vault Research --layer sync    # verify drift is gone
+```
+
+!!! warning "Safety guard"
+    `--prune` is skipped (with a warning) if the scan sees zero files — a mis-pointed
+    path or un-materialised iCloud vault won't wipe the index.
+
+### Machine-readable checks (CI)
+
+`--json` outputs a flat array of `{id, layer, label, status, message, fix_hint}` objects:
+
+```bash
+obs doctor --layer database --json | python3 -c "
+import json, sys
+checks = json.load(sys.stdin)
+print(f\"{sum(1 for c in checks if c['status']=='fail')} failing checks\")
+"
+```
+
+!!! tip "Full walkthrough"
+    See the [Diagnostics tutorial](tutorials/doctor.md) for every layer, the sync
+    check table, and the common-scenarios matrix.
+
+---
+
+## Manage Configuration
+
+`obs config` is the unified YAML config (v4.0.0+, Homebrew). One place for AI
+provider keys, paths, and preferences.
+
+### Inspect and validate
+
+```bash
+obs config show          # active config + which file loaded it
+obs config validate       # surface schema/structure errors
+```
+
+### Create or migrate
+
+```bash
+obs config init                              # interactive fresh config
+obs config migrate --target-dir ~/.config/obs  # legacy obs/nexus-cli → unified
+```
+
+### Edit by hand
+
+```bash
+obs config edit          # opens config in $EDITOR
+obs config validate      # confirm the edit is well-formed
+```
+
+!!! tip "Full walkthrough"
+    See the [Configuration tutorial](tutorials/config.md) for every subcommand and
+    the common-tasks matrix.
+
+---
+
+## Initialize or Rebuild the Database
+
+All vault data lives in a SQLite database at `~/.config/obs/vault_db.sqlite`.
+`obs db init` creates it (with all tables and views) or rebuilds it from scratch.
+
+```bash
+obs db init
+```
+
+When to use it:
+
+- **Fresh install** — the database is created automatically on first `obs scan`,
+  but `obs db init` makes the location explicit.
+- **Corruption / reset** — if queries misbehave, `obs db init` rebuilds the schema.
+  Re-scan your vaults afterward to repopulate notes, links, and metrics.
+
+!!! warning "Rebuild wipes indexed data"
+    `obs db init` resets the schema. Your markdown files on disk are untouched, but
+    the index (notes/links/tags/metrics) is cleared — re-run `obs scan` to refill it.
+
+!!! tip "Full walkthrough"
+    See the [Search tutorial](tutorials/search.md) for finding notes once the DB is
+    populated.
+
+---
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) -- Full command documentation
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
 - [Claude Integration](claude-integration.md) -- MCP server setup
+- [Vault↔Repo Mirroring tutorial](tutorials/flow-init.md) -- Step-by-step setup
+- [Diagnostics tutorial](tutorials/doctor.md) -- `obs doctor` walkthrough
+- [Configuration tutorial](tutorials/config.md) -- `obs config` walkthrough
+- [Search tutorial](tutorials/search.md) -- power-user search

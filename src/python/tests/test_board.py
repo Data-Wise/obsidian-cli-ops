@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -322,7 +323,7 @@ def test_engine_refresh_writes_board(tmp_path, monkeypatch):
     result = engine.refresh("v1")
     assert "error" not in result
     assert result["changed"] is True
-    board_path = tmp_path / "00_meta" / "_ACTION-BOARD.md"
+    board_path = tmp_path / "Engineering" / "_ACTION-BOARD.md"
     assert board_path.exists()
     text = board_path.read_text(encoding="utf-8")
     assert "# 🎯 Research Action Board" in text
@@ -339,7 +340,7 @@ def test_engine_refresh_unknown_vault():
 
 def test_engine_status_existing_board(tmp_path, monkeypatch):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
-    board_path = tmp_path / "00_meta" / "_ACTION-BOARD.md"
+    board_path = tmp_path / "Engineering" / "_ACTION-BOARD.md"
     board_path.parent.mkdir(parents=True)
     board_path.write_text("<!-- obs:board:start -->\n> generated: 2026-01-01\n<!-- obs:board:end -->", encoding="utf-8")
 
@@ -365,17 +366,128 @@ def test_engine_status_missing_board(tmp_path, monkeypatch):
     assert result["drift"] is True
 
 
+def _make_sync_db(tmp_path, vault_path, *, disk_files, db_paths,
+                   scan_status="completed", notes_failed=0):
+    """Mirrors test_doctor.py's TestCheckSync._make_db — a vault_db.sqlite
+    at the (monkeypatched) home dir, with disk files vs. indexed notes rows
+    that can agree (no drift) or disagree (ghost/missing rows -> drift).
+    scan_status/notes_failed override the last scan_history row to exercise
+    the sync-errors check (fail on status='failed', warn on notes_failed>0)."""
+    for rel in disk_files:
+        fp = vault_path / rel
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        fp.write_text(f"# {rel}\n")
+
+    db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("CREATE TABLE schema_version (version INTEGER)")
+    conn.execute("INSERT INTO schema_version VALUES (2)")
+    conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+    conn.execute("INSERT INTO vaults VALUES ('v1', 'SyncVault', ?, '2026-06-25T00:00:00')",
+                 (str(vault_path),))
+    conn.execute("CREATE TABLE notes (id TEXT, vault_id TEXT, path TEXT, title TEXT, content_hash TEXT)")
+    for i, rel in enumerate(db_paths):
+        conn.execute("INSERT INTO notes VALUES (?, 'v1', ?, ?, 'h')", (f"n{i}", rel, rel))
+    conn.execute(
+        "CREATE TABLE scan_history (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "vault_id TEXT, started_at TIMESTAMP, completed_at TIMESTAMP, "
+        "notes_scanned INTEGER, notes_failed INTEGER, failed_paths TEXT, status TEXT)"
+    )
+    conn.execute(
+        "INSERT INTO scan_history (vault_id, started_at, completed_at, "
+        "notes_scanned, notes_failed, failed_paths, status) "
+        "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, ?, NULL, ?)",
+        (len(db_paths), notes_failed, scan_status),
+    )
+    conn.commit()
+    conn.close()
+
+
+class TestHasDrift:
+    """Regression: _has_drift previously imported a nonexistent `Doctor` class
+    with a wrong API (run_check/.level/.check_id) — the ImportError was
+    swallowed by a bare `except Exception`, so it silently always returned
+    False. Exercises the real core.doctor.run_checks() path instead of
+    monkeypatching _has_drift itself (as the status() tests above do)."""
+
+    def test_false_when_in_sync(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md"], db_paths=["a.md"])
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is False
+
+    def test_true_when_ghost_rows_present(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md"],
+                      db_paths=["a.md", "gone.md"])
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is True
+
+    def test_true_when_missing_files_present(self, tmp_path, monkeypatch):
+        """A disk file absent from the index (sync-missing, warn) is drift
+        just as much as a DB row absent from disk (sync-ghosts) — the
+        original fix's id match ("sync-ghosts" only) missed this direction."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md", "b.md"],
+                      db_paths=["a.md"])
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is True
+
+    def test_true_when_last_scan_failed(self, tmp_path, monkeypatch):
+        """scan_history.status='failed' -> sync-errors fail — a failed scan
+        is drift-relevant even with no ghost/missing rows yet."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md"], db_paths=["a.md"],
+                      scan_status="failed")
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is True
+
+    def test_true_when_last_scan_had_note_errors(self, tmp_path, monkeypatch):
+        """notes_failed>0 on a completed scan -> sync-errors warn."""
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        _make_sync_db(tmp_path, vault_path, disk_files=["a.md"], db_paths=["a.md"],
+                      notes_failed=2)
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is True
+
+    def test_false_when_run_checks_raises(self, monkeypatch):
+        """The except-Exception degrade path must still return False (not
+        crash the board), and must not silently swallow — it logs."""
+        def _boom(**kwargs):
+            raise RuntimeError("simulated doctor failure")
+        monkeypatch.setattr("core.doctor.run_checks", _boom)
+
+        engine = BoardEngine(vault_manager=MagicMock())
+        assert engine._has_drift("v1") is False
+
+
 def test_engine_resolve_prefers_research_subdirectory(tmp_path):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
     research = tmp_path / "Research"
     research.mkdir()
     engine = BoardEngine(vault_manager=MagicMock())
     resolved = engine._resolve_board_path(vault)
-    assert resolved == tmp_path / "Research" / "00_meta" / "_ACTION-BOARD.md"
+    assert resolved == tmp_path / "Research" / "Engineering" / "_ACTION-BOARD.md"
 
 
 def test_engine_resolve_falls_back_to_vault_root(tmp_path):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
     engine = BoardEngine(vault_manager=MagicMock())
     resolved = engine._resolve_board_path(vault)
-    assert resolved == tmp_path / "00_meta" / "_ACTION-BOARD.md"
+    assert resolved == tmp_path / "Engineering" / "_ACTION-BOARD.md"

@@ -98,7 +98,8 @@
 
 | Command | Description |
 |---------|-------------|
-| `obs link [dir] [--vault-root P] [--mirror M]` | Create `.obs/sync.yml` mirror map |
+| `obs flow init [dir] [--vault-root P] [--pairs J] [--force]` | Create `.flow/obsidian-sync.yml` vault↔repo map |
+| `obs doctor --layer flow` | Validate `.flow/obsidian-sync.yml` across vaults |
 | `obs research board [--out F] [--kind K] [--dry-run]` | Legacy research board renderer |
 | `obs help [--all]` | Show help |
 | `obs version` | Show version |

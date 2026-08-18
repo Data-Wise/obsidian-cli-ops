@@ -125,6 +125,26 @@ class DatabaseManager:
             Vault ID (hash of path)
         """
         vault_id = self._generate_id(path)
+        vault_path_obj = Path(path).resolve()
+
+        # Check nesting/overlap with existing vaults
+        existing = self.list_vaults()
+        for ev in existing:
+            if ev['id'] == vault_id:
+                continue
+            ev_path = Path(ev['path']).resolve()
+            if vault_path_obj == ev_path:
+                continue
+            if vault_path_obj in ev_path.parents:
+                raise ValueError(
+                    f"Vault nesting detected: new vault path '{vault_path_obj}' "
+                    f"is a parent of already registered vault '{ev['name']}' at '{ev_path}'."
+                )
+            if ev_path in vault_path_obj.parents:
+                raise ValueError(
+                    f"Vault nesting detected: new vault path '{vault_path_obj}' "
+                    f"is a child of already registered vault '{ev['name']}' at '{ev_path}'."
+                )
 
         with self.get_connection() as conn:
             # Upsert in place — never INSERT OR REPLACE here. A REPLACE would
@@ -751,11 +771,17 @@ class DatabaseManager:
             conn.execute(
                 "ALTER TABLE scan_history ADD COLUMN notes_failed INTEGER DEFAULT 0"
             )
+        if 'failed_paths' not in existing:
+            conn.execute(
+                "ALTER TABLE scan_history ADD COLUMN failed_paths TEXT"
+            )
 
     def complete_scan(self, scan_id: int, notes_scanned: int,
-                     notes_added: int = 0, notes_updated: int = 0,
-                     notes_deleted: int = 0, notes_failed: int = 0):
+                      notes_added: int = 0, notes_updated: int = 0,
+                      notes_deleted: int = 0, notes_failed: int = 0,
+                      failed_paths: Optional[List[str]] = None):
         """Mark scan as completed."""
+        import json
         with self.get_connection() as conn:
             self._ensure_scan_history_columns(conn)
             conn.execute("""
@@ -766,11 +792,12 @@ class DatabaseManager:
                     notes_updated = ?,
                     notes_deleted = ?,
                     notes_failed = ?,
+                    failed_paths = ?,
                     duration_seconds = (julianday(CURRENT_TIMESTAMP) - julianday(started_at)) * 86400,
                     status = 'completed'
                 WHERE id = ?
             """, (notes_scanned, notes_added, notes_updated, notes_deleted,
-                  notes_failed, scan_id))
+                  notes_failed, json.dumps(failed_paths or []), scan_id))
 
     def fail_scan(self, scan_id: int, error_message: str):
         """Mark scan as failed."""

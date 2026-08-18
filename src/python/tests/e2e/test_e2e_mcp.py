@@ -1183,6 +1183,25 @@ class TestE2EDogfoodCLI:
         assert isinstance(data, list)
         assert len(data) >= 2  # at least sync-ghosts + sync-missing
 
+    def test_obs_doctor_json_valid_for_every_layer(self, mcp_proc, e2e_vault):
+        """`obs doctor --layer <layer> --json` must emit clean JSON on stdout.
+
+        Regression for a bug where an unaliased `import json` anywhere else in
+        main() shadowed the module-level `json` for the whole function, so the
+        doctor branch's `json.dumps(...)` raised UnboundLocalError before any
+        of those later local imports ran.
+        """
+        vault_dir, _, env = e2e_vault
+        for layer in ("python", "database", "vault", "sync", "mcp", "docs", "icloud"):
+            r = subprocess.run(
+                [_OBS_PYTHON, str(_OBS_CLI), "doctor",
+                 "--vault", vault_dir.name, "--layer", layer, "--json"],
+                env=env, capture_output=True, text=True, timeout=30,
+            )
+            assert "Traceback" not in r.stderr, f"layer={layer}: {r.stderr}"
+            data = json.loads(r.stdout)
+            assert isinstance(data, list), f"layer={layer}"
+
     def test_obs_health_on_vault(self, mcp_proc, e2e_vault):
         """`obs health <name>` must produce health output."""
         vault_dir, _, env = e2e_vault
@@ -1252,6 +1271,15 @@ class TestE2EMiscTools:
         result = mcp_proc.call_tool("diagnose", {})
         assert isinstance(result, str)
         assert "python" in result.lower() or "database" in result.lower()
+
+    def test_diagnose_specific_layers(self, mcp_proc):
+        """diagnose with specific layers must run only those layers."""
+        result = mcp_proc.call_tool("diagnose", {"layers": "python,database"})
+        assert isinstance(result, str)
+        report = json.loads(result)
+        assert len(report) > 0
+        for item in report:
+            assert item["layer"] in ("python", "database")
 
     def test_unified_search(self, mcp_proc):
         """unified_search fans out; must not crash even with no results."""

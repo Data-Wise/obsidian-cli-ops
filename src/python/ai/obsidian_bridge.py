@@ -36,7 +36,7 @@ class ObsidianBridge:
         if self._available is None:
             try:
                 result = subprocess.run(
-                    ["obsidian", "--version"],
+                    ["obsidian", "version"],
                     capture_output=True,
                     text=True,
                     timeout=5,
@@ -115,7 +115,7 @@ class ObsidianBridge:
         cli_installed = False
         try:
             result = subprocess.run(
-                ["obsidian", "--version"],
+                ["obsidian", "version"],
                 capture_output=True, text=True, timeout=5,
             )
             if result.returncode == 0:

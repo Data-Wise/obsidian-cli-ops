@@ -21,6 +21,7 @@ from core.doctor import (
     DoctorResult, run_checks, _check_python, _check_database, _check_mcp,
     _check_icloud, _find_bad_vault_resolvers, _check_mcp_tool_resolvers,
     _find_async_run_offenders, _check_mcp_async_run, _check_sync,
+    _check_obsidian_sync,
 )
 
 _VersionInfo = namedtuple("version_info", ["major", "minor", "micro", "releaselevel", "serial"])
@@ -320,6 +321,82 @@ class TestCheckMCP:
         entry = next(r for r in results if r.id == "mcp-entry")
         assert entry.status == "warn"
 
+    def _write_config(self, tmp_path, command, monkeypatch):
+        config_path = tmp_path / "claude_desktop_config.json"
+        mcp_server_path = tmp_path / "mcp_server.py"
+        mcp_server_path.touch()
+        config_path.write_text(json.dumps({
+            "mcpServers": {
+                "obsidian-ops": {
+                    "command": command,
+                    "args": [str(mcp_server_path)]
+                }
+            }
+        }))
+        from core import doctor as doctor_mod
+        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+
+    def test_interpreter_pass_bare_command(self, tmp_path, monkeypatch):
+        self._write_config(tmp_path, "python3", monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "pass"
+
+    def test_interpreter_fail_nonexistent_absolute_path(self, tmp_path, monkeypatch):
+        self._write_config(tmp_path, "/nonexistent/path/to/python3", monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "fail"
+
+    def test_interpreter_fail_unresolvable_bare_command(self, tmp_path, monkeypatch):
+        self._write_config(tmp_path, "totally-not-a-real-interpreter-xyz", monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "fail"
+
+    def test_interpreter_warn_cellar_pinned_path(self, tmp_path, monkeypatch):
+        cellar_bin = tmp_path / "Cellar" / "python@3.14" / "3.14.6" / "bin"
+        cellar_bin.mkdir(parents=True)
+        interpreter = cellar_bin / "python3.14"
+        interpreter.write_text("#!/bin/sh\n")
+        os.chmod(interpreter, 0o755)
+        self._write_config(tmp_path, str(interpreter), monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "warn"
+
+    def test_interpreter_warn_cellar_pinned_path_with_revision_suffix(self, tmp_path, monkeypatch):
+        # Homebrew revision-suffixed versions (bottle rebuilds) are just as fragile
+        # as plain X.Y.Z Cellar paths and must still trigger the warn.
+        cellar_bin = tmp_path / "Cellar" / "python@3.14" / "3.14.6_1" / "bin"
+        cellar_bin.mkdir(parents=True)
+        interpreter = cellar_bin / "python3.14"
+        interpreter.write_text("#!/bin/sh\n")
+        os.chmod(interpreter, 0o755)
+        self._write_config(tmp_path, str(interpreter), monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "warn"
+
+    def test_interpreter_fail_non_string_command(self, tmp_path, monkeypatch):
+        # A malformed-but-valid-JSON config (e.g. command: 123) must be reported
+        # as a fail result, not crash obs doctor with an uncaught TypeError.
+        self._write_config(tmp_path, 123, monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "fail"
+
+    def test_interpreter_pass_stable_symlink_path(self, tmp_path, monkeypatch):
+        bin_dir = tmp_path / "bin"
+        bin_dir.mkdir()
+        interpreter = bin_dir / "python3.14"
+        interpreter.write_text("#!/bin/sh\n")
+        os.chmod(interpreter, 0o755)
+        self._write_config(tmp_path, str(interpreter), monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "pass"
+
 
 # ---------------------------------------------------------------------------
 # Layer 5: iCloud
@@ -349,6 +426,31 @@ class TestCheckIcloud:
         assert detect.status == "pass"
         assert len(results) == 1
 
+    def test_icloud_offload_commands(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        db_path = tmp_path / ".config" / "obs" / "vault_db.sqlite"
+        db_path.parent.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT)")
+        icloud_path = tmp_path / "Library" / "Mobile Documents" / "iCloud~md~obsidian" / "Documents" / "Vault1"
+        icloud_path.mkdir(parents=True)
+        (icloud_path / "test.md").touch()
+        conn.execute("INSERT INTO vaults VALUES ('v1', 'Vault1', ?)", (str(icloud_path),))
+        conn.commit()
+        conn.close()
+
+        from unittest.mock import patch as mock_patch
+        with mock_patch("platform.system", return_value="Darwin"), \
+             mock_patch("fs_utils.is_icloud_path", return_value=True), \
+             mock_patch("fs_utils.is_dataless", return_value=True), \
+             mock_patch("fs_utils.fs_op", side_effect=TimeoutError):
+            results = _check_icloud()
+
+        offload = next(r for r in results if r.id == "icloud-offload")
+        assert offload.status in ("warn", "fail")
+        assert f'brctl download "{icloud_path}"' in offload.fix_hint
+
+
 
 # ---------------------------------------------------------------------------
 # Layer: sync (content-based vault↔DB drift)
@@ -357,15 +459,15 @@ class TestCheckIcloud:
 class TestCheckSync:
     """sync layer: ghosts (DB rows gone from disk), missing (*.md absent from
     DB), errors (last scan recorded failures), drift (info summary)."""
-
     def _make_db(self, tmp_path, vault_path: Path, *, disk_files, db_paths,
-                 last_scan_status="completed", notes_failed=0):
+                 last_scan_status="completed", notes_failed=0, failed_paths=None):
         """Build a vault on disk + a matching/mismatching DB index.
 
         disk_files: list of relative paths to materialize as real .md files.
         db_paths:   list of relative paths to insert as notes rows.
         The set difference between the two yields ghosts/missing.
         """
+        import json
         # Materialize disk files
         for rel in disk_files:
             fp = vault_path / rel
@@ -387,13 +489,13 @@ class TestCheckSync:
         conn.execute(
             "CREATE TABLE scan_history (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             "vault_id TEXT, started_at TIMESTAMP, completed_at TIMESTAMP, "
-            "notes_scanned INTEGER, notes_failed INTEGER, status TEXT)"
+            "notes_scanned INTEGER, notes_failed INTEGER, failed_paths TEXT, status TEXT)"
         )
         conn.execute(
             "INSERT INTO scan_history (vault_id, started_at, completed_at, "
-            "notes_scanned, notes_failed, status) "
-            "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, ?, ?)",
-            (len(db_paths), notes_failed, last_scan_status),
+            "notes_scanned, notes_failed, failed_paths, status) "
+            "VALUES ('v1', '2026-06-25T00:00:00', '2026-06-25T00:01:00', ?, ?, ?, ?)",
+            (len(db_paths), notes_failed, json.dumps(failed_paths) if failed_paths is not None else None, last_scan_status),
         )
         conn.commit()
         conn.close()
@@ -529,6 +631,21 @@ class TestCheckSync:
         results = run_checks(layers=["sync"])
         layers = {r.layer for r in results}
         assert layers == {"sync"}
+
+    def test_errors_inlines_failing_paths(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_path = tmp_path / "SyncVault"
+        vault_path.mkdir()
+        self._make_db(tmp_path, vault_path,
+                      disk_files=["a.md"], db_paths=["a.md"],
+                      last_scan_status="completed", notes_failed=2,
+                      failed_paths=["error_note1.md", "error_note2.md"])
+        results = _check_sync()
+        errors = next(r for r in results if r.id.startswith("sync-errors:"))
+        assert errors.status == "warn"
+        assert "error_note1.md" in errors.message
+        assert "error_note2.md" in errors.message
+
 
 
 # ---------------------------------------------------------------------------
@@ -760,3 +877,156 @@ class TestCheckVaultNesting:
             results = _check_vaults()
         r = next(r for r in results if r.id == "vault-nesting")
         assert r.status == "pass"
+
+
+# ---------------------------------------------------------------------------
+# Layer: flow (obsidian-sync.yml validation)
+# ---------------------------------------------------------------------------
+
+class TestCheckObsidianSync:
+    """Tests for _check_obsidian_sync — .flow/obsidian-sync.yml validation."""
+
+    def _make_db(self, tmp_path, vaults):
+        """Create a minimal vault_db.sqlite with the given vaults."""
+        db_path = tmp_path / ".config" / "obs"
+        db_path.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path / "vault_db.sqlite"))
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (1)")
+        for vid, name, path in vaults:
+            conn.execute("INSERT INTO vaults VALUES (?, ?, ?, NULL)", (vid, name, path))
+        conn.commit()
+        conn.close()
+
+    def test_missing_flow_dir(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-missing" in r.id)
+        assert r.status == "warn"
+        assert "sync config missing" in r.message
+
+    def test_valid_config_passes(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        vault_root = tmp_path / "obsidian-vault"; vault_root.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            f"vault_root: {vault_root}\n"
+            "pairs:\n"
+            "  - { vault: teaching, repo: teaching-repo }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-ok" in r.id)
+        assert r.status == "pass"
+        assert "1 pair(s)" in r.message
+
+    def test_invalid_yaml_parse_error(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text("{{invalid yaml: [")
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-schema" in r.id)
+        assert r.status == "fail"
+        assert "YAML parse error" in r.message
+
+    def test_missing_required_field(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text("vault_root: ~/test\n")
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-schema" in r.id)
+        assert r.status == "fail"
+        assert "pairs" in r.message.lower() or "required" in r.message.lower()
+
+    def test_vault_root_missing_warn(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: /nonexistent/path\n"
+            "pairs:\n"
+            "  - { vault: a, repo: b }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-vault-root" in r.id)
+        assert r.status == "warn"
+        assert "/nonexistent/path" in r.message
+
+    def test_pair_identity_fail(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: ~/test\n"
+            "pairs:\n"
+            "  - { vault: teaching, repo: teaching }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-pair-identity" in r.id)
+        assert r.status == "fail"
+        assert "identical" in r.message
+
+    def test_pair_duplicate_warn(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text(
+            "vault_root: ~/test\n"
+            "pairs:\n"
+            "  - { vault: a, repo: b }\n"
+            "  - { vault: a, repo: b }\n"
+        )
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-pair-dup" in r.id)
+        assert r.status == "warn"
+        assert "Duplicate" in r.message
+
+    def test_non_dict_yaml_fail(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        vault_dir = tmp_path / "vault"; vault_dir.mkdir()
+        flow_dir = vault_dir / ".flow"; flow_dir.mkdir()
+        (flow_dir / "obsidian-sync.yml").write_text("- item1\n- item2\n")
+        self._make_db(tmp_path, [("v1", "TestVault", str(vault_dir))])
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        r = next(r for r in results if "flow-sync-schema" in r.id)
+        assert r.status == "fail"
+        assert "mapping" in r.message.lower()
+
+    def test_db_missing_skip(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        assert any(r.status == "skip" for r in results)
+
+    def test_no_vaults_skip(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        db_path = tmp_path / ".config" / "obs"
+        db_path.mkdir(parents=True)
+        conn = sqlite3.connect(str(db_path / "vault_db.sqlite"))
+        conn.execute("CREATE TABLE vaults (id TEXT, name TEXT, path TEXT, last_scanned TEXT)")
+        conn.execute("CREATE TABLE schema_version (version INTEGER)")
+        conn.execute("INSERT INTO schema_version VALUES (1)")
+        conn.commit()
+        conn.close()
+        from core.doctor import _check_obsidian_sync
+        results = _check_obsidian_sync()
+        assert any(r.status == "skip" for r in results)

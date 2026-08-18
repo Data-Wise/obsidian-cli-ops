@@ -12,6 +12,18 @@ class TestObsidianBridgeAvailability:
     """Tests for availability detection and caching."""
 
     @patch("ai.obsidian_bridge.subprocess.run")
+    def test_available_with_native_cli_version_command(self, mock_run):
+        def run_cli(args, **kwargs):
+            if args == ["obsidian", "version"]:
+                return MagicMock(returncode=0, stdout="1.12.7 (installer 1.12.7)")
+            return MagicMock(returncode=1, stdout="", stderr="unknown command")
+
+        mock_run.side_effect = run_cli
+        bridge = ObsidianBridge()
+
+        assert bridge.is_available() is True
+
+    @patch("ai.obsidian_bridge.subprocess.run")
     def test_available_when_cli_works(self, mock_run):
         mock_run.return_value = MagicMock(returncode=0)
         bridge = ObsidianBridge()
@@ -52,6 +64,24 @@ class TestObsidianBridgeAvailability:
         bridge.reset()
         bridge.is_available()
         assert mock_run.call_count == 2
+
+    @patch("ai.obsidian_bridge.subprocess.run")
+    def test_status_reports_native_cli_version(self, mock_run):
+        def run_cli(args, **kwargs):
+            if args == ["obsidian", "version"]:
+                return MagicMock(returncode=0, stdout="1.12.7 (installer 1.12.7)")
+            if args == ["obsidian", "vaults"]:
+                return MagicMock(returncode=0, stdout="Research")
+            return MagicMock(returncode=1, stdout="", stderr="unknown command")
+
+        mock_run.side_effect = run_cli
+        bridge = ObsidianBridge()
+
+        status = bridge.get_status()
+
+        assert status.cli_installed is True
+        assert status.cli_version == "1.12.7 (installer 1.12.7)"
+        assert status.app_running is True
 
 
 class TestObsidianBridgeGracefulDegradation:

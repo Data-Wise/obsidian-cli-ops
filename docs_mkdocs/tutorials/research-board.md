@@ -39,5 +39,4 @@ launchd/cron to catch staleness, then add a write step on a cadence.
 
 ## How it fits
 
-`.STATUS` → **atlas** (`project list --json`) → **`obs research board`** → vault dashboard. The
-per-project mirror map is [`.obs/sync.yml`](../obs-sync-yml.md).
+`.STATUS` → **atlas** (`project list --json`) → **`obs research board`** → vault dashboard.

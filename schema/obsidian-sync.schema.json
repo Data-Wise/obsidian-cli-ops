@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data-wise.github.io/obsidian-cli-ops/schemas/obsidian-sync.json",
+  "title": "flow/obsidian-sync.yml",
+  "description": "Vault↔repo mirror map for Obsidian sync",
+  "type": "object",
+  "required": ["vault_root", "pairs"],
+  "properties": {
+    "vault_root": {
+      "type": "string",
+      "description": "Absolute path to Obsidian vault root (tilde-expanded)"
+    },
+    "pairs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["vault", "repo"],
+        "properties": {
+          "vault": {
+            "type": "string",
+            "pattern": "^[^/].*",
+            "description": "Relative path within vault (no leading /)"
+          },
+          "repo": {
+            "type": "string",
+            "pattern": "^[^/].*",
+            "description": "Relative path within repo (no leading /)"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "include": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["*.md"],
+      "description": "Glob patterns for files to sync"
+    },
+    "exclude": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["_archive"],
+      "description": "Directories to skip"
+    }
+  },
+  "additionalProperties": false
+}

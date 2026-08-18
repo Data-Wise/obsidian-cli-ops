@@ -342,6 +342,32 @@ class TestGraphTools:
         result = mcp_mod.get_broken_links(vault_id)
         assert isinstance(result, str)
 
+    def test_get_broken_links_shows_real_title_and_path(self, mcp_mod, tmp_path):
+        """Regression: the `broken_links` view exposes source_title/source_path,
+        not title/path — get_broken_links must read the columns the view
+        actually returns, not silently fall back to Unknown/? for every row."""
+        from vault_scanner import VaultScanner
+
+        vault_dir = tmp_path / "BrokenLinkVault"
+        vault_dir.mkdir()
+        (vault_dir / ".obsidian").mkdir()
+        (vault_dir / ".obsidian" / "app.json").write_text("{}")
+        (vault_dir / "Dangling Note.md").write_text(
+            "# Dangling Note\n\n[[Nonexistent Target]]\n"
+        )
+
+        vault_name = "broken-link-vault"
+        asyncio.run(VaultScanner(mcp_mod.db).scan_vault(str(vault_dir), vault_name))
+        mcp_mod.analyze_vault(vault_name)  # resolves links, marking unresolved ones 'broken'
+
+        result = mcp_mod.get_broken_links(vault_name)
+        assert "Dangling Note" in result
+        # notes.path is stored relative to the vault root (vault_scanner.py's
+        # relative_to(vault_path)), never absolute — only the relative form matches.
+        assert "Dangling Note.md" in result
+        assert "Unknown" not in result
+        assert "Path: ?" not in result
+
     def test_analyze_vault_known(self, mcp_mod, obs_vault):
         vault_id, _, _ = obs_vault
         result = mcp_mod.analyze_vault(vault_id)

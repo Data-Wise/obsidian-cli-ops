@@ -50,6 +50,10 @@ flowchart TD
 | [Claude / MCP Integration](claude-mcp.md) | 🟣 Integration | ~20 min | Connect Claude Desktop, use all 42 MCP tools, note CRUD |
 | [Research Domain Setup](research-setup.md) | 🟡 Intermediate | ~15 min | Connect Zotero, PDFs, courses, and manuscripts (`obs research`) |
 | [Research Board](research-board.md) | 🟡 Intermediate | ~10 min | Render the deterministic manuscript/program dashboard from atlas state |
+| [Vault↔Repo Mirroring](flow-init.md) | 🟡 Intermediate | ~10 min | Create `.flow/obsidian-sync.yml` vault↔repo mirror map |
+| [Diagnostics](doctor.md) | 🟡 Intermediate | ~10 min | Run `obs doctor`, read layers, heal ghost notes with `scan --prune` |
+| [Configuration](config.md) | 🟢 Beginner | ~10 min | Inspect, validate, migrate, init, edit the unified config |
+| [Search](search.md) | 🟢 Beginner | ~5 min | Find notes by title, scope, cap, JSON, pipe to AI |
 | [Board Sync Workflow](../cookbook.md#board-sync-workflow) | 🟡 Intermediate | ~5 min | Weekly action board, launchd automation |
 | [Workflow Decision Guide](../cookbook.md#which-workflow-should-you-use) | 🟢 Beginner | ~2 min | Pick the right workflow for your task |
 

@@ -6,6 +6,23 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Docs gap audit (2026-07-12)
+
+- **Architecture docs updated** — added Config File Contracts section documenting the `.flow/obsidian-sync.yml` vault↔repo mirror map (vault-rooted, v4.3.0).
+- **Testing overview fixed** — added 5 missing test files to the inventory table (`flow_init` 36, `flow_dogfood` 19, `research_board` 8, `db_manager` 8, `obs_link` 5→removed); unit subtotal 342 → 413; Jest subtotal 69 → 70.
+- **Architecture testing section fixed** — 450+ pytest → 764 pytest; 69 Jest → 70 Jest.
+- **refcard.md updated** — added `obs flow init` and `obs doctor --layer flow` to the "Other" section.
+- **Removed `.obs/sync.yml` / `obs link` (ADR-001)** — deleted `research/obs_link.py`, `tests/test_obs_link.py`, `docs_mkdocs/obs-sync-yml.md`; removed `obs link` CLI subcommand and zsh dispatcher; `.flow/obsidian-sync.yml` is now the sole vault↔repo mirror-map contract.
+- **New `design-standards.md`** — contributor-facing reference for the three convention-driven surfaces: local config file contracts (`.flow/obsidian-sync.yml`), their create/validate command pairs (`obs flow init` / `obs doctor --layer flow`), and Obsidian dashboards (`obs research board` / `obs board refresh`); wired into `mkdocs.yml` Reference nav with a "new surface" PR checklist.
+
+### Docs website redesign & brand system (2026-07-12)
+
+- **Palette + typography** — replaced Material's default indigo/purple with a fixed ink `#15161a` / paper `#f7f6f2` / teal `#0d9488` system via `docs_mkdocs/stylesheets/redesign.css` (Space Grotesk + JetBrains Mono, no Inter, 4px radii).
+- **Logo & favicon** — new "Node Cartography" mark (faceted obsidian diamond hub + note nodes) wired into `mkdocs.yml` `theme.logo` / `theme.favicon` (transparent mark so it reads on the ink header); assets in `docs/proposals/brand/` + `docs_mkdocs/assets/`.
+- **Proposal artifact** — the interactive audit + before/after mockup is preserved as a self-contained `docs_mkdocs/proposals/docs-redesign.html` (JS+CSS inlined, mark embedded as a base64 data URI, zero external refs), linked from `design-standards.md` §6.
+- **Planning record** — `docs/specs/SPEC-docs-redesign-2026-07-12.md` documents the decisions and the bundle-rebuild workflow for future redesign passes.
+- **Navigation regroup** — the 13-item "Tutorials & Cookbook" menu is now split into sub-sections (Getting Started, Vault, Graph, AI, Research, Flow & Diagnostics) with Cookbook kept top-level; Reference's AI Setup Guide + Claude Integration are grouped under "AI & MCP". No pages added or removed.
+
 ## v4.3.0 (2026-07-01) — Board sync automation + E2E dogfood
 
 ### Board sync automation
@@ -151,7 +168,7 @@ Follow-up pass closing gaps found before the v4.3.0 GitHub release was cut.
 
 ### Added
 
-- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. [Schema](obs-sync-yml.md).
+- **`obs link`** — create the per-project `.obs/sync.yml` mirror map (docs-standards ADR-001); idempotent. *(Removed in v4.3.1 — superseded by `obs flow init` / `.flow/obsidian-sync.yml`.)*
 - **`obs research board`** — deterministic atlas → vault dashboard renderer (manuscripts + programs); marker-bounded atomic write; `--out`, `--kind`, `--dry-run`. [Tutorial](tutorials/research-board.md).
 - **`server_info` MCP tool** (#53) — reports the running server's
   `server_version`, `installed_version`, `started_at`, and

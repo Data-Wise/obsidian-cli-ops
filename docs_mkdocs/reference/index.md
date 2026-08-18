@@ -6,7 +6,7 @@ Every reference page in one place — commands, flags, providers, MCP tools, sch
 
 ## Quick Reference Card
 
-[![Quick Reference Card](../refcard.md)](../refcard.md){ .md-button }
+[:material/book-open-page-variant: Quick Reference Card](../refcard.md){ .md-button }
 A printable cheat sheet covering every `obs` command, MCP tool, AI provider,
 and workflow — all on one page.
 
@@ -30,7 +30,6 @@ and workflow — all on one page.
 | [Visual Workflows](../workflows.md) | Decision flowcharts — which command to run for each task |
 | [AI Setup Guide](../ai-setup.md) | Provider installation, API keys, and configuration |
 | [Claude Integration](../claude-integration.md) | MCP server setup for Claude Desktop, Claude Code, and Cowork |
-| [.obs/sync.yml Schema](../obs-sync-yml.md) | Mirror-map schema for research project sync |
 | [Changelog](../changelog.md) | Version history with all additions, fixes, and changes |
 
 ---
@@ -48,6 +47,7 @@ and workflow — all on one page.
 | `obs vault info` | [Metadata](../refcard.md#vault-lookup) | [Details](../cli-reference.md#obs-vault-info) |
 | `obs vault rename` | — | [Rename rules](../cli-reference.md#obs-vault-rename) |
 | `obs vault delete` | — | [Safety notes](../cli-reference.md#obs-vault-delete) |
+| `obs flow init` | — | [Mirror map](../cli-reference.md#obs-flow-init) |
 
 ### Graph & Health
 
@@ -84,4 +84,4 @@ and workflow — all on one page.
 
 ---
 
-**Version:** 4.3.0 | **Last updated:** 2026-07-01
+**Version:** 4.3.0 | **Last updated:** 2026-07-11

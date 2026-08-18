@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/badge/version-4.3.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Tests](https://img.shields.io/badge/tests-450%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Tests](https://img.shields.io/badge/tests-764%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![MCP Tools](https://img.shields.io/badge/MCP%20tools-42-purple.svg)](claude-integration.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/Data-Wise/obsidian-cli-ops/blob/main/LICENSE)
@@ -11,7 +11,7 @@ A laser-focused CLI for Obsidian vault management with AI-powered graph analysis
 Claude / MCP integration so you can query your vaults in natural language.
 
 [Install Now](installation.md){ .md-button .md-button--primary }
-[Quick Reference](refcard.md){ .md-button }
+[:material/book-open-page-variant: Quick Reference](refcard.md){ .md-button }
 [Claude Integration](claude-integration.md){ .md-button }
 
 ---
@@ -34,6 +34,12 @@ Claude / MCP integration so you can query your vaults in natural language.
 
 !!! tip "Claude Integration (v4.0.0)"
     42 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
+
+!!! tip "Diagnostics & Doctor"
+    `obs doctor` runs self-checks across 7 layers (runtime, DB, vault, sync, MCP, docs, iCloud) plus `flow`. Clear ghost notes with `obs scan --prune`. [Diagnostics tutorial →](tutorials/doctor.md)
+
+!!! tip "Vault↔Repo Mirroring (v4.3.1)"
+    `obs flow init` writes `.flow/obsidian-sync.yml` — the single vault↔repo mirror map for savant planning. [Mirroring tutorial →](tutorials/flow-init.md)
 
 ---
 

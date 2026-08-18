@@ -8,7 +8,11 @@ set -euo pipefail
 
 REMOTE="${1:-origin}"
 BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed 's/refs\/heads\///')
-RANGE="${3:-@{push}..HEAD}"
+if [ -n "${3:-}" ]; then
+    RANGE="$3"
+else
+    RANGE='@{push}..HEAD'
+fi
 
 # Guard: skip for secondary remotes (upstream, fork)
 [ "$REMOTE" != "origin" ] && exit 0
@@ -57,7 +61,7 @@ if [ -n "$secrets" ]; then
 fi
 
 # 4. Merge commits in feature branch
-merges=$(git log --oneline --merges "$RANGE" 2>/dev/null | wc -l | tr -d ' ')
+merges=$(git log --oneline --merges "$RANGE" 2>/dev/null | wc -l | tr -d ' ' || true)
 if [ "$merges" -gt 0 ]; then
     echo "[pre-push] WARNING: $merges merge commit(s). Feature branches typically rebase."
     warnings=$((warnings + 1))

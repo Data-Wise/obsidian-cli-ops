@@ -50,6 +50,10 @@ jobs:
 
       - name: Check diff size
         id: diff_size
+        # Release PRs (dev → main) aggregate every commit since the last
+        # release and will always exceed the per-PR line cap. The cap is a
+        # feature-PR hygiene lint, so exempt anything targeting main.
+        if: github.event.pull_request.base.ref != 'main'
         run: |
           ADDED=$(git diff --diff-filter=A --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | wc -l)
           CHANGED=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | wc -l)

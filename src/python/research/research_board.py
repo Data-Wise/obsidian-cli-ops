@@ -70,29 +70,74 @@ def _row(p: dict) -> str:
     )
 
 
+# cran_state -> icon (matches the informal convention already used across
+# ~/projects/r-packages/active/*/.STATUS — planned/dev/hold/submitted/accepted/on_cran)
+_CRAN_ICONS = {
+    "on_cran": "✅", "accepted": "✅",
+    "submitted": "🟡",
+    "hold": "⏸️", "blocked": "⏸️",
+    "planned": "🔜",
+    "dev": "⚪",
+}
+
+
+def _cran_badge(cran_state: str | None) -> str:
+    if not cran_state:
+        return "—"
+    icon = _CRAN_ICONS.get(str(cran_state).lower(), "⚪")
+    return f"{icon} {cran_state}"
+
+
+def _package_row(p: dict) -> str:
+    return (
+        f"| {p.get('name', '—')} "
+        f"| {_cran_badge(p.get('cranState'))} "
+        f"| {status_icon(p.get('status'))} {p.get('status') or '—'} "
+        f"| {progress_bar(p.get('progress'))} "
+        f"| {p.get('next') or '—'} |"
+    )
+
+
 def render_action_board(projects: list[dict]) -> str:
     """Render the marker-block body (no enclosing markers, no timestamps)."""
     ranked = rank(projects)
     lines: list[str] = ["## 🎯 Research Action Board", ""]
     sections = [
-        ("Manuscripts", lambda k: k == "manuscript"),
-        ("Programs", lambda k: k == "program"),
-        ("Packages & other", lambda k: k not in ("manuscript", "program")),
+        ("Manuscripts", lambda k: k == "manuscript", _row, "| Project | Venue | Status | Progress | Next |"),
+        ("Programs", lambda k: k == "program", _row, "| Project | Venue | Status | Progress | Next |"),
+        ("Packages", lambda k: k == "package", _package_row, "| Package | CRAN | Status | Progress | Next |"),
+        (
+            "Other",
+            lambda k: k not in ("manuscript", "program", "package"),
+            _row,
+            "| Project | Venue | Status | Progress | Next |",
+        ),
     ]
-    for label, pred in sections:
+    for label, pred, row_fn, header in sections:
         sel = [p for p in ranked if pred(p.get("kind"))]
         if not sel:
             continue
         lines.append(f"### {label}")
-        lines.append("| Project | Venue | Status | Progress | Next |")
+        lines.append(header)
         lines.append("|---|---|---|---|---|")
-        lines.extend(_row(p) for p in sel)
+        lines.extend(row_fn(p) for p in sel)
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
 
 def build_block(projects: list[dict]) -> str:
     return f"{MARKER_START}\n{render_action_board(projects)}{MARKER_END}\n"
+
+
+def format_warnings(warnings: list[str]) -> str:
+    """Format integration warnings as a banner for CLI/stderr output — NOT for the
+    marker block (which must stay a pure, timestamp-free function of project data
+    for the golden-file/idempotency guarantee). Empty string if no warnings."""
+    if not warnings:
+        return ""
+    lines = ["⚠️  research board rendered with partial data — atlas integration issue(s):"]
+    lines.extend(f"   - {w}" for w in warnings)
+    return "\n".join(lines) + "\n"
 
 
 def write_marked_block(path: str | Path, block: str, dry_run: bool = False) -> dict:
@@ -120,18 +165,50 @@ def write_marked_block(path: str | Path, block: str, dry_run: bool = False) -> d
     return {"path": str(p), "changed": changed, "action": "dry-run" if dry_run else "write"}
 
 
+class AtlasIntegrationError(RuntimeError):
+    """Raised when the `atlas` CLI integration fails — binary missing/non-zero exit,
+    or its stdout isn't valid JSON. Carries a human-readable message; callers decide
+    whether to degrade (partial board + warning) or propagate."""
+
+
 def load_projects(kind: str | None = None, atlas_bin: str = "atlas") -> list[dict]:
-    """Load projects from atlas (`atlas project list [--kind] --format json`)."""
+    """Load projects from atlas (`atlas project list [--kind] --format json`).
+
+    Raises `AtlasIntegrationError` (not the raw subprocess/json exception) on any
+    integration failure, so callers get one exception type to catch regardless of
+    whether atlas is missing, exits non-zero, or returns malformed JSON.
+    """
     cmd = [atlas_bin, "project", "list", "--format", "json"]
     if kind:
         cmd += ["--kind", kind]
-    out = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
-    return json.loads(out)
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    except FileNotFoundError as exc:
+        raise AtlasIntegrationError(f"atlas binary not found ({atlas_bin!r}): {exc}") from exc
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip()
+        raise AtlasIntegrationError(
+            f"`{' '.join(cmd)}` exited {exc.returncode}" + (f": {stderr}" if stderr else "")
+        ) from exc
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise AtlasIntegrationError(f"`{' '.join(cmd)}` returned invalid JSON: {exc}") from exc
 
 
-def load_research_projects(atlas_bin: str = "atlas") -> list[dict]:
-    """Load research items (manuscripts + programs) from atlas — the default board scope."""
+def load_research_projects(atlas_bin: str = "atlas") -> tuple[list[dict], list[str]]:
+    """Load research items (manuscripts + programs + packages) from atlas — the
+    default board scope.
+
+    Degrades per-kind: if one kind's `atlas` call fails, the other kinds' data is
+    still returned rather than losing the whole board to a single hiccup. Returns
+    `(items, warnings)` — `warnings` is empty on full success.
+    """
     items: list[dict] = []
-    for k in ("manuscript", "program"):
-        items.extend(load_projects(kind=k, atlas_bin=atlas_bin))
-    return items
+    warnings: list[str] = []
+    for k in ("manuscript", "program", "package"):
+        try:
+            items.extend(load_projects(kind=k, atlas_bin=atlas_bin))
+        except AtlasIntegrationError as exc:
+            warnings.append(f"{k}: {exc}")
+    return items, warnings

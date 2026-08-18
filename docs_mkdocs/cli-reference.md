@@ -382,6 +382,35 @@ obs doctor --layer database --json   # DB checks as JSON
 
 ---
 
+### obs flow init
+
+Create `.flow/obsidian-sync.yml` — the vault↔repo mirror map for savant `plan:obsidian-sync`.
+
+```bash
+obs flow init [directory] [--vault-root PATH] [--pairs JSON] [--force] [--json]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `directory` | `.` | Target directory to create config in |
+| `--vault-root` | (required for non-interactive) | Absolute path to Obsidian vault root |
+| `--pairs` | (required for non-interactive) | JSON array of vault→repo pairs, e.g. `[{"vault":"a","repo":"b"}]` |
+| `--force` | | Overwrite existing config |
+| `--json` | | Machine-readable output |
+
+**Examples:**
+
+```bash
+obs flow init                                    # Interactive wizard
+obs flow init --vault-root ~/vault --pairs '[{"vault":"a","repo":"b"}]'  # Non-interactive
+obs flow init --vault-root ~/vault --pairs '[...]' --json  # JSON output
+```
+
+!!! info "Flow layer in doctor"
+    `obs doctor --layer flow` validates existing configs against the JSON Schema (6 checks: missing, schema, stale, vault-root, pair-duplicate, pair-identity).
+
+---
+
 ## :chart_with_upwards_trend: Graph Analysis
 
 ### obs analyze
@@ -585,22 +614,6 @@ obs version
 ---
 
 ## :books: Research Registry
-
-### obs link
-
-Create the per-project `.obs/sync.yml` mirror map ([schema](obs-sync-yml.md)). Idempotent.
-
-```bash
-obs link [project_dir] [--vault-root <path>] [--mirror auto|mirror|none] [--force] [--json]
-```
-
-- `--vault-root` — vault path for an active mirror (defaults to `mirror: none` when omitted).
-- `--mirror` — force the mode; `--force` overwrites an existing map.
-
-```bash
-obs link                                  # mirror: none (non-vault project)
-obs link --vault-root ~/vault/Research/x  # active mirror
-```
 
 ### obs research board
 

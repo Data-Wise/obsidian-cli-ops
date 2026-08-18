@@ -1,0 +1,89 @@
+/* obsidian-cli-ops redesign — ink / paper / teal palette + typographic polish.
+   Loaded after the Material theme; overrides the indigo/purple defaults.
+
+   Note: only the *palette* variables are overridden here. The dark/light *scheme*
+   switching is left to Material — we supply the --light / --dark variants and let
+   Material's own [data-md-color-scheme="slate"] mapping pick them up, so dark mode
+   actually inverts instead of being forced back to the light surface. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root,
+[data-md-color-scheme="default"] {
+  /* brand */
+  --ink: #15161a;
+  --paper: #f7f6f2;
+  --teal: #0d9488;
+
+  /* primary (header / nav rail) */
+  --md-primary-fg-color: #15161a;
+  --md-primary-fg-color--light: #2a2c33;
+  --md-primary-fg-color--dark: #0c0d10;
+  --md-primary-bg-color: #f7f6f2;
+  --md-primary-bg-color--light: #ffffff;
+  --md-primary-bg-color--dark: #e9e7e0;
+
+  /* accent (links, focus, active) */
+  --md-accent-fg-color: #0d9488;
+  --md-accent-fg-color--light: #14b8a6;
+  --md-accent-fg-color--dark: #14b8a6;
+
+  /* default surface (light = paper, dark variant = ink) */
+  --md-default-bg-color: #f7f6f2;
+  --md-default-bg-color--light: #fbfaf7;
+  --md-default-bg-color--dark: #15161a;
+  --md-default-fg-color: #15161a;
+  --md-default-fg-color--light: #2a2c33;
+  --md-default-fg-color--dark: #e9e7e0;
+
+  /* code */
+  --md-code-bg-color: #efece4;
+  --md-code-fg-color: #15161a;
+
+  /* structure: crisper, less rounded */
+  --md-default-border-color: rgba(21, 22, 26, 0.10);
+  --md-admonition-border-color: rgba(21, 22, 26, 0.12);
+
+  /* type */
+  --md-text-font-family: "Space Grotesk", var(--md-text-font, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --md-code-font-family: "JetBrains Mono", var(--md-code-font, "SFMono-Regular", monospace);
+}
+
+/* headings: a touch tighter and more deliberate */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* links underline on hover in the accent, not the muddy default */
+.md-content a:hover,
+.md-nav__link:hover {
+  color: var(--md-accent-fg-color);
+}
+
+/* header logo: larger + transparent background (mark reads on the ink header) */
+.md-header__button.md-logo {
+  background: transparent;
+  padding: 0;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+.md-header__button.md-logo img {
+  height: 2rem;
+  width: 2rem;
+}
+
+/* brand seam: a thin teal rule ties the accent into the ink banner and gives a
+   clean, deliberate edge against the paper body (works in light + dark modes) */
+.md-header {
+  border-bottom: 2px solid var(--md-accent-fg-color);
+}
+
+/* subtle surface separation for admonitions / tabs instead of heavy shadows */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 4px;
+}

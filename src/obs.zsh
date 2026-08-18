@@ -265,12 +265,9 @@ obs_discover() {
     _log_verbose "Running vault discovery in: $path"
 
     # Build command
-    local cmd=("$python_cli" "discover" "$path")
-
-    # Add verbose flag if enabled
-    if [[ "$VERBOSE" == "true" ]]; then
-        cmd+=(--verbose)
-    fi
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("discover" "$path")
 
     # Add --scan flag if requested
     if [[ "$2" == "--scan" ]]; then
@@ -292,7 +289,9 @@ obs_scan() {
 
     _log_verbose "Scanning vault at: $path"
 
-    local cmd=("$python_cli" "scan" "$path")
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("scan" "$path")
 
     # Optional vault name
     if [[ "$2" == "--name" && -n "$3" ]]; then
@@ -309,10 +308,6 @@ obs_scan() {
         cmd+=(--no-prune)
     elif [[ "$*" == *"--prune"* ]]; then
         cmd+=(--prune)
-    fi
-
-    if [[ "$VERBOSE" == "true" ]]; then
-        cmd+=(--verbose)
     fi
 
     $OBS_PYTHON "${cmd[@]}"
@@ -333,12 +328,9 @@ obs_analyze() {
     _log_verbose "Analyzing vault: $vault"
 
     # Build command
-    local cmd=("$python_cli" "analyze" "$vault")
-
-    # Add verbose flag if enabled
-    if [[ "$VERBOSE" == "true" ]]; then
-        cmd+=(--verbose)
-    fi
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("analyze" "$vault")
 
     $OBS_PYTHON "${cmd[@]}"
 }
@@ -639,7 +631,9 @@ obs_search() {
     fi
 
     shift
-    local cmd=("$python_cli" "search" "$query")
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("search" "$query")
 
     # Pass remaining flags (--vault, --limit, --json) through
     while [[ $# -gt 0 ]]; do
@@ -647,7 +641,6 @@ obs_search() {
         shift
     done
 
-    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     $OBS_PYTHON "${cmd[@]}"
 }
 
@@ -670,12 +663,13 @@ obs_bridge() {
     fi
     shift
 
-    local cmd=("$python_cli" "bridge" "$subcmd")
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("bridge" "$subcmd")
     while [[ $# -gt 0 ]]; do
         cmd+=("$1")
         shift
     done
-    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     $OBS_PYTHON "${cmd[@]}"
 }
 
@@ -689,12 +683,13 @@ obs_trends() {
     fi
     shift
 
-    local cmd=("$python_cli" "trends" "$vault")
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("trends" "$vault")
     while [[ $# -gt 0 ]]; do
         cmd+=("$1")
         shift
     done
-    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     $OBS_PYTHON "${cmd[@]}"
 }
 
@@ -708,12 +703,13 @@ obs_stale() {
     fi
     shift
 
-    local cmd=("$python_cli" "stale" "$vault")
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("stale" "$vault")
     while [[ $# -gt 0 ]]; do
         cmd+=("$1")
         shift
     done
-    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     $OBS_PYTHON "${cmd[@]}"
 }
 
@@ -727,12 +723,13 @@ obs_daily_digest() {
     fi
     shift
 
-    local cmd=("$python_cli" "daily-digest" "$vault")
+    local cmd=("$python_cli")
+    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
+    cmd+=("daily-digest" "$vault")
     while [[ $# -gt 0 ]]; do
         cmd+=("$1")
         shift
     done
-    [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     $OBS_PYTHON "${cmd[@]}"
 }
 
@@ -765,11 +762,6 @@ obs_doctor() {
 obs_config() {
     local python_cli=$(_get_python_cli) || return 1
     $OBS_PYTHON "$python_cli" config "$@"
-}
-
-obs_link() {
-    local python_cli=$(_get_python_cli) || return 1
-    $OBS_PYTHON "$python_cli" link "$@"
 }
 
 obs_research() {
@@ -863,9 +855,6 @@ obs() {
             ;;
         "config")
             obs_config "$@"
-            ;;
-        "link")
-            obs_link "$@"
             ;;
         "research")
             obs_research "$@"

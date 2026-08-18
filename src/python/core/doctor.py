@@ -11,12 +11,16 @@ import ast
 import json
 import os
 import platform
+import re
+import shutil
 import sqlite3
 import sys
 import time
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Literal, Optional
+
+import yaml
 
 Status = Literal["pass", "warn", "fail", "skip", "error", "info"]
 
@@ -52,6 +56,7 @@ def run_checks(vault_id: Optional[str] = None, layers: Optional[list[str]] = Non
         "database": _check_database,
         "vault": lambda: _check_vaults(vault_id),
         "sync": lambda: _check_sync(vault_id),
+        "flow": lambda: _check_obsidian_sync(vault_id),
         "mcp": _check_mcp,
         "docs": _check_doc_counts,
         "icloud": _check_icloud,
@@ -63,7 +68,7 @@ def run_checks(vault_id: Optional[str] = None, layers: Optional[list[str]] = Non
         fn = all_layers.get(name)
         if fn is None:
             continue
-        if name in ("vault", "sync") and not db_ok:
+        if name in ("vault", "sync", "flow") and not db_ok:
             results.append(DoctorResult(
                 id=f"{name}-skip", layer=name, label=f"{name.capitalize()} checks",
                 status="skip", message="skipped: DB unavailable",
@@ -498,27 +503,218 @@ def _sync_errors_result(conn: sqlite3.Connection, vid: str, prefix: str) -> Doct
     label = f"{prefix}: Last scan errors"
     try:
         row = conn.execute(
-            "SELECT status, notes_failed FROM scan_history "
+            "SELECT status, notes_failed, failed_paths FROM scan_history "
             "WHERE vault_id = ? ORDER BY started_at DESC, id DESC LIMIT 1",
             (vid,),
         ).fetchone()
     except sqlite3.OperationalError as e:
-        return DoctorResult(f"sync-errors:{vid}", "sync", label, "error", f"Query failed: {e}")
+        # Fall back to trying without failed_paths in case it's a pre-migration DB
+        try:
+            row = conn.execute(
+                "SELECT status, notes_failed FROM scan_history "
+                "WHERE vault_id = ? ORDER BY started_at DESC, id DESC LIMIT 1",
+                (vid,),
+            ).fetchone()
+        except sqlite3.OperationalError:
+            return DoctorResult(f"sync-errors:{vid}", "sync", label, "error", f"Query failed: {e}")
 
     if row is None:
         return DoctorResult(f"sync-errors:{vid}", "sync", label, "skip", "no scan history")
 
     status = row["status"]
     failed = row["notes_failed"] or 0
+    
+    # Safely retrieve failed_paths
+    failed_paths = []
+    if "failed_paths" in row.keys() and row["failed_paths"]:
+        try:
+            failed_paths = json.loads(row["failed_paths"])
+        except Exception:
+            pass
+
     if status == "failed":
         return DoctorResult(f"sync-errors:{vid}", "sync", label, "fail",
                             "last scan aborted (status=failed)",
                             f"Run: obs scan {vid} --verbose  to see the error")
     if failed > 0:
+        paths_str = ""
+        if failed_paths:
+            paths_str = ":\n  - " + "\n  - ".join(failed_paths[:5])
+            if len(failed_paths) > 5:
+                paths_str += f"\n  - ... and {len(failed_paths) - 5} more"
         return DoctorResult(f"sync-errors:{vid}", "sync", label, "warn",
-                            f"last scan recorded {failed} per-note error(s)",
+                            f"last scan recorded {failed} per-note error(s){paths_str}",
                             "inspect failing paths in the scan log")
     return DoctorResult(f"sync-errors:{vid}", "sync", label, "pass", "last scan had no errors")
+
+
+# ---------------------------------------------------------------------------
+# Layer — flow (.flow/obsidian-sync.yml validation, per registered vault)
+# ---------------------------------------------------------------------------
+
+_SCHEMA_DIR = Path(__file__).parent.parent.parent.parent / "schema"
+
+
+def _load_json_schema(name: str) -> dict | None:
+    """Load a JSON Schema file from schema/ directory."""
+    path = _SCHEMA_DIR / name
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def _validate_against_schema(data: dict, schema: dict) -> list[str]:
+    """Validate data against a JSON Schema. Returns list of error strings."""
+    try:
+        import jsonschema
+        validator = jsonschema.Draft202012Validator(schema)
+        return [e.message for e in validator.iter_errors(data)]
+    except ImportError:
+        # Fallback: basic structural checks without jsonschema
+        errors = []
+        for field in schema.get("required", []):
+            if field not in data:
+                errors.append(f"missing required field: {field}")
+        if "pairs" in data and isinstance(data["pairs"], list):
+            for i, pair in enumerate(data["pairs"]):
+                if not isinstance(pair, dict):
+                    errors.append(f"pairs[{i}] must be an object")
+                    continue
+                for key in ("vault", "repo"):
+                    if key not in pair:
+                        errors.append(f"pairs[{i}] missing required field: {key}")
+        return errors
+
+
+def _check_obsidian_sync(vault_id: Optional[str] = None) -> list[DoctorResult]:
+    """Validate .flow/obsidian-sync.yml in registered vaults."""
+    db_path = Path.home() / ".config" / "obs" / "vault_db.sqlite"
+    if not db_path.exists():
+        return [DoctorResult("flow-skip", "flow", "Flow checks", "skip", "skipped: DB missing")]
+
+    conn = None
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+        if vault_id:
+            rows = conn.execute("SELECT * FROM vaults WHERE id = ?", (vault_id,)).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM vaults ORDER BY name").fetchall()
+    except Exception as e:
+        return [DoctorResult("flow-skip", "flow", "Flow checks", "skip", f"skipped: {e}")]
+    finally:
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+    if not rows:
+        return [DoctorResult("flow-skip", "flow", "Flow checks", "skip",
+                             "No vaults registered" if not vault_id else f"Vault {vault_id!r} not found")]
+
+    schema = _load_json_schema("obsidian-sync.schema.json")
+    results: list[DoctorResult] = []
+
+    for vault in rows:
+        vid = vault["id"]
+        name = vault["name"]
+        path = Path(vault["path"])
+        prefix = f"{name} ({vid[:8]})"
+        sync_file = path / ".flow" / "obsidian-sync.yml"
+
+        # flow-sync-missing
+        if not sync_file.exists():
+            results.append(DoctorResult(
+                f"flow-sync-missing:{vid}", "flow", f"{prefix}: obsidian-sync.yml", "warn",
+                "No .flow/obsidian-sync.yml — vault sync config missing",
+                "Create .flow/obsidian-sync.yml (see schema/obsidian-sync.schema.json)"))
+            continue
+
+        # Parse YAML
+        try:
+            data = yaml.safe_load(sync_file.read_text(encoding="utf-8"))
+        except yaml.YAMLError as e:
+            results.append(DoctorResult(
+                f"flow-sync-schema:{vid}", "flow", f"{prefix}: obsidian-sync.yml", "fail",
+                f"YAML parse error: {e}",
+                f"Fix {sync_file}"))
+            continue
+
+        if not isinstance(data, dict):
+            results.append(DoctorResult(
+                f"flow-sync-schema:{vid}", "flow", f"{prefix}: obsidian-sync.yml", "fail",
+                "Config must be a YAML mapping (key: value pairs)",
+                f"Fix {sync_file}"))
+            continue
+
+        # JSON Schema validation
+        if schema:
+            errors = _validate_against_schema(data, schema)
+            for idx, err in enumerate(errors):
+                results.append(DoctorResult(
+                    f"flow-sync-schema:{vid}:{idx}", "flow", f"{prefix}: obsidian-sync.yml", "fail",
+                    f"Schema violation: {err}",
+                    f"Fix {sync_file}"))
+            if errors:
+                continue
+
+        # flow-sync-stale — check if config is older than 90 days
+        try:
+            mtime = sync_file.stat().st_mtime
+            age_days = int((time.time() - mtime) / 86400)
+            if age_days > 90:
+                results.append(DoctorResult(
+                    f"flow-sync-stale:{vid}", "flow", f"{prefix}: obsidian-sync.yml age", "warn",
+                    f"Config is {age_days} days old — may be outdated",
+                    f"Review and update {sync_file}"))
+        except OSError:
+            pass
+
+        # flow-sync-vault-root-missing
+        vault_root_raw = data.get("vault_root", "")
+        vault_root = Path(os.path.expanduser(vault_root_raw)) if vault_root_raw else None
+        if vault_root and not vault_root.exists():
+            results.append(DoctorResult(
+                f"flow-sync-vault-root:{vid}", "flow", f"{prefix}: vault_root", "warn",
+                f"vault_root not found: {vault_root}",
+                "Check if vault is offloaded (brctl download) or path is wrong"))
+
+        # Pair checks
+        pairs = data.get("pairs", [])
+        seen: set[tuple[str, str]] = set()
+        for pair in pairs:
+            v = pair.get("vault", "")
+            r = pair.get("repo", "")
+
+            # flow-sync-pair-identity
+            if v == r:
+                results.append(DoctorResult(
+                    f"flow-sync-pair-identity:{vid}", "flow", f"{prefix}: pair identity", "fail",
+                    f"vault and repo are identical: {v}",
+                    "Each pair must map a vault folder to a different repo folder"))
+
+            # flow-sync-pair-duplicate
+            key = (v, r)
+            if key in seen:
+                results.append(DoctorResult(
+                    f"flow-sync-pair-dup:{vid}", "flow", f"{prefix}: pair duplicate", "warn",
+                    f"Duplicate pair: {v} → {r}",
+                    "Remove the duplicate entry"))
+            seen.add(key)
+
+        # If no issues, report pass
+        vault_results = [r for r in results if r.id.endswith(f":{vid}")]
+        if not any(r.status in ("fail", "warn") for r in vault_results):
+            results.append(DoctorResult(
+                f"flow-sync-ok:{vid}", "flow", f"{prefix}: obsidian-sync.yml", "pass",
+                f"{len(pairs)} pair(s), vault_root OK" if vault_root and vault_root.exists()
+                else f"{len(pairs)} pair(s)"))
+
+    return results
 
 
 # ---------------------------------------------------------------------------
@@ -605,11 +801,55 @@ def _check_mcp() -> list[DoctorResult]:
             else:
                 results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "pass",
                                             f"Entry present (command: {cmd})"))
+            results.append(_check_mcp_interpreter(cmd))
     except (json.JSONDecodeError, OSError) as e:
         results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "error",
                                     f"Cannot parse config: {e}"))
 
     return results
+
+
+_CELLAR_PIN_RE = re.compile(r"/Cellar/[^/]+/[0-9]+(?:\.[0-9]+){2,}(?:_[0-9]+)?/")
+
+
+def _check_mcp_interpreter(cmd) -> DoctorResult:
+    """Validate the obsidian-ops MCP entry's interpreter (`command`) is a real,
+    executable binary — and warn when it's pinned to a version-specific Homebrew
+    Cellar path, which breaks silently on the next `brew upgrade` (#94-class bug:
+    a dead Cellar path reported no doctor failure until Claude Desktop tried to
+    spawn it)."""
+    if not isinstance(cmd, str):
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            f"\"command\" must be a string, got {type(cmd).__name__}: {cmd!r}",
+                            "Set \"command\" to a working python3 interpreter path")
+
+    if not cmd:
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            "No command set on obsidian-ops entry",
+                            "Set \"command\" to a working python3 interpreter")
+
+    if os.sep in cmd or (os.altsep and os.altsep in cmd):
+        resolved = cmd
+        exists_and_executable = os.path.isfile(resolved) and os.access(resolved, os.X_OK)
+    else:
+        resolved = shutil.which(cmd)
+        exists_and_executable = resolved is not None
+
+    if not exists_and_executable:
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            f"Interpreter not found or not executable: {cmd}",
+                            "Reinstall via ./install.sh, or point \"command\" to a working "
+                            "python3 (e.g. /opt/homebrew/bin/python3.14)")
+
+    if _CELLAR_PIN_RE.search(resolved):
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "warn",
+                            f"Interpreter is pinned to a specific Homebrew version: {resolved}",
+                            "Point \"command\" to the stable symlink instead, e.g. "
+                            "/opt/homebrew/bin/python3.14 — a version-pinned Cellar path "
+                            "breaks on the next brew upgrade")
+
+    return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "pass",
+                        f"Interpreter resolves and is executable: {resolved}")
 
 
 def _find_bad_vault_resolvers(source: str) -> list[str]:
@@ -838,15 +1078,27 @@ def _check_icloud() -> list[DoctorResult]:
                                     f"Write latency {latency:.2f}s"))
 
     # icloud-offload — check if Optimize Mac Storage is likely active
-    offloaded = sum(1 for v in icloud_vaults for f in v.rglob("*.md") if is_dataless(f))
-    if offloaded > 50:
-        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "fail",
-                                    f"{offloaded} vault files are offloaded (dataless placeholders)",
-                                    "System Settings → Apple ID → iCloud → disable 'Optimize Mac Storage'"))
-    elif offloaded > 0:
-        results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "warn",
-                                    f"{offloaded} files are offloaded placeholders",
-                                    f'Run: brctl download "{probe_vault}"'))
+    vault_offloads = {}
+    for v in icloud_vaults:
+        try:
+            count = sum(1 for f in v.rglob("*.md") if is_dataless(f))
+            if count > 0:
+                vault_offloads[v] = count
+        except Exception:
+            pass
+
+    total_offloaded = sum(vault_offloads.values())
+    if total_offloaded > 0:
+        cmds = [f'brctl download "{v}"' for v in vault_offloads.keys()]
+        recs_str = " && ".join(cmds)
+        if total_offloaded > 50:
+            results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "fail",
+                                        f"{total_offloaded} vault files are offloaded (dataless placeholders) across {len(vault_offloads)} vault(s)",
+                                        recs_str + "  or  System Settings → Apple ID → iCloud → disable 'Optimize Mac Storage'"))
+        else:
+            results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "warn",
+                                        f"{total_offloaded} files are offloaded placeholders across {len(vault_offloads)} vault(s)",
+                                        recs_str))
     else:
         results.append(DoctorResult("icloud-offload", "icloud", "Optimize Mac Storage", "pass",
                                     "No offloaded files detected"))

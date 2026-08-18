@@ -83,6 +83,7 @@ else
         warn "ERROR: failed to create venv at $VENV_DIR"
         exit 1
     fi
+    export PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1
     "$VENV_DIR/bin/python" -m pip install --quiet --upgrade pip >/dev/null 2>&1 || true
     if ! "$VENV_DIR/bin/python" -m pip install --quiet -r "$LOCKFILE"; then
         warn "ERROR: failed to install dependencies from $LOCKFILE"
@@ -90,6 +91,15 @@ else
     fi
     printf '%s\n' "$LOCK_HASH" > "$SENTINEL"
     log "✓ Installed core deps into $VENV_DIR"
+fi
+
+# --- 3. Configure Claude Desktop MCP if Darwin ---
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    if [[ -x "$VENV_DIR/bin/python" ]]; then
+        "$VENV_DIR/bin/python" "$PROJECT_DIR/scripts/configure_mcp.py" || warn "WARNING: Failed to configure Claude Desktop MCP server automatically."
+    else
+        "$PYTHON_BOOTSTRAP" "$PROJECT_DIR/scripts/configure_mcp.py" || warn "WARNING: Failed to configure Claude Desktop MCP server automatically."
+    fi
 fi
 
 log ""
