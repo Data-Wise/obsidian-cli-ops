@@ -809,15 +809,20 @@ def _check_mcp() -> list[DoctorResult]:
     return results
 
 
-_CELLAR_PIN_RE = re.compile(r"/Cellar/[^/]+/[0-9]+\.[0-9]+\.[0-9]+/")
+_CELLAR_PIN_RE = re.compile(r"/Cellar/[^/]+/[0-9]+(?:\.[0-9]+){2,}(?:_[0-9]+)?/")
 
 
-def _check_mcp_interpreter(cmd: str) -> DoctorResult:
+def _check_mcp_interpreter(cmd) -> DoctorResult:
     """Validate the obsidian-ops MCP entry's interpreter (`command`) is a real,
     executable binary — and warn when it's pinned to a version-specific Homebrew
     Cellar path, which breaks silently on the next `brew upgrade` (#94-class bug:
     a dead Cellar path reported no doctor failure until Claude Desktop tried to
     spawn it)."""
+    if not isinstance(cmd, str):
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            f"\"command\" must be a string, got {type(cmd).__name__}: {cmd!r}",
+                            "Set \"command\" to a working python3 interpreter path")
+
     if not cmd:
         return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
                             "No command set on obsidian-ops entry",
