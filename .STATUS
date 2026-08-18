@@ -1,5 +1,5 @@
 priority: P1
-status: ✅ v4.3.1 RELEASE IN PROGRESS (doctor MCP diagnostics + drift-detection fixes)
+status: ✅ v4.3.1 RELEASED (doctor MCP diagnostics + drift-detection fixes)
 progress: 100
 updated: 2026-08-17
 version: 4.3.1
@@ -7,6 +7,13 @@ next: |
   1. Port plugin skills
   2. Port vault template ops (low priority)
 verified: |
+  v4.3.1 RELEASED 2026-08-17: release PR #99 (dev→main, regular merge a15a85ac), main CI green,
+  tag v4.3.1 + GitHub release published (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.3.1),
+  Homebrew tap auto-bumped (data-wise/homebrew-tap PR #215, sha256 f9369f8d...). Follow-up PR #100
+  (dev→main) fixed a second, separately-hardcoded version badge in docs_mkdocs/index.md that the
+  version-bump checklist missed (README.md's badge was updated, this one wasn't) — live docs site
+  confirmed on v4.3.1 after that merge. dev/main back in sync (b3ae919e). Worktrees cleaned
+  (release-v4.3.1 removed; pr94-rebase/pr95-rebase already gone). No open PRs remain.
   obs doctor mcp-interpreter check + --json fix (2026-08-17, PRs #96/#97, merged to dev): fixed
   the Claude Desktop MCP outage this session — a Homebrew python@3.14 patch bump (3.14.6→3.14.7)
   deleted a version-pinned Cellar path the obsidian-ops MCP entry was hardcoded to, and `obs
