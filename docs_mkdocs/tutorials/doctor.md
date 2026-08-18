@@ -105,13 +105,14 @@ obs doctor --vault Research --layer sync    # verify drift is gone
 
 ## Step 6 — JSON for automation
 
-Every check supports `--json` for scripting and CI:
+Every check supports `--json` for scripting and CI. Output is a flat JSON array of
+`{id, layer, label, status, message, fix_hint}` objects — one per check:
 
 ```bash
 obs doctor --layer database --json | python3 -c "
 import json, sys
-r = json.load(sys.stdin)
-fails = [c for c in r['checks'] if c['status'] == 'fail']
+checks = json.load(sys.stdin)
+fails = [c for c in checks if c['status'] == 'fail']
 print(f'{len(fails)} failing checks')
 "
 ```
@@ -127,6 +128,7 @@ print(f'{len(fails)} failing checks')
 | iCloud vault looks empty | `obs doctor --layer icloud` | materialise the vault (open in Obsidian) |
 | Docs/count mismatch before release | `obs doctor --layer docs` | run `scripts/validate-counts.sh --fix` |
 | MCP server misbehaves | `obs doctor --layer mcp` | review the AST guard failures it reports |
+| Claude Desktop MCP entry won't launch | `obs doctor --layer mcp` | check the `mcp-interpreter` result — catches a dead/non-executable Python path, or one pinned to a fragile Homebrew Cellar version that breaks on the next `brew upgrade` |
 
 ---
 

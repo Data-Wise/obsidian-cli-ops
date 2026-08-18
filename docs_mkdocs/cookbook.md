@@ -894,11 +894,13 @@ obs doctor --vault Research --layer sync    # verify drift is gone
 
 ### Machine-readable checks (CI)
 
+`--json` outputs a flat array of `{id, layer, label, status, message, fix_hint}` objects:
+
 ```bash
 obs doctor --layer database --json | python3 -c "
 import json, sys
-r = json.load(sys.stdin)
-print(f\"{sum(1 for c in r['checks'] if c['status']=='fail')} failing checks\")
+checks = json.load(sys.stdin)
+print(f\"{sum(1 for c in checks if c['status']=='fail')} failing checks\")
 "
 ```
 

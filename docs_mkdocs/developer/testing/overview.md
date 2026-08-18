@@ -9,7 +9,8 @@
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
-| Doctor / Diagnostics | 35 | pytest | `test_doctor.py` |
+| Doctor / Diagnostics | 78 | pytest | `test_doctor.py` |
+| Doctor MCP Interpreter (Dogfood) | 4 | pytest | `test_doctor_mcp_interpreter_dogfood.py` |
 | AI Models | 32 | pytest | `test_ai_models.py` |
 | Config Loader | 27 | pytest | `test_config_loader.py` |
 | AI Providers | 26 | pytest | `test_ai_providers.py` |
@@ -40,7 +41,7 @@
 | DB Pagination | 1 | pytest | `test_db_pagination.py` |
 | Graph Metrics Join | 1 | pytest | `test_graph_metrics_join.py` |
 | Search API | 1 | pytest | `test_search_api.py` |
-| **Unit Subtotal** | **413** | **pytest** | |
+| **Unit Subtotal** | **460** | **pytest** | |
 
 ### MCP Unit Tests (pytest)
 
@@ -56,7 +57,8 @@ Covers all 42 MCP tools and 4 resources with mock vault/DB fixtures. Includes ed
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
 | MCP dogfood — real subprocess JSON-RPC | 71 | pytest | `tests/e2e/test_e2e_mcp.py` |
-| **E2E Subtotal** | **71** | **pytest** | |
+| Doctor MCP Interpreter — real subprocess | 4 | pytest | `tests/e2e/test_e2e_doctor_mcp.py` |
+| **E2E Subtotal** | **75** | **pytest** | |
 
 E2E tests spin up the real MCP server as a subprocess and exercise the JSON-RPC protocol end-to-end. **Gated behind `E2E=1`** — not run in standard CI to avoid environment dependencies.
 

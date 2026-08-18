@@ -1,12 +1,25 @@
 priority: P1
 status: ✅ v4.3.0 RELEASED (GitHub release + Homebrew tap bumped) · Issue #85/#86 on dev
 progress: 100
-updated: 2026-07-12
+updated: 2026-08-17
 version: 4.3.0
 next: |
   1. Port plugin skills
   2. Port vault template ops (low priority)
 verified: |
+  obs doctor mcp-interpreter check + --json fix (2026-08-17, PRs #96/#97, merged to dev): fixed
+  the Claude Desktop MCP outage this session — a Homebrew python@3.14 patch bump (3.14.6→3.14.7)
+  deleted a version-pinned Cellar path the obsidian-ops MCP entry was hardcoded to, and `obs
+  doctor` reported all-pass throughout. Added `mcp-interpreter` to the `mcp` layer: fails on a
+  dead/non-executable/unresolvable interpreter, warns when it resolves but is pinned to a
+  version-specific Homebrew Cellar path (incl. revision-suffixed, e.g. `3.14.6_1`) — the exact
+  fragility that broke. Adversarial review (opencode) caught a crash bug (non-string `command`
+  value raised an uncaught TypeError) and the revision-suffix regex gap before merge; both fixed
+  with regression tests. Also fixed a separate pre-existing bug found along the way: `obs doctor
+  --json` crashed on every layer (`UnboundLocalError` from a shadowed local `import json`
+  elsewhere in `obs_cli.py`'s `main()`), spun off as PR #97. Added e2e (real subprocess,
+  `E2E=1`-gated) + dogfood (in-process via `obs_cli.main()`) coverage for both. Tests: 603 pytest
+  (non-e2e) + 138 e2e collected.
   Issue #85 (diagnostics/installer hardening) + Issue #86 (vault reorg path migration) — completed on dev 2026-07-11. Issue #85: vault nesting guard (db_manager), failed_paths persistence (vault_scanner), iCloud per-vault offload warnings, targeted diagnose layers, Claude Desktop MCP auto-config (install.sh + scripts/configure_mcp.py), global verbose flag fix. Issue #86: migrated board path from retired 00_meta to Engineering/_ACTION-BOARD.md (board.py + test_board.py), config/example.project_map.json already uses Engineering/packages/ + Research/. Tests: 764 pytest + 69 Jest passing.
   Obsidian-sync validation (2026-07-12, bf5dd59→52e5a46): Added JSON Schema for .flow/obsidian-sync.yml, 6 doctor checks (missing, schema, stale, vault-root, pair-duplicate, pair-identity), `obs flow init` command (interactive + non-interactive modes), updated savant:restore and craft:recap hooks. Tests: 764 pytest + 69 Jest passing (58 new tests: 23 unit + 19 dogfood + 16 e2e). Docs: CLAUDE.md, refcard, cli-reference, testing overview updated. Commands: 64 (was 63). Adversarial review: 17 fixes (critical bugs, security, correctness, design) — atomic write, path traversal blocking, backup before overwrite, corrupted YAML handling.
   v4.3.0 RELEASED 2026-07-01: release PR #83 (dev→main, regular merge 9617159), main CI green, tag v4.3.0 + GitHub release published, Homebrew tap auto-bumped (data-wise/homebrew-tap commit "update to v4.3.0", sha256 80219a2d), docs auto-deployed to Pages. Tests: 514 pytest + 67 Jest passing; counts aligned (63 cmds/42 tools). Release-prep this cycle: version bump 4.2.0→4.3.0 across 14 files, count 62→63, MCP tool groups completed, tutorial coverage for research/config/board commands, 34 stale branches + leaked ORCHESTRATE files cleaned.
