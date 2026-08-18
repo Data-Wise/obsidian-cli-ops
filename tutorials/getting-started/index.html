@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3205,9 +3205,9 @@ comparison, so AI embeddings survive re-scans.</p>
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    Broken Links: 3
 </code></pre></div>
 <h3 id="search-notes-by-title">Search notes by title<a class="headerlink" href="#search-notes-by-title" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;meeting&quot;</span><span class="w"> </span>--vault<span class="w"> </span>Work<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">   </span><span class="c1"># One vault, cap at 5</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal&quot;</span><span class="w"> </span>--json<span class="w">                    </span><span class="c1"># Machine-readable output</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"meeting"</span><span class="w"> </span>--vault<span class="w"> </span>Work<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">   </span><span class="c1"># One vault, cap at 5</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal"</span><span class="w"> </span>--json<span class="w">                    </span><span class="c1"># Machine-readable output</span>
 </code></pre></div>
 <p><code>obs search</code> is a fast graph-database title search — no AI needed.</p>
 <hr />
@@ -3293,7 +3293,7 @@ Manual: <code>scripts/board-refresh.sh</code></p>
 <h2 id="step-7-ai-powered-analysis">Step 7: AI-Powered Analysis<a class="headerlink" href="#step-7-ai-powered-analysis" title="Permanent link">&para;</a></h2>
 <p>Unlock semantic search, duplicates detection, knowledge gaps, and reorganization.</p>
 <h3 id="set-up-a-provider">Set up a provider<a class="headerlink" href="#set-up-a-provider" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">          </span><span class="c1"># Check what&#39;s available</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>obs<span class="w"> </span>ai<span class="w"> </span>status<span class="w">          </span><span class="c1"># Check what's available</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>setup<span class="w">           </span><span class="c1"># Interactive wizard</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>obs<span class="w"> </span>ai<span class="w"> </span><span class="nb">test</span><span class="w">            </span><span class="c1"># Test all configured providers</span>
 </code></pre></div>
@@ -3359,11 +3359,11 @@ Safe to run anytime.</p>
 <h2 id="step-8-research-pipeline">Step 8: Research Pipeline<a class="headerlink" href="#step-8-research-pipeline" title="Permanent link">&para;</a></h2>
 <p>Combine Zotero, PDF search, and manuscript tracking — all from the terminal.</p>
 <p><strong>Prerequisites:</strong> <a href="../research-setup/">Research Setup</a></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>get<span class="w"> </span>A1B2C3D4<span class="w">                    </span><span class="c1"># Get by Zotero key</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>obs<span class="w"> </span>research<span class="w"> </span>zotero<span class="w"> </span>recent<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">                </span><span class="c1"># Recently modified</span>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;instrumental variable&quot;</span><span class="w">      </span><span class="c1"># Full-text PDF search</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>obs<span class="w"> </span>research<span class="w"> </span>pdf<span class="w"> </span>search<span class="w"> </span><span class="s2">"instrumental variable"</span><span class="w">      </span><span class="c1"># Full-text PDF search</span>
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>stats<span class="w">                        </span><span class="c1"># Manuscript overview</span>
 <a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>obs<span class="w"> </span>research<span class="w"> </span>manuscript<span class="w"> </span>show<span class="w"> </span>my-paper<span class="w">                </span><span class="c1"># Deep dive</span>
@@ -3371,7 +3371,7 @@ Safe to run anytime.</p>
 </code></pre></div>
 <h3 id="unified-search-vault-zotero-pdf">Unified search (vault + Zotero + PDF)<a class="headerlink" href="#unified-search-vault-zotero-pdf" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Combined results across all backends</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;collider bias&quot;</span><span class="w"> </span>--vault<span class="w"> </span>Research
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"collider bias"</span><span class="w"> </span>--vault<span class="w"> </span>Research
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># For Zotero + PDF, use the dedicated subcommands above</span>
 </code></pre></div>
 <p>From Claude Desktop, just ask: <em>"Search my vault and Zotero for papers on
@@ -3384,12 +3384,12 @@ Once configured, all 42 MCP tools are available — ask Claude
 to search, analyze, create, and edit your vault.</p>
 <p><strong>Setup:</strong> <a href="../../claude-integration/">Claude Integration</a> — takes ~5 minutes.</p>
 <h3 id="example-prompts">Example prompts<a class="headerlink" href="#example-prompts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>&quot;List orphaned notes in MyVault&quot;
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>&quot;Check vault health and list the top 3 issues&quot;
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>&quot;Run a quality check on all notes in MyVault&quot;
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>&quot;Find notes that might be merged&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>"Search my research vault for causal inference"
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>"List orphaned notes in MyVault"
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>"Create a note titled 'Meeting 2026-06-15'"
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>"Check vault health and list the top 3 issues"
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>"Run a quality check on all notes in MyVault"
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>"Find notes that might be merged"
 </code></pre></div>
 <hr />
 <h2 id="step-10-which-workflow-next">Step 10: Which Workflow Next?<a class="headerlink" href="#step-10-which-workflow-next" title="Permanent link">&para;</a></h2>
@@ -3522,7 +3522,7 @@ the research pipeline, and connected Claude. Your vault is now production-ready.
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

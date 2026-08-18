@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -4297,10 +4297,10 @@
 </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w">                     </span><span class="c1"># Search all vaults</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">    </span><span class="c1"># One vault only</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;meeting&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">                    </span><span class="c1"># Cap at 5 results</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal&quot;</span><span class="w"> </span>--json<span class="w">                        </span><span class="c1"># JSON output</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span><span class="w">                     </span><span class="c1"># Search all vaults</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span><span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">    </span><span class="c1"># One vault only</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"meeting"</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">                    </span><span class="c1"># Cap at 5 results</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal"</span><span class="w"> </span>--json<span class="w">                        </span><span class="c1"># JSON output</span>
 </code></pre></div>
 <hr />
 <h3 id="obs-discover">obs discover<a class="headerlink" href="#obs-discover" title="Permanent link">&para;</a></h3>
@@ -4392,7 +4392,7 @@
 </table>
 <p><strong>Examples:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Documents/MyVault<span class="w">              </span><span class="c1"># Scan and register a vault (additive)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Notes<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Personal Notes&quot;</span><span class="w">  </span><span class="c1"># Scan with a custom name</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Notes<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Personal Notes"</span><span class="w">  </span><span class="c1"># Scan with a custom name</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Vault<span class="w"> </span>--analyze<span class="w">                </span><span class="c1"># Scan and run analysis in one step</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Vault<span class="w"> </span>--prune<span class="w">                  </span><span class="c1"># Scan AND remove deleted/renamed notes</span>
 </code></pre></div>
@@ -4483,7 +4483,7 @@ unchanged, so existing notes, links, and graph metrics stay valid.</p>
 </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>OldName<span class="w"> </span><span class="s2">&quot;Research Vault&quot;</span><span class="w">   </span><span class="c1"># Rename by current name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>OldName<span class="w"> </span><span class="s2">"Research Vault"</span><span class="w">   </span><span class="c1"># Rename by current name</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>abc123<span class="w"> </span>Archive<span class="w">             </span><span class="c1"># Rename by ID prefix</span>
 </code></pre></div>
 <div class="admonition warning">
@@ -4790,8 +4790,8 @@ catch whole bug classes before release:</p>
 </table>
 <p><strong>Examples:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w">                                    </span><span class="c1"># Interactive wizard</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vault<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">&#39;[{&quot;vault&quot;:&quot;a&quot;,&quot;repo&quot;:&quot;b&quot;}]&#39;</span><span class="w">  </span><span class="c1"># Non-interactive</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vault<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">&#39;[...]&#39;</span><span class="w"> </span>--json<span class="w">  </span><span class="c1"># JSON output</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vault<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">'[{"vault":"a","repo":"b"}]'</span><span class="w">  </span><span class="c1"># Non-interactive</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vault<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">'[...]'</span><span class="w"> </span>--json<span class="w">  </span><span class="c1"># JSON output</span>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Flow layer in doctor</p>
@@ -5800,11 +5800,11 @@ you can ask Claude natural-language questions about your vaults.</p>
 <code>course_list</code>, <code>course_show</code>, <code>course_lectures</code>, <code>manuscript_list</code>, <code>manuscript_show</code>,
 <code>manuscript_stats</code>, <code>bib_check</code></p>
 <h3 id="example-claude-prompts">Example Claude prompts<a class="headerlink" href="#example-claude-prompts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>&quot;Search my research vault for causal inference&quot;
-<a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>&quot;List orphaned notes in MyVault&quot;
-<a id="__codelineno-76-3" name="__codelineno-76-3" href="#__codelineno-76-3"></a>&quot;Create a note titled &#39;Meeting 2026-06-15&#39;&quot;
-<a id="__codelineno-76-4" name="__codelineno-76-4" href="#__codelineno-76-4"></a>&quot;Read the note on causal mediation&quot;
-<a id="__codelineno-76-5" name="__codelineno-76-5" href="#__codelineno-76-5"></a>&quot;Run a quality check on MyVault&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>"Search my research vault for causal inference"
+<a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>"List orphaned notes in MyVault"
+<a id="__codelineno-76-3" name="__codelineno-76-3" href="#__codelineno-76-3"></a>"Create a note titled 'Meeting 2026-06-15'"
+<a id="__codelineno-76-4" name="__codelineno-76-4" href="#__codelineno-76-4"></a>"Read the note on causal mediation"
+<a id="__codelineno-76-5" name="__codelineno-76-5" href="#__codelineno-76-5"></a>"Run a quality check on MyVault"
 </code></pre></div>
 <p>See <a href="../claude-integration/">Claude Integration</a> for full setup instructions and all 42 tools.</p>
 <hr />
@@ -5876,7 +5876,7 @@ you can ask Claude natural-language questions about your vaults.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

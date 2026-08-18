@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3788,7 +3788,7 @@
 <h3 id="custom-database-location">Custom Database Location<a class="headerlink" href="#custom-database-location" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">db_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">db</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span><span class="s2">&quot;/custom/path/to/db.sqlite&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">db</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span><span class="s2">"/custom/path/to/db.sqlite"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="programmatic-access">Programmatic Access<a class="headerlink" href="#programmatic-access" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">vault_scanner</span><span class="w"> </span><span class="kn">import</span> <span class="n">VaultScanner</span>
@@ -3801,15 +3801,15 @@
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">graph</span> <span class="o">=</span> <span class="n">GraphBuilder</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
 <a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c1"># Scan</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="n">stats</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">scan_vault</span><span class="p">(</span><span class="s2">&quot;/path/to/vault&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="n">stats</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">scan_vault</span><span class="p">(</span><span class="s2">"/path/to/vault"</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
 <a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="c1"># Analyze</span>
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="n">vault</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_vault_by_path</span><span class="p">(</span><span class="s2">&quot;/path/to/vault&quot;</span><span class="p">)</span>
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="n">graph_stats</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">analyze_vault</span><span class="p">(</span><span class="n">vault</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="n">vault</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_vault_by_path</span><span class="p">(</span><span class="s2">"/path/to/vault"</span><span class="p">)</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="n">graph_stats</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">analyze_vault</span><span class="p">(</span><span class="n">vault</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
 <a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="c1"># Query</span>
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="n">orphans</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_orphaned_notes</span><span class="p">(</span><span class="n">vault</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
-<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="n">hubs</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_hub_notes</span><span class="p">(</span><span class="n">vault</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="n">orphans</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_orphaned_notes</span><span class="p">(</span><span class="n">vault</span><span class="p">[</span><span class="s1">'id'</span><span class="p">])</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="n">hubs</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_hub_notes</span><span class="p">(</span><span class="n">vault</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </code></pre></div>
 <p>See <code>src/python/README.md</code> for complete API documentation.</p>
 <h2 id="feedback">Feedback<a class="headerlink" href="#feedback" title="Permanent link">&para;</a></h2>
@@ -3881,7 +3881,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

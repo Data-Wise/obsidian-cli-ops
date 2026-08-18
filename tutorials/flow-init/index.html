@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2633,18 +2633,18 @@ it falls back to the iCloud Research path.</p>
 <code>{"vault": ..., "repo": ...}</code> objects). Both are required in non-interactive mode.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--vault-root<span class="w"> </span>~/vaults/Research<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--pairs<span class="w"> </span><span class="s1">&#39;[{&quot;vault&quot;:&quot;projects/atlas&quot;,&quot;repo&quot;:&quot;atlas&quot;},{&quot;vault&quot;:&quot;notes&quot;,&quot;repo&quot;:&quot;docs/notes&quot;}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--pairs<span class="w"> </span><span class="s1">'[{"vault":"projects/atlas","repo":"atlas"},{"vault":"notes","repo":"docs/notes"}]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--json
 </code></pre></div>
 <p><code>--json</code> returns the written config as machine-readable output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;vault_root&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/you/vaults/Research&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;pairs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;vault&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;projects/atlas&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;repo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;atlas&quot;</span><span class="p">},</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;vault&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notes&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;repo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;docs/notes&quot;</span><span class="p">}</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"vault_root"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/you/vaults/Research"</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">"pairs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p">{</span><span class="nt">"vault"</span><span class="p">:</span><span class="w"> </span><span class="s2">"projects/atlas"</span><span class="p">,</span><span class="w"> </span><span class="nt">"repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"atlas"</span><span class="p">},</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">{</span><span class="nt">"vault"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notes"</span><span class="p">,</span><span class="w"> </span><span class="nt">"repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docs/notes"</span><span class="p">}</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.md&quot;</span><span class="p">],</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">&quot;exclude&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;_archive&quot;</span><span class="p">]</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">"include"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"*.md"</span><span class="p">],</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">"exclude"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_archive"</span><span class="p">]</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -2660,7 +2660,7 @@ and stamps a created date. The default contents:</p>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notes</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/notes</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">include</span><span class="p">:</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*.md&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"*.md"</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nt">exclude</span><span class="p">:</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_archive</span>
 </code></pre></div>
@@ -2752,7 +2752,7 @@ default <code>all_layers</code> set, so a plain <code>obs doctor</code> covers i
 <h2 id="step-5-overwrite-safely">Step 5 — Overwrite safely<a class="headerlink" href="#step-5-overwrite-safely" title="Permanent link">&para;</a></h2>
 <p><code>obs flow init</code> refuses to clobber an existing config unless you pass <code>--force</code>.
 With <code>--force</code>, the previous file is copied to <code>.flow/obsidian-sync.yml.bak</code> first.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vaults/Research<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">&#39;[{&quot;vault&quot;:&quot;projects/atlas&quot;,&quot;repo&quot;:&quot;atlas&quot;}]&#39;</span><span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>obs<span class="w"> </span>flow<span class="w"> </span>init<span class="w"> </span>--vault-root<span class="w"> </span>~/vaults/Research<span class="w"> </span>--pairs<span class="w"> </span><span class="s1">'[{"vault":"projects/atlas","repo":"atlas"}]'</span><span class="w"> </span>--force
 </code></pre></div>
 <hr />
 <h2 id="common-validation-errors">Common validation errors<a class="headerlink" href="#common-validation-errors" title="Permanent link">&para;</a></h2>
@@ -2873,7 +2873,7 @@ With <code>--force</code>, the previous file is copied to <code>.flow/obsidian-s
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

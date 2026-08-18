@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2584,13 +2584,13 @@
 <p>Before monitoring trends, establish a baseline with the static health tools:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>health<span class="w"> </span>Research<span class="w">           </span><span class="c1"># 4-dimension score (connectivity, links, structure, freshness)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Research<span class="w">          </span><span class="c1"># graph metrics (density, clusters, hub/orphan counts)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Research<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>obs<span class="w"> </span>analyze<span class="w"> </span>Research<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s2">import json, sys</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s2">m = json.load(sys.stdin)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s2">print(f\&quot;Density: {m[&#39;density&#39;]:.4f}\&quot;)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s2">print(f\&quot;Orphans: {m[&#39;orphan_count&#39;]}\&quot;)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s2">print(f\&quot;Clusters: {m[&#39;cluster_count&#39;]}\&quot;)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s2">print(f\"Density: {m['density']:.4f}\")</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s2">print(f\"Orphans: {m['orphan_count']}\")</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s2">print(f\"Clusters: {m['cluster_count']}\")</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">"</span>
 </code></pre></div>
 <p>Run this weekly and compare numbers over time.</p>
 <hr />
@@ -2599,12 +2599,12 @@
 <blockquote>
 <p><em>"Show me my most stale notes in Research"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Claude calls: get_stale_notes(&quot;Research&quot;, limit=20)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Claude calls: get_stale_notes("Research", limit=20)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Returns:
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  has_graph_metrics: true
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  notes:
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    - {title: &quot;Collider Bias&quot;, days_since_modified: 187, pagerank: 0.021, staleness_score: 0.011}
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    - {title: &quot;Old Draft Notes&quot;, days_since_modified: 312, pagerank: 0.003, staleness_score: 0.003}
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    - {title: "Collider Bias", days_since_modified: 187, pagerank: 0.021, staleness_score: 0.011}
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    - {title: "Old Draft Notes", days_since_modified: 312, pagerank: 0.003, staleness_score: 0.003}
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    - ...
 </code></pre></div>
 <p><code>staleness_score = pagerank × (days_since_modified / 365)</code> — a high score means an important note (high PageRank) that hasn't been touched in a long time. When <code>has_graph_metrics</code> is false, results are sorted by <code>days_since_modified</code> only.</p>
@@ -2617,17 +2617,17 @@
 <blockquote>
 <p><em>"Show me the writing velocity for Research over the last 30 days"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Claude calls: get_trends(&quot;Research&quot;, days=30)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Claude calls: get_trends("Research", days=30)
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Returns:
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  total_notes: 847
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  lookback_days: 30
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  velocity_notes_per_week: 2.8
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  insufficient_data: false
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  buckets:
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    - {week: &quot;2026-05-26&quot;, notes_created: 3, notes_modified: 8}
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    - {week: &quot;2026-06-02&quot;, notes_created: 1, notes_modified: 12}
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    - {week: &quot;2026-06-09&quot;, notes_created: 5, notes_modified: 9}
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    - {week: &quot;2026-06-16&quot;, notes_created: 3, notes_modified: 5}
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    - {week: "2026-05-26", notes_created: 3, notes_modified: 8}
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    - {week: "2026-06-02", notes_created: 1, notes_modified: 12}
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    - {week: "2026-06-09", notes_created: 5, notes_modified: 9}
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    - {week: "2026-06-16", notes_created: 3, notes_modified: 5}
 </code></pre></div>
 <p>Use this to understand your vault's growth patterns and whether you're linking as you write.</p>
 <hr />
@@ -2636,7 +2636,7 @@
 <blockquote>
 <p><em>"Give me a daily digest of my Research vault"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Claude calls: get_daily_digest(&quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Claude calls: get_daily_digest("Research")
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Returns:
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  - Notes created today: 0
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  - Notes modified today: 2
@@ -2652,20 +2652,20 @@ Takes 2 seconds. Catches orphaned notes before your vault grows chaotic.</p>
 <h2 id="step-5-quality-sweep-weekly">Step 5: Quality Sweep (weekly)<a class="headerlink" href="#step-5-quality-sweep-weekly" title="Permanent link">&para;</a></h2>
 <p>Combine temporal and AI tools for a weekly review:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Find the worst-scoring notes</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>Research<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>obs<span class="w"> </span>ai<span class="w"> </span>quality<span class="w"> </span>Research<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">scores = sorted(json.load(sys.stdin), key=lambda x: x[&#39;overall_score&#39;])</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">scores = sorted(json.load(sys.stdin), key=lambda x: x['overall_score'])</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">for s in scores[:5]:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">    print(f\&quot;  {s[&#39;overall_score&#39;]:3.0f}  {s[&#39;title&#39;]}\&quot;)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">    print(f\"  {s['overall_score']:3.0f}  {s['title']}\")</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">"</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 2. Scan for stale content (CLI equivalent — uses graph freshness, not timestamps)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>obs<span class="w"> </span>health<span class="w"> </span>Research<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>obs<span class="w"> </span>health<span class="w"> </span>Research<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">import json, sys</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">h = json.load(sys.stdin)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">print(f\&quot;Freshness score: {h[&#39;freshness&#39;][&#39;score&#39;]}/100\&quot;)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">print(f\&quot;Structural score: {h[&#39;structure&#39;][&#39;score&#39;]}/100\&quot;)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">print(f\"Freshness score: {h['freshness']['score']}/100\")</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">print(f\"Structural score: {h['structure']['score']}/100\")</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">"</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># 3. Re-scan so metrics are fresh</span>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>obs<span class="w"> </span>scan<span class="w"> </span>/path/to/Research
@@ -2769,7 +2769,7 @@ Takes 2 seconds. Catches orphaned notes before your vault grows chaotic.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

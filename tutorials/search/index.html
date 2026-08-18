@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2548,41 +2548,41 @@
 </ul>
 <hr />
 <h2 id="step-1-basic-title-search">Step 1 — Basic title search<a class="headerlink" href="#step-1-basic-title-search" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span>
 </code></pre></div>
 <p>Matches note <strong>titles</strong> across every registered vault. Returns up to 20 hits by default.</p>
 <hr />
 <h2 id="step-2-scope-to-one-vault">Step 2 — Scope to one vault<a class="headerlink" href="#step-2-scope-to-one-vault" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>--vault<span class="w"> </span>Research
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span><span class="w"> </span>--vault<span class="w"> </span>Research
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># short form:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal mediation&quot;</span><span class="w"> </span>-v<span class="w"> </span>Research
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal mediation"</span><span class="w"> </span>-v<span class="w"> </span>Research
 </code></pre></div>
 <p>Limits results to a single vault by name or ID.</p>
 <hr />
 <h2 id="step-3-cap-the-result-count">Step 3 — Cap the result count<a class="headerlink" href="#step-3-cap-the-result-count" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;meeting&quot;</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"meeting"</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># short form:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;meeting&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"meeting"</span><span class="w"> </span>-n<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <p>Useful when a query is broad and you only want the top few.</p>
 <hr />
 <h2 id="step-4-machine-readable-output">Step 4 — Machine-readable output<a class="headerlink" href="#step-4-machine-readable-output" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal&quot;</span><span class="w"> </span>--json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal"</span><span class="w"> </span>--json
 </code></pre></div>
 <p>Returns a JSON array — perfect for scripting or piping into <code>jq</code> / <code>python3</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;causal&quot;</span><span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"causal"</span><span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s2">import json, sys</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">for n in json.load(sys.stdin):</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">    print(f\&quot;{n[&#39;id&#39;]}  {n[&#39;title&#39;]}\&quot;)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">    print(f\"{n['id']}  {n['title']}\")</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">"</span>
 </code></pre></div>
 <hr />
 <h2 id="step-5-hand-a-result-to-ai">Step 5 — Hand a result to AI<a class="headerlink" href="#step-5-hand-a-result-to-ai" title="Permanent link">&para;</a></h2>
 <p>Search gives you a note ID; pass it to an AI feature for deeper work:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;collider bias&quot;</span><span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>search<span class="w"> </span><span class="s2">"collider bias"</span><span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s2">print(json.load(sys.stdin)[0][&#39;id&#39;])</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s2">print(json.load(sys.stdin)[0]['id'])</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>obs<span class="w"> </span>ai<span class="w"> </span>similar<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -2653,7 +2653,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

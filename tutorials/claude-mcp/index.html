@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2743,14 +2743,14 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 </code></pre></div>
 <p>Add the <code>obsidian-ops</code> entry inside <code>"mcpServers"</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;obsidian-ops&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/bin/zsh&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="s2">&quot;OBS_PYTHON=\&quot;${OBS_PYTHON:-}\&quot;; if [ -z \&quot;$OBS_PYTHON\&quot; ]; then for c in \&quot;$HOME/.local/share/obs/venv/bin/python3\&quot; \&quot;/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\&quot;; do [ -x \&quot;$c\&quot; ] &amp;&amp; OBS_PYTHON=\&quot;$c\&quot; &amp;&amp; break; done; fi; exec \&quot;${OBS_PYTHON:-python3}\&quot; /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"obsidian-ops"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/bin/zsh"</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="s2">"-c"</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="s2">"OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\"; do [ -x \"$c\" ] &amp;&amp; OBS_PYTHON=\"$c\" &amp;&amp; break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="p">],</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
@@ -2759,7 +2759,7 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">JSON is strict</p>
 <p>No trailing commas. Validate with:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>~/Library/<span class="s2">&quot;Application Support&quot;</span>/Claude/claude_desktop_config.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>~/Library/<span class="s2">"Application Support"</span>/Claude/claude_desktop_config.json
 </code></pre></div></p>
 </div>
 <hr />
@@ -2778,14 +2778,14 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"Show me stats for my Research vault"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Claude calls: get_vault_stats(&quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Claude calls: get_vault_stats("Research")
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Returns: 847 notes, 2,341 links, density 0.023, 12 clusters
 </code></pre></div>
 <p><strong>Search:</strong></p>
 <blockquote>
 <p><em>"Search my Research vault for causal mediation, show the top 5"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Claude calls: search_notes(&quot;causal mediation&quot;, vault_id=&quot;Research&quot;, limit=5)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Claude calls: search_notes("causal mediation", vault_id="Research", limit=5)
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Returns: ranked list of matching notes with titles and snippets
 </code></pre></div>
 <blockquote>
@@ -2795,22 +2795,22 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"What are the 10 most connected notes in Research?"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Claude calls: get_hub_notes(&quot;Research&quot;, limit=10)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Claude calls: get_hub_notes("Research", limit=10)
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Returns: hub notes ranked by PageRank with connection counts
 </code></pre></div>
 <p><strong>Orphan detection:</strong></p>
 <blockquote>
 <p><em>"List orphaned notes in Research that I should link up"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Claude calls: get_orphaned_notes(&quot;Research&quot;, limit=20)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Claude calls: get_orphaned_notes("Research", limit=20)
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Returns: list of isolated notes with word counts and last modified dates
 </code></pre></div>
 <p><strong>Health check:</strong></p>
 <blockquote>
 <p><em>"Run a health check on Research and give me a priority fix list"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Claude calls: get_vault_health(&quot;Research&quot;)
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Returns: 4-dimension scores + Claude&#39;s prioritized recommendations
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Claude calls: get_vault_health("Research")
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Returns: 4-dimension scores + Claude's prioritized recommendations
 </code></pre></div>
 <hr />
 <h2 id="step-7-read-and-navigate-notes">Step 7: Read and Navigate Notes<a class="headerlink" href="#step-7-read-and-navigate-notes" title="Permanent link">&para;</a></h2>
@@ -2818,7 +2818,7 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"Read the note about collider bias in my Research vault"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Claude calls: search_notes(&quot;collider bias&quot;, vault_id=&quot;Research&quot;, limit=1)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Claude calls: search_notes("collider bias", vault_id="Research", limit=1)
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>             then: read_note(note_id)
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Returns: full note content including YAML frontmatter
 </code></pre></div>
@@ -2847,16 +2847,16 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <p><em>"Create a note in Research called 'Sensitivity Analysis 2026-06-15' with these sections: Overview, Methods, Results, References"</em></p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Claude calls: create_note(
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    vault_id=&quot;Research&quot;,
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    title=&quot;Sensitivity Analysis 2026-06-15&quot;,
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    content=&quot;# Sensitivity Analysis 2026-06-15\n\n## Overview\n\n## Methods\n...&quot;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    vault_id="Research",
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    title="Sensitivity Analysis 2026-06-15",
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    content="# Sensitivity Analysis 2026-06-15\n\n## Overview\n\n## Methods\n..."
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>)
 </code></pre></div>
 <p><strong>Append to an existing note:</strong></p>
 <blockquote>
 <p><em>"Append these key points from today's meeting to my collider-bias note: [...]"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Claude calls: append_to_note(note_id, content=&quot;---\n## Meeting Notes 2026-06-15\n[...]&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Claude calls: append_to_note(note_id, content="---\n## Meeting Notes 2026-06-15\n[...]")
 </code></pre></div>
 <p><strong>Edit a note:</strong></p>
 <blockquote>
@@ -2872,8 +2872,8 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Claude calls: insert_to_note(
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    note_id,
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    content=&quot;| Method B | 0.82 | 0.03 |&quot;,
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    after_heading=&quot;Results&quot;,
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    content="| Method B | 0.82 | 0.03 |",
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    after_heading="Results",
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    as_table_row=True
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>)
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a># Appends the row to the existing Markdown table without touching the rest of the note
@@ -2883,8 +2883,8 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Claude calls: insert_to_note(
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    note_id,
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    content=&quot;## Limitations\n\nTo be filled in.&quot;,
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    before_heading=&quot;References&quot;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    content="## Limitations\n\nTo be filled in.",
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    before_heading="References"
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>)
 </code></pre></div>
 <blockquote>
@@ -2892,10 +2892,10 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Claude calls: insert_to_note(
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    note_id,
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    content=&quot;This paper examines...&quot;,
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    replace_section=&quot;Abstract&quot;
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    content="This paper examines...",
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    replace_section="Abstract"
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>)
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a># Replaces everything between &#39;## Abstract&#39; and the next same-level heading
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a># Replaces everything between '## Abstract' and the next same-level heading
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">insert_to_note vs write_note vs append_to_note</p>
@@ -2909,7 +2909,7 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"Rename 'collider-bias' to 'Collider Bias - Regression Discontinuity'"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Claude calls: rename_note(note_id, &quot;Collider Bias - Regression Discontinuity&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Claude calls: rename_note(note_id, "Collider Bias - Regression Discontinuity")
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Returns: warning if other notes link to the old name (wikilinks will break)
 </code></pre></div>
 <p><strong>Delete a note (dry-run first):</strong></p>
@@ -2917,9 +2917,9 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <p><em>"Delete the note 'scratch-pad-old'"</em></p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Claude calls: delete_note(note_id, confirm=False)   # dry-run by default
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Returns: &quot;Would delete: scratch-pad-old.md (234 words, 0 incoming links)&quot;
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Claude asks: &quot;Confirm deletion?&quot;
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>You: &quot;Yes&quot;
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Returns: "Would delete: scratch-pad-old.md (234 words, 0 incoming links)"
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Claude asks: "Confirm deletion?"
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>You: "Yes"
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Claude calls: delete_note(note_id, confirm=True)
 </code></pre></div>
 <hr />
@@ -2929,35 +2929,35 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"What topics are missing from my Research vault?"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Claude calls: run_obs_ai(&quot;gaps&quot;, &quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Claude calls: run_obs_ai("gaps", "Research")
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Returns: stub notes, orphaned topics, suggested new notes
 </code></pre></div>
 <p><strong>Quality scoring:</strong></p>
 <blockquote>
 <p><em>"Score all notes in Research and show me the 5 worst"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Claude calls: run_obs_ai(&quot;quality&quot;, &quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Claude calls: run_obs_ai("quality", "Research")
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Returns: notes ranked by weighted score (completeness/connectivity/metadata/freshness)
 </code></pre></div>
 <p><strong>Merge candidates:</strong></p>
 <blockquote>
 <p><em>"Find notes in Research that overlap so much they might be merged"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Claude calls: run_obs_ai(&quot;merge-suggest&quot;, &quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Claude calls: run_obs_ai("merge-suggest", "Research")
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Returns: note pairs with cosine similarity &gt; 0.8, shared links/tags
 </code></pre></div>
 <p><strong>Tag suggestions:</strong></p>
 <blockquote>
 <p><em>"Suggest tags for all untagged notes in Research"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Claude calls: run_obs_ai(&quot;tag-suggest&quot;, &quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Claude calls: run_obs_ai("tag-suggest", "Research")
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Returns: tag suggestions per note with confidence scores
 </code></pre></div>
 <p><strong>Vault reorganization:</strong></p>
 <blockquote>
 <p><em>"Give me a reorganization plan for Research"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Claude calls: run_obs_ai(&quot;refactor&quot;, &quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Claude calls: run_obs_ai("refactor", "Research")
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Returns: categorized suggestions: move, archive, merge-folder, connect, create-folder
 </code></pre></div>
 <hr />
@@ -2972,7 +2972,7 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
 <blockquote>
 <p><em>"I just added 10 new notes. Please rescan my Research vault."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Claude calls: rescan_vault(&quot;Research&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Claude calls: rescan_vault("Research")
 </code></pre></div>
 <h3 id="export-as-script-pattern">Export-as-script pattern<a class="headerlink" href="#export-as-script-pattern" title="Permanent link">&para;</a></h3>
 <p>Ask Claude to generate a shell script from its analysis:</p>
@@ -3076,7 +3076,7 @@ venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

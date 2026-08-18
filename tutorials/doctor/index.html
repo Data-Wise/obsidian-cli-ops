@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2699,13 +2699,14 @@ mis-pointed path or an un-materialised iCloud vault won't wipe your index.</p>
 </div>
 <hr />
 <h2 id="step-6-json-for-automation">Step 6 — JSON for automation<a class="headerlink" href="#step-6-json-for-automation" title="Permanent link">&para;</a></h2>
-<p>Every check supports <code>--json</code> for scripting and CI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>doctor<span class="w"> </span>--layer<span class="w"> </span>database<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<p>Every check supports <code>--json</code> for scripting and CI. Output is a flat JSON array of
+<code>{id, layer, label, status, message, fix_hint}</code> objects — one per check:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>doctor<span class="w"> </span>--layer<span class="w"> </span>database<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">r = json.load(sys.stdin)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">fails = [c for c in r[&#39;checks&#39;] if c[&#39;status&#39;] == &#39;fail&#39;]</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">print(f&#39;{len(fails)} failing checks&#39;)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">checks = json.load(sys.stdin)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">fails = [c for c in checks if c['status'] == 'fail']</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">print(f'{len(fails)} failing checks')</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">"</span>
 </code></pre></div>
 <hr />
 <h2 id="common-scenarios">Common scenarios<a class="headerlink" href="#common-scenarios" title="Permanent link">&para;</a></h2>
@@ -2742,6 +2743,11 @@ mis-pointed path or an un-materialised iCloud vault won't wipe your index.</p>
 <td>MCP server misbehaves</td>
 <td><code>obs doctor --layer mcp</code></td>
 <td>review the AST guard failures it reports</td>
+</tr>
+<tr>
+<td>Claude Desktop MCP entry won't launch</td>
+<td><code>obs doctor --layer mcp</code></td>
+<td>check the <code>mcp-interpreter</code> result — catches a dead/non-executable Python path, or one pinned to a fragile Homebrew Cellar version that breaks on the next <code>brew upgrade</code></td>
 </tr>
 </tbody>
 </table>
@@ -2814,7 +2820,7 @@ mis-pointed path or an un-materialised iCloud vault won't wipe your index.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

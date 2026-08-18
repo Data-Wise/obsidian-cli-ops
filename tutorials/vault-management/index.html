@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2598,21 +2598,21 @@
 </code></pre></div>
 <p>For scripting, request JSON instead:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>info<span class="w"> </span>Research<span class="w"> </span>--json
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># {&quot;id&quot;: &quot;a1b2c3...&quot;, &quot;name&quot;: &quot;Research&quot;, &quot;path&quot;: &quot;/Users/you/Documents/Research&quot;,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">#  &quot;notes&quot;: 482, &quot;last_scanned&quot;: &quot;...&quot;, &quot;created_at&quot;: &quot;...&quot;}</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># {"id": "a1b2c3...", "name": "Research", "path": "/Users/you/Documents/Research",</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">#  "notes": 482, "last_scanned": "...", "created_at": "..."}</span>
 </code></pre></div>
 <hr />
 <h2 id="step-2-rename-a-vault">Step 2: Rename a Vault<a class="headerlink" href="#step-2-rename-a-vault" title="Permanent link">&para;</a></h2>
 <p>When a vault was registered with an awkward auto-generated name (often the directory basename), give it a friendlier label:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>Research<span class="w"> </span><span class="s2">&quot;Research Vault&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>Research<span class="w"> </span><span class="s2">"Research Vault"</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># ✏️  Renamed Research → Research Vault</span>
 </code></pre></div>
 <p>The <strong>path and ID are unchanged</strong> — only the display name moves. Every note, link, and graph metric stays valid because they key off the ID (a hash of the path), not the name.</p>
 <div class="admonition warning">
 <p class="admonition-title">Collisions are refused</p>
 <p>If another vault already uses the target name, the rename fails:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>WorkNotes<span class="w"> </span><span class="s2">&quot;Research Vault&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># ❌ Another vault already uses the name &#39;Research Vault&#39; (id b7c8...);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>WorkNotes<span class="w"> </span><span class="s2">"Research Vault"</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># ❌ Another vault already uses the name 'Research Vault' (id b7c8...);</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#    names must stay unambiguous.</span>
 </code></pre></div>
 <p>This keeps name-based lookup (<code>obs stats "Research Vault"</code>) deterministic.</p>
@@ -2620,7 +2620,7 @@
 <hr />
 <h2 id="step-3-preview-a-deletion-dry-run">Step 3: Preview a Deletion (dry-run)<a class="headerlink" href="#step-3-preview-a-deletion-dry-run" title="Permanent link">&para;</a></h2>
 <p>Deletion is <strong>dry-run by default</strong> — running it without <code>--force</code> changes nothing and just previews the impact:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span><span class="s2">&quot;Old Archive&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span><span class="s2">"Old Archive"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>╭──────────── ⚠️  DRY RUN — nothing deleted ────────────╮
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│ Name: Old Archive                                    │
@@ -2637,7 +2637,7 @@
 <hr />
 <h2 id="step-4-commit-the-deletion">Step 4: Commit the Deletion<a class="headerlink" href="#step-4-commit-the-deletion" title="Permanent link">&para;</a></h2>
 <p>When the preview looks right, pass <code>--force</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span><span class="s2">&quot;Old Archive&quot;</span><span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>obs<span class="w"> </span>vault<span class="w"> </span>delete<span class="w"> </span><span class="s2">"Old Archive"</span><span class="w"> </span>--force
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 🗑️  Deleted vault Old Archive (137 notes removed from the obs index).</span>
 </code></pre></div>
 <p>What happens under the hood:</p>
@@ -2662,7 +2662,7 @@
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>obs<span class="w"> </span>scan<span class="w"> </span>~/Documents/MyVault<span class="w"> </span>--analyze
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Give it a tidy display name</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>MyVault<span class="w"> </span><span class="s2">&quot;My Vault&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>obs<span class="w"> </span>vault<span class="w"> </span>rename<span class="w"> </span>MyVault<span class="w"> </span><span class="s2">"My Vault"</span>
 </code></pre></div>
 <hr />
 <h2 id="from-claude-desktop-mcp">From Claude Desktop (MCP)<a class="headerlink" href="#from-claude-desktop-mcp" title="Permanent link">&para;</a></h2>
@@ -2762,7 +2762,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
