@@ -11,6 +11,8 @@ import ast
 import json
 import os
 import platform
+import re
+import shutil
 import sqlite3
 import sys
 import time
@@ -799,11 +801,55 @@ def _check_mcp() -> list[DoctorResult]:
             else:
                 results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "pass",
                                             f"Entry present (command: {cmd})"))
+            results.append(_check_mcp_interpreter(cmd))
     except (json.JSONDecodeError, OSError) as e:
         results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "error",
                                     f"Cannot parse config: {e}"))
 
     return results
+
+
+_CELLAR_PIN_RE = re.compile(r"/Cellar/[^/]+/[0-9]+(?:\.[0-9]+){2,}(?:_[0-9]+)?/")
+
+
+def _check_mcp_interpreter(cmd) -> DoctorResult:
+    """Validate the obsidian-ops MCP entry's interpreter (`command`) is a real,
+    executable binary — and warn when it's pinned to a version-specific Homebrew
+    Cellar path, which breaks silently on the next `brew upgrade` (#94-class bug:
+    a dead Cellar path reported no doctor failure until Claude Desktop tried to
+    spawn it)."""
+    if not isinstance(cmd, str):
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            f"\"command\" must be a string, got {type(cmd).__name__}: {cmd!r}",
+                            "Set \"command\" to a working python3 interpreter path")
+
+    if not cmd:
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            "No command set on obsidian-ops entry",
+                            "Set \"command\" to a working python3 interpreter")
+
+    if os.sep in cmd or (os.altsep and os.altsep in cmd):
+        resolved = cmd
+        exists_and_executable = os.path.isfile(resolved) and os.access(resolved, os.X_OK)
+    else:
+        resolved = shutil.which(cmd)
+        exists_and_executable = resolved is not None
+
+    if not exists_and_executable:
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "fail",
+                            f"Interpreter not found or not executable: {cmd}",
+                            "Reinstall via ./install.sh, or point \"command\" to a working "
+                            "python3 (e.g. /opt/homebrew/bin/python3.14)")
+
+    if _CELLAR_PIN_RE.search(resolved):
+        return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "warn",
+                            f"Interpreter is pinned to a specific Homebrew version: {resolved}",
+                            "Point \"command\" to the stable symlink instead, e.g. "
+                            "/opt/homebrew/bin/python3.14 — a version-pinned Cellar path "
+                            "breaks on the next brew upgrade")
+
+    return DoctorResult("mcp-interpreter", "mcp", "obsidian-ops interpreter", "pass",
+                        f"Interpreter resolves and is executable: {resolved}")
 
 
 def _find_bad_vault_resolvers(source: str) -> list[str]:

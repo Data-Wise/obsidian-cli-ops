@@ -321,6 +321,82 @@ class TestCheckMCP:
         entry = next(r for r in results if r.id == "mcp-entry")
         assert entry.status == "warn"
 
+    def _write_config(self, tmp_path, command, monkeypatch):
+        config_path = tmp_path / "claude_desktop_config.json"
+        mcp_server_path = tmp_path / "mcp_server.py"
+        mcp_server_path.touch()
+        config_path.write_text(json.dumps({
+            "mcpServers": {
+                "obsidian-ops": {
+                    "command": command,
+                    "args": [str(mcp_server_path)]
+                }
+            }
+        }))
+        from core import doctor as doctor_mod
+        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+
+    def test_interpreter_pass_bare_command(self, tmp_path, monkeypatch):
+        self._write_config(tmp_path, "python3", monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "pass"
+
+    def test_interpreter_fail_nonexistent_absolute_path(self, tmp_path, monkeypatch):
+        self._write_config(tmp_path, "/nonexistent/path/to/python3", monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "fail"
+
+    def test_interpreter_fail_unresolvable_bare_command(self, tmp_path, monkeypatch):
+        self._write_config(tmp_path, "totally-not-a-real-interpreter-xyz", monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "fail"
+
+    def test_interpreter_warn_cellar_pinned_path(self, tmp_path, monkeypatch):
+        cellar_bin = tmp_path / "Cellar" / "python@3.14" / "3.14.6" / "bin"
+        cellar_bin.mkdir(parents=True)
+        interpreter = cellar_bin / "python3.14"
+        interpreter.write_text("#!/bin/sh\n")
+        os.chmod(interpreter, 0o755)
+        self._write_config(tmp_path, str(interpreter), monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "warn"
+
+    def test_interpreter_warn_cellar_pinned_path_with_revision_suffix(self, tmp_path, monkeypatch):
+        # Homebrew revision-suffixed versions (bottle rebuilds) are just as fragile
+        # as plain X.Y.Z Cellar paths and must still trigger the warn.
+        cellar_bin = tmp_path / "Cellar" / "python@3.14" / "3.14.6_1" / "bin"
+        cellar_bin.mkdir(parents=True)
+        interpreter = cellar_bin / "python3.14"
+        interpreter.write_text("#!/bin/sh\n")
+        os.chmod(interpreter, 0o755)
+        self._write_config(tmp_path, str(interpreter), monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "warn"
+
+    def test_interpreter_fail_non_string_command(self, tmp_path, monkeypatch):
+        # A malformed-but-valid-JSON config (e.g. command: 123) must be reported
+        # as a fail result, not crash obs doctor with an uncaught TypeError.
+        self._write_config(tmp_path, 123, monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "fail"
+
+    def test_interpreter_pass_stable_symlink_path(self, tmp_path, monkeypatch):
+        bin_dir = tmp_path / "bin"
+        bin_dir.mkdir()
+        interpreter = bin_dir / "python3.14"
+        interpreter.write_text("#!/bin/sh\n")
+        os.chmod(interpreter, 0o755)
+        self._write_config(tmp_path, str(interpreter), monkeypatch)
+        results = _check_mcp()
+        interp = next(r for r in results if r.id == "mcp-interpreter")
+        assert interp.status == "pass"
+
 
 # ---------------------------------------------------------------------------
 # Layer 5: iCloud
