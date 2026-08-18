@@ -7,6 +7,7 @@ boards in the Obsidian vault.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
@@ -19,6 +20,8 @@ import yaml
 
 from .vault_manager import VaultManager
 from db_manager import DatabaseManager  # noqa: E402
+
+log = logging.getLogger(__name__)
 
 MARKER_START = "<!-- obs:board:start -->"
 MARKER_END = "<!-- obs:board:end -->"
@@ -523,12 +526,23 @@ class BoardEngine:
         return -1
 
     def _has_drift(self, vault_id: str) -> bool:
+        """True if the sync layer reports disk<->DB divergence for this vault.
+
+        Checks all three drift-bearing check families (sync-ghosts, sync-missing,
+        sync-errors) at fail/warn/error status — sync-drift is excluded (always
+        'info', never actionable). 'error' is included deliberately: a check that
+        couldn't run (query failure, corrupt schema) is not evidence of "no
+        drift" and must not be conflated with an actual clean pass.
+        """
         try:
             from core.doctor import run_checks  # noqa: E402
             results = run_checks(vault_id=vault_id, layers=["sync"])
             for r in results:
-                if r.status in ("fail", "warn") and "sync-ghosts" in r.id:
+                check_id = r.id.split(":", 1)[0]
+                if r.status in ("fail", "warn", "error") and check_id in (
+                    "sync-ghosts", "sync-missing", "sync-errors",
+                ):
                     return True
         except Exception:
-            pass
+            log.exception("_has_drift: sync check failed for vault %s", vault_id)
         return False
