@@ -1789,8 +1789,30 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[Unreleased]">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v431-2026-08-17-doctor-mcp-diagnostics-drift-detection-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixes
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#docs-gap-audit-2026-07-12" class="md-nav__link">
@@ -3286,8 +3308,30 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[Unreleased]">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v431-2026-08-17-doctor-mcp-diagnostics-drift-detection-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixes
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#docs-gap-audit-2026-07-12" class="md-nav__link">
@@ -4242,6 +4286,15 @@
 <p>All notable changes to Obsidian CLI Ops.</p>
 <hr />
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h2 id="v431-2026-08-17-doctor-mcp-diagnostics-drift-detection-fixes">v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes<a class="headerlink" href="#v431-2026-08-17-doctor-mcp-diagnostics-drift-detection-fixes" title="Permanent link">&para;</a></h2>
+<h3 id="fixes">Fixes<a class="headerlink" href="#fixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>obs doctor</code> — new <code>mcp-interpreter</code> check</strong> — catches a Claude Desktop MCP entry pointed at a dead, non-executable, or unresolvable Python interpreter, and warns when it's pinned to a fragile version-specific Homebrew Cellar path (including revision-suffixed, e.g. <code>3.14.6_1</code>) instead of a stable symlink. Motivated by a live outage: a <code>python@3.14</code> patch bump deleted the Cellar path the <code>obsidian-ops</code> MCP entry was hardcoded to, and <code>obs doctor</code> reported all-pass throughout.</li>
+<li><strong><code>obs doctor --json</code> crash fixed</strong> — every layer crashed with an <code>UnboundLocalError</code> from a local <code>import json</code> elsewhere in <code>obs_cli.py</code>'s <code>main()</code> shadowing the module-level import. Also fixed the tutorial/cookbook <code>--json</code> automation examples, which assumed the wrong output shape (<code>{"checks": [...]}</code> instead of the actual flat array).</li>
+<li><strong><code>get_broken_links</code> MCP tool fixed</strong> — read <code>title</code>/<code>path</code> keys that don't exist on the <code>broken_links</code> view (it exposes <code>source_title</code>/<code>source_path</code>), so every result silently fell back to "Unknown"/"?".</li>
+<li><strong><code>obs board</code> drift detection fixed</strong> — <code>BoardEngine._has_drift</code> imported a nonexistent <code>Doctor</code> class with a wrong API; the resulting exception was swallowed, so the board's drift flag always reported <code>False</code>. Now calls the real <code>run_checks()</code> API, checks all three drift-bearing check families (<code>sync-ghosts</code>, <code>sync-missing</code>, <code>sync-errors</code>) at <code>fail</code>/<code>warn</code>/<code>error</code> status, and logs instead of silently swallowing exceptions.</li>
+<li><strong>Obsidian CLI bridge version probe fixed</strong> — use the native <code>obsidian version</code> command (CLI 1.12.7+) instead of the unsupported <code>obsidian --version</code>.</li>
+</ul>
 <h3 id="docs-gap-audit-2026-07-12">Docs gap audit (2026-07-12)<a class="headerlink" href="#docs-gap-audit-2026-07-12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Architecture docs updated</strong> — added Config File Contracts section documenting the <code>.flow/obsidian-sync.yml</code> vault↔repo mirror map (vault-rooted, v4.3.0).</li>
