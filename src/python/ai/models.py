@@ -206,7 +206,7 @@ class BridgeStatus:
     """Status of the Obsidian CLI bridge connection.
 
     Used by: obs bridge status.
-    cli_installed: obsidian binary found and responds to --version.
+    cli_installed: obsidian binary found and responds to the version command.
     app_running: a vault-level command succeeded (requires app IPC).
     capabilities: commands available given current status.
     """
