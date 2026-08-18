@@ -6,6 +6,16 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+## v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes
+
+### Fixes
+
+- **`obs doctor` — new `mcp-interpreter` check** — catches a Claude Desktop MCP entry pointed at a dead, non-executable, or unresolvable Python interpreter, and warns when it's pinned to a fragile version-specific Homebrew Cellar path (including revision-suffixed, e.g. `3.14.6_1`) instead of a stable symlink. Motivated by a live outage: a `python@3.14` patch bump deleted the Cellar path the `obsidian-ops` MCP entry was hardcoded to, and `obs doctor` reported all-pass throughout.
+- **`obs doctor --json` crash fixed** — every layer crashed with an `UnboundLocalError` from a local `import json` elsewhere in `obs_cli.py`'s `main()` shadowing the module-level import. Also fixed the tutorial/cookbook `--json` automation examples, which assumed the wrong output shape (`{"checks": [...]}` instead of the actual flat array).
+- **`get_broken_links` MCP tool fixed** — read `title`/`path` keys that don't exist on the `broken_links` view (it exposes `source_title`/`source_path`), so every result silently fell back to "Unknown"/"?".
+- **`obs board` drift detection fixed** — `BoardEngine._has_drift` imported a nonexistent `Doctor` class with a wrong API; the resulting exception was swallowed, so the board's drift flag always reported `False`. Now calls the real `run_checks()` API, checks all three drift-bearing check families (`sync-ghosts`, `sync-missing`, `sync-errors`) at `fail`/`warn`/`error` status, and logs instead of silently swallowing exceptions.
+- **Obsidian CLI bridge version probe fixed** — use the native `obsidian version` command (CLI 1.12.7+) instead of the unsupported `obsidian --version`.
+
 ### Docs gap audit (2026-07-12)
 
 - **Architecture docs updated** — added Config File Contracts section documenting the `.flow/obsidian-sync.yml` vault↔repo mirror map (vault-rooted, v4.3.0).
