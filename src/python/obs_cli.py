@@ -2092,8 +2092,8 @@ def main():
                         print("No tags found.")
                     else:
                         if getattr(args, 'json', False):
-                            import json
-                            print(json.dumps([{"tag": t[0], "count": t[1]} for t in tags], indent=2))
+                            import json as _json
+                            print(_json.dumps([{"tag": t[0], "count": t[1]} for t in tags], indent=2))
                         else:
                             print(f"Tags ({len(tags)}):")
                             for tag, count in tags:
@@ -2104,8 +2104,8 @@ def main():
                         print("No collections found.")
                     else:
                         if getattr(args, 'json', False):
-                            import json
-                            print(json.dumps([{"name": c[0], "count": c[1]} for c in collections], indent=2))
+                            import json as _json
+                            print(_json.dumps([{"name": c[0], "count": c[1]} for c in collections], indent=2))
                         else:
                             print("Collections:")
                             for name, count in collections:
@@ -2116,8 +2116,8 @@ def main():
                         print(f"No items found with tag: {args.tag}")
                     else:
                         if getattr(args, 'json', False):
-                            import json
-                            print(json.dumps([i.to_dict() for i in items], indent=2))
+                            import json as _json
+                            print(_json.dumps([i.to_dict() for i in items], indent=2))
                         else:
                             print(f"Items tagged '{args.tag}' ({len(items)}):")
                             for i, item in enumerate(items, 1):
@@ -2157,8 +2157,8 @@ def main():
                         print(str(e))
                         sys.exit(1)
                     if getattr(args, 'json', False):
-                        import json
-                        print(json.dumps(doc.to_dict(), indent=2))
+                        import json as _json
+                        print(_json.dumps(doc.to_dict(), indent=2))
                     else:
                         print(f"File: {doc.filename}")
                         print(f"Pages: {doc.page_count}  Size: {doc.size_bytes // 1024} KB")
@@ -2225,8 +2225,8 @@ def main():
                 sources = None if getattr(args, 'source', 'all') == 'all' else [args.source]
                 results = us.search(args.query, sources=sources, limit_per_source=args.limit)
                 if getattr(args, 'json', False):
-                    import json
-                    print(json.dumps([r.to_dict() for r in results], indent=2, default=str))
+                    import json as _json
+                    print(_json.dumps([r.to_dict() for r in results], indent=2, default=str))
                 elif not results:
                     print("No results found.")
                 else:
