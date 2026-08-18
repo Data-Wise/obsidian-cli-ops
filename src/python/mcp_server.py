@@ -540,8 +540,8 @@ def get_broken_links(vault_id: str) -> str:
         lines = [f"🔗 **{total} Broken Links** across {len(broken)} notes\n"]
         for b in broken:
             lines += [
-                f"- **{b.get('title', 'Unknown')}** — {b['broken_count']} broken link(s)",
-                f"  Path: {b.get('path', '?')}",
+                f"- **{b.get('source_title', 'Unknown')}** — {b['broken_count']} broken link(s)",
+                f"  Path: {b.get('source_path', '?')}",
                 "",
             ]
         return "\n".join(lines)
