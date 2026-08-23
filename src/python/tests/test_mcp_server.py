@@ -300,6 +300,61 @@ class TestSearchTools:
         result = mcp_mod.search_notes("zzznomatch999", vault_id=vault_id)
         assert isinstance(result, str)
 
+    @pytest.fixture
+    def named_vault(self, tmp_path, real_db):
+        """A vault whose NAME differs from its ID.
+
+        The shared `obs_vault` fixture cannot exercise this: it calls
+        `scan_vault(path, vault_id)`, passing the ID into the `vault_name`
+        parameter, so `add_vault`'s upsert overwrites the name with the ID
+        hash. Its vault therefore has name == id, and every name-vs-ID bug is
+        invisible to it. (Fixture quirk, not a product bug -- production
+        callers pass a real name or None.)
+        """
+        import asyncio
+        from vault_scanner import VaultScanner
+
+        vdir = tmp_path / "NamedVault"
+        (vdir / ".obsidian").mkdir(parents=True)
+        (vdir / ".obsidian" / "app.json").write_text("{}")
+        (vdir / "Delta Note.md").write_text("# Delta Note\n\nDelta body.\n")
+
+        vault_id = real_db.add_vault("NamedVault", str(vdir))
+        asyncio.run(VaultScanner(real_db).scan_vault(str(vdir), "NamedVault"))
+        yield "NamedVault", vault_id
+        real_db.delete_vault(vault_id)
+
+    def test_search_notes_by_vault_name(self, mcp_mod, named_vault):
+        """A vault NAME must scope the search, not silently match nothing.
+
+        Regression guard: search_notes() was the one vault-taking tool that
+        never resolved its argument, so a name went straight into
+        `WHERE n.vault_id = ?` -- a column holding the ID hash. Every scoped
+        search returned zero results against a perfectly healthy index, which
+        is indistinguishable from "no such note".
+        """
+        name, vault_id = named_vault
+        assert name != vault_id          # else this test proves nothing
+        result = mcp_mod.search_notes("delta", vault_id=name)
+        assert "Delta" in result, f"name-scoped search found nothing: {result!r}"
+
+    def test_search_notes_name_and_id_agree(self, mcp_mod, named_vault):
+        """Scoping by name, by ID, or by ID prefix must all agree."""
+        name, vault_id = named_vault
+        for scope in (name, vault_id, vault_id[:8]):
+            assert "Delta" in mcp_mod.search_notes("delta", vault_id=scope), \
+                f"scope {scope!r} found nothing"
+
+    def test_search_notes_unknown_vault_is_loud(self, mcp_mod):
+        """An unresolvable vault must say so, not look like an empty result.
+
+        Silently returning "No notes found" for a typo'd vault name is the
+        exact failure this fix removes.
+        """
+        result = mcp_mod.search_notes("alpha", vault_id="no-such-vault-xyz")
+        assert "not found" in result.lower()
+        assert "No notes found" not in result
+
     def test_search_notes_global(self, mcp_mod):
         result = mcp_mod.search_notes("note")
         assert isinstance(result, str)

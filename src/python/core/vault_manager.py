@@ -402,13 +402,33 @@ class VaultManager:
         Search notes and generate context snippets.
 
         Args:
-            query: Search term
-            vault_id: Optional vault ID
+            query: Search term (matched against note TITLES -- note bodies are
+                not stored in the index, only a content hash)
+            vault_id: Optional vault name, full ID, or unambiguous ID prefix
             tags: Optional tags
 
         Returns:
             List of dicts with note info and 'snippet' field
+
+        Raises:
+            ValueError: If vault_id is given but matches no registered vault.
         """
+        # Resolve name/prefix -> ID before querying. db.search_notes() compares
+        # against the  column, which holds the ID hash, so an
+        # unresolved name matched NOTHING and every scoped search came back
+        # empty against a perfectly healthy index -- indistinguishable from
+        # "no such note". Every sibling method here already resolves this way;
+        # search was the one that did not.
+        if vault_id:
+            vault = self.db.get_vault_by_name_or_id(vault_id)
+            if not vault:
+                raise ValueError(
+                    f"Vault not found: {vault_id!r}. "
+                    "Pass a vault name, full ID, or unambiguous ID prefix "
+                    "(see list_vaults)."
+                )
+            vault_id = vault["id"]
+
         results = self.db.search_notes(query, vault_id, tags)
         processed = []
         

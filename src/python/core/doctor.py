@@ -861,6 +861,17 @@ def _find_bad_vault_resolvers(source: str) -> list[str]:
     typically via the _resolve_vault() helper. Lookups keyed off a note's
     canonical id (db.get_vault(note["vault_id"])) use a Subscript, not a bare
     parameter Name, so they are correctly ignored.
+
+    SCOPE -- this detects exactly one anti-pattern, and a pass does NOT mean
+    every vault-taking tool resolves correctly. It cannot see a tool that
+    forwards its raw vault param to a callee that never resolves, which is how
+    search_notes() shipped broken: `vault_manager.search_notes(query,
+    vault_id=vault_id)` looked clean here while the name reached
+    `WHERE n.vault_id = ?` unresolved and matched nothing. Deciding that
+    statically would need whole-call-graph analysis; several managers
+    (get_vault_health, get_trends, get_stale_notes, get_daily_digest) legitimately
+    resolve internally and would become false positives. Behavior tests are the
+    real guard -- see TestSearchTools in tests/test_mcp_server.py.
     """
     tree = ast.parse(source)
     offenders: list[str] = []
@@ -910,7 +921,7 @@ def _check_mcp_tool_resolvers(server_path: Path) -> DoctorResult:
             "names and ID prefixes work, not just exact IDs.",
         )
     return DoctorResult("mcp-tool-resolvers", "mcp", label, "pass",
-                        "all vault-taking tools use name/ID/prefix resolution")
+                        "no tool calls exact-ID-only db.get_vault(<param>)")
 
 
 def _find_async_run_offenders(source: str) -> list[str]:
