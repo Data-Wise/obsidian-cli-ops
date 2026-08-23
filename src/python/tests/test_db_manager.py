@@ -13,6 +13,45 @@ def db():
     return manager
 
 
+class TestSearchNotesVaultScope:
+    """db.search_notes() must accept a vault NAME, not only an exact ID.
+
+    The WHERE clause compares against `notes.vault_id` (an ID hash), so before
+    the resolver was added here a caller passing a name matched zero rows --
+    an empty result indistinguishable from "no such note", against a perfectly
+    healthy index. Resolution lives at this layer because it is the choke point
+    every caller reaches (obs_cli resolved first, the MCP path did not).
+    """
+
+    @pytest.fixture
+    def seeded(self, db):
+        vault_id = db.add_vault(name="NamedVault", path="/tmp/named-vault")
+        db.add_note(vault_id=vault_id, path="a.md", title="Alpha Note",
+                    content="alpha body")
+        return db, vault_id
+
+    def test_scope_by_name(self, seeded):
+        db, vault_id = seeded
+        assert "NamedVault" != vault_id          # else this proves nothing
+        rows = db.search_notes("Alpha", vault_id="NamedVault")
+        assert len(rows) == 1
+
+    def test_scope_by_id_and_prefix(self, seeded):
+        db, vault_id = seeded
+        assert len(db.search_notes("Alpha", vault_id=vault_id)) == 1
+        assert len(db.search_notes("Alpha", vault_id=vault_id[:8])) == 1
+
+    def test_scoped_matches_unscoped(self, seeded):
+        db, _ = seeded
+        assert len(db.search_notes("Alpha")) == 1
+        assert len(db.search_notes("Alpha", vault_id="NamedVault")) == 1
+
+    def test_unknown_vault_raises_rather_than_returning_empty(self, seeded):
+        db, _ = seeded
+        with pytest.raises(ValueError, match="Vault not found"):
+            db.search_notes("Alpha", vault_id="no-such-vault")
+
+
 class TestDeleteVault:
     """Tests for DatabaseManager.delete_vault and its FK cascade."""
 

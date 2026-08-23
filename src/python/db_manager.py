@@ -294,13 +294,34 @@ class DatabaseManager:
 
         Args:
             query: Search term (searches title only, as content is not stored)
-            vault_id: Optional specific vault ID to scope search
+            vault_id: Optional vault name, full ID, or unambiguous ID prefix
             tags: Optional list of tags to filter by (OR logic for tags)
             limit: Max results
 
         Returns:
             List of dicts with note info and vault_name
+
+        Raises:
+            ValueError: If vault_id is given but matches no registered vault.
         """
+        # Resolve here, at the choke point every caller reaches, rather than in
+        # one caller. The WHERE clause below compares against `notes.vault_id`
+        # (an ID hash), so an unresolved NAME matched nothing and the search
+        # came back empty against a healthy index -- indistinguishable from
+        # "no such note". obs_cli resolves before calling; the MCP path did
+        # not. Resolving once here means no future caller has to remember.
+        # Re-resolving an already-resolved ID is a single indexed lookup and
+        # returns the same value, so the double call is harmless.
+        if vault_id:
+            vault = self.get_vault_by_name_or_id(vault_id)
+            if not vault:
+                raise ValueError(
+                    f"Vault not found: {vault_id!r}. "
+                    "Pass a vault name, full ID, or unambiguous ID prefix "
+                    "(see list_vaults)."
+                )
+            vault_id = vault["id"]
+
         sql = """
             SELECT n.id, n.title, n.path, n.modified_at, v.name as vault_name
             FROM notes n
