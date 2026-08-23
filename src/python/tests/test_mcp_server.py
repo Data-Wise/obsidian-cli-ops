@@ -190,9 +190,17 @@ def named_vault(mcp_mod, tmp_path):
     name = "ResearchVault"
     # 2nd positional arg is vault_name → stored name is "ResearchVault", id = hash(path)
     asyncio.run(VaultScanner(mcp_mod.db).scan_vault(str(vault_dir), name))
-    vault = mcp_mod.db.get_vault_by_name_or_id(name)
+    vault_id = mcp_mod.db._generate_id(str(vault_dir))
+    vault = mcp_mod.db.get_vault(vault_id)
     assert vault is not None and vault["name"] == name and vault["id"] != name
-    return name, vault["id"], vault_dir
+    yield name, vault["id"], vault_dir
+    # Teardown is REQUIRED, not tidiness. This fixture is function-scoped over a
+    # module-scoped db, so without it every test leaves another vault named
+    # "ResearchVault" behind -- they reached 17. Resolution by name then has to
+    # pick among duplicates, and each test may silently assert against a
+    # different test's vault. (Surfaced when name-ambiguity started raising
+    # instead of returning an arbitrary row.)
+    mcp_mod.db.delete_vault(vault["id"])
 
 
 # ---------------------------------------------------------------------------
@@ -300,30 +308,6 @@ class TestSearchTools:
         result = mcp_mod.search_notes("zzznomatch999", vault_id=vault_id)
         assert isinstance(result, str)
 
-    @pytest.fixture
-    def named_vault(self, tmp_path, real_db):
-        """A vault whose NAME differs from its ID.
-
-        The shared `obs_vault` fixture cannot exercise this: it calls
-        `scan_vault(path, vault_id)`, passing the ID into the `vault_name`
-        parameter, so `add_vault`'s upsert overwrites the name with the ID
-        hash. Its vault therefore has name == id, and every name-vs-ID bug is
-        invisible to it. (Fixture quirk, not a product bug -- production
-        callers pass a real name or None.)
-        """
-        import asyncio
-        from vault_scanner import VaultScanner
-
-        vdir = tmp_path / "NamedVault"
-        (vdir / ".obsidian").mkdir(parents=True)
-        (vdir / ".obsidian" / "app.json").write_text("{}")
-        (vdir / "Delta Note.md").write_text("# Delta Note\n\nDelta body.\n")
-
-        vault_id = real_db.add_vault("NamedVault", str(vdir))
-        asyncio.run(VaultScanner(real_db).scan_vault(str(vdir), "NamedVault"))
-        yield "NamedVault", vault_id
-        real_db.delete_vault(vault_id)
-
     def test_search_notes_by_vault_name(self, mcp_mod, named_vault):
         """A vault NAME must scope the search, not silently match nothing.
 
@@ -332,17 +316,20 @@ class TestSearchTools:
         `WHERE n.vault_id = ?` -- a column holding the ID hash. Every scoped
         search returned zero results against a perfectly healthy index, which
         is indistinguishable from "no such note".
+
+        Uses the module-level `named_vault` fixture (name != id), which the
+        name-resolution tests for the other tools already share.
         """
-        name, vault_id = named_vault
+        name, vault_id, _ = named_vault
         assert name != vault_id          # else this test proves nothing
-        result = mcp_mod.search_notes("delta", vault_id=name)
-        assert "Delta" in result, f"name-scoped search found nothing: {result!r}"
+        result = mcp_mod.search_notes("alpha", vault_id=name)
+        assert "Alpha" in result, f"name-scoped search found nothing: {result!r}"
 
     def test_search_notes_name_and_id_agree(self, mcp_mod, named_vault):
         """Scoping by name, by ID, or by ID prefix must all agree."""
-        name, vault_id = named_vault
+        name, vault_id, _ = named_vault
         for scope in (name, vault_id, vault_id[:8]):
-            assert "Delta" in mcp_mod.search_notes("delta", vault_id=scope), \
+            assert "Alpha" in mcp_mod.search_notes("alpha", vault_id=scope), \
                 f"scope {scope!r} found nothing"
 
     def test_search_notes_unknown_vault_is_loud(self, mcp_mod):

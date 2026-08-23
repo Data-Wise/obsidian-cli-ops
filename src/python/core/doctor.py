@@ -871,7 +871,9 @@ def _find_bad_vault_resolvers(source: str) -> list[str]:
     statically would need whole-call-graph analysis; several managers
     (get_vault_health, get_trends, get_stale_notes, get_daily_digest) legitimately
     resolve internally and would become false positives. Behavior tests are the
-    real guard -- see TestSearchTools in tests/test_mcp_server.py.
+    real guard: TestSearchNotesVaultScope in tests/test_db_manager.py owns the
+    contract (resolution lives in DatabaseManager.search_notes), with
+    TestSearchTools in tests/test_mcp_server.py covering the MCP path on top.
     """
     tree = ast.parse(source)
     offenders: list[str] = []

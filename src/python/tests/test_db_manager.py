@@ -51,6 +51,53 @@ class TestSearchNotesVaultScope:
         with pytest.raises(ValueError, match="Vault not found"):
             db.search_notes("Alpha", vault_id="no-such-vault")
 
+    def test_empty_string_does_not_silently_search_globally(self, seeded):
+        """vault_id="" must not skip resolution AND scoping.
+
+        `if vault_id:` is falsy for "", so the query ran unscoped and returned
+        cross-vault results labelled as scoped -- worse than an error, because
+        a client passing "" instead of None cannot tell.
+        """
+        db, _ = seeded
+        db2 = db.add_vault(name="OtherVault", path="/tmp/other-vault")
+        db.add_note(vault_id=db2, path="b.md", title="Alpha Elsewhere",
+                    content="elsewhere")
+        assert len(db.search_notes("Alpha")) == 2          # genuinely global
+        with pytest.raises(ValueError, match="empty vault identifier"):
+            db.search_notes("Alpha", vault_id="")
+
+    def test_empty_string_is_rejected_even_with_one_vault(self, seeded):
+        """With a single vault, "" used to resolve to it via the prefix branch.
+
+        Same call, different meaning depending on how many vaults exist.
+        """
+        db, _ = seeded
+        with pytest.raises(ValueError, match="empty vault identifier"):
+            db.search_notes("Alpha", vault_id="")
+
+    def test_ambiguous_vault_name_raises_rather_than_picking_one(self, db):
+        """Duplicate vault NAMES must raise, as duplicate ID prefixes already do.
+
+        `vaults.name` has no UNIQUE constraint, and two vaults called
+        "Documents" (a local one and an iCloud one) is realistic. fetchone()
+        picked one arbitrarily and silently dropped the other's notes.
+        """
+        a = db.add_vault(name="Documents", path="/tmp/one/Documents")
+        b = db.add_vault(name="Documents", path="/tmp/two/Documents")
+        db.add_note(vault_id=a, path="m1.md", title="Meeting A", content="x")
+        db.add_note(vault_id=b, path="m2.md", title="Meeting B", content="y")
+        with pytest.raises(ValueError, match="Ambiguous vault name"):
+            db.search_notes("Meeting", vault_id="Documents")
+
+    def test_limit_is_honored(self, db):
+        """db's default of 50 must not cap a caller asking for more."""
+        vault_id = db.add_vault(name="BigVault", path="/tmp/big-vault")
+        for i in range(60):
+            db.add_note(vault_id=vault_id, path=f"n{i}.md",
+                        title=f"Note {i:03d}", content="body")
+        assert len(db.search_notes("Note", vault_id="BigVault")) == 50   # default
+        assert len(db.search_notes("Note", vault_id="BigVault", limit=60)) == 60
+
 
 class TestDeleteVault:
     """Tests for DatabaseManager.delete_vault and its FK cascade."""

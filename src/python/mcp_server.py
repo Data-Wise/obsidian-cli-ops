@@ -396,8 +396,7 @@ def search_notes(query: str, vault_id: Optional[str] = None, limit: int = 10) ->
     Returns matching notes with vault, path, and ID.
     """
     try:
-        results = vault_manager.search_notes(query, vault_id=vault_id)
-        results = results[:limit]
+        results = vault_manager.search_notes(query, vault_id=vault_id, limit=limit)
         if not results:
             return f"No notes found matching '{query}'"
 
