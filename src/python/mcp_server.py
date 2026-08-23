@@ -380,18 +380,23 @@ def discover_vaults(path: str) -> str:
 @mcp.tool()
 def search_notes(query: str, vault_id: Optional[str] = None, limit: int = 10) -> str:
     """
-    Search notes by title and content across vaults.
+    Search notes by TITLE across vaults.
+
+    Note bodies are not stored in the index (only a content hash), so this
+    matches note titles only -- a term that appears solely in a note's body
+    will not be found.
 
     Args:
-        query: Search term (title or body text).
-        vault_id: Scope to a specific vault (optional).
+        query: Search term. Multi-word queries match titles containing ALL words.
+        vault_id: Scope to a vault by name, full ID, or unambiguous ID prefix
+            (optional). An unresolvable value is reported as an error rather
+            than returning an empty result set.
         limit: Max results (default 10).
 
-    Returns matching notes with vault, path, and content snippet.
+    Returns matching notes with vault, path, and ID.
     """
     try:
-        results = vault_manager.search_notes(query, vault_id=vault_id)
-        results = results[:limit]
+        results = vault_manager.search_notes(query, vault_id=vault_id, limit=limit)
         if not results:
             return f"No notes found matching '{query}'"
 

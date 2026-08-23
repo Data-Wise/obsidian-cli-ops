@@ -15,7 +15,7 @@
 
 Once connected, Claude can interact with every `obs` capability through natural language:
 
-- **"Search my research vault for causal inference"** — full-text search across notes
+- **"Search my research vault for causal inference"** — searches note titles (bodies are not indexed)
 - **"What are the most connected notes in MyVault?"** — PageRank hub detection
 - **"Create a note called 'Meeting 2026-06-15'"** — note CRUD directly in Claude chat
 - **"Check vault health for Research"** — 4-dimension health scores
@@ -90,7 +90,7 @@ Claude should call `list_vaults()` and return your vault list. If nothing happen
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
-| `search_notes` | `query`, `vault_id`, `limit` | Full-text search across notes |
+| `search_notes` | `query`, `vault_id`, `limit` | Search note **titles** (bodies are not indexed) |
 | `find_similar_notes` | `note_id`, `limit`, `threshold` | Semantically similar notes by embedding |
 
 ### Graph Analysis Tools
