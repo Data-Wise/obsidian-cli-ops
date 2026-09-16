@@ -50,8 +50,7 @@ verified: |
   against the pre-fix code (planted-defect check) and PASSES against the fix. Full
   suite re-run in an ephemeral `uv run --python 3.12` env (no local dev venv with
   pytest+py>=3.10 was available): 637 passed / 142 skipped, no regressions. CI green
-  (Clean-install smoke test, test, validate). Not yet in a released version — dev is
-  1 commit ahead of main pending the next version bump.
+  (Clean-install smoke test, test, validate). Shipped in v4.4.2 (see above).
   v4.4.1 release prep 2026-09-16: version bumped 4.4.0→4.4.1 across pyproject.toml, package.json,
   package-lock.json (lines 3 & 9), src/python/__init__.py, src/obs.zsh (header comment + VERSION=),
   man/man1/obs.1 (.TH line + date), README.md (badge + 2 version mentions), CLAUDE.md, and
