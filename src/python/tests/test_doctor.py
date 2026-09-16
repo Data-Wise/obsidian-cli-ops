@@ -262,7 +262,7 @@ class TestCheckVaults:
 class TestCheckMCP:
     def test_fail_no_config(self, tmp_path, monkeypatch):
         from core import doctor as doctor_mod
-        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS",
+        monkeypatch.setattr(doctor_mod, "_MCP_CONFIG_PATHS",
                             [tmp_path / "nonexistent.json"])
         results = _check_mcp()
         ids = {r.id for r in results}
@@ -277,7 +277,7 @@ class TestCheckMCP:
         assert "mcp-async-run" in ids
 
     def test_pass_with_valid_config(self, tmp_path, monkeypatch):
-        config_path = tmp_path / "claude_desktop_config.json"
+        config_path = tmp_path / ".claude.json"
         mcp_server_path = tmp_path / "mcp_server.py"
         mcp_server_path.touch()
         config_path.write_text(json.dumps({
@@ -289,7 +289,7 @@ class TestCheckMCP:
             }
         }))
         from core import doctor as doctor_mod
-        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+        monkeypatch.setattr(doctor_mod, "_MCP_CONFIG_PATHS", [config_path])
         results = _check_mcp()
         cfg = next(r for r in results if r.id == "mcp-config")
         assert cfg.status == "pass"
@@ -297,16 +297,16 @@ class TestCheckMCP:
         assert entry.status == "pass"
 
     def test_fail_missing_obsidian_ops_entry(self, tmp_path, monkeypatch):
-        config_path = tmp_path / "claude_desktop_config.json"
+        config_path = tmp_path / ".claude.json"
         config_path.write_text(json.dumps({"mcpServers": {"other-tool": {}}}))
         from core import doctor as doctor_mod
-        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+        monkeypatch.setattr(doctor_mod, "_MCP_CONFIG_PATHS", [config_path])
         results = _check_mcp()
         entry = next(r for r in results if r.id == "mcp-entry")
         assert entry.status == "fail"
 
     def test_warn_server_path_wrong(self, tmp_path, monkeypatch):
-        config_path = tmp_path / "claude_desktop_config.json"
+        config_path = tmp_path / ".claude.json"
         config_path.write_text(json.dumps({
             "mcpServers": {
                 "obsidian-ops": {
@@ -316,13 +316,13 @@ class TestCheckMCP:
             }
         }))
         from core import doctor as doctor_mod
-        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+        monkeypatch.setattr(doctor_mod, "_MCP_CONFIG_PATHS", [config_path])
         results = _check_mcp()
         entry = next(r for r in results if r.id == "mcp-entry")
         assert entry.status == "warn"
 
     def _write_config(self, tmp_path, command, monkeypatch):
-        config_path = tmp_path / "claude_desktop_config.json"
+        config_path = tmp_path / ".claude.json"
         mcp_server_path = tmp_path / "mcp_server.py"
         mcp_server_path.touch()
         config_path.write_text(json.dumps({
@@ -334,7 +334,7 @@ class TestCheckMCP:
             }
         }))
         from core import doctor as doctor_mod
-        monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+        monkeypatch.setattr(doctor_mod, "_MCP_CONFIG_PATHS", [config_path])
 
     def test_interpreter_pass_bare_command(self, tmp_path, monkeypatch):
         self._write_config(tmp_path, "python3", monkeypatch)
