@@ -75,7 +75,7 @@ sync, and research workflows — all organized by task.
 
 ## Prerequisites
 
-- macOS or Linux, Python 3.9+
+- macOS or Linux, Python 3.10+
 - An Obsidian vault (any size)
 - For AI tutorials: at least one AI provider — see [AI Setup Guide](../ai-setup.md)
 - For Claude MCP tutorial: Claude Desktop installed

@@ -22,7 +22,7 @@ paths:
 - A `[obs] WARN: ... ambient python3 ... deps may be missing` line means the
   launcher fell through to the ambient interpreter — run one of the above.
 - Force a specific interpreter with `export OBS_PYTHON=/path/to/python` (tier 1).
-- Check Python version: `python3 --version` (must be 3.9+)
+- Check Python version: `python3 --version` (must be 3.10+)
 
 ## Link Resolution Issues
 - Verify wikilinks are in standard format: `[[target]]` or `[[target|display]]`

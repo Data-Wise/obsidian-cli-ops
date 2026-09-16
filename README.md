@@ -168,7 +168,7 @@ obs version                     # Show version
 ## 📦 Requirements
 
 - **ZSH**: Shell integration
-- **Python 3.9+**: Core functionality
+- **Python 3.10+**: Core functionality
 - **Dependencies**: See `src/python/requirements.txt`
 - **Optional**: Ollama, Gemini API, or Anthropic API for AI features
 

@@ -1,7 +1,7 @@
 # Technology Stack: Obsidian CLI Ops
 
 ## Core Languages & Frameworks
-- **Python 3.9+**: Primary language for backend logic, graph analysis, and TUI.
+- **Python 3.10+**: Primary language for backend logic, graph analysis, and TUI.
 - **Zsh**: Used for CLI entry points, shell integration, and high-performance system tasks.
 - **Node.js/JavaScript**: Used for specific integration tests and legacy shell script testing.
 

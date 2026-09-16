@@ -284,7 +284,7 @@
       ]
     },
     "system": {
-      "required": ["python3.9+", "node18+", "zsh", "git"],
+      "required": ["python3.10+", "node18+", "zsh", "git"],
       "recommended": ["ollama"]
     }
   },

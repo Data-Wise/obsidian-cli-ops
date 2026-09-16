@@ -22,7 +22,7 @@ This installs `obs` with all Python dependencies in an **isolated virtual enviro
 ### Prerequisites
 
 - **macOS** or **Linux**
-- **Python 3.9+**: `python3 --version`
+- **Python 3.10+**: `python3 --version`
 - **ZSH**: Default on macOS; available on Linux via `apt install zsh`
 - **Git**: For cloning the repository
 

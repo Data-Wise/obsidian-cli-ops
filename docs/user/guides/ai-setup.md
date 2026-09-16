@@ -27,7 +27,7 @@ This will:
 
 ## Requirements
 
-- **Python 3.9+** (check: `python3 --version`)
+- **Python 3.10+** (check: `python3 --version`)
 - **Internet** (for initial model download only)
 - **Disk Space:**
   - Minimum: 500MB

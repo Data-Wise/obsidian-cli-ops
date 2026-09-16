@@ -168,7 +168,7 @@ Tests run on GitHub Actions for both `dev` and `main` branches:
 
 ```yaml
 # .github/workflows/ci.yml
-- Python 3.9+ on ubuntu-latest
+- Python 3.11/3.12 on ubuntu-latest
 - pytest with coverage reporting
 - Jest for ZSH wrapper validation
 ```
