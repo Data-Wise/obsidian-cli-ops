@@ -6,6 +6,10 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`scripts/configure_mcp.py` server-script path pinning** — `repo_dir` was derived via `Path(__file__).resolve()`, and the resulting server-script path was `.resolve()`'d again at both print sites and in the `claude mcp add` args. When the script is invoked via Homebrew's `opt/` stable symlink (`python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py`, as the tap caveats suggest), `.resolve()` dereferences `opt/` down to a version-pinned Cellar path (e.g. `Cellar/obsidian-cli-ops/4.4.1_1/...`) and bakes it into the registered MCP server args — the exact path `brew upgrade` deletes on the next version bump. Same fragility class as the v4.4.0 venv_python `.resolve()` fix below, this time for the server script rather than the interpreter. Dropped all `.resolve()` calls on the `__file__`-derived path so the stable symlink is preserved end-to-end.
+
 ## v4.4.1 (2026-09-16) — MCP registration mechanism fixed
 
 ### Fixed
