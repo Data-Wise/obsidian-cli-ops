@@ -31,11 +31,9 @@ from core import doctor as doctor_mod
 
 
 def _write_scratch_config(tmp_path: Path, command, monkeypatch) -> None:
-    config_dir = tmp_path / "Library" / "Application Support" / "Claude"
-    config_dir.mkdir(parents=True)
     server_path = tmp_path / "mcp_server.py"
     server_path.touch()
-    config_path = config_dir / "claude_desktop_config.json"
+    config_path = tmp_path / ".claude.json"
     config_path.write_text(json.dumps({
         "mcpServers": {
             "obsidian-ops": {
@@ -44,7 +42,7 @@ def _write_scratch_config(tmp_path: Path, command, monkeypatch) -> None:
             }
         }
     }))
-    monkeypatch.setattr(doctor_mod, "_CLAUDE_DESKTOP_CONFIG_PATHS", [config_path])
+    monkeypatch.setattr(doctor_mod, "_MCP_CONFIG_PATHS", [config_path])
     # ObsCLI() -> DatabaseManager() resolves its db path from Path.home();
     # isolate it from the developer's real ~/.config/obs.
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
