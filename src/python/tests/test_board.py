@@ -315,6 +315,7 @@ def test_engine_refresh_writes_board(tmp_path, monkeypatch):
     vm.list_vaults.return_value = [vault]
 
     engine = BoardEngine(vault_manager=vm)
+    monkeypatch.setattr(BoardEngine, "_configured_board_path", staticmethod(lambda: None))
     # Avoid external connectors by patching collect to return a known list.
     monkeypatch.setattr(engine, "_collect_projects", lambda: [
         ProjectStatus(name="m1", kind="manuscript", status="active", progress=50, priority="P1", next_action="write"),
@@ -347,6 +348,7 @@ def test_engine_status_existing_board(tmp_path, monkeypatch):
     vm = MagicMock()
     vm.get_vault.return_value = vault
     engine = BoardEngine(vault_manager=vm)
+    monkeypatch.setattr(BoardEngine, "_configured_board_path", staticmethod(lambda: None))
     monkeypatch.setattr(engine, "_has_drift", lambda vault_id: False)
 
     result = engine.status("v1")
@@ -477,7 +479,13 @@ class TestHasDrift:
         assert engine._has_drift("v1") is False
 
 
-def test_engine_resolve_prefers_research_subdirectory(tmp_path):
+@pytest.fixture
+def no_board_config(monkeypatch):
+    """Isolate default-path tests from this machine's ~/.config/obs/config.yaml."""
+    monkeypatch.setattr(BoardEngine, "_configured_board_path", staticmethod(lambda: None))
+
+
+def test_engine_resolve_prefers_research_subdirectory(tmp_path, no_board_config):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
     research = tmp_path / "Research"
     research.mkdir()
@@ -486,8 +494,66 @@ def test_engine_resolve_prefers_research_subdirectory(tmp_path):
     assert resolved == tmp_path / "Research" / "Engineering" / "_ACTION-BOARD.md"
 
 
-def test_engine_resolve_falls_back_to_vault_root(tmp_path):
+def test_engine_resolve_falls_back_to_vault_root(tmp_path, no_board_config):
     vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
     engine = BoardEngine(vault_manager=MagicMock())
     resolved = engine._resolve_board_path(vault)
     assert resolved == tmp_path / "Engineering" / "_ACTION-BOARD.md"
+
+
+# ── board.path override (Issue #86 follow-up) ───────────────────────────────
+
+def _write_obs_config(tmp_path, monkeypatch, body: str):
+    """Point HOME at tmp_path and write a ~/.config/obs/config.yaml there."""
+    cfg = tmp_path / ".config" / "obs"
+    cfg.mkdir(parents=True, exist_ok=True)
+    (cfg / "config.yaml").write_text(body, encoding="utf-8")
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+
+def test_configured_board_path_read_from_config(tmp_path, monkeypatch):
+    _write_obs_config(tmp_path, monkeypatch, "board:\n  path: Research/00_meta/_ACTION-BOARD.md\n")
+    assert BoardEngine._configured_board_path() == "Research/00_meta/_ACTION-BOARD.md"
+
+
+def test_configured_board_path_absent_when_key_missing(tmp_path, monkeypatch):
+    _write_obs_config(tmp_path, monkeypatch, "vault:\n  root: /tmp/vault\n")
+    assert BoardEngine._configured_board_path() is None
+
+
+def test_configured_board_path_tolerates_malformed_config(tmp_path, monkeypatch):
+    """A broken config must not fail the refresh — it falls through to the default."""
+    _write_obs_config(tmp_path, monkeypatch, "board:\n  path: [unclosed\n")
+    assert BoardEngine._configured_board_path() is None
+
+
+def test_engine_resolve_honours_config_relative_path(tmp_path, monkeypatch):
+    vault_root = tmp_path / "vault"
+    (vault_root / "Research").mkdir(parents=True)
+    monkeypatch.setattr(
+        BoardEngine, "_configured_board_path",
+        staticmethod(lambda: "Research/00_meta/_ACTION-BOARD.md"),
+    )
+    vault = _FakeVault(id="v1", name="Docs", path=str(vault_root))
+    engine = BoardEngine(vault_manager=MagicMock())
+    assert engine._resolve_board_path(vault) == vault_root / "Research" / "00_meta" / "_ACTION-BOARD.md"
+
+
+def test_engine_resolve_honours_config_absolute_path(tmp_path, monkeypatch):
+    target = tmp_path / "elsewhere" / "BOARD.md"
+    monkeypatch.setattr(BoardEngine, "_configured_board_path", staticmethod(lambda: str(target)))
+    vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
+    engine = BoardEngine(vault_manager=MagicMock())
+    assert engine._resolve_board_path(vault) == target
+
+
+def test_engine_resolve_explicit_arg_beats_config(tmp_path, monkeypatch):
+    """--out wins over board.path, which wins over the built-in default."""
+    monkeypatch.setattr(
+        BoardEngine, "_configured_board_path",
+        staticmethod(lambda: "Research/00_meta/_ACTION-BOARD.md"),
+    )
+    vault = _FakeVault(id="v1", name="Docs", path=str(tmp_path))
+    engine = BoardEngine(vault_manager=MagicMock())
+    resolved = engine._resolve_board_path(vault, "Custom/BOARD.md")
+    assert resolved == tmp_path / "Custom" / "BOARD.md"
