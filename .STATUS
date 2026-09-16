@@ -1,19 +1,55 @@
 priority: P1
-status: 🔜 v4.4.1 PR OPEN (dev→main) — MCP registration mechanism fix
-progress: 95
+status: 🔜 v4.4.2 PR OPEN (dev→main) — configure_mcp.py symlink fix + tap post_install_steps
+progress: 99
 updated: 2026-09-16
-version: 4.4.1
+version: 4.4.2
 next: |
-  1. Merge the dev→main release PR, tag v4.4.1, publish the GitHub release, sync the Homebrew tap
-     — then `brew reinstall obsidian-cli-ops --build-from-source` to pick up the fix locally
-     (the underlying MCP registration itself already works on this machine, confirmed via
-     `claude mcp list` — only the installed `obs doctor` binary is stale until this releases)
+  1. Merge the dev→main release PR, tag v4.4.2, publish the GitHub release, sync the
+     Homebrew tap
   2. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
      the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
      (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
   3. Port plugin skills
   4. Port vault template ops (low priority)
 verified: |
+  data-wise/homebrew-tap PR #225 merged 2026-09-16 (squash 698e195, tap `main`):
+  migrated `post_install` (deprecated) to `post_install_steps` on the obsidian-cli-ops
+  formula. The DSL's `run` block is evaluated at formula-definition (class-body) time,
+  before any Formula instance exists — a live accessor call like `libexec` inside it
+  fails `brew style`'s FormulaAudit/InstallSteps cop. Fixed via Homebrew's `{{libexec}}`
+  run-time template token (expanded later against the real instance), confirmed correct
+  by reading Homebrew's own `install_steps.rb` and reconfirmed via a real
+  `brew reinstall --build-from-source` showing correctly-resolved paths. Also: bundled
+  `scripts/configure_mcp.py` into the formula (`libexec/scripts/`, was missing entirely)
+  so the caveats' MCP registration command actually resolves; `revision 1` bumped;
+  caveats' MCP section rewritten to real `claude mcp add`/`claude mcp list` commands
+  (not the retired claude_desktop_config.json flow, not a nonexistent marketplace-plugin
+  slug — obsidian-cli-ops has no marketplace.json entry). CI gotcha hit + fixed: the tap's
+  push-triggered "Regen vs committed" check diffs HEAD against the *previous commit on
+  the branch*, not against main — a 3rd review-only commit (test assertion + comment, no
+  content requiring its own revision bump) spuriously failed that check even though the
+  pull_request-triggered run of the same check (correctly diffed against main) passed.
+  Fixed by squashing the branch's 3 commits into 1 (git reset --soft origin/main +
+  recommit + force-push) before merging — eliminates the false-positive for any
+  single-commit PR. (See wiki finding on homebrew-tap's check-revision-bump.sh.)
+  configure_mcp.py Cellar-path bug fixed + merged 2026-09-16 (PR #105, squash b81c47a,
+  dev): `repo_dir = Path(__file__).resolve()`
+  plus three more `.resolve()` calls on the derived server-script path dereferenced
+  Homebrew's `opt/` stable symlink down to the version-pinned Cellar path whenever the
+  script ran via the tap's own caveats-suggested invocation
+  (`python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py`) —
+  baking a path `brew upgrade` deletes into the registered `claude mcp add` args. Same
+  fragility class as the v4.4.0 venv_python `.resolve()` fix, this time for the server
+  script rather than the interpreter; `_resolve_python()`'s interpreter path was
+  unaffected (it re-derives via `brew --prefix` independently). Dropped all 4
+  `.resolve()` calls on the `__file__`-derived path. New regression test
+  `src/python/tests/test_configure_mcp_symlink.py` (subprocess-level, opt/-symlink
+  layout, no `claude` on PATH so no live-registry side effects) — confirmed it FAILS
+  against the pre-fix code (planted-defect check) and PASSES against the fix. Full
+  suite re-run in an ephemeral `uv run --python 3.12` env (no local dev venv with
+  pytest+py>=3.10 was available): 637 passed / 142 skipped, no regressions. CI green
+  (Clean-install smoke test, test, validate). Not yet in a released version — dev is
+  1 commit ahead of main pending the next version bump.
   v4.4.1 release prep 2026-09-16: version bumped 4.4.0→4.4.1 across pyproject.toml, package.json,
   package-lock.json (lines 3 & 9), src/python/__init__.py, src/obs.zsh (header comment + VERSION=),
   man/man1/obs.1 (.TH line + date), README.md (badge + 2 version mentions), CLAUDE.md, and
