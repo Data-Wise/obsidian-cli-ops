@@ -3,7 +3,7 @@ E2E tests for `obs doctor --layer mcp` — mcp-interpreter edge cases.
 
 These spawn the REAL obs_cli.py subprocess (the same CLI Claude Desktop's
 troubleshooting docs point users at), pointed at a scratch HOME so it reads
-a throwaway claude_desktop_config.json instead of the real one. This is the
+a throwaway ~/.claude.json instead of the real one. This is the
 live counterpart to the unit tests in tests/test_doctor.py, which call
 _check_mcp() directly in-process — here the full path (argparse wiring,
 Rich-table rendering, process exit code) is what's under test, using the
@@ -64,15 +64,13 @@ _OBS_CLI = _SRC / "obs_cli.py"
 
 
 def _write_scratch_config(home: Path, command) -> Path:
-    """Write a claude_desktop_config.json under a scratch HOME, matching the
-    layout obs doctor's _CLAUDE_DESKTOP_CONFIG_PATHS expects (Path.home()
-    respects the HOME env var on POSIX, so pointing HOME at a tmp dir fully
-    isolates this from the developer's real Claude Desktop config)."""
-    config_dir = home / "Library" / "Application Support" / "Claude"
-    config_dir.mkdir(parents=True)
+    """Write a ~/.claude.json under a scratch HOME, matching the layout obs
+    doctor's _MCP_CONFIG_PATHS expects (Path.home() respects the HOME env
+    var on POSIX, so pointing HOME at a tmp dir fully isolates this from the
+    developer's real ~/.claude.json)."""
     server_path = home / "mcp_server.py"
     server_path.touch()
-    config_path = config_dir / "claude_desktop_config.json"
+    config_path = home / ".claude.json"
     config_path.write_text(json.dumps({
         "mcpServers": {
             "obsidian-ops": {

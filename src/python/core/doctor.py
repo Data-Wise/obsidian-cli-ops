@@ -24,9 +24,15 @@ import yaml
 
 Status = Literal["pass", "warn", "fail", "skip", "error", "info"]
 
-_CLAUDE_DESKTOP_CONFIG_PATHS = [
-    Path.home() / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json",
-    Path.home() / ".config" / "claude" / "claude_desktop_config.json",
+# `claude mcp add` (scripts/configure_mcp.py) registers obsidian-ops in
+# ~/.claude.json (user scope, checked first) or a repo-root .mcp.json
+# (project scope) -- NOT claude_desktop_config.json, which this app's
+# unified Claude Code + Cowork desktop client repurposes entirely for
+# unrelated UI-state prefs and carries no mcpServers key at all (CONFIRMED
+# 2026-09-16 -- see memory mcp-config-app-owned-not-static).
+_MCP_CONFIG_PATHS = [
+    Path.home() / ".claude.json",
+    Path(__file__).resolve().parent.parent.parent.parent / ".mcp.json",
 ]
 
 _CORE_IMPORTS = ["rich", "networkx", "mcp"]   # sqlite3 is stdlib, checked separately
@@ -758,22 +764,22 @@ def _check_mcp() -> list[DoctorResult]:
                                     "mcp package not importable",
                                     "Run: ./install.sh  or  brew reinstall obsidian-cli-ops"))
 
-    # --- Claude Desktop config checks ---
+    # --- Claude Code MCP registration checks ---
     config_path = None
-    for p in _CLAUDE_DESKTOP_CONFIG_PATHS:
+    for p in _MCP_CONFIG_PATHS:
         if p.exists():
             config_path = p
             break
 
     if config_path is None:
-        results.append(DoctorResult("mcp-config", "mcp", "Claude Desktop config", "fail",
-                                    "claude_desktop_config.json not found",
-                                    f"Expected at: {_CLAUDE_DESKTOP_CONFIG_PATHS[0]}"))
+        results.append(DoctorResult("mcp-config", "mcp", "Claude Code MCP config", "fail",
+                                    f"No MCP config found in {_MCP_CONFIG_PATHS}",
+                                    "Run: python3 scripts/configure_mcp.py"))
         results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "skip",
                                     "skipped: config missing"))
         return results
 
-    results.append(DoctorResult("mcp-config", "mcp", "Claude Desktop config", "pass", str(config_path)))
+    results.append(DoctorResult("mcp-config", "mcp", "Claude Code MCP config", "pass", str(config_path)))
 
     # mcp-entry
     try:
@@ -783,8 +789,8 @@ def _check_mcp() -> list[DoctorResult]:
         entry = servers.get("obsidian-ops")
         if entry is None:
             results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "fail",
-                                        "obsidian-ops not found in mcpServers",
-                                        'Add "obsidian-ops" entry to claude_desktop_config.json'))
+                                        f"obsidian-ops not found in {config_path}'s mcpServers",
+                                        "Run: python3 scripts/configure_mcp.py"))
         else:
             cmd = entry.get("command", "")
             # Resolve the script path from the command args if present
@@ -797,7 +803,7 @@ def _check_mcp() -> list[DoctorResult]:
             if server_path and not server_path.exists():
                 results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "warn",
                                             f"Entry exists but mcp_server.py path is wrong: {server_path}",
-                                            f"Update path in {config_path}"))
+                                            "Re-run: python3 scripts/configure_mcp.py"))
             else:
                 results.append(DoctorResult("mcp-entry", "mcp", "obsidian-ops entry", "pass",
                                             f"Entry present (command: {cmd})"))
