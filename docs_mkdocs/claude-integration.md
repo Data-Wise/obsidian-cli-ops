@@ -3,11 +3,11 @@
 > **TL;DR** (30 seconds)
 > - **What:** Connect `obs` to Claude Desktop, Claude Code, or Cowork via MCP
 > - **Why:** Ask Claude in plain English to search, analyze, and edit your vaults
-> - **How:** Add one JSON block to `claude_desktop_config.json`, restart Claude
+> - **How:** Run `configure_mcp.py` (registers via the `claude` CLI), restart Claude
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~5 minutes | **Level:** Intermediate | **Version:** 4.3.0
+**Time:** ~2 minutes | **Level:** Beginner | **Version:** 4.4.2
 
 ---
 
@@ -28,49 +28,43 @@ The MCP server exposes **42 tools** and **4 resources** that map directly to `ob
 ## Prerequisites
 
 - `obs` installed: `brew install data-wise/tap/obsidian-cli-ops`
-- Claude Desktop (any recent version)
+- The `claude` CLI on `PATH` (ships with Claude Code / the unified desktop app)
 - At least one vault registered: `obs discover ~/Documents --scan`
 
 ---
 
 ## Setup
 
-### Step 1 — Edit Claude Desktop config
+### Step 1 — Run the registration script
 
-Open (or create) `~/Library/Application Support/Claude/claude_desktop_config.json`
-and add the `obsidian-ops` entry inside `"mcpServers"`:
-
-```json
-{
-  "mcpServers": {
-    "obsidian-ops": {
-      "command": "/bin/zsh",
-      "args": [
-        "-c",
-        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/4.0.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
-      ],
-      "env": {}
-    }
-  }
-}
+```bash
+python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py
 ```
 
-Replace `YOUR_USERNAME` with your macOS username (run `whoami` in Terminal).
+This registers `obsidian-ops` with the `claude` CLI (`claude mcp add -s user`), which
+writes to `~/.claude.json` (or a project-local `.mcp.json` if run from inside a
+project). It's safe to re-run any time — e.g. after a `brew upgrade` — since it
+removes and re-adds the entry each time.
 
 !!! tip "From-source install"
-    If you cloned the repo instead of using Homebrew, replace the path with the absolute
-    path to `src/python/mcp_server.py` in your checkout.
+    If you cloned the repo instead of using Homebrew, run `python3
+    scripts/configure_mcp.py` from the repo root instead.
 
-### Step 2 — Restart Claude Desktop
+### Step 2 — Restart Claude Desktop / Claude Code
 
-`Cmd+Q` → reopen. The `obsidian-ops` server should appear in the tool panel.
+`Cmd+Q` → reopen (Claude Desktop), or restart the Code tab. MCP tools are only read
+at startup, so a running session won't pick up a new or changed registration.
 
 ### Step 3 — Verify
 
-Ask Claude: **"List my Obsidian vaults"**
+```bash
+claude mcp list
+```
 
-Claude should call `list_vaults()` and return your vault list. If nothing happens, see
-[Troubleshooting](#troubleshooting) below.
+`obsidian-ops` should show as **✔ Connected**. Then ask Claude: **"List my Obsidian
+vaults"** — it should call `list_vaults()` and return your vault list. If something's
+off, see [Troubleshooting](#troubleshooting) below, or run `obs doctor --layer mcp`
+for a full diagnostic.
 
 ---
 
@@ -275,17 +269,28 @@ linking plan with specific recommendations.
 
 ### "obsidian-ops" doesn't appear in Claude Desktop
 
-1. Validate your JSON: `python3 -m json.tool ~/Library/"Application Support"/Claude/claude_desktop_config.json`
-2. Check the zsh one-liner manually in Terminal — paste the `command`+`args` values
-3. Confirm `obs` is installed: `obs version`
-4. Restart Claude Desktop fully (`Cmd+Q`, not just closing the window)
+1. Confirm the registration actually succeeded: `claude mcp list` should list
+   `obsidian-ops`. If it's missing, re-run
+   `python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py`.
+2. Confirm `obs` is installed: `obs version`
+3. Restart Claude Desktop fully (`Cmd+Q`, not just closing the window) — MCP tools
+   are only read at startup.
+4. Run `obs doctor --layer mcp` for a full diagnostic (config location, entry
+   present, interpreter resolves and is executable).
+
+!!! note "Older config still has a `nexus` entry?"
+    Pre-v4.0.0 installs used the MCP client key `nexus`; it was renamed to
+    `obsidian-ops`. `claude mcp remove nexus -s user` cleans up the stale entry
+    if `configure_mcp.py` didn't already replace it.
 
 ### `ModuleNotFoundError: mcp`
 
-The launcher resolved to a Python outside the obs venv. Force the correct interpreter:
+The registered interpreter is outside the obs venv. Force the correct one, then
+re-register:
 
 ```bash
 export OBS_PYTHON=/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3
+python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py
 ```
 
 Or reinstall: `brew reinstall obsidian-cli-ops`

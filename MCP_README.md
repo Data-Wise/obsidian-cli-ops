@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.3.0 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
+**Version:** 4.4.2 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -19,34 +19,18 @@ brew install data-wise/tap/obsidian-cli-ops
 The MCP server (`src/python/mcp_server.py`) and all required dependencies
 (`mcp==1.27.2` + transitive) are included in the Homebrew venv.
 
-### 2. Add to Claude Desktop config
-
-Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "obsidian-ops": {
-      "command": "/bin/zsh",
-      "args": [
-        "-c",
-        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\" \"/opt/homebrew/Cellar/obsidian-cli-ops/3.3.0/libexec/venv/bin/python\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
-      ],
-      "env": {}
-    }
-  }
-}
-```
-
-Replace `YOUR_USERNAME` with your macOS username. The launcher tries three venv candidates
-in order (user venv → Homebrew opt symlink → Homebrew Cellar path) so it survives version
-bumps without manual config edits.
-
-Or copy from the project's reference config:
+### 2. Register with the `claude` CLI
 
 ```bash
-cat mcp_config.json
+python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py
 ```
+
+This calls `claude mcp add -s user`, writing the `obsidian-ops` entry to
+`~/.claude.json` (or a project-local `.mcp.json` if run inside a project). Safe to
+re-run any time, including after `brew upgrade` — it removes and re-adds the entry.
+
+From a source checkout instead of Homebrew: `python3 scripts/configure_mcp.py`
+from the repo root.
 
 ### 3. Restart Claude Desktop
 
@@ -54,7 +38,12 @@ cat mcp_config.json
 
 ### 4. Verify
 
-Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and return results.
+```bash
+claude mcp list
+```
+
+`obsidian-ops` should show **✔ Connected**. Then ask Claude: *"List my Obsidian
+vaults"* — it should call `list_vaults()` and return results.
 
 ---
 
@@ -220,17 +209,21 @@ Tools in the Vault, Search, Graph, and Note groups call `obs_cli.py` via subproc
 
 ### Server doesn't appear in Claude Desktop
 
-1. Check the config path: `~/Library/Application Support/Claude/claude_desktop_config.json`
-2. Validate JSON syntax (trailing commas break parsing)
-3. Confirm the python path resolves — run the zsh one-liner manually in Terminal
-4. Restart Claude Desktop fully (`Cmd+Q`, not just closing the window)
+1. Confirm registration succeeded: `claude mcp list` should list `obsidian-ops`. If
+   not, re-run `python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py`.
+2. Run `obs doctor --layer mcp` for a full diagnostic (config location, entry
+   present, interpreter resolves and is executable).
+3. Restart Claude Desktop fully (`Cmd+Q`, not just closing the window) — MCP tools
+   are only read at startup.
 
 ### `ModuleNotFoundError: mcp`
 
-The interpreter resolved to a Python outside the obs venv. Force the correct venv:
+The registered interpreter resolved to a Python outside the obs venv. Force the
+correct one, then re-register:
 
 ```bash
 export OBS_PYTHON=/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3
+python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py
 ```
 
 Or reinstall: `brew reinstall obsidian-cli-ops`

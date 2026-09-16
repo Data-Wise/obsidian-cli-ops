@@ -166,7 +166,7 @@ Use Claude Desktop to query and edit your vaults in natural language:
 ```mermaid
 graph TD
     A[Claude Desktop] --> B{obsidian-ops MCP connected?}
-    B -->|No| C[claude_desktop_config.json setup]
+    B -->|No| C[Run configure_mcp.py]
     C --> D[Restart Claude Desktop]
     D --> A
     B -->|Yes| E[Natural language query]
