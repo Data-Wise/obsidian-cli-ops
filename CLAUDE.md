@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 4.3.1
+**Current Version**: 4.4.0
 **Status**: Stable release
 **Priority**: P1
 
@@ -26,7 +26,7 @@ Developer guide for Claude Code when working with this repository.
 ### Technology Stack
 
 - **ZSH**: CLI interface (`src/obs.zsh`) - 501 lines
-- **Python 3.9+**: Core logic (`src/python/`) - ~5,300 lines
+- **Python 3.10+**: Core logic (`src/python/`) - ~5,300 lines
 - **SQLite**: Knowledge graph database
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting

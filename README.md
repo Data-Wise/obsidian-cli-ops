@@ -1,16 +1,16 @@
 # Obsidian CLI Ops
 
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
-[![Version](https://img.shields.io/badge/version-4.3.1-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-4.4.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-450%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/tests-636%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 
 **An Intelligent Command-Line Tool for Obsidian Vault Management with AI-Powered Graph Analysis.**
 
 `obs` is a laser-focused CLI tool for managing Obsidian vaults with AI-powered knowledge graph analysis.
 
-**Current Version**: 4.3.1
+**Current Version**: 4.4.0
 
 ## 🚀 Quick Start
 
@@ -123,7 +123,7 @@ obs version                     # Show version
 
 ## 📋 Planning & Development
 
-**Current Status:** v4.3.1 Stable
+**Current Status:** v4.4.0 Stable
 
 ### Active Planning Files
 - **[.STATUS](.STATUS)** - Current state, next steps, and metrics ⭐ What to work on now
@@ -168,7 +168,7 @@ obs version                     # Show version
 ## 📦 Requirements
 
 - **ZSH**: Shell integration
-- **Python 3.9+**: Core functionality
+- **Python 3.10+**: Core functionality
 - **Dependencies**: See `src/python/requirements.txt`
 - **Optional**: Ollama, Gemini API, or Anthropic API for AI features
 

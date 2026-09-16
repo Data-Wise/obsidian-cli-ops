@@ -187,15 +187,39 @@ class DatabaseManager:
         Returns:
             Vault dict or None if not found
         """
+        # An empty identifier is a caller error, not a prefix. Left to fall
+        # through, `LIKE '' || '%'` matches EVERY vault: ambiguity-raises with
+        # several, and silently resolves to "the only vault" with one -- so the
+        # same call means different things depending on how many vaults are
+        # registered. Reject it here so every caller of this resolver agrees.
+        if identifier is not None and not str(identifier).strip():
+            raise ValueError(
+                "Vault not found: empty vault identifier. "
+                "Pass a vault name, full ID, or unambiguous ID prefix, "
+                "or omit the argument to search all vaults."
+            )
+
         with self.get_connection() as conn:
-            # Try exact name match first (case-insensitive)
+            # Try exact name match first (case-insensitive).
+            # `vaults.name` carries no UNIQUE constraint, so duplicates are
+            # possible and realistic (~/Documents/Vault and an iCloud
+            # Documents/Vault both register as "Documents"). fetchone() would
+            # pick one arbitrarily and silently drop the other's notes -- the
+            # same silently-wrong-result class this resolver exists to prevent.
+            # Raise, mirroring the ambiguous-ID-prefix branch below.
             cursor = conn.execute(
                 "SELECT * FROM vaults WHERE LOWER(name) = LOWER(?)",
                 (identifier,)
             )
-            row = cursor.fetchone()
-            if row:
-                return dict(row)
+            rows = cursor.fetchall()
+            if len(rows) == 1:
+                return dict(rows[0])
+            if len(rows) > 1:
+                detail = ", ".join(f"{r['id'][:8]} ({r['path']})" for r in rows)
+                raise ValueError(
+                    f"Ambiguous vault name '{identifier}' matches {len(rows)} "
+                    f"vaults: {detail}. Pass an ID or ID prefix instead."
+                )
 
             # Try exact ID match
             cursor = conn.execute(
@@ -294,13 +318,45 @@ class DatabaseManager:
 
         Args:
             query: Search term (searches title only, as content is not stored)
-            vault_id: Optional specific vault ID to scope search
+            vault_id: Optional vault name, full ID, or unambiguous ID prefix
             tags: Optional list of tags to filter by (OR logic for tags)
             limit: Max results
 
         Returns:
             List of dicts with note info and vault_name
+
+        Raises:
+            ValueError: If vault_id is given but matches no registered vault,
+                or is ambiguous (a name shared by several vaults, or an ID
+                prefix matching several).
         """
+        # Resolve here, at the choke point every caller reaches, rather than in
+        # one caller. The WHERE clause below compares against `notes.vault_id`
+        # (an ID hash), so an unresolved NAME matched nothing and the search
+        # came back empty against a healthy index -- indistinguishable from
+        # "no such note". obs_cli resolves before calling; the MCP path did
+        # not. Re-resolving an already-resolved ID is a single indexed lookup
+        # returning the same value, so obs_cli's own resolution stays harmlessly
+        # idempotent.
+        # SCOPE: this makes search_notes the only DatabaseManager method that
+        # accepts a name or prefix. list_notes(), get_orphaned_notes(),
+        # get_broken_links(), get_vault_tag_stats(), delete_vault() and
+        # rename_vault() still require an exact ID, and will return empty
+        # (not raise) for a name. Widening them is a separate change.
+        # `is not None`, not truthiness: vault_id="" would otherwise skip
+        # resolution AND scoping, silently returning cross-vault results
+        # labelled as scoped. An empty string is an unresolvable vault, so it
+        # takes the same error path as any other bad identifier.
+        if vault_id is not None:
+            vault = self.get_vault_by_name_or_id(vault_id)
+            if not vault:
+                raise ValueError(
+                    f"Vault not found: {vault_id!r}. "
+                    "Pass a vault name, full ID, or unambiguous ID prefix "
+                    "(see list_vaults)."
+                )
+            vault_id = vault["id"]
+
         sql = """
             SELECT n.id, n.title, n.path, n.modified_at, v.name as vault_name
             FROM notes n

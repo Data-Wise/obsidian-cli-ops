@@ -78,7 +78,7 @@ Ask Claude: *"List my Obsidian vaults"* — it should call `list_vaults()` and r
 
 | Tool | Description |
 |------|-------------|
-| `search_notes(query, vault_id, limit)` | Full-text search across notes |
+| `search_notes(query, vault_id, limit)` | Search note **titles** (bodies are not indexed) |
 | `find_similar_notes(note_id, limit, threshold)` | Semantically similar notes |
 
 ### Graph Analysis Tools

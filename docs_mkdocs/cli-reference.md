@@ -699,7 +699,7 @@ Refresh the `_ACTION-BOARD.md` file from atlas project state, vault stats, and
 `.STATUS` files.
 
 ```bash
-obs board refresh [--vault <name>] [--all] [--dry-run] [--json]
+obs board refresh [--vault <name>] [--all] [--dry-run] [--out <path>] [--json]
 ```
 
 | Argument | Default | Description |
@@ -707,7 +707,15 @@ obs board refresh [--vault <name>] [--all] [--dry-run] [--json]
 | `--vault` | first research vault | Vault name or ID |
 | `--all` | | Refresh boards in all vaults |
 | `--dry-run` | | Show what would change without writing |
+| `--out` | | Board file to write (absolute, or relative to the vault root); overrides `board.path` in `~/.config/obs/config.yaml` |
 | `--json` | | Machine-readable JSON output |
+
+Board file location precedence (highest first): `--out` -> `board.path` in
+`~/.config/obs/config.yaml` -> built-in default (`Engineering/_ACTION-BOARD.md`,
+or `Research/Engineering/` when a `Research/` sub-vault exists). Nothing is
+auto-detected past that: if the board moves, say so via `--out` or
+`board.path`, or the deterministic block silently lands somewhere no
+consumer reads (see Issue #86).
 
 **Examples:**
 
@@ -716,6 +724,7 @@ obs board refresh                            # Refresh first research vault
 obs board refresh --vault Research           # Specific vault
 obs board refresh --all                      # All vaults
 obs board refresh --dry-run                  # Preview changes
+obs board refresh --out Custom/BOARD.md      # Override the board file location
 ```
 
 ### obs board status

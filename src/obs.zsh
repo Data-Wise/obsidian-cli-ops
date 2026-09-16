@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 4.3.1
+# Version: 4.4.0
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -99,7 +99,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="4.3.1"
+VERSION="4.4.0"
 
 # --- Helper Functions ---
 
@@ -167,7 +167,7 @@ obs_help() {
         echo ""
 
         echo "📋 RESEARCH BOARD"
-        echo "  obs board refresh [--all] [--dry-run]  Refresh research board from atlas state"
+        echo "  obs board refresh [--all] [--dry-run] [--out PATH]  Refresh research board from atlas state"
         echo "  obs board status          Show board refresh status"
         echo ""
 

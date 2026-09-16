@@ -190,9 +190,17 @@ def named_vault(mcp_mod, tmp_path):
     name = "ResearchVault"
     # 2nd positional arg is vault_name → stored name is "ResearchVault", id = hash(path)
     asyncio.run(VaultScanner(mcp_mod.db).scan_vault(str(vault_dir), name))
-    vault = mcp_mod.db.get_vault_by_name_or_id(name)
+    vault_id = mcp_mod.db._generate_id(str(vault_dir))
+    vault = mcp_mod.db.get_vault(vault_id)
     assert vault is not None and vault["name"] == name and vault["id"] != name
-    return name, vault["id"], vault_dir
+    yield name, vault["id"], vault_dir
+    # Teardown is REQUIRED, not tidiness. This fixture is function-scoped over a
+    # module-scoped db, so without it every test leaves another vault named
+    # "ResearchVault" behind -- they reached 17. Resolution by name then has to
+    # pick among duplicates, and each test may silently assert against a
+    # different test's vault. (Surfaced when name-ambiguity started raising
+    # instead of returning an arbitrary row.)
+    mcp_mod.db.delete_vault(vault["id"])
 
 
 # ---------------------------------------------------------------------------
@@ -299,6 +307,40 @@ class TestSearchTools:
         vault_id, _, _ = obs_vault
         result = mcp_mod.search_notes("zzznomatch999", vault_id=vault_id)
         assert isinstance(result, str)
+
+    def test_search_notes_by_vault_name(self, mcp_mod, named_vault):
+        """A vault NAME must scope the search, not silently match nothing.
+
+        Regression guard: search_notes() was the one vault-taking tool that
+        never resolved its argument, so a name went straight into
+        `WHERE n.vault_id = ?` -- a column holding the ID hash. Every scoped
+        search returned zero results against a perfectly healthy index, which
+        is indistinguishable from "no such note".
+
+        Uses the module-level `named_vault` fixture (name != id), which the
+        name-resolution tests for the other tools already share.
+        """
+        name, vault_id, _ = named_vault
+        assert name != vault_id          # else this test proves nothing
+        result = mcp_mod.search_notes("alpha", vault_id=name)
+        assert "Alpha" in result, f"name-scoped search found nothing: {result!r}"
+
+    def test_search_notes_name_and_id_agree(self, mcp_mod, named_vault):
+        """Scoping by name, by ID, or by ID prefix must all agree."""
+        name, vault_id, _ = named_vault
+        for scope in (name, vault_id, vault_id[:8]):
+            assert "Alpha" in mcp_mod.search_notes("alpha", vault_id=scope), \
+                f"scope {scope!r} found nothing"
+
+    def test_search_notes_unknown_vault_is_loud(self, mcp_mod):
+        """An unresolvable vault must say so, not look like an empty result.
+
+        Silently returning "No notes found" for a typo'd vault name is the
+        exact failure this fix removes.
+        """
+        result = mcp_mod.search_notes("alpha", vault_id="no-such-vault-xyz")
+        assert "not found" in result.lower()
+        assert "No notes found" not in result
 
     def test_search_notes_global(self, mcp_mod):
         result = mcp_mod.search_notes("note")

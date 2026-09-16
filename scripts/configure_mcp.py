@@ -33,7 +33,14 @@ def main():
         # Fallback to the interpreter running this script if venv python doesn't exist yet
         venv_python = Path(sys.executable)
         
-    print(f"   Python Interpreter: {venv_python.resolve()}")
+    # NOTE: venv_python is deliberately NOT .resolve()'d below -- both branches
+    # above (the venv path and the sys.executable fallback) are already
+    # absolute, and a venv's own bin/python is itself commonly a symlink to a
+    # version-pinned Homebrew/system interpreter. Resolving it here would bake
+    # that version-pinned path into claude_desktop_config.json, defeating the
+    # venv's stable-symlink indirection -- exactly the fragility obs doctor's
+    # mcp-interpreter check (added v4.3.1) warns about.
+    print(f"   Python Interpreter: {venv_python}")
     print(f"   MCP Server Script:  {server_script.resolve()}")
     
     # 2. Locate configuration files
@@ -72,7 +79,7 @@ def main():
             config["mcpServers"] = {}
             
         config["mcpServers"]["obsidian-ops"] = {
-            "command": str(venv_python.resolve()),
+            "command": str(venv_python),
             "args": [str(server_script.resolve())]
         }
         
@@ -90,7 +97,7 @@ def main():
         manual_cfg = {
             "mcpServers": {
                 "obsidian-ops": {
-                    "command": str(venv_python.resolve()),
+                    "command": str(venv_python),
                     "args": [str(server_script.resolve())]
                 }
             }

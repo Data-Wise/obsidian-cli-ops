@@ -1,12 +1,63 @@
 priority: P1
-status: ✅ v4.3.1 RELEASE IN PROGRESS (doctor MCP diagnostics + drift-detection fixes)
+status: 🚧 v4.4.0 RELEASE IN PROGRESS (board.path override + config vault-less support)
 progress: 100
-updated: 2026-08-17
-version: 4.3.1
+updated: 2026-09-15
+version: 4.4.0
 next: |
-  1. Port plugin skills
-  2. Port vault template ops (low priority)
+  1. Merge or close 4 stale unmerged branches: feature/fix-broken-links-display (29d),
+     feature/fix-cli-version-probe (28d), feature/package-dashboard-v3 (61d),
+     feature/research-board-error-handling (61d)
+  2. Re-add the `obsidian-ops` entry to Claude Desktop's MCP config (`obs doctor` flags it FAIL) —
+     also confirm whether this app version persists claude_desktop_config.json edits at all
+     (see memory mcp-config-app-owned-not-static)
+  3. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
+     the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
+     (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
+  4. Port plugin skills
+  5. Port vault template ops (low priority)
 verified: |
+  v4.4.0 release prep 2026-09-15: version bumped 4.3.1→4.4.0 across package.json,
+  package-lock.json, pyproject.toml, src/python/__init__.py, src/obs.zsh, man/man1/obs.1
+  (version+date), README.md (badges + prose, incl. stale Python-3.9%2B and
+  tests-450%2B-passing badges caught and fixed), CLAUDE.md, docs_mkdocs/index.md (badge only —
+  the "(v4.3.1)" tip below it is a historical record, left alone); version-gated tests
+  (tests/obs.test.js, __tests__/cli.test.js) updated to match. docs_mkdocs/changelog.md
+  [Unreleased] section converted to a `## v4.4.0` heading. validate-counts.sh clean
+  (63/42/4/5), mandoc -Tlint clean, mkdocs build --strict clean. Full suite: 636 pytest
+  passed/4 skipped (unchanged); Jest 70/72 passed — the 2 dep_bootstrap.test.js failures are
+  a confirmed PRE-EXISTING, environment-only gap (this machine's ambient python3 is 3.9.6;
+  requirements.lock pins networkx==3.6.1, which requires Python>=3.10 per PyPI — reproduces
+  identically regardless of branch/commit, confirmed via `pip index versions networkx` on
+  ambient python3 capping at 3.2.1). Not a regression from the 3.9→3.10 floor bump; that fix
+  didn't touch requirements.lock or install.sh's interpreter selection.
+
+  dev-only fixes, uncommitted-to-committed (2026-09-15, prior to this release cut):
+  (1) Python floor raised 3.9→3.10 (e1f5c6d) — pyproject.toml's `requires-python = ">=3.9"` was
+  unresolvable: `mcp>=1.27.2` is a core (non-optional) dependency requiring Python >=3.10, so pip/uv
+  dependency resolution failed outright on 3.9 (confirmed via uv's resolver); CI never actually
+  tested 3.9 (matrix is 3.11/3.12 only). Bumped requires-python/classifiers/black+mypy targets and
+  10 doc/status files asserting "Python 3.9+". doctor.py's runtime check was left alone — it already
+  treated 3.9 as warn-tier, not a claimed floor.
+  (2) board.py config-read reconciliation (083d78d) — BoardEngine._configured_board_path() (added
+  uncommitted, this session, for the board.path config override / Issue #86 follow-up) was
+  duplicating config_loader.py's YAML-parse/error-handling. Extracted config_loader.read_unified_doc()
+  (existence+PyYAML-guard+safe_load, no vault.root requirement) and had both _load_unified() and
+  board.py call it — deliberately NOT via config_loader.load()/ObsConfig, since load() requires
+  vault.root and would silently drop a board-only config.
+  (3) SPEC + GRILL + implementation: vault.root made Optional (42918b9 spec, a659e8f grill — 5
+  branches resolved — 6eb7619 implementation) so a vault-less (e.g. board.path-only) config.yaml is
+  visible to `obs config show` instead of reporting "no config found". `obs config validate` needed
+  ZERO code changes — its existing `if not cfg.root` check already enforces "vault-less still
+  fails validate" once root can be None. templates_resolved raises ValueError (not silent None);
+  _to_yaml() guards against writing literal `root: "None"`. 8 new tests; full suite 629→636 passed,
+  4 skipped throughout, zero regressions.
+  v4.3.1 RELEASED 2026-08-17: release PR #99 (dev→main, regular merge a15a85ac), main CI green,
+  tag v4.3.1 + GitHub release published (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.3.1),
+  Homebrew tap auto-bumped (data-wise/homebrew-tap PR #215, sha256 f9369f8d...). Follow-up PR #100
+  (dev→main) fixed a second, separately-hardcoded version badge in docs_mkdocs/index.md that the
+  version-bump checklist missed (README.md's badge was updated, this one wasn't) — live docs site
+  confirmed on v4.3.1 after that merge. dev/main back in sync (b3ae919e). Worktrees cleaned
+  (release-v4.3.1 removed; pr94-rebase/pr95-rebase already gone). No open PRs remain.
   obs doctor mcp-interpreter check + --json fix (2026-08-17, PRs #96/#97, merged to dev): fixed
   the Claude Desktop MCP outage this session — a Homebrew python@3.14 patch bump (3.14.6→3.14.7)
   deleted a version-pinned Cellar path the obsidian-ops MCP entry was hardcoded to, and `obs

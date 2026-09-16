@@ -1062,6 +1062,7 @@ def main():
     refresh_parser.add_argument('--vault', default=None, help='Vault name or ID (default: first research vault)')
     refresh_parser.add_argument('--all', action='store_true', help='Refresh boards in all vaults')
     refresh_parser.add_argument('--dry-run', action='store_true', help='Show what would change without writing')
+    refresh_parser.add_argument('--out', default=None, help='Board file to write (absolute, or relative to the vault root); overrides board.path in ~/.config/obs/config.yaml')
     refresh_parser.add_argument('--json', action='store_true', help='Output result as JSON')
 
     status_parser = board_subparsers.add_parser('status', help='Show board refresh status')
@@ -1933,16 +1934,17 @@ def main():
 
             if cmd == 'refresh':
                 dry_run = getattr(args, 'dry_run', False)
+                out = getattr(args, 'out', None)
                 if getattr(args, 'all', False):
-                    results = engine.refresh_all(dry_run=dry_run)
+                    results = engine.refresh_all(dry_run=dry_run, board_rel_path=out)
                 else:
                     vault = getattr(args, 'vault', None)
                     if vault:
-                        results = [engine.refresh_for_vault_name(vault, dry_run=dry_run)]
+                        results = [engine.refresh_for_vault_name(vault, dry_run=dry_run, board_rel_path=out)]
                     else:
                         vaults = engine._vm.list_vaults()
                         if vaults:
-                            results = [engine.refresh(vaults[0].id, dry_run=dry_run)]
+                            results = [engine.refresh(vaults[0].id, dry_run=dry_run, board_rel_path=out)]
                         else:
                             results = [{"error": "No vaults found", "path": "", "changed": False}]
                 if getattr(args, 'json_output', False) or getattr(args, 'json', False):

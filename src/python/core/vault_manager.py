@@ -397,19 +397,27 @@ class VaultManager:
         rows = self.db.list_notes(vault_id, limit=limit, offset=offset)
         return [Note.from_db_row(dict(row)) for row in rows]
 
-    def search_notes(self, query: str, vault_id: Optional[str] = None, tags: List[str] = None) -> List[Dict]:
+    def search_notes(self, query: str, vault_id: Optional[str] = None, tags: List[str] = None,
+                     limit: int = 50) -> List[Dict]:
         """
         Search notes and generate context snippets.
 
         Args:
-            query: Search term
-            vault_id: Optional vault ID
+            query: Search term (matched against note TITLES -- note bodies are
+                not stored in the index, only a content hash)
+            vault_id: Optional vault name, full ID, or unambiguous ID prefix
             tags: Optional tags
+            limit: Max rows fetched from the DB. Not forwarding this made db's
+                default of 50 a hard ceiling regardless of the caller's limit.
 
         Returns:
             List of dicts with note info and 'snippet' field
+
+        Raises:
+            ValueError: If vault_id is given but matches no registered vault.
         """
-        results = self.db.search_notes(query, vault_id, tags)
+        # vault_id resolution (name / ID / prefix) happens in db.search_notes().
+        results = self.db.search_notes(query, vault_id, tags, limit=limit)
         processed = []
         
         lower_query = query.lower()

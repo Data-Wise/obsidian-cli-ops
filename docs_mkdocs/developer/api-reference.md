@@ -39,7 +39,7 @@ flowchart LR
 
 | Tool | Args | Returns |
 |------|------|---------|
-| `search_notes(query, vault_id?, limit?)` | `query: str`; optional `vault_id`, `limit` (default 10) | `[{id, title, snippet, score}]` |
+| `search_notes(query, vault_id?, limit?)` | `query: str` (matched against TITLES); optional `vault_id` (name, ID, or ID prefix), `limit` (default 10) | `[{id, title, path, modified_at, vault_name}]` |
 | `list_notes(vault_id, limit?)` | `vault_id: str`; optional `limit` | `[{id, title, path, word_count, tags}]` |
 
 #### Graph Tools
