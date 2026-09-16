@@ -71,8 +71,8 @@ class ResearchConfig:
 class ObsConfig:
     """Top-level obs config (vault, research, plugins sections + source tag)."""
 
-    # vault section
-    root: Path
+    # vault section (absent for a vault-less config, e.g. board.path-only — GRILL-config-vault-root-optional-2026-09-15)
+    root: Optional[Path] = None
     active: list[str] = field(default_factory=list)
     templates: Optional[Path] = None
     # research section (absent for vault-only installs)
@@ -84,9 +84,19 @@ class ObsConfig:
 
     @property
     def templates_resolved(self) -> Path:
-        """Return the explicit templates path, or the default under vault root."""
+        """Return the explicit templates path, or the default under vault root.
+
+        Raises ValueError if neither is set (a vault-less config with no explicit
+        templates override) — there's no sensible path to return, and failing loudly
+        at this one call site beats returning a look-alike value further from the cause.
+        """
         if self.templates:
             return self.templates
+        if self.root is None:
+            raise ValueError(
+                "templates_resolved: no vault.root and no vault.templates set — "
+                "this config has no templates location"
+            )
         return self.root / DEFAULT_TEMPLATES_SUBPATH
 
 
@@ -157,10 +167,12 @@ def _load_unified() -> Optional[ObsConfig]:
         return None
     v = doc.get("vault", {})
     root_raw = v.get("root")
-    if not root_raw:
-        return None
-
-    root = _expand(root_raw)
+    # A missing vault.root no longer discards the whole config — a vault-less
+    # config (e.g. board.path-only) is still a valid ObsConfig with root=None.
+    # GRILL-config-vault-root-optional-2026-09-15 decision 1: `obs config validate`
+    # still fails on root=None (its own `if not cfg.root` check), so this only
+    # changes what `show`/other readers see, not `validate`'s pass/fail contract.
+    root = _expand(root_raw) if root_raw else None
     active = list(v.get("active") or [])
     templates_raw = v.get("templates")
     templates = _expand(templates_raw) if templates_raw else None
@@ -300,9 +312,12 @@ def cmd_show() -> int:
         print("[obs] No config found. Run `obs config init`.")
         return 1
     print(f"# obs config  (source: {cfg.source})")
-    print(f"vault.root:      {cfg.root}")
+    print(f"vault.root:      {cfg.root if cfg.root is not None else '(not set)'}")
     print(f"vault.active:    {cfg.active}")
-    print(f"vault.templates: {cfg.templates_resolved}")
+    if cfg.root is not None or cfg.templates is not None:
+        print(f"vault.templates: {cfg.templates_resolved}")
+    else:
+        print("vault.templates: (not set)")
     if cfg.research:
         if cfg.research.zotero:
             print(f"research.zotero.database: {cfg.research.zotero.database}")
@@ -412,6 +427,16 @@ def cmd_edit() -> int:
 
 
 def _to_yaml(cfg: ObsConfig) -> str:
+    """Serialize cfg to the unified YAML format (used by cmd_migrate/cmd_init).
+
+    Both current callers only ever pass a root-set ObsConfig (legacy loaders
+    require root; cmd_init prompts for one), but root is now Optional at the
+    dataclass level (GRILL-config-vault-root-optional-2026-09-15 decision 4)
+    -- guard here so a future vault-less caller fails loudly instead of
+    silently writing the literal string `root: "None"` into a real config file.
+    """
+    if cfg.root is None:
+        raise ValueError("_to_yaml: cfg.root is None — refusing to write vault.root: \"None\"")
     lines = [
         "# obs unified config — https://data-wise.github.io/obsidian-cli-ops/",
         "version: 1",

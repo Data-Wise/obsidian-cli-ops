@@ -184,6 +184,37 @@ plugins:
         monkeypatch.setattr(cl, "_UNIFIED_PATH", tmp_path / "nope.yaml")
         assert cl._load_unified() is None
 
+    # ── vault-less config (GRILL-config-vault-root-optional-2026-09-15) ────
+
+    VAULT_LESS_YAML = """\
+version: 1
+board:
+  path: Research/00_meta/_ACTION-BOARD.md
+"""
+
+    def test_parses_vault_less_config(self, tmp_path, monkeypatch):
+        """A config with no vault: section at all is still a valid ObsConfig (root=None)."""
+        p = tmp_path / "config.yaml"
+        p.write_text(self.VAULT_LESS_YAML, encoding="utf-8")
+        monkeypatch.setattr(cl, "_UNIFIED_PATH", p)
+        cfg = cl._load_unified()
+        assert cfg is not None
+        assert cfg.root is None
+        assert cfg.active == []
+
+    def test_parses_vault_section_present_but_root_empty(self, tmp_path, monkeypatch):
+        """vault: present with active/templates but no root -- still root=None, not discarded."""
+        p = tmp_path / "config.yaml"
+        p.write_text(
+            "version: 1\nvault:\n  active:\n    - Research\n",
+            encoding="utf-8",
+        )
+        monkeypatch.setattr(cl, "_UNIFIED_PATH", p)
+        cfg = cl._load_unified()
+        assert cfg is not None
+        assert cfg.root is None
+        assert cfg.active == ["Research"]
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Priority chain: load()
@@ -242,6 +273,12 @@ class TestObsConfigHelpers:
         cfg = cl.ObsConfig(root=Path("/vault"))
         assert cfg.templates_resolved == Path("/vault/_SYSTEM/templates")
 
+    def test_templates_resolved_raises_when_root_and_templates_unset(self):
+        """A vault-less config with no explicit templates override has no sensible answer."""
+        cfg = cl.ObsConfig(root=None)
+        with pytest.raises(ValueError, match="templates_resolved"):
+            cfg.templates_resolved
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # _to_yaml round-trip
@@ -291,3 +328,60 @@ class TestToYaml:
         cfg = cl.ObsConfig(root=Path("/v"))
         doc = _yaml.safe_load(cl._to_yaml(cfg))
         assert "plugins" not in doc
+
+    def test_raises_when_root_is_none(self):
+        """Guards against silently writing the literal string root: "None" (GRILL decision 4)."""
+        cfg = cl.ObsConfig(root=None)
+        with pytest.raises(ValueError, match="_to_yaml"):
+            cl._to_yaml(cfg)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# cmd_show / cmd_validate — vault-less config (GRILL-config-vault-root-optional-2026-09-15)
+# ──────────────────────────────────────────────────────────────────────────────
+
+class TestCmdShowVaultLess:
+    def test_show_reports_not_set_for_vault_less_config(self, tmp_path, monkeypatch, capsys):
+        p = tmp_path / "config.yaml"
+        p.write_text("version: 1\nboard:\n  path: X/_ACTION-BOARD.md\n", encoding="utf-8")
+        monkeypatch.setattr(cl, "_UNIFIED_PATH", p)
+        monkeypatch.setattr(cl, "_LEGACY_OBS_PATH", tmp_path / "nope")
+        monkeypatch.setattr(cl, "_LEGACY_NEXUS_PATH", tmp_path / "nope.yaml")
+
+        rc = cl.cmd_show()
+
+        assert rc == 0  # doesn't crash on templates_resolved, doesn't report "no config found"
+        out = capsys.readouterr().out
+        assert "vault.root:      (not set)" in out
+        assert "vault.templates: (not set)" in out
+
+    def test_show_still_resolves_templates_for_normal_config(self, tmp_path, monkeypatch, capsys):
+        p = tmp_path / "config.yaml"
+        p.write_text("version: 1\nvault:\n  root: ~/Vaults\n", encoding="utf-8")
+        monkeypatch.setattr(cl, "_UNIFIED_PATH", p)
+        monkeypatch.setattr(cl, "_LEGACY_OBS_PATH", tmp_path / "nope")
+        monkeypatch.setattr(cl, "_LEGACY_NEXUS_PATH", tmp_path / "nope.yaml")
+
+        rc = cl.cmd_show()
+
+        assert rc == 0
+        out = capsys.readouterr().out
+        assert "vault.root:      " + str(Path.home() / "Vaults") in out
+        assert "(not set)" not in out
+
+
+class TestCmdValidateVaultLess:
+    def test_validate_still_fails_vault_less_config(self, tmp_path, monkeypatch, capsys):
+        """GRILL decision 1 (option b): validate keeps its vault-centric pass/fail contract --
+        a vault-less config is parseable (unlike before) but still INVALID for `obs config validate`.
+        """
+        p = tmp_path / "config.yaml"
+        p.write_text("version: 1\nboard:\n  path: X/_ACTION-BOARD.md\n", encoding="utf-8")
+        monkeypatch.setattr(cl, "_UNIFIED_PATH", p)
+        monkeypatch.setattr(cl, "_LEGACY_OBS_PATH", tmp_path / "nope")
+        monkeypatch.setattr(cl, "_LEGACY_NEXUS_PATH", tmp_path / "nope.yaml")
+
+        rc = cl.cmd_validate()
+
+        assert rc == 1
+        assert "INVALID: vault.root is empty" in capsys.readouterr().out
