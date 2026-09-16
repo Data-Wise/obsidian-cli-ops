@@ -68,38 +68,20 @@ If you add new notes later, rescan with `obs analyze MyVault` or ask Claude: *"R
 
 ---
 
-## Step 4: Add the MCP Server to Claude Desktop
+## Step 4: Register the MCP Server
 
-Open (or create) this file:
+Run the bundled registration script:
 
-```
-~/Library/Application Support/Claude/claude_desktop_config.json
-```
-
-Add the `obsidian-ops` entry inside `"mcpServers"`:
-
-```json
-{
-  "mcpServers": {
-    "obsidian-ops": {
-      "command": "/bin/zsh",
-      "args": [
-        "-c",
-        "OBS_PYTHON=\"${OBS_PYTHON:-}\"; if [ -z \"$OBS_PYTHON\" ]; then for c in \"$HOME/.local/share/obs/venv/bin/python3\" \"/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/bin/python3\"; do [ -x \"$c\" ] && OBS_PYTHON=\"$c\" && break; done; fi; exec \"${OBS_PYTHON:-python3}\" /Users/YOUR_USERNAME/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py"
-      ],
-      "env": {}
-    }
-  }
-}
+```bash
+python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py
 ```
 
-Replace `YOUR_USERNAME` with your macOS username (`whoami` in Terminal).
+This registers `obsidian-ops` with the `claude` CLI (`claude mcp add -s user`),
+writing to `~/.claude.json`. It's safe to re-run any time — including after a
+`brew upgrade` — since it removes and re-adds the entry each time.
 
-!!! warning "JSON is strict"
-    No trailing commas. Validate with:
-    ```bash
-    python3 -m json.tool ~/Library/"Application Support"/Claude/claude_desktop_config.json
-    ```
+From a source checkout instead of Homebrew: `python3 scripts/configure_mcp.py`
+from the repo root.
 
 ---
 
@@ -107,11 +89,18 @@ Replace `YOUR_USERNAME` with your macOS username (`whoami` in Terminal).
 
 `Cmd+Q` → reopen Claude Desktop. The `obsidian-ops` connector should appear in the tool panel.
 
-Test it by typing:
+Confirm from the terminal too:
+
+```bash
+claude mcp list
+```
+
+`obsidian-ops` should show **✔ Connected**. Then test it by typing:
 
 > *"List my Obsidian vaults"*
 
-Claude should call `list_vaults()` and return your vault list. If it doesn't, see
+Claude should call `list_vaults()` and return your vault list. If it doesn't, run
+`obs doctor --layer mcp` or see
 [Troubleshooting](../claude-integration.md#troubleshooting).
 
 ---
