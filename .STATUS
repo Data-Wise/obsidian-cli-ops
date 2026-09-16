@@ -1,21 +1,53 @@
 priority: P1
-status: ✅ v4.4.0 RELEASED (board.path override + config vault-less support)
-progress: 100
-updated: 2026-09-15
-version: 4.4.0
+status: 🔜 v4.4.1 PR OPEN (dev→main) — MCP registration mechanism fix
+progress: 95
+updated: 2026-09-16
+version: 4.4.1
 next: |
-  1. Merge or close 4 stale unmerged branches: feature/fix-broken-links-display (29d),
-     feature/fix-cli-version-probe (28d), feature/package-dashboard-v3 (61d),
-     feature/research-board-error-handling (61d)
-  2. Re-add the `obsidian-ops` entry to Claude Desktop's MCP config (`obs doctor` flags it FAIL) —
-     also confirm whether this app version persists claude_desktop_config.json edits at all
-     (see memory mcp-config-app-owned-not-static)
-  3. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
+  1. Merge the dev→main release PR, tag v4.4.1, publish the GitHub release, sync the Homebrew tap
+     — then `brew reinstall obsidian-cli-ops --build-from-source` to pick up the fix locally
+     (the underlying MCP registration itself already works on this machine, confirmed via
+     `claude mcp list` — only the installed `obs doctor` binary is stale until this releases)
+  2. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
      the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
      (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
-  4. Port plugin skills
-  5. Port vault template ops (low priority)
+  3. Port plugin skills
+  4. Port vault template ops (low priority)
 verified: |
+  v4.4.1 release prep 2026-09-16: version bumped 4.4.0→4.4.1 across pyproject.toml, package.json,
+  package-lock.json (lines 3 & 9), src/python/__init__.py, src/obs.zsh (header comment + VERSION=),
+  man/man1/obs.1 (.TH line + date), README.md (badge + 2 version mentions), CLAUDE.md, and
+  docs_mkdocs/index.md (badge); version-gated tests (tests/obs.test.js, __tests__/cli.test.js)
+  updated to match. docs_mkdocs/changelog.md got a new `## v4.4.1` heading above the v4.4.0 entry
+  (old entries left untouched, per convention). validate-counts.sh clean (63/42/4/5), mandoc
+  -Tlint clean, mkdocs build --strict clean. Full suite: 636 pytest passed/4 skipped (unchanged);
+  Jest 70/72 passed — the 2 dep_bootstrap.test.js failures are the same documented PRE-EXISTING,
+  environment-only gap (ambient python3.9.6 < networkx's Python>=3.10 requirement), not a
+  regression. PR opened dev→main.
+  4 stale unmerged branches deleted 2026-09-16: feature/fix-broken-links-display,
+  feature/fix-cli-version-probe (both local + origin), feature/package-dashboard-v3,
+  feature/research-board-error-handling (local-only). Triaged by diffing each against dev before
+  deleting, not by age/name alone: all 4 were fully superseded — their fixes/features were already
+  independently re-implemented on dev under different commits (_has_drift's sync-check fix,
+  get_broken_links' source_title/source_path fix + its exact regression test, the CRAN-state
+  dashboard column's _cran_badge/_package_row, and the AtlasIntegrationError/format_warnings
+  graceful-degradation wiring — all verbatim-matching, comments included). No unique work lost;
+  `git branch -D` required (branch-guard flagged the force-delete; user ran it directly since no
+  PR/merge-ancestry existed to verify against — the diff comparison already covered the guard's
+  underlying concern).
+  MCP registration mechanism fixed + merged 2026-09-16 (PR #103, squash fe81e6f, dev): CONFIRMED
+  claude_desktop_config.json is repurposed for Cowork/epitaxy UI prefs on the unified Claude Code +
+  Cowork desktop app (2.110.0) and carries no mcpServers key at all — real MCP registration goes
+  through the claude CLI → ~/.claude.json (user scope)/.mcp.json (project scope). configure_mcp.py
+  now calls `claude mcp add -s user` instead of hand-editing that file, and its interpreter
+  resolution gained the missing Homebrew-venv tier (mirrors obs.zsh's _obs_resolve_python) — the old
+  code fell straight to ambient python3 on a Homebrew-only install, which lacks the mcp package.
+  obs doctor's mcp-config/mcp-entry checks renamed _CLAUDE_DESKTOP_CONFIG_PATHS → _MCP_CONFIG_PATHS
+  to match; same DoctorResult ids/shape, updated tests (unit + dogfood + e2e). Full suite 636
+  passed/4 skipped unchanged, e2e/test_e2e_doctor_mcp.py 4/4 passed. Live-verified on this machine:
+  `claude mcp list` shows obsidian-ops ✔ Connected; running the fix directly showed 7/7 mcp-layer
+  checks pass. CI green (test/validate/Clean-install smoke test), no leaks in diff. (See memory
+  mcp-config-app-owned-not-static.)
   v4.4.0 RELEASED 2026-09-15/16: release PR #102 (dev→main, regular merge 2d7bf8f), main CI
   green (CI + Deploy Docs), tag v4.4.0 + GitHub release published
   (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.4.0), Homebrew tap auto-bumped

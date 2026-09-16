@@ -6,6 +6,13 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+## v4.4.1 (2026-09-16) — MCP registration mechanism fixed
+
+### Fixed
+
+- **`obsidian-ops` MCP registration** — `scripts/configure_mcp.py` and `obs doctor`'s `mcp-config`/`mcp-entry` checks targeted `claude_desktop_config.json`, which the unified Claude Code + Cowork desktop app repurposes entirely for unrelated UI-state preferences and no longer uses for MCP registration at all. `configure_mcp.py` now registers `obsidian-ops` via `claude mcp add -s user` (writes to `~/.claude.json`); `obs doctor` reads the same location (plus a repo-root `.mcp.json` for project scope).
+- **`configure_mcp.py` interpreter resolution** — the Homebrew-formula-venv tier was missing entirely, so a Homebrew-only install (no `install.sh` user venv) fell straight to the ambient Python interpreter, which lacks the `mcp` package. Now mirrors `obs.zsh`'s `_obs_resolve_python` 4-tier priority.
+
 ## v4.4.0 (2026-09-15) — Board path override + config vault-less support
 
 ### Added
