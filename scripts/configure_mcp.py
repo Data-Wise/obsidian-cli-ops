@@ -20,6 +20,43 @@ from pathlib import Path
 SERVER_NAME = "obsidian-ops"
 
 
+def _resolve_python() -> Path:
+    """Mirror obs.zsh's _obs_resolve_python 4-tier priority: explicit
+    OBS_PYTHON -> install.sh user venv -> Homebrew formula venv (via the
+    stable `brew --prefix` symlink, not a version-pinned Cellar path) ->
+    ambient python3 (warn -- deps may be missing)."""
+    obs_python = os.environ.get("OBS_PYTHON")
+    if obs_python and os.access(obs_python.split()[0], os.X_OK):
+        return Path(obs_python)
+
+    xdg_data = os.environ.get("XDG_DATA_HOME")
+    data_dir = Path(xdg_data) / "obs" if xdg_data else Path.home() / ".local" / "share" / "obs"
+    user_venv = data_dir / "venv" / "bin" / "python"
+    if user_venv.is_file() and os.access(user_venv, os.X_OK):
+        return user_venv
+
+    brew_bin = shutil.which("brew")
+    if brew_bin:
+        result = subprocess.run(
+            [brew_bin, "--prefix", "obsidian-cli-ops"], capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            brew_venv = Path(result.stdout.strip()) / "libexec" / "venv" / "bin" / "python"
+            if brew_venv.is_file() and os.access(brew_venv, os.X_OK):
+                return brew_venv
+
+    ambient = shutil.which("python3")
+    if ambient:
+        print(f"WARN: no isolated environment found; falling back to ambient python3 ({ambient}).", file=sys.stderr)
+        print("WARN: obs dependencies may be missing. Provision an isolated env:", file=sys.stderr)
+        print("WARN:   brew reinstall obsidian-cli-ops   # Homebrew", file=sys.stderr)
+        print("WARN:   ./install.sh                      # manual install", file=sys.stderr)
+        return Path(ambient)
+
+    print("Error: no python3 interpreter found on PATH.", file=sys.stderr)
+    sys.exit(1)
+
+
 def main():
     print(f"Registering {SERVER_NAME} MCP server via the claude CLI...")
 
@@ -27,30 +64,17 @@ def main():
     repo_dir = Path(__file__).resolve().parent.parent
     server_script = repo_dir / "src" / "python" / "mcp_server.py"
 
-    # Resolve the virtual environment path
-    xdg_data = os.environ.get("XDG_DATA_HOME")
-    if xdg_data:
-        data_dir = Path(xdg_data) / "obs"
-    else:
-        data_dir = Path.home() / ".local" / "share" / "obs"
-
-    venv_python = data_dir / "venv" / "bin" / "python"
-
     if not server_script.exists():
         print(f"Error: MCP server script not found at {server_script}", file=sys.stderr)
         sys.exit(1)
 
-    if not venv_python.exists():
-        # Fallback to the interpreter running this script if venv python doesn't exist yet
-        venv_python = Path(sys.executable)
-
-    # NOTE: venv_python is deliberately NOT .resolve()'d below -- both branches
-    # above (the venv path and the sys.executable fallback) are already
-    # absolute, and a venv's own bin/python is itself commonly a symlink to a
-    # version-pinned Homebrew/system interpreter. Resolving it here would bake
-    # that version-pinned path into the registration, defeating the venv's
-    # stable-symlink indirection -- exactly the fragility obs doctor's
-    # mcp-interpreter check (added v4.3.1) warns about.
+    # NOTE: venv_python is deliberately NOT .resolve()'d below -- a venv's own
+    # bin/python is itself commonly a symlink to a version-pinned Homebrew/
+    # system interpreter. Resolving it here would bake that version-pinned
+    # path into the registration, defeating the venv's stable-symlink
+    # indirection -- exactly the fragility obs doctor's mcp-interpreter check
+    # (added v4.3.1) warns about.
+    venv_python = _resolve_python()
     print(f"   Python interpreter: {venv_python}")
     print(f"   MCP server script:  {server_script.resolve()}")
 
