@@ -5045,7 +5045,7 @@ on demand via the <code>research--action-board</code> prompt.</p>
 <h3 id="obs-board-refresh">obs board refresh<a class="headerlink" href="#obs-board-refresh" title="Permanent link">&para;</a></h3>
 <p>Refresh the <code>_ACTION-BOARD.md</code> file from atlas project state, vault stats, and
 <code>.STATUS</code> files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>&lt;path&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -5072,17 +5072,29 @@ on demand via the <code>research--action-board</code> prompt.</p>
 <td>Show what would change without writing</td>
 </tr>
 <tr>
+<td><code>--out</code></td>
+<td></td>
+<td>Board file to write (absolute, or relative to the vault root); overrides <code>board.path</code> in <code>~/.config/obs/config.yaml</code></td>
+</tr>
+<tr>
 <td><code>--json</code></td>
 <td></td>
 <td>Machine-readable JSON output</td>
 </tr>
 </tbody>
 </table>
+<p>Board file location precedence (highest first): <code>--out</code> -&gt; <code>board.path</code> in
+<code>~/.config/obs/config.yaml</code> -&gt; built-in default (<code>Engineering/_ACTION-BOARD.md</code>,
+or <code>Research/Engineering/</code> when a <code>Research/</code> sub-vault exists). Nothing is
+auto-detected past that: if the board moves, say so via <code>--out</code> or
+<code>board.path</code>, or the deterministic block silently lands somewhere no
+consumer reads (see Issue #86).</p>
 <p><strong>Examples:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w">                            </span><span class="c1"># Refresh first research vault</span>
 <a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--vault<span class="w"> </span>Research<span class="w">           </span><span class="c1"># Specific vault</span>
 <a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--all<span class="w">                      </span><span class="c1"># All vaults</span>
 <a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--dry-run<span class="w">                  </span><span class="c1"># Preview changes</span>
+<a id="__codelineno-50-5" name="__codelineno-50-5" href="#__codelineno-50-5"></a>obs<span class="w"> </span>board<span class="w"> </span>refresh<span class="w"> </span>--out<span class="w"> </span>Custom/BOARD.md<span class="w">      </span><span class="c1"># Override the board file location</span>
 </code></pre></div>
 <h3 id="obs-board-status">obs board status<a class="headerlink" href="#obs-board-status" title="Permanent link">&para;</a></h3>
 <p>Show whether <code>_ACTION-BOARD.md</code> exists, when it was last refreshed, and

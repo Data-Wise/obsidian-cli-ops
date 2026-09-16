@@ -3001,8 +3001,8 @@
 <tbody>
 <tr>
 <td><code>search_notes(query, vault_id?, limit?)</code></td>
-<td><code>query: str</code>; optional <code>vault_id</code>, <code>limit</code> (default 10)</td>
-<td><code>[{id, title, snippet, score}]</code></td>
+<td><code>query: str</code> (matched against TITLES); optional <code>vault_id</code> (name, ID, or ID prefix), <code>limit</code> (default 10)</td>
+<td><code>[{id, title, path, modified_at, vault_name}]</code></td>
 </tr>
 <tr>
 <td><code>list_notes(vault_id, limit?)</code></td>

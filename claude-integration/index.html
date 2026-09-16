@@ -3123,7 +3123,7 @@
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
 <ul>
-<li><strong>"Search my research vault for causal inference"</strong> — full-text search across notes</li>
+<li><strong>"Search my research vault for causal inference"</strong> — searches note titles (bodies are not indexed)</li>
 <li><strong>"What are the most connected notes in MyVault?"</strong> — PageRank hub detection</li>
 <li><strong>"Create a note called 'Meeting 2026-06-15'"</strong> — note CRUD directly in Claude chat</li>
 <li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
@@ -3219,7 +3219,7 @@ path to <code>src/python/mcp_server.py</code> in your checkout.</p>
 <tr>
 <td><code>search_notes</code></td>
 <td><code>query</code>, <code>vault_id</code>, <code>limit</code></td>
-<td>Full-text search across notes</td>
+<td>Search note <strong>titles</strong> (bodies are not indexed)</td>
 </tr>
 <tr>
 <td><code>find_similar_notes</code></td>
