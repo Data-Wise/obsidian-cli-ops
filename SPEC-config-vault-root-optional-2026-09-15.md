@@ -114,3 +114,5 @@ Step 5: should `obs config validate` treat a vault-less-but-otherwise-valid
 config as OK or INVALID? Recommendation above is **(b)** — keep `validate`'s
 current pass/fail contract, fix only `load()`'s silent full-discard. Needs
 sign-off before coding starts.
+
+> Interrogated by grill — see [GRILL-config-vault-root-optional-2026-09-15.md](GRILL-config-vault-root-optional-2026-09-15.md)
