@@ -1,17 +1,37 @@
 priority: P1
-status: ✅ v4.3.1 RELEASED (doctor MCP diagnostics + drift-detection fixes)
+status: 🚧 v4.4.0 RELEASE IN PROGRESS (board.path override + config vault-less support)
 progress: 100
 updated: 2026-09-15
-version: 4.3.1
+version: 4.4.0
 next: |
   1. Merge or close 4 stale unmerged branches: feature/fix-broken-links-display (29d),
      feature/fix-cli-version-probe (28d), feature/package-dashboard-v3 (61d),
      feature/research-board-error-handling (61d)
-  2. Re-add the `obsidian-ops` entry to Claude Desktop's MCP config (`obs doctor` flags it FAIL)
-  3. Port plugin skills
-  4. Port vault template ops (low priority)
+  2. Re-add the `obsidian-ops` entry to Claude Desktop's MCP config (`obs doctor` flags it FAIL) —
+     also confirm whether this app version persists claude_desktop_config.json edits at all
+     (see memory mcp-config-app-owned-not-static)
+  3. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
+     the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
+     (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
+  4. Port plugin skills
+  5. Port vault template ops (low priority)
 verified: |
-  dev-only fixes, uncommitted-to-committed (2026-09-15, no release cut this session):
+  v4.4.0 release prep 2026-09-15: version bumped 4.3.1→4.4.0 across package.json,
+  package-lock.json, pyproject.toml, src/python/__init__.py, src/obs.zsh, man/man1/obs.1
+  (version+date), README.md (badges + prose, incl. stale Python-3.9%2B and
+  tests-450%2B-passing badges caught and fixed), CLAUDE.md, docs_mkdocs/index.md (badge only —
+  the "(v4.3.1)" tip below it is a historical record, left alone); version-gated tests
+  (tests/obs.test.js, __tests__/cli.test.js) updated to match. docs_mkdocs/changelog.md
+  [Unreleased] section converted to a `## v4.4.0` heading. validate-counts.sh clean
+  (63/42/4/5), mandoc -Tlint clean, mkdocs build --strict clean. Full suite: 636 pytest
+  passed/4 skipped (unchanged); Jest 70/72 passed — the 2 dep_bootstrap.test.js failures are
+  a confirmed PRE-EXISTING, environment-only gap (this machine's ambient python3 is 3.9.6;
+  requirements.lock pins networkx==3.6.1, which requires Python>=3.10 per PyPI — reproduces
+  identically regardless of branch/commit, confirmed via `pip index versions networkx` on
+  ambient python3 capping at 3.2.1). Not a regression from the 3.9→3.10 floor bump; that fix
+  didn't touch requirements.lock or install.sh's interpreter selection.
+
+  dev-only fixes, uncommitted-to-committed (2026-09-15, prior to this release cut):
   (1) Python floor raised 3.9→3.10 (e1f5c6d) — pyproject.toml's `requires-python = ">=3.9"` was
   unresolvable: `mcp>=1.27.2` is a core (non-optional) dependency requiring Python >=3.10, so pip/uv
   dependency resolution failed outright on 3.9 (confirmed via uv's resolver); CI never actually

@@ -6,6 +6,8 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+## v4.4.0 (2026-09-15) — Board path override + config vault-less support
+
 ### Added
 
 - **`obs board refresh --out <path>`** — override the board file location at the CLI layer (absolute, or relative to the vault root). Precedence: `--out` > `board.path` in `~/.config/obs/config.yaml` > built-in default. Closes the Issue #86 follow-up (the board silently wrote to the wrong path for weeks with no override available).
