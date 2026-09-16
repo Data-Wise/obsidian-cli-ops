@@ -18,6 +18,7 @@ from typing import Any, Optional
 
 import yaml
 
+import config_loader
 from .vault_manager import VaultManager
 from db_manager import DatabaseManager  # noqa: E402
 
@@ -439,10 +440,10 @@ class BoardEngine:
         board_file = self._resolve_board_path(vault, board_rel_path)
         return self._writer.write(board_file, block, dry_run=dry_run)
 
-    def refresh_all(self, dry_run: bool = False) -> list[dict]:
+    def refresh_all(self, dry_run: bool = False, board_rel_path: str | None = None) -> list[dict]:
         results: list[dict] = []
         for v in self._vm.list_vaults():
-            result = self.refresh(v.id, dry_run=dry_run)
+            result = self.refresh(v.id, dry_run=dry_run, board_rel_path=board_rel_path)
             results.append(result)
         return results
 
@@ -469,24 +470,43 @@ class BoardEngine:
             "drift": self._has_drift(vault.id),
         }
 
-    def refresh_for_vault_name(self, name: str, dry_run: bool = False) -> dict:
+    def refresh_for_vault_name(
+        self,
+        name: str,
+        dry_run: bool = False,
+        board_rel_path: str | None = None,
+    ) -> dict:
         """Refresh based on vault display name (e.g. 'Research' -> Documents/Research)."""
         vaults = self._vm.list_vaults()
         # Try exact match
         for v in vaults:
             if v.name.lower() == name.lower():
-                return self.refresh(v.id, dry_run=dry_run)
+                return self.refresh(v.id, dry_run=dry_run, board_rel_path=board_rel_path)
         # Try prefix match (e.g. 'Doc' matches 'Documents')
         for v in vaults:
             if v.name.lower().startswith(name.lower()):
-                return self.refresh(v.id, dry_run=dry_run)
+                return self.refresh(v.id, dry_run=dry_run, board_rel_path=board_rel_path)
         return {"error": f"Vault not found by name: {name}", "path": "", "changed": False}
 
     def _resolve_board_path(self, vault, board_rel_path: str | None = None) -> Path:
-        """Resolve board file path, checking known sub-vaults then vault-root."""
+        """Resolve board file path.
+
+        Precedence (highest first):
+          1. ``board_rel_path`` — explicit caller/CLI argument (``obs board refresh --out``)
+          2. ``board.path`` in ``~/.config/obs/config.yaml`` — per-machine override
+          3. built-in default — ``<vault>/[Research/]Engineering/_ACTION-BOARD.md``
+
+        Levels 1 and 2 accept either an absolute path or one relative to the
+        vault root. Nothing is auto-detected: if you move the board, say so in
+        config, or the deterministic block silently lands somewhere no consumer
+        reads (see Issue #86, which moved this path with no override available).
+        """
         vault_root = Path(vault.path).expanduser()
-        if board_rel_path:
-            return vault_root / board_rel_path
+
+        override = board_rel_path or self._configured_board_path()
+        if override:
+            candidate = Path(override).expanduser()
+            return candidate if candidate.is_absolute() else vault_root / candidate
 
         # Prefer known sub-vaults (e.g. Research/ inside Documents/) if the directory exists.
         for sub in ("Research",):
@@ -496,6 +516,30 @@ class BoardEngine:
 
         # Fall back to vault-root path
         return vault_root / "Engineering" / "_ACTION-BOARD.md"
+
+    @staticmethod
+    def _configured_board_path() -> str | None:
+        """Read ``board.path`` from the unified config, or None if unset.
+
+        Reads via ``config_loader.read_unified_doc()`` — the same file config_loader.py
+        owns — rather than re-parsing ``~/.config/obs/config.yaml`` independently.
+        Deliberately does NOT go through ``config_loader.load()``/``ObsConfig``: that
+        entry point requires ``vault.root`` to be set and returns None otherwise, which
+        would silently drop a board-only config (no ``vault:`` section at all) that has
+        nothing to do with the rest of ``obs config``.
+
+        Tolerant by design: a missing, unreadable, or malformed config falls through to
+        the built-in default rather than failing the refresh.
+        """
+        try:
+            doc = config_loader.read_unified_doc()
+            if not doc:
+                return None
+            value = (doc.get("board") or {}).get("path")
+            return str(value).strip() or None if value else None
+        except Exception as exc:  # noqa: BLE001 - config must never break refresh
+            log.warning("Ignoring unreadable board.path in ~/.config/obs/config.yaml: %s", exc)
+            return None
 
     def _collect_projects(self) -> list[ProjectStatus]:
         sources: list[list[ProjectStatus]] = []

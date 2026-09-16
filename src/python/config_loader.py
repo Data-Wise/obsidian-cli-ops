@@ -134,13 +134,27 @@ def _expand(raw: str) -> Path:
     return Path(os.path.expanduser(raw))
 
 
-def _load_unified() -> Optional[ObsConfig]:
+def read_unified_doc() -> Optional[dict]:
+    """Read + parse ``~/.config/obs/config.yaml``, or None if it doesn't exist.
+
+    Public on purpose: callers that need one optional key (e.g. BoardEngine's
+    ``board.path``) and must not be gated on ``vault.root`` being set should
+    read the file through here rather than re-implementing this existence
+    check + YAML parse — see ``_load_unified()`` below, which additionally
+    requires ``vault.root`` and returns a full ``ObsConfig``.
+    """
     path = _UNIFIED_PATH.expanduser()
     if not path.exists():
         return None
     if yaml is None:
         raise RuntimeError("PyYAML required for config loading: pip install pyyaml")
-    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+
+
+def _load_unified() -> Optional[ObsConfig]:
+    doc = read_unified_doc()
+    if doc is None:
+        return None
     v = doc.get("vault", {})
     root_raw = v.get("root")
     if not root_raw:
