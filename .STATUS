@@ -14,6 +14,23 @@ next: |
   3. Port plugin skills
   4. Port vault template ops (low priority)
 verified: |
+  configure_mcp.py Cellar-path bug fixed 2026-09-16 (post-v4.4.1, on
+  claude/happy-lovelace-d8288e, not yet merged): `repo_dir = Path(__file__).resolve()`
+  plus three more `.resolve()` calls on the derived server-script path dereferenced
+  Homebrew's `opt/` stable symlink down to the version-pinned Cellar path whenever the
+  script ran via the tap's own caveats-suggested invocation
+  (`python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py`) —
+  baking a path `brew upgrade` deletes into the registered `claude mcp add` args. Same
+  fragility class as the v4.4.0 venv_python `.resolve()` fix, this time for the server
+  script rather than the interpreter; `_resolve_python()`'s interpreter path was
+  unaffected (it re-derives via `brew --prefix` independently). Dropped all 4
+  `.resolve()` calls on the `__file__`-derived path. New regression test
+  `src/python/tests/test_configure_mcp_symlink.py` (subprocess-level, opt/-symlink
+  layout, no `claude` on PATH so no live-registry side effects) — confirmed it FAILS
+  against the pre-fix code (planted-defect check) and PASSES against the fix. Full
+  suite re-run in an ephemeral `uv run --python 3.12` env (no local dev venv with
+  pytest+py>=3.10 was available): 637 passed / 142 skipped, no regressions. Not yet
+  committed/PR'd — awaiting instruction.
   v4.4.1 release prep 2026-09-16: version bumped 4.4.0→4.4.1 across pyproject.toml, package.json,
   package-lock.json (lines 3 & 9), src/python/__init__.py, src/obs.zsh (header comment + VERSION=),
   man/man1/obs.1 (.TH line + date), README.md (badge + 2 version mentions), CLAUDE.md, and

@@ -60,8 +60,13 @@ def _resolve_python() -> Path:
 def main():
     print(f"Registering {SERVER_NAME} MCP server via the claude CLI...")
 
-    # 1. Resolve absolute paths
-    repo_dir = Path(__file__).resolve().parent.parent
+    # 1. Resolve absolute paths. Deliberately NOT .resolve()'d -- see the
+    # venv_python note below. When invoked via the Homebrew opt/ symlink
+    # (`python3 $(brew --prefix obsidian-cli-ops)/libexec/scripts/configure_mcp.py`,
+    # as the tap caveats suggest), .resolve() would dereference opt/ down to
+    # the version-pinned Cellar path and bake that into the `claude mcp add`
+    # args, breaking registration on the next `brew upgrade`.
+    repo_dir = Path(__file__).parent.parent
     server_script = repo_dir / "src" / "python" / "mcp_server.py"
 
     if not server_script.exists():
@@ -76,13 +81,13 @@ def main():
     # (added v4.3.1) warns about.
     venv_python = _resolve_python()
     print(f"   Python interpreter: {venv_python}")
-    print(f"   MCP server script:  {server_script.resolve()}")
+    print(f"   MCP server script:  {server_script}")
 
     claude_bin = shutil.which("claude")
     if not claude_bin:
         print("Error: `claude` CLI not found on PATH -- cannot register MCP server.", file=sys.stderr)
         print("Install/update Claude Code, then re-run this script, or register manually:", file=sys.stderr)
-        print(f"  claude mcp add {SERVER_NAME} -s user -- {venv_python} {server_script.resolve()}", file=sys.stderr)
+        print(f"  claude mcp add {SERVER_NAME} -s user -- {venv_python} {server_script}", file=sys.stderr)
         sys.exit(1)
 
     # Remove any stale registration first so re-running this script (e.g.
@@ -96,7 +101,7 @@ def main():
     result = subprocess.run(
         [
             claude_bin, "mcp", "add", SERVER_NAME, "-s", "user", "--",
-            str(venv_python), str(server_script.resolve()),
+            str(venv_python), str(server_script),
         ],
         capture_output=True,
         text=True,
