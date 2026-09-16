@@ -158,13 +158,20 @@ Use
 Exits 0 when all checks pass/warn; 1 on any fail; 2 on unexpected error.
 .SS Board Management
 .TP
-.B board refresh\fR [\fB\-\-vault\fR \fIname\fR] [\fB\-\-all\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR]
+.B board refresh\fR [\fB\-\-vault\fR \fIname\fR] [\fB\-\-all\fR] [\fB\-\-dry\-run\fR] [\fB\-\-out\fR \fIpath\fR] [\fB\-\-json\fR]
 Refresh the \fI_ACTION\-BOARD.md\fR file from atlas project state, vault stats,
 and \fI.STATUS\fR files. Defaults to the first research vault; use
 .B \-\-all
 to update all vaults and
 .B \-\-dry\-run
-to preview without writing.
+to preview without writing. Use
+.B \-\-out
+to override the board file location (absolute, or relative to the vault
+root); takes precedence over a
+.B board.path
+key in \fI~/.config/obs/config.yaml\fR, which itself overrides the built\-in
+default (\fIEngineering/_ACTION\-BOARD.md\fR, or \fIResearch/Engineering/\fR
+when a \fIResearch/\fR sub\-vault exists).
 .TP
 .B board status\fR [\fB\-\-vault\fR \fIname\fR] [\fB\-\-all\fR] [\fB\-\-json\fR]
 Show whether the board file exists, when it was last refreshed, and whether

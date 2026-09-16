@@ -167,7 +167,7 @@ obs_help() {
         echo ""
 
         echo "📋 RESEARCH BOARD"
-        echo "  obs board refresh [--all] [--dry-run]  Refresh research board from atlas state"
+        echo "  obs board refresh [--all] [--dry-run] [--out PATH]  Refresh research board from atlas state"
         echo "  obs board status          Show board refresh status"
         echo ""
 

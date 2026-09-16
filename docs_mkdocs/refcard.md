@@ -34,7 +34,7 @@
 | `obs stale <vault> [--limit N] [--json]` | Stale high-importance notes |
 | `obs daily-digest <vault> [--days N] [--limit N] [--json]` | Bridge + trends + stale |
 | `obs doctor [--vault V] [--layer L] [--json]` | 7-layer self-diagnostic |
-| `obs board refresh [--vault V] [--all] [--dry-run] [--json]` | Generate `_ACTION-BOARD.md` |
+| `obs board refresh [--vault V] [--all] [--dry-run] [--out PATH] [--json]` | Generate `_ACTION-BOARD.md` |
 | `obs board status [--vault V] [--all] [--json]` | Board refresh status |
 
 ## :robot: AI Commands

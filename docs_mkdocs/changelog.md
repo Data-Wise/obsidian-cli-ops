@@ -6,6 +6,17 @@ All notable changes to Obsidian CLI Ops.
 
 ## [Unreleased]
 
+### Added
+
+- **`obs board refresh --out <path>`** — override the board file location at the CLI layer (absolute, or relative to the vault root). Precedence: `--out` > `board.path` in `~/.config/obs/config.yaml` > built-in default. Closes the Issue #86 follow-up (the board silently wrote to the wrong path for weeks with no override available).
+- **`board.path` config key** in `~/.config/obs/config.yaml` — a per-machine override for the board file location, read via a new `config_loader.read_unified_doc()` helper (shared with `obs config`'s own loader, no duplicate YAML parsing).
+- **`config_loader.ObsConfig.root` is now optional** — a config with no `vault:` section (e.g. `board.path`-only) is no longer silently discarded; `obs config show` reports it instead of "no config found". `obs config validate` is unchanged and still requires `vault.root`.
+
+### Fixed
+
+- **Python floor raised to 3.10** — `requires-python = ">=3.9"` was unresolvable: `mcp>=1.27.2` is a core dependency requiring Python >=3.10, so installs on 3.9 failed outright. CI never actually tested 3.9 (matrix is 3.11/3.12 only).
+- **`scripts/configure_mcp.py` interpreter pinning** — every write of the MCP entry's `command` called `.resolve()` on the venv interpreter path, dereferencing its symlink down to a version-pinned Homebrew Cellar path — exactly the fragility `obs doctor`'s `mcp-interpreter` check exists to catch. Dropped the `.resolve()` call so the stable symlink is written instead.
+
 ## v4.3.1 (2026-08-17) — Doctor MCP diagnostics + drift-detection fixes
 
 ### Fixes
