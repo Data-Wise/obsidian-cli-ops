@@ -36,7 +36,7 @@ If not already installed:
 
 ```bash
 brew install data-wise/tap/obsidian-cli-ops
-obs version   # should print 3.3.0
+obs version   # should print 4.4.2 or newer
 ```
 
 The Homebrew formula includes `mcp==1.27.2` and all transitive deps in an isolated
