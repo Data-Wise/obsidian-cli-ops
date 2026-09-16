@@ -1,17 +1,19 @@
 priority: P1
-status: 🔜 v4.4.2 PR OPEN (dev→main) — configure_mcp.py symlink fix + tap post_install_steps
-progress: 99
+status: ✅ v4.4.2 RELEASED — configure_mcp.py symlink fix + tap post_install_steps
+progress: 100
 updated: 2026-09-16
 version: 4.4.2
 next: |
-  1. Merge the dev→main release PR, tag v4.4.2, publish the GitHub release, sync the
-     Homebrew tap
-  2. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
+  1. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
      the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
      (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
-  3. Port plugin skills
-  4. Port vault template ops (low priority)
+  2. Port plugin skills
+  3. Port vault template ops (low priority)
 verified: |
+  v4.4.2 RELEASED 2026-09-16: release PR #106 (dev→main, regular merge aeb2c55), main CI
+  green (CI + Deploy Docs), tag v4.4.2 + GitHub release published
+  (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.4.2), Homebrew tap
+  auto-synced (data-wise/homebrew-tap PR #226, auto-merged). dev/main back in sync.
   data-wise/homebrew-tap PR #225 merged 2026-09-16 (squash 698e195, tap `main`):
   migrated `post_install` (deprecated) to `post_install_steps` on the obsidian-cli-ops
   formula. The DSL's `run` block is evaluated at formula-definition (class-body) time,
