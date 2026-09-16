@@ -2707,7 +2707,7 @@ First time: <code>obs board refresh &amp;&amp; obs board status</code></p>
 <p>Use Claude Desktop to query and edit your vaults in natural language:</p>
 <pre class="mermaid"><code>graph TD
     A[Claude Desktop] --&gt; B{obsidian-ops MCP connected?}
-    B --&gt;|No| C[claude_desktop_config.json setup]
+    B --&gt;|No| C[Run configure_mcp.py]
     C --&gt; D[Restart Claude Desktop]
     D --&gt; A
     B --&gt;|Yes| E[Natural language query]
