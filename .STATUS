@@ -1,11 +1,11 @@
 priority: P1
-status: ✅ v4.4.1 RELEASED — post-release follow-ups merged (configure_mcp.py symlink fix + tap post_install_steps)
-progress: 98
+status: 🔜 v4.4.2 PR OPEN (dev→main) — configure_mcp.py symlink fix + tap post_install_steps
+progress: 99
 updated: 2026-09-16
-version: 4.4.1
+version: 4.4.2
 next: |
-  1. dev is 1 commit ahead of main (PR #105, b81c47a — configure_mcp.py symlink fix) —
-     not yet in a released version; fold into the next version bump (v4.4.2 or v4.5.0)
+  1. Merge the dev→main release PR, tag v4.4.2, publish the GitHub release, sync the
+     Homebrew tap
   2. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
      the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
      (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
