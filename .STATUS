@@ -10,6 +10,20 @@ next: |
   2. Port plugin skills
   3. Port vault template ops (low priority)
 verified: |
+  Stale MCP setup docs fixed 2026-09-16 (PR #107 merge 1ab7c8d, PR #108 merge a961d25,
+  both dev→main): claude-integration.md, tutorials/claude-mcp.md, MCP_README.md, and
+  the workflows.md diagram still told readers to hand-edit
+  claude_desktop_config.json with a per-user hardcoded path — the exact mechanism
+  retired by configure_mcp.py/`claude mcp add` in v4.4.1/v4.4.2. Rewrote setup +
+  troubleshooting sections to the current flow (run configure_mcp.py, verify via
+  `claude mcp list` / `obs doctor --layer mcp`). Removed mcp_config.json (unreferenced,
+  hardcoded another user's home dir). Also fixed a stale `obs version # should print
+  3.3.0` in the claude-mcp tutorial (PR #108). mkdocs build --strict clean both times;
+  live site verified post-deploy (fetched claude-integration/ page, confirmed
+  configure_mcp.py instructions + v4.4.2 sidebar badge). Caught mid-fix: `git add
+  file1 file2 ... badpath` silently aborts staging ALL listed paths when one doesn't
+  match a file on disk — a `git rm`'d path in the same `git add` call dropped 4 real
+  edits with no error; recovered by checking `git show --stat HEAD` and re-staging.
   v4.4.2 RELEASED 2026-09-16: release PR #106 (dev→main, regular merge aeb2c55), main CI
   green (CI + Deploy Docs), tag v4.4.2 + GitHub release published
   (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.4.2), Homebrew tap
