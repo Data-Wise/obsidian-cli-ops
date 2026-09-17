@@ -10,6 +10,23 @@ next: |
   2. Port plugin skills
   3. Port vault template ops (low priority)
 verified: |
+  obsidian-ops MCP live-verified 2026-09-16 (session restart picked up the registration):
+  `server_info` reports server_version 4.4.2 == installed_version 4.4.2,
+  restart_recommended false; `list_vaults`/`search_notes`/`create_note`/`rescan_vault`/
+  `analyze_vault` all confirmed working end-to-end against a real vault
+  ("Obsidian Vault", ID d79436e8e20be92f). Session report synced there too
+  (Engineering/dev-tools/obsidian-cli-ops/Session-Report-2026-09-16.md) — caught
+  `create_note`'s param is `subfolder`, not `folder` (passing the wrong name is a
+  silent no-op, not an error, so the note landed at vault root); fixed by moving the
+  file + rescan + analyze_vault to re-index at the correct path. Cache written to
+  .remember/obsidian-vault.yml (gitignored) for future syncs.
+  10 stale branches triaged + deleted 2026-09-16 (5 local, 5 remote): claude/happy-lovelace-d8288e
+  (PR #105), claude/vigorous-leakey-2d3c4b (PR #91), feature/doctor-mcp-interpreter (PR #96),
+  meme/hungry-boyd-4d74d0 (PR #97), release/v4.3.1 (PR #98) — all merged. feature/package-dashboard
+  and meme/admiring-thompson-d46555 had zero diff vs their own merge-base (no unique work).
+  feature/package-dashboard-v2 (PR #89 CLOSED) had its feature (_cran_badge/_package_row in
+  research_board.py) confirmed already present in dev verbatim. Two stale worktree registrations
+  (pointing at a nonexistent /Users/dt/... path) blocked deletion until `git worktree prune`.
   Stale MCP setup docs fixed 2026-09-16 (PR #107 merge 1ab7c8d, PR #108 merge a961d25,
   both dev→main): claude-integration.md, tutorials/claude-mcp.md, MCP_README.md, and
   the workflows.md diagram still told readers to hand-edit
