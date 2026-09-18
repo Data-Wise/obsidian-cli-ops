@@ -4,6 +4,12 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## Unreleased
+
+### Fixed
+
+- **Manual installer Python preflight** — `install.sh` now checks the ambient `python3` version before creating the isolated environment or invoking `pip`. Python 3.9 and older exit with a direct Python 3.10+ requirement instead of failing later during dependency resolution.
+
 ## v4.4.2 (2026-09-16) — configure_mcp.py symlink fix + Homebrew tap post_install_steps
 
 ### Fixed

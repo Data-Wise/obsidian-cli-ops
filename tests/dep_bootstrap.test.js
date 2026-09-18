@@ -340,6 +340,13 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
   // "already provisioned" branch and never reaches pip (no network).
   function stagedInstall() {
     const home = mkdtemp();
+    const binDir = path.join(home, 'bin');
+    writeStubExecutable(
+      path.join(binDir, 'python3'),
+      '#!/bin/sh\n' +
+        'if [ "$1" = "-c" ]; then printf "3 12 3.12.0\\n"; exit 0; fi\n' +
+        'exit 99\n'
+    );
     const venvPy = path.join(home, '.local/share/obs/venv/bin/python');
     writeStubExecutable(venvPy);
     fs.writeFileSync(
@@ -347,7 +354,7 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
       sha256OfFile(LOCKFILE)
     );
     const out = execFileSync('bash', [INSTALL_SCRIPT], {
-      env: cleanEnv({ HOME: home }),
+      env: cleanEnv({ HOME: home, PATH: `${binDir}:${process.env.PATH}` }),
       encoding: 'utf8',
     });
     return { home, out };
@@ -388,6 +395,37 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
     expect(`${err.stderr || ''}${err.stdout || ''}`).toMatch(
       /requirements\.lock not found/i
     );
+  });
+
+  test('rejects an ambient Python older than 3.10 before creating a venv', () => {
+    const home = mkdtemp();
+    const projectDir = mkdtemp();
+    const installCopy = path.join(projectDir, 'install.sh');
+    fs.copyFileSync(INSTALL_SCRIPT, installCopy);
+    fs.copyFileSync(LOCKFILE, path.join(projectDir, 'requirements.lock'));
+    fs.chmodSync(installCopy, 0o755);
+    const binDir = path.join(home, 'bin');
+    const python3 = path.join(binDir, 'python3');
+    writeStubExecutable(
+      python3,
+      '#!/bin/sh\n' +
+        'if [ "$1" = "-c" ]; then printf "3 9\\n"; exit 0; fi\n' +
+        'exit 99\n'
+    );
+
+    const result = spawnSync('bash', [installCopy], {
+      env: cleanEnv({
+        HOME: home,
+        PATH: `${binDir}:/usr/bin:/bin`,
+      }),
+      encoding: 'utf8',
+    });
+
+    expect(result.status).not.toBe(0);
+    expect(`${result.stderr || ''}${result.stdout || ''}`).toMatch(
+      /Python 3\.10 or newer is required.*found 3\.9/i
+    );
+    expect(fs.existsSync(path.join(home, '.local/share/obs/venv'))).toBe(false);
   });
 });
 
