@@ -44,7 +44,9 @@ This installs `obs` with all Python dependencies in an **isolated virtual enviro
     This creates an isolated virtual environment at `~/.local/share/obs/venv`,
     installs the pinned dependencies from `requirements.lock`, and symlinks the
     `obs.zsh` launcher into `~/.config/zsh/functions`. It is **idempotent** — it
-    only re-provisions when `requirements.lock` changes. No manual `pip` needed.
+    only re-provisions when `requirements.lock` changes. Before provisioning,
+    the installer verifies that the ambient `python3` is version 3.10 or newer
+    and reports the detected version when it is too old. No manual `pip` needed.
 
     !!! note "Why not `pip install`?"
         Installing into your system/ambient Python is fragile: a `python@3.x`
@@ -141,6 +143,10 @@ If `obs` reports a Python error, ensure `/opt/homebrew/bin/python3` (macOS) or `
 ```bash
 export OBS_PYTHON=/path/to/python3
 ```
+
+The manual installer itself uses the `python3` found on `PATH` to create its
+isolated environment and requires Python 3.10 or newer. Confirm the version with
+`python3 --version` before rerunning `./install.sh`.
 
 ### ZSH autoload not working
 

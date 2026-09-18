@@ -1,15 +1,18 @@
 priority: P1
-status: ✅ v4.4.2 RELEASED — configure_mcp.py symlink fix + tap post_install_steps
+status: 🔧 v4.4.2 DEV — manual installer Python 3.10 preflight
 progress: 100
-updated: 2026-09-16
+updated: 2026-09-18
 version: 4.4.2
 next: |
-  1. requirements.lock's networkx==3.6.1 requires Python>=3.10 but install.sh doesn't gate on
-     the ambient interpreter before invoking pip — fails cryptically on a <3.10 ambient python3
-     (dep_bootstrap.test.js, 2 known-failing tests, documented not fixed 2026-09-15)
-  2. Port plugin skills
-  3. Port vault template ops (low priority)
+  1. Port plugin skills
+  2. Port vault template ops (low priority)
 verified: |
+  Manual installer Python floor gate implemented 2026-09-18: install.sh now checks its ambient
+  bootstrap interpreter before creating the venv or invoking pip and reports the detected version
+  when it is below Python 3.10. Added a deterministic Python 3.9 regression test and updated the
+  supported-Python fixtures. Validation: 71 Jest passed / 2 skipped; 637 pytest passed / 142
+  skipped on Python 3.12; ESLint clean; validate-counts clean; mkdocs build --strict clean;
+  bash -n and git diff --check clean.
   obsidian-ops MCP live-verified 2026-09-16 (session restart picked up the registration):
   `server_info` reports server_version 4.4.2 == installed_version 4.4.2,
   restart_recommended false; `list_vaults`/`search_notes`/`create_note`/`rescan_vault`/
