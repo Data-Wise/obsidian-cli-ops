@@ -161,7 +161,7 @@ obs version                     # Show version
 
 ## 🧪 Test Coverage
 
-- **450+ pytest + 69 Jest** tests passing (2 Jest network-gated, run in CI; +32 E2E gated behind `E2E=1`)
+- **640 pytest + 86 Jest** tests passing (2 Jest install tests run in CI; +138 E2E gated behind `E2E=1`)
 - CI: GitHub Actions on push/PR to `main` and `dev`
 - Python coverage reporting via `pytest-cov`
 

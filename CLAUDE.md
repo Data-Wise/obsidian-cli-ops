@@ -31,7 +31,7 @@ Developer guide for Claude Code when working with this repository.
 - **NetworkX**: Graph analysis
 - **Rich**: CLI output formatting
 - **Gemini/Anthropic/Claude/Ollama**: Multi-provider AI (optional)
-- **Pytest**: Testing harness (764 pytest + 69 Jest)
+- **Pytest**: Testing harness (640 pytest + 138 E2E + 86 Jest)
 
 ## Architecture
 
@@ -111,10 +111,10 @@ obs version                     # Show version
 ### Testing
 
 ```bash
-pytest src/python/tests/        # 764 pytest tests passing
-pytest src/python/tests/test_mcp_server.py # 113 MCP unit tests
-E2E=1 pytest src/python/tests/e2e/ -v  # 48 E2E tests (requires real env)
-npx jest                        # 70 Jest tests passing (2 skipped)
+pytest src/python/tests/        # 640 pytest tests passing (+138 E2E skipped without E2E=1)
+pytest src/python/tests/test_mcp_server.py # 134 MCP unit tests
+E2E=1 pytest src/python/tests/e2e/ -v  # 138 E2E tests (requires real env)
+npx jest                        # 86 Jest tests (2 install tests need network + Python 3.10+)
 obs --verbose <command>         # Run any command with verbose output
 ```
 
@@ -138,7 +138,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `core/` - Business logic (1,128 lines)
   - `obs_cli.py` - CLI interface (985 lines)
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
-  - `tests/` - Test suite (764 pytest + 113 MCP unit + 48 E2E pytest tests)
+  - `tests/` - Test suite (640 pytest incl. 134 MCP unit, + 138 E2E pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
 
 ### Documentation
