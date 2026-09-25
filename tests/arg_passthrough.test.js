@@ -21,7 +21,6 @@ let tmp;
 let stub;
 
 beforeAll(() => {
-  // No spaces here: _obs_resolve_python checks -x on "${OBS_PYTHON%% *}".
   tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'obs-argv-'));
   stub = path.join(tmp, 'python-stub');
   fs.writeFileSync(stub, '#!/bin/sh\nfor a in "$@"; do printf "%s\\n" "$a"; done\n');
@@ -100,5 +99,29 @@ describe('obs vault argument pass-through', () => {
   test('delete --force with a spaced vault name', () => {
     expect(argvFor('vault', 'delete', 'Obsidian Vault', '--force'))
       .toEqual(['vault', 'delete', 'Obsidian Vault', '--force']);
+  });
+});
+
+describe('OBS_PYTHON resolution', () => {
+  test('an interpreter path containing spaces is honored', () => {
+    const dir = path.join(tmp, 'dir with spaces');
+    fs.mkdirSync(dir, { recursive: true });
+    const spaced = path.join(dir, 'python stub');
+    fs.copyFileSync(stub, spaced);
+    fs.chmodSync(spaced, 0o755);
+    const env = { ...process.env, HOME: tmp, OBS_PYTHON: spaced };
+    delete env.XDG_DATA_HOME;
+    const res = spawnSync(ZSH, [OBS_SCRIPT, 'vault', 'info', 'My Vault'], { encoding: 'utf8', env });
+    const lines = res.stdout.split('\n').filter((l) => l !== '');
+    expect(lines.slice(-4))
+      .toEqual([expect.stringMatching(/obs_cli\.py$/), 'vault', 'info', 'My Vault']);
+  });
+
+  test('a non-executable OBS_PYTHON warns before falling back', () => {
+    const env = { ...process.env, HOME: tmp, OBS_PYTHON: path.join(tmp, 'no such python') };
+    delete env.XDG_DATA_HOME;
+    const res = spawnSync(ZSH, [OBS_SCRIPT, 'version'], { encoding: 'utf8', env });
+    expect(res.stderr).toContain('OBS_PYTHON');
+    expect(res.stderr).toContain('not executable');
   });
 });

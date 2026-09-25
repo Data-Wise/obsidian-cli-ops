@@ -232,25 +232,57 @@ class TestVaultTools:
         result = mcp_mod.get_vault_stats()
         assert isinstance(result, str)
 
+    @staticmethod
+    def _discover(mcp_mod, path, **kw):
+        """Await discover_vaults inside a running loop, as FastMCP does (#62)."""
+        async def _call():
+            return await mcp_mod.discover_vaults(path, **kw)
+        return asyncio.run(_call())
+
+    @staticmethod
+    def _make_vault(root, name):
+        vault = root / name
+        (vault / ".obsidian").mkdir(parents=True)
+        (vault / "a.md").write_text("# a\n\n[[b]]\n")
+        (vault / "b.md").write_text("# b\n")
+        return vault
+
+    def _paths(self, mcp_mod):
+        return {v.path for v in mcp_mod.vault_manager.list_vaults()}
+
     def test_discover_vaults_parent_dir(self, mcp_mod, obs_vault):
         _, vault_dir, _ = obs_vault
-        result = mcp_mod.discover_vaults(str(vault_dir.parent))
+        result = self._discover(mcp_mod, str(vault_dir.parent))
         assert isinstance(result, str)
 
-    def test_discover_vaults_is_find_only(self, mcp_mod, obs_vault, tmp_path):
-        """discover_vaults reports vaults but must not register them."""
-        new_vault = tmp_path / "Found Vault"
-        (new_vault / ".obsidian").mkdir(parents=True)
-        (new_vault / "a.md").write_text("# a\n")
-        before = {v.path for v in mcp_mod.vault_manager.list_vaults()}
-        result = mcp_mod.discover_vaults(str(tmp_path))
+    def test_discover_vaults_is_find_only_by_default(self, mcp_mod, obs_vault, tmp_path):
+        """Default scan=False reports vaults but must not register them."""
+        self._make_vault(tmp_path, "Found Vault")
+        before = self._paths(mcp_mod)
+        result = self._discover(mcp_mod, str(tmp_path))
         assert "Found Vault" in result
         assert "NOT registered" in result
-        after = {v.path for v in mcp_mod.vault_manager.list_vaults()}
-        assert after == before
+        assert self._paths(mcp_mod) == before
+
+    def test_discover_vaults_scan_registers_new_vault(self, mcp_mod, tmp_path):
+        vault = self._make_vault(tmp_path, "Scan Me Vault")
+        result = self._discover(mcp_mod, str(tmp_path), scan=True)
+        assert "registered as **Scan Me Vault**" in result
+        assert "2 notes" in result
+        assert str(vault.resolve()) in self._paths(mcp_mod)
+
+    def test_discover_vaults_scan_skips_registered_and_keeps_name(self, mcp_mod, tmp_path):
+        """scan=True must not rescan or rename a vault that is already registered."""
+        vault = self._make_vault(tmp_path, "folder-name")
+        asyncio.run(mcp_mod.vault_manager.scan_vault(str(vault), "Custom Name"))
+        result = self._discover(mcp_mod, str(tmp_path), scan=True)
+        assert "already registered as **Custom Name**" in result
+        names = {v.name for v in mcp_mod.vault_manager.list_vaults()
+                 if v.path == str(vault.resolve())}
+        assert names == {"Custom Name"}
 
     def test_discover_vaults_nonexistent(self, mcp_mod):
-        result = mcp_mod.discover_vaults("/no/such/path/e2e_xyz")
+        result = self._discover(mcp_mod, "/no/such/path/e2e_xyz")
         assert isinstance(result, str)
 
     # --- delete_vault: own throwaway vault so the shared fixture is untouched ---

@@ -36,10 +36,15 @@ ICLOUD_OBSIDIAN="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents"
 # Resolving to a bare `command -v python3` was the v3.2.0 crash: in the field it
 # landed on a dep-less python@3.x and obs died with ModuleNotFoundError: 'rich'.
 _obs_resolve_python() {
-    # 1. Honor an explicit override if its interpreter actually exists.
-    if [[ -n "$OBS_PYTHON" && -x "${OBS_PYTHON%% *}" ]]; then
-        echo "$OBS_PYTHON"
-        return 0
+    # 1. Honor an explicit override if its interpreter actually exists. The
+    #    whole value is the interpreter path (it may contain spaces); it is
+    #    never split into a command plus arguments.
+    if [[ -n "$OBS_PYTHON" ]]; then
+        if [[ -x "$OBS_PYTHON" ]]; then
+            echo "$OBS_PYTHON"
+            return 0
+        fi
+        echo "[obs] WARN: OBS_PYTHON=$OBS_PYTHON is not executable; ignoring it." >&2
     fi
 
     # 2. install.sh-provisioned user venv. Checked before brew so the common
@@ -277,7 +282,7 @@ obs_discover() {
     [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     cmd+=("discover" "${args[@]}")
 
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_scan() {
@@ -298,7 +303,7 @@ obs_scan() {
     [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     cmd+=("scan" "$@")
 
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_analyze() {
@@ -320,7 +325,7 @@ obs_analyze() {
     [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
     cmd+=("analyze" "$vault")
 
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_vaults() {
@@ -328,7 +333,7 @@ obs_vaults() {
 
     _log_verbose "Listing vaults in database"
 
-    $OBS_PYTHON "$python_cli" vaults
+    "$OBS_PYTHON" "$python_cli" vaults
 }
 
 obs_stats() {
@@ -338,9 +343,9 @@ obs_stats() {
     _log_verbose "Showing statistics"
 
     if [[ -n "$vault_id" ]]; then
-        $OBS_PYTHON "$python_cli" stats --vault "$vault_id"
+        "$OBS_PYTHON" "$python_cli" stats --vault "$vault_id"
     else
-        $OBS_PYTHON "$python_cli" stats
+        "$OBS_PYTHON" "$python_cli" stats
     fi
 }
 
@@ -356,7 +361,7 @@ obs_health() {
     _log_verbose "Running health check: $*"
 
     # Pass every argument through intact so `health --json <vault>` works too.
-    $OBS_PYTHON "$python_cli" health "$@"
+    "$OBS_PYTHON" "$python_cli" health "$@"
 }
 
 # --- AI Commands (v2.0) ---
@@ -369,12 +374,12 @@ obs_ai() {
     case "$subcmd" in
         status)
             _log_verbose "Showing AI provider status"
-            $OBS_PYTHON "$python_cli" "ai" "status"
+            "$OBS_PYTHON" "$python_cli" "ai" "status"
             ;;
 
         setup)
             _log_verbose "Running AI setup wizard"
-            $OBS_PYTHON "$python_cli" "ai" "setup"
+            "$OBS_PYTHON" "$python_cli" "ai" "setup"
             ;;
 
         test)
@@ -386,7 +391,7 @@ obs_ai() {
                 cmd+=(--provider "$2")
             fi
 
-            $OBS_PYTHON "${cmd[@]}"
+            "$OBS_PYTHON" "${cmd[@]}"
             ;;
 
         similar)
@@ -397,7 +402,7 @@ obs_ai() {
                 return 1
             fi
             _log_verbose "Finding similar notes"
-            $OBS_PYTHON "$python_cli" "ai" "similar" "$note_id"
+            "$OBS_PYTHON" "$python_cli" "ai" "similar" "$note_id"
             ;;
 
         analyze)
@@ -408,7 +413,7 @@ obs_ai() {
                 return 1
             fi
             _log_verbose "Analyzing note with AI"
-            $OBS_PYTHON "$python_cli" "ai" "analyze" "$note_id"
+            "$OBS_PYTHON" "$python_cli" "ai" "analyze" "$note_id"
             ;;
 
         duplicates)
@@ -419,7 +424,7 @@ obs_ai() {
                 return 1
             fi
             _log_verbose "Finding duplicate notes"
-            $OBS_PYTHON "$python_cli" "ai" "duplicates" "$vault_id"
+            "$OBS_PYTHON" "$python_cli" "ai" "duplicates" "$vault_id"
             ;;
 
         suggest-links)
@@ -437,7 +442,7 @@ obs_ai() {
                 shift 2
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            $OBS_PYTHON "${cmd[@]}"
+            "$OBS_PYTHON" "${cmd[@]}"
             ;;
 
         gaps)
@@ -455,7 +460,7 @@ obs_ai() {
                 shift 2
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            $OBS_PYTHON "${cmd[@]}"
+            "$OBS_PYTHON" "${cmd[@]}"
             ;;
 
         summarize)
@@ -473,7 +478,7 @@ obs_ai() {
                 shift 2
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            $OBS_PYTHON "${cmd[@]}"
+            "$OBS_PYTHON" "${cmd[@]}"
             ;;
 
         refactor)
@@ -496,7 +501,7 @@ obs_ai() {
                 fi
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-            $OBS_PYTHON "${cmd[@]}"
+            "$OBS_PYTHON" "${cmd[@]}"
             ;;
 
         merge-suggest)
@@ -522,7 +527,7 @@ obs_ai() {
                     *) subargs+=("$1"); shift ;;
                 esac
             done
-            $OBS_PYTHON "$python_cli" "${gflags[@]}" "ai" "merge-suggest" "$vault_id" "${subargs[@]}"
+            "$OBS_PYTHON" "$python_cli" "${gflags[@]}" "ai" "merge-suggest" "$vault_id" "${subargs[@]}"
             ;;
 
         tag-suggest)
@@ -547,7 +552,7 @@ obs_ai() {
                     *) subargs+=("$1"); shift ;;
                 esac
             done
-            $OBS_PYTHON "$python_cli" "${gflags[@]}" "ai" "tag-suggest" "$target" "${subargs[@]}"
+            "$OBS_PYTHON" "$python_cli" "${gflags[@]}" "ai" "tag-suggest" "$target" "${subargs[@]}"
             ;;
 
         quality)
@@ -570,7 +575,7 @@ obs_ai() {
                     *) subargs+=("$1"); shift ;;
                 esac
             done
-            $OBS_PYTHON "$python_cli" "${gflags[@]}" "ai" "quality" "$target" "${subargs[@]}"
+            "$OBS_PYTHON" "$python_cli" "${gflags[@]}" "ai" "quality" "$target" "${subargs[@]}"
             ;;
 
         *)
@@ -619,7 +624,7 @@ obs_search() {
         shift
     done
 
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 # --- Option D Commands Removed ---
@@ -648,7 +653,7 @@ obs_bridge() {
         cmd+=("$1")
         shift
     done
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_trends() {
@@ -668,7 +673,7 @@ obs_trends() {
         cmd+=("$1")
         shift
     done
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_stale() {
@@ -688,7 +693,7 @@ obs_stale() {
         cmd+=("$1")
         shift
     done
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_daily_digest() {
@@ -708,7 +713,7 @@ obs_daily_digest() {
         cmd+=("$1")
         shift
     done
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_doctor() {
@@ -734,27 +739,27 @@ obs_doctor() {
                 ;;
         esac
     done
-    $OBS_PYTHON "${cmd[@]}"
+    "$OBS_PYTHON" "${cmd[@]}"
 }
 
 obs_config() {
     local python_cli=$(_get_python_cli) || return 1
-    $OBS_PYTHON "$python_cli" config "$@"
+    "$OBS_PYTHON" "$python_cli" config "$@"
 }
 
 obs_research() {
     local python_cli=$(_get_python_cli) || return 1
-    $OBS_PYTHON "$python_cli" research "$@"
+    "$OBS_PYTHON" "$python_cli" research "$@"
 }
 
 obs_vault() {
     local python_cli=$(_get_python_cli) || return 1
-    $OBS_PYTHON "$python_cli" vault "$@"
+    "$OBS_PYTHON" "$python_cli" vault "$@"
 }
 
 obs_board() {
     local python_cli=$(_get_python_cli) || return 1
-    $OBS_PYTHON "$python_cli" board "$@"
+    "$OBS_PYTHON" "$python_cli" board "$@"
 }
 
 # --- Dispatch ---
