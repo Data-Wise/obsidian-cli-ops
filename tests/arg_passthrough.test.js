@@ -160,6 +160,54 @@ describe('obs stats argument pass-through', () => {
   });
 });
 
+describe('trailing value flag with no value (must not hang)', () => {
+  // A bare `shift 2` fails when one argument is left, so the loop never
+  // advanced and the wrapper spun forever. The flag is now passed alone and
+  // argparse reports the missing value.
+  test.each([
+    [
+      ['ai', 'suggest-links', 'N', '--limit'],
+      ['ai', 'suggest-links', 'N', '--limit'],
+    ],
+    [
+      ['ai', 'gaps', 'V', '--limit'],
+      ['ai', 'gaps', 'V', '--limit'],
+    ],
+    [
+      ['ai', 'summarize', 'V', '--limit'],
+      ['ai', 'summarize', 'V', '--limit'],
+    ],
+    [
+      ['ai', 'refactor', 'V', '--phase'],
+      ['ai', 'refactor', 'V', '--phase'],
+    ],
+    [
+      ['ai', 'merge-suggest', 'V', '--threshold'],
+      ['ai', 'merge-suggest', 'V', '--threshold'],
+    ],
+    [
+      ['ai', 'tag-suggest', 'V', '--provider'],
+      ['ai', 'tag-suggest', 'V', '--provider'],
+    ],
+    [
+      ['doctor', '--vault'],
+      ['doctor', '--vault'],
+    ],
+    [
+      ['doctor', '--layer'],
+      ['doctor', '--layer'],
+    ],
+  ])('%j', (input, expected) => {
+    expect(argvFor(...input)).toEqual(expected);
+  });
+
+  test('a flag value with spaces is still kept whole', () => {
+    expect(
+      argvFor('doctor', '--vault', 'Obsidian Vault', '--layer', 'sync')
+    ).toEqual(['doctor', '--vault', 'Obsidian Vault', '--layer', 'sync']);
+  });
+});
+
 describe('obs health argument pass-through', () => {
   test('--json before a spaced vault name', () => {
     expect(argvFor('health', '--json', 'Obsidian Vault')).toEqual([

@@ -9,6 +9,7 @@ All notable changes to Obsidian CLI Ops.
 ### Fixed
 
 - **`obs stats --json`** — `--json` is a global flag in `obs_cli.py` (it must precede `stats`), and the ZSH wrapper never forwarded it: `obs stats <vault> --json` silently printed the Rich panel, and `obs stats --json <vault>` failed (`--vault: expected one argument`). `obs_stats` now moves `--json`/`--verbose` before the subcommand wherever they appear, maps a bare positional to `--vault`, and passes a trailing `--vault` with no value through to argparse instead of looping forever on `shift 2`.
+- **Wrapper hang on a trailing value flag** — the same `shift 2` bug hung `obs ai suggest-links|gaps|summarize|refactor|merge-suggest|tag-suggest` and `obs doctor` (`--vault`, `--layer`) when a value flag was the last argument (e.g. `obs doctor --vault`): zsh's `shift 2` fails with one argument left, so the loop never advanced. Each loop now takes up to two arguments (`"${@[1,2]}"`) and shifts only what exists, so argparse reports the missing value.
 
 ## v4.5.0 (2026-09-25) — MCP vault registration + wrapper argument fixes
 
