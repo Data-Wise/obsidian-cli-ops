@@ -15,7 +15,9 @@ const path = require('path');
 const os = require('os');
 
 const OBS_SCRIPT = path.join(__dirname, '../src/obs.zsh');
-const ZSH = ['/bin/zsh', '/usr/bin/zsh', '/opt/homebrew/bin/zsh'].find(fs.existsSync) || 'zsh';
+const ZSH =
+  ['/bin/zsh', '/usr/bin/zsh', '/opt/homebrew/bin/zsh'].find(fs.existsSync) ||
+  'zsh';
 
 let tmp;
 let stub;
@@ -23,7 +25,10 @@ let stub;
 beforeAll(() => {
   tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'obs-argv-'));
   stub = path.join(tmp, 'python-stub');
-  fs.writeFileSync(stub, '#!/bin/sh\nfor a in "$@"; do printf "%s\\n" "$a"; done\n');
+  fs.writeFileSync(
+    stub,
+    '#!/bin/sh\nfor a in "$@"; do printf "%s\\n" "$a"; done\n'
+  );
   fs.chmodSync(stub, 0o755);
 });
 
@@ -43,22 +48,34 @@ function argvFor(...args) {
   return lines.slice(start + 1);
 }
 
-const VAULT_PATH = '/Users/me/Library/Mobile Documents/iCloud~md~obsidian/Documents/My Vault';
+const VAULT_PATH =
+  '/Users/me/Library/Mobile Documents/iCloud~md~obsidian/Documents/My Vault';
 
 describe('obs scan argument pass-through', () => {
   test('path first, spaced --name value', () => {
-    expect(argvFor('scan', VAULT_PATH, '--name', 'Eng Vault'))
-      .toEqual(['scan', VAULT_PATH, '--name', 'Eng Vault']);
+    expect(argvFor('scan', VAULT_PATH, '--name', 'Eng Vault')).toEqual([
+      'scan',
+      VAULT_PATH,
+      '--name',
+      'Eng Vault',
+    ]);
   });
 
   test('--name before the path', () => {
-    expect(argvFor('scan', '--name', 'Eng Vault', VAULT_PATH))
-      .toEqual(['scan', '--name', 'Eng Vault', VAULT_PATH]);
+    expect(argvFor('scan', '--name', 'Eng Vault', VAULT_PATH)).toEqual([
+      'scan',
+      '--name',
+      'Eng Vault',
+      VAULT_PATH,
+    ]);
   });
 
   test('--name=value form', () => {
-    expect(argvFor('scan', '--name=Eng Vault', VAULT_PATH))
-      .toEqual(['scan', '--name=Eng Vault', VAULT_PATH]);
+    expect(argvFor('scan', '--name=Eng Vault', VAULT_PATH)).toEqual([
+      'scan',
+      '--name=Eng Vault',
+      VAULT_PATH,
+    ]);
   });
 
   test('flags are not matched inside a path or name', () => {
@@ -67,15 +84,22 @@ describe('obs scan argument pass-through', () => {
   });
 
   test('--verbose global flag is forwarded before the subcommand', () => {
-    expect(argvFor('--verbose', 'scan', VAULT_PATH, '--prune'))
-      .toEqual(['--verbose', 'scan', VAULT_PATH, '--prune']);
+    expect(argvFor('--verbose', 'scan', VAULT_PATH, '--prune')).toEqual([
+      '--verbose',
+      'scan',
+      VAULT_PATH,
+      '--prune',
+    ]);
   });
 });
 
 describe('obs discover argument pass-through', () => {
   test('--scan before a spaced path', () => {
-    expect(argvFor('discover', '--scan', VAULT_PATH))
-      .toEqual(['discover', '--scan', VAULT_PATH]);
+    expect(argvFor('discover', '--scan', VAULT_PATH)).toEqual([
+      'discover',
+      '--scan',
+      VAULT_PATH,
+    ]);
   });
 
   test('defaults to the current directory', () => {
@@ -85,20 +109,30 @@ describe('obs discover argument pass-through', () => {
 
 describe('obs health argument pass-through', () => {
   test('--json before a spaced vault name', () => {
-    expect(argvFor('health', '--json', 'Obsidian Vault'))
-      .toEqual(['health', '--json', 'Obsidian Vault']);
+    expect(argvFor('health', '--json', 'Obsidian Vault')).toEqual([
+      'health',
+      '--json',
+      'Obsidian Vault',
+    ]);
   });
 });
 
 describe('obs vault argument pass-through', () => {
   test('delete dry-run with a spaced vault name', () => {
-    expect(argvFor('vault', 'delete', 'Obsidian Vault'))
-      .toEqual(['vault', 'delete', 'Obsidian Vault']);
+    expect(argvFor('vault', 'delete', 'Obsidian Vault')).toEqual([
+      'vault',
+      'delete',
+      'Obsidian Vault',
+    ]);
   });
 
   test('delete --force with a spaced vault name', () => {
-    expect(argvFor('vault', 'delete', 'Obsidian Vault', '--force'))
-      .toEqual(['vault', 'delete', 'Obsidian Vault', '--force']);
+    expect(argvFor('vault', 'delete', 'Obsidian Vault', '--force')).toEqual([
+      'vault',
+      'delete',
+      'Obsidian Vault',
+      '--force',
+    ]);
   });
 });
 
@@ -111,16 +145,30 @@ describe('OBS_PYTHON resolution', () => {
     fs.chmodSync(spaced, 0o755);
     const env = { ...process.env, HOME: tmp, OBS_PYTHON: spaced };
     delete env.XDG_DATA_HOME;
-    const res = spawnSync(ZSH, [OBS_SCRIPT, 'vault', 'info', 'My Vault'], { encoding: 'utf8', env });
+    const res = spawnSync(ZSH, [OBS_SCRIPT, 'vault', 'info', 'My Vault'], {
+      encoding: 'utf8',
+      env,
+    });
     const lines = res.stdout.split('\n').filter((l) => l !== '');
-    expect(lines.slice(-4))
-      .toEqual([expect.stringMatching(/obs_cli\.py$/), 'vault', 'info', 'My Vault']);
+    expect(lines.slice(-4)).toEqual([
+      expect.stringMatching(/obs_cli\.py$/),
+      'vault',
+      'info',
+      'My Vault',
+    ]);
   });
 
   test('a non-executable OBS_PYTHON warns before falling back', () => {
-    const env = { ...process.env, HOME: tmp, OBS_PYTHON: path.join(tmp, 'no such python') };
+    const env = {
+      ...process.env,
+      HOME: tmp,
+      OBS_PYTHON: path.join(tmp, 'no such python'),
+    };
     delete env.XDG_DATA_HOME;
-    const res = spawnSync(ZSH, [OBS_SCRIPT, 'version'], { encoding: 'utf8', env });
+    const res = spawnSync(ZSH, [OBS_SCRIPT, 'version'], {
+      encoding: 'utf8',
+      env,
+    });
     expect(res.stderr).toContain('OBS_PYTHON');
     expect(res.stderr).toContain('not executable');
   });

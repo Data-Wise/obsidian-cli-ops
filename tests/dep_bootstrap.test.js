@@ -250,7 +250,10 @@ describe('obs.zsh — _obs_resolve_python tier selection', () => {
     writeStubExecutable(stub);
     const userVenv = path.join(home, '.local/share/obs/venv/bin/python');
     writeStubExecutable(userVenv);
-    const { resolved, stderr } = resolvePython({ home, obsPython: `${stub} -E -X utf8` });
+    const { resolved, stderr } = resolvePython({
+      home,
+      obsPython: `${stub} -E -X utf8`,
+    });
     expect(resolved).toBe(userVenv);
     expect(stderr).toContain('not executable');
   });
