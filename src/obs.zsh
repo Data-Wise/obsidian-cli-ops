@@ -4,7 +4,7 @@
 # ======================
 # CLI tool for managing Obsidian vaults with AI-powered graph analysis.
 #
-# Version: 4.5.0
+# Version: 4.5.1
 # Author: Data-Wise
 # Project: obsidian-cli-ops
 #
@@ -104,7 +104,7 @@ _get_last_vault() {
 
 # Defaults
 VERBOSE=false
-VERSION="4.5.0"
+VERSION="4.5.1"
 
 # --- Helper Functions ---
 

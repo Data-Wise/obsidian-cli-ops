@@ -4,7 +4,7 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
-## Unreleased
+## v4.5.1 (2026-09-25) — obs stats --json + trailing-flag hang fixes
 
 ### Fixed
 
