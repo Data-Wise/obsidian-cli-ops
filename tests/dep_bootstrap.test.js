@@ -233,18 +233,29 @@ describe('obs.zsh — _obs_resolve_python tier selection', () => {
     expect(resolved).toBe(stub);
   });
 
-  test('tier 1: an override with trailing args validates only the interpreter path', () => {
-    const stubDir = mkdtemp();
+  test('tier 1: an override path containing spaces is honored', () => {
+    const stubDir = path.join(mkdtemp(), 'dir with spaces');
     const stub = path.join(stubDir, 'python');
     writeStubExecutable(stub);
-    // e.g. OBS_PYTHON="/path/to/python -E -X utf8" — the `-x` check uses
-    // ${OBS_PYTHON%% *}, but the full string is what gets used to invoke.
-    const override = `${stub} -E -X utf8`;
-    const { resolved } = resolvePython({
-      home: mkdtemp(),
-      obsPython: override,
+    const { resolved } = resolvePython({ home: mkdtemp(), obsPython: stub });
+    expect(resolved).toBe(stub);
+  });
+
+  test('tier 1: an override with trailing args is not an interpreter path (warns, falls through)', () => {
+    // OBS_PYTHON is run as ONE word, so "/path/python -E" never executed (zsh:
+    // "no such file or directory: /path/python -E"). The resolver used to accept
+    // it by checking only ${OBS_PYTHON%% *}; now the whole value must be executable.
+    const home = mkdtemp();
+    const stub = path.join(mkdtemp(), 'python');
+    writeStubExecutable(stub);
+    const userVenv = path.join(home, '.local/share/obs/venv/bin/python');
+    writeStubExecutable(userVenv);
+    const { resolved, stderr } = resolvePython({
+      home,
+      obsPython: `${stub} -E -X utf8`,
     });
-    expect(resolved).toBe(override);
+    expect(resolved).toBe(userVenv);
+    expect(stderr).toContain('not executable');
   });
 
   test('tier 1: a non-existent $OBS_PYTHON override is ignored (falls through)', () => {

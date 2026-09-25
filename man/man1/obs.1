@@ -189,7 +189,10 @@ Show the version.
 .TP
 .B OBS_PYTHON
 Path to the Python interpreter used to run the core. Overrides automatic
-resolution; must point to an interpreter that has obs's dependencies.
+resolution; must point to an interpreter that has obs's dependencies. The
+whole value is the path (it may contain spaces); it cannot carry extra
+interpreter arguments. A value that is not executable is ignored with a
+warning.
 .TP
 .B NO_COLOR
 When set, disable colored output. Color is also disabled when standard

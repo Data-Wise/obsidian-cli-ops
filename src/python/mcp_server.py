@@ -200,7 +200,8 @@ def list_vaults() -> str:
     try:
         vaults = vault_manager.list_vaults()
         if not vaults:
-            return "No vaults found. Use discover_vaults(path) to register one."
+            return ("No vaults found. Use discover_vaults(path, scan=True) to "
+                    "find and register one.")
 
         lines = ["📚 **Obsidian Vaults**\n"]
         for v in vaults:
@@ -230,8 +231,9 @@ def delete_vault(vault_id: str, confirm: bool = False) -> str:
 
     Removing the vault row cascades — via ON DELETE CASCADE foreign keys — to all
     of its notes, links, tags, graph metrics, and embeddings in the obs index.
-    The markdown files themselves are left in place; re-run discover_vaults() +
-    rescan_vault() to re-index.
+    The markdown files themselves are left in place; re-register the vault with
+    discover_vaults(path, scan=True) to re-index it (rescan_vault() only works
+    on a vault that is still registered).
     """
     try:
         vault, err = _resolve_vault(vault_id)
@@ -350,14 +352,22 @@ def get_vault_stats(vault_id: Optional[str] = None) -> str:
 
 
 @mcp.tool()
-def discover_vaults(path: str) -> str:
+async def discover_vaults(path: str, scan: bool = False) -> str:
     """
-    Scan a filesystem path to discover and register Obsidian vaults.
+    Find Obsidian vaults (folders containing `.obsidian/`) under a filesystem path,
+    and optionally register them.
 
     Args:
         path: Directory to search (e.g. '/Users/dt' or '~/Documents').
+        scan: When False (default), find-only: report vault paths and leave the
+            obs index unchanged. When True, register and scan every found vault
+            that is NOT already registered, naming it after its folder (like
+            `obs discover <dir> --scan`). Already-registered vaults are listed
+            but not rescanned or renamed; use rescan_vault() to refresh those.
+            Scanning may take 5–60s per large vault.
 
-    Use this when a vault is missing from list_vaults().
+    Use this when a vault is missing from list_vaults(): call it once to confirm
+    the path, then again with scan=True to add it.
     """
     try:
         expanded = str(Path(path).expanduser().resolve())
@@ -365,9 +375,30 @@ def discover_vaults(path: str) -> str:
         if not found:
             return f"No Obsidian vaults found under {expanded}"
         lines = [f"Found {len(found)} vault(s) under {expanded}:\n"]
+        if not scan:
+            for p in found:
+                lines.append(f"  - {p}")
+            lines.append("\nThese vaults are NOT registered yet. Call "
+                         "discover_vaults(path, scan=True) to register them, "
+                         "then use list_vaults().")
+            return "\n".join(lines)
+
+        # scan=True. FastMCP runs this handler inside its event loop, so await
+        # scan_vault directly; never asyncio.run() here (#62).
         for p in found:
-            lines.append(f"  - {p}")
-        lines.append("\nRun get_vault_stats() to see registered vaults.")
+            existing = vault_manager.db.get_vault_by_path(p)
+            if existing:
+                lines.append(f"  - {p}: already registered as "
+                             f"**{existing['name']}** (skipped; use rescan_vault())")
+                continue
+            try:
+                result = await vault_manager.scan_vault(p)
+                lines.append(f"  - {p}: ✓ registered as **{result.vault_name}** "
+                             f"({result.notes_scanned} notes, "
+                             f"{result.links_found} links, "
+                             f"ID `{result.vault_id}`)")
+            except Exception as e:
+                lines.append(f"  - {p}: ✗ scan failed: {e}")
         return "\n".join(lines)
     except Exception as e:
         return f"Error discovering vaults: {e}"

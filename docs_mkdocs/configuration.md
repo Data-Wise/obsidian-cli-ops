@@ -96,6 +96,8 @@ To force a specific interpreter (non-standard location, or a venv you manage):
 export OBS_PYTHON=/path/to/python3
 ```
 
+The whole value is the interpreter path (spaces are fine); it cannot carry extra arguments such as `-E`. A value that is not executable is ignored with an `[obs] WARN: OBS_PYTHON=... is not executable` line and resolution falls through to the next tier.
+
 If you ever see `[obs] WARN: ... ambient python3 ... deps may be missing`, provision an isolated env with `./install.sh` (or `brew reinstall obsidian-cli-ops`). See [Installation](installation.md#how-dependencies-are-provisioned) for the full model.
 
 ### iCloud Vault Auto-Detection
