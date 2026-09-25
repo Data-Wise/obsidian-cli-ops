@@ -346,27 +346,17 @@ obs_stats() {
 
 obs_health() {
     local python_cli=$(_get_python_cli) || return 1
-    local vault=$1
 
-    if [[ -z "$vault" ]]; then
+    if [[ $# -eq 0 ]]; then
         _log "ERROR" "Vault name or ID required"
-        echo "Usage: obs health <vault>"
+        echo "Usage: obs health <vault> [--json]"
         return 1
     fi
 
-    _log_verbose "Running health check: $vault"
+    _log_verbose "Running health check: $*"
 
-    # Build command
-    local cmd=("$python_cli" "health" "$vault")
-
-    # Pass --json flag if present
-    shift
-    while [[ "$1" == --* ]]; do
-        cmd+=("$1")
-        shift
-    done
-
-    $OBS_PYTHON "${cmd[@]}"
+    # Pass every argument through intact so `health --json <vault>` works too.
+    $OBS_PYTHON "$python_cli" health "$@"
 }
 
 # --- AI Commands (v2.0) ---

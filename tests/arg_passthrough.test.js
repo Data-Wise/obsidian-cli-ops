@@ -84,6 +84,13 @@ describe('obs discover argument pass-through', () => {
   });
 });
 
+describe('obs health argument pass-through', () => {
+  test('--json before a spaced vault name', () => {
+    expect(argvFor('health', '--json', 'Obsidian Vault'))
+      .toEqual(['health', '--json', 'Obsidian Vault']);
+  });
+});
+
 describe('obs vault argument pass-through', () => {
   test('delete dry-run with a spaced vault name', () => {
     expect(argvFor('vault', 'delete', 'Obsidian Vault'))

@@ -1,12 +1,16 @@
 priority: P1
 status: 🔧 v4.4.2 DEV — manual installer Python 3.10 preflight
 progress: 100
-updated: 2026-09-18
+updated: 2026-09-25
 version: 4.4.2
 next: |
   1. Port plugin skills
   2. Port vault template ops (low priority)
 verified: |
+  ZSH wrapper arg pass-through fixed 2026-09-25 on feature/wrapper-arg-passthrough (1361f67+):
+  obs scan/discover/health forward "$@" to argparse (flag-first + --name= forms work); MCP
+  discover_vaults documented find-only. Details: docs_mkdocs/changelog.md Unreleased.
+  Tests: Jest 81/83 (2 dep_bootstrap = ambient py3.9 env), pytest 638 passed/142 skipped.
   Manual installer Python floor gate implemented 2026-09-18: install.sh now checks its ambient
   bootstrap interpreter before creating the venv or invoking pip and reports the detected version
   when it is below Python 3.10. Added a deterministic Python 3.9 regression test and updated the
