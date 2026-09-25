@@ -453,8 +453,10 @@ obs_ai() {
             _log_verbose "Suggesting links for note"
             local cmd=("$python_cli" "ai" "suggest-links" "$note_id")
             while [[ "$1" == --* ]]; do
-                cmd+=("$1" "$2")
-                shift 2
+                # Take the flag and its value; a trailing flag with no value is
+                # passed alone (a bare `shift 2` fails there and loops forever).
+                cmd+=("${@[1,2]}")
+                shift $(( $# < 2 ? $# : 2 ))
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
             "$OBS_PYTHON" "${cmd[@]}"
@@ -471,8 +473,8 @@ obs_ai() {
             _log_verbose "Finding knowledge gaps"
             local cmd=("$python_cli" "ai" "gaps" "$vault_id")
             while [[ "$1" == --* ]]; do
-                cmd+=("$1" "$2")
-                shift 2
+                cmd+=("${@[1,2]}")
+                shift $(( $# < 2 ? $# : 2 ))
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
             "$OBS_PYTHON" "${cmd[@]}"
@@ -489,8 +491,8 @@ obs_ai() {
             _log_verbose "Summarizing vault"
             local cmd=("$python_cli" "ai" "summarize" "$vault_id")
             while [[ "$1" == --* ]]; do
-                cmd+=("$1" "$2")
-                shift 2
+                cmd+=("${@[1,2]}")
+                shift $(( $# < 2 ? $# : 2 ))
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
             "$OBS_PYTHON" "${cmd[@]}"
@@ -511,8 +513,8 @@ obs_ai() {
                     cmd+=("$1")
                     shift
                 else
-                    cmd+=("$1" "$2")
-                    shift 2
+                    cmd+=("${@[1,2]}")
+                    shift $(( $# < 2 ? $# : 2 ))
                 fi
             done
             [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
@@ -538,7 +540,7 @@ obs_ai() {
                 case "$1" in
                     --json) gflags+=(--json); shift ;;
                     --verbose|-v) gflags+=(--verbose); shift ;;
-                    --threshold|--provider) subargs+=("$1" "$2"); shift 2 ;;
+                    --threshold|--provider) subargs+=("${@[1,2]}"); shift $(( $# < 2 ? $# : 2 )) ;;
                     *) subargs+=("$1"); shift ;;
                 esac
             done
@@ -563,7 +565,7 @@ obs_ai() {
                 case "$1" in
                     --json) gflags+=(--json); shift ;;
                     --verbose|-v) gflags+=(--verbose); shift ;;
-                    --min-confidence|--provider) subargs+=("$1" "$2"); shift 2 ;;
+                    --min-confidence|--provider) subargs+=("${@[1,2]}"); shift $(( $# < 2 ? $# : 2 )) ;;
                     *) subargs+=("$1"); shift ;;
                 esac
             done
@@ -737,12 +739,12 @@ obs_doctor() {
     while [[ "$1" == --* ]]; do
         case "$1" in
             --vault)
-                cmd+=(--vault "$2")
-                shift 2
+                cmd+=("${@[1,2]}")
+                shift $(( $# < 2 ? $# : 2 ))
                 ;;
             --layer)
-                cmd+=(--layer "$2")
-                shift 2
+                cmd+=("${@[1,2]}")
+                shift $(( $# < 2 ? $# : 2 ))
                 ;;
             --json)
                 cmd+=(--json)
