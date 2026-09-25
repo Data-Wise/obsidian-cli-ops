@@ -2677,7 +2677,9 @@
 <p>This creates an isolated virtual environment at <code>~/.local/share/obs/venv</code>,
 installs the pinned dependencies from <code>requirements.lock</code>, and symlinks the
 <code>obs.zsh</code> launcher into <code>~/.config/zsh/functions</code>. It is <strong>idempotent</strong> — it
-only re-provisions when <code>requirements.lock</code> changes. No manual <code>pip</code> needed.</p>
+only re-provisions when <code>requirements.lock</code> changes. Before provisioning,
+the installer verifies that the ambient <code>python3</code> is version 3.10 or newer
+and reports the detected version when it is too old. No manual <code>pip</code> needed.</p>
 <div class="admonition note">
 <p class="admonition-title">Why not <code>pip install</code>?</p>
 <p>Installing into your system/ambient Python is fragile: a <code>python@3.x</code>
@@ -2769,6 +2771,9 @@ live in <code>libexec/venv</code>, not in the upgraded interpreter.</p>
 <p>If <code>obs</code> reports a Python error, ensure <code>/opt/homebrew/bin/python3</code> (macOS) or <code>/usr/bin/python3</code> (Linux) exists. You can set a custom path:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/path/to/python3
 </code></pre></div>
+<p>The manual installer itself uses the <code>python3</code> found on <code>PATH</code> to create its
+isolated environment and requires Python 3.10 or newer. Confirm the version with
+<code>python3 --version</code> before rerunning <code>./install.sh</code>.</p>
 <h3 id="zsh-autoload-not-working">ZSH autoload not working<a class="headerlink" href="#zsh-autoload-not-working" title="Permanent link">&para;</a></h3>
 <p>Verify the function file is in your <code>fpath</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$fpath</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">' '</span><span class="w"> </span><span class="s1">'\n'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>obs

@@ -3118,7 +3118,7 @@
 - <strong>How:</strong> Run <code>configure_mcp.py</code> (registers via the <code>claude</code> CLI), restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~2 minutes | <strong>Level:</strong> Beginner | <strong>Version:</strong> 4.4.2</p>
+<p><strong>Time:</strong> ~2 minutes | <strong>Level:</strong> Beginner | <strong>Version:</strong> 4.5.0</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -3185,8 +3185,8 @@ for a full diagnostic.</p>
 </tr>
 <tr>
 <td><code>discover_vaults</code></td>
-<td><code>path</code></td>
-<td>Find Obsidian vaults in a directory tree</td>
+<td><code>path</code>, <code>scan=False</code></td>
+<td>Find Obsidian vaults in a directory tree. Default is <strong>find-only</strong> (index unchanged); <code>scan=True</code> registers + scans each vault not yet registered (named after its folder; already-registered vaults are skipped, never renamed)</td>
 </tr>
 <tr>
 <td><code>rename_vault</code></td>

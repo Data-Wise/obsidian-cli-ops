@@ -2721,6 +2721,7 @@
 <p>To force a specific interpreter (non-standard location, or a venv you manage):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OBS_PYTHON</span><span class="o">=</span>/path/to/python3
 </code></pre></div>
+<p>The whole value is the interpreter path (spaces are fine); it cannot carry extra arguments such as <code>-E</code>. A value that is not executable is ignored with an <code>[obs] WARN: OBS_PYTHON=... is not executable</code> line and resolution falls through to the next tier.</p>
 <p>If you ever see <code>[obs] WARN: ... ambient python3 ... deps may be missing</code>, provision an isolated env with <code>./install.sh</code> (or <code>brew reinstall obsidian-cli-ops</code>). See <a href="../installation/#how-dependencies-are-provisioned">Installation</a> for the full model.</p>
 <h3 id="icloud-vault-auto-detection">iCloud Vault Auto-Detection<a class="headerlink" href="#icloud-vault-auto-detection" title="Permanent link">&para;</a></h3>
 <p><code>obs</code> automatically checks the standard Obsidian iCloud path:</p>
