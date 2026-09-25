@@ -1,5 +1,5 @@
 priority: P1
-status: 🚀 v4.5.0 RELEASE — discover_vaults(scan=True) + wrapper arg/OBS_PYTHON fixes
+status: ✅ v4.5.0 RELEASED — discover_vaults(scan=True) + wrapper arg/OBS_PYTHON fixes
 progress: 100
 updated: 2026-09-25
 version: 4.5.0
@@ -7,10 +7,19 @@ next: |
   1. Port plugin skills
   2. Port vault template ops (low priority)
 verified: |
-  ZSH wrapper arg pass-through fixed 2026-09-25 on feature/wrapper-arg-passthrough (1361f67+):
-  obs scan/discover/health forward "$@" to argparse (flag-first + --name= forms work); MCP
-  discover_vaults gains scan=True (registers unregistered vaults; default find-only); OBS_PYTHON
-  paths with spaces honored. Details: docs_mkdocs/changelog.md Unreleased.
+  v4.5.0 RELEASED 2026-09-25: feature PR #110 (squash 0821c23) + bump PR #111 (squash b75c9c9)
+  into dev; release PR #112 (dev→main, regular merge 88a5df8), main CI green (CI + Deploy Docs),
+  tag v4.5.0 + GitHub release published
+  (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.5.0). Homebrew tap auto-synced
+  (data-wise/homebrew-tap PR #236, auto-merged 7d1ad15); stale caveat tool count 38→42 fixed in
+  tap PR #237 (squash eee235b, `revision-exempt`). Local `brew upgrade` → 4.5.0_1;
+  post-install-check.sh 4.5.0 all green; verify-caveats.sh current. dev/main in sync at 88a5df8.
+  Release PR title must be conventional-commit (`chore(release): …`) — pr-metadata.yml rejected
+  `Release: v4.5.0`.
+  ZSH wrapper arg pass-through (#110): obs scan/discover/health forward "$@" to argparse
+  (flag-first + --name= forms work); MCP discover_vaults gains scan=True (registers unregistered
+  vaults; default find-only); OBS_PYTHON paths with spaces honored. Details:
+  docs_mkdocs/changelog.md v4.5.0.
   Tests: Jest 84/86 (2 dep_bootstrap = ambient py3.9 env), pytest 640 passed/142 skipped.
   Manual installer Python floor gate implemented 2026-09-18: install.sh now checks its ambient
   bootstrap interpreter before creating the venv or invoking pip and reports the detected version
