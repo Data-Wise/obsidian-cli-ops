@@ -1,14 +1,13 @@
 priority: P1
-status: ✅ v4.5.0 RELEASED — discover_vaults(scan=True) + wrapper arg/OBS_PYTHON fixes
+status: 🚀 v4.5.1 RELEASE — obs stats --json + trailing-flag hang fixes
 progress: 100
 updated: 2026-09-25
-version: 4.5.0
+version: 4.5.1
 next: |
-  1. Release v4.5.1 — ships #113 (obs stats --json) + #114 (trailing-flag hang) from dev
-  2. Port plugin skills
-  3. Port vault template ops (low priority)
+  1. Port plugin skills
+  2. Port vault template ops (low priority)
 verified: |
-  Post-v4.5.0 on dev (unreleased), 2026-09-25: PR #113 (squash a5ff969) — obs stats forwards
+  Shipped in v4.5.1, 2026-09-25: PR #113 (squash a5ff969) — obs stats forwards
   --json/--verbose as global flags in any position (--json was never forwarded before); PR #114
   (squash aee198e) — obs ai suggest-links/gaps/summarize/refactor/merge-suggest/tag-suggest and
   obs doctor no longer hang forever on a trailing value flag (zsh `shift 2` with one arg left).
