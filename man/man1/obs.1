@@ -1,6 +1,6 @@
 .\" Man page for obs (Obsidian CLI Ops)
 .\" Updated: 2026-09-16
-.TH OBS 1 "2026-09-25" "obsidian-cli-ops 4.5.0" "User Commands"
+.TH OBS 1 "2026-09-25" "obsidian-cli-ops 4.5.1" "User Commands"
 .SH NAME
 obs \- manage Obsidian vaults with AI\-powered knowledge\-graph analysis
 .SH SYNOPSIS
@@ -40,9 +40,10 @@ Enable verbose output. May be given before the command.
 .B (none)\fR, \fBvaults
 List all known vaults from the database.
 .TP
-.B stats\fR [\fIvault\fR]
+.B stats\fR [\fIvault\fR] [\fB\-\-json\fR]
 Show statistics. With a vault name or ID, show that vault's statistics;
 with no argument, show overall statistics across vaults.
+\fB\-\-json\fR prints JSON and may appear before or after the vault.
 .TP
 .B discover\fR \fIpath\fR [\fB\-\-scan\fR]
 Find Obsidian vaults under
