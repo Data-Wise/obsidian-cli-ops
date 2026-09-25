@@ -4329,7 +4329,7 @@
 <hr />
 <h3 id="obs-stats">obs stats<a class="headerlink" href="#obs-stats" title="Permanent link">&para;</a></h3>
 <p>Show vault or global statistics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>--vault<span class="w"> </span>&lt;name<span class="p">|</span>id&gt;<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>obs<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>&lt;vault&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>--vault<span class="w"> </span>&lt;name<span class="p">|</span>id&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4340,8 +4340,12 @@
 </thead>
 <tbody>
 <tr>
-<td><code>--vault</code></td>
+<td><code>&lt;vault&gt;</code> / <code>--vault</code></td>
 <td>Vault name or ID (full or prefix). Omit for global stats.</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Output as JSON. May appear before or after the vault.</td>
 </tr>
 </tbody>
 </table>
@@ -4349,6 +4353,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>obs<span class="w"> </span>stats<span class="w">                    </span><span class="c1"># Global stats (all vaults)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>MyVault<span class="w">    </span><span class="c1"># Specific vault stats</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>obs<span class="w"> </span>stats<span class="w"> </span>--vault<span class="w"> </span>abc<span class="w">        </span><span class="c1"># Prefix lookup</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>obs<span class="w"> </span>stats<span class="w"> </span>--json<span class="w"> </span><span class="s2">"My Vault"</span><span class="w">  </span><span class="c1"># JSON for one vault (flag order is free)</span>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Link count display (v3.2.3+)</p>
