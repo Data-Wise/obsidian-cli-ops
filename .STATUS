@@ -4,9 +4,20 @@ progress: 100
 updated: 2026-09-25
 version: 4.5.0
 next: |
-  1. Port plugin skills
-  2. Port vault template ops (low priority)
+  1. Release v4.5.1 — ships #113 (obs stats --json) + #114 (trailing-flag hang) from dev
+  2. Port plugin skills
+  3. Port vault template ops (low priority)
 verified: |
+  Post-v4.5.0 on dev (unreleased), 2026-09-25: PR #113 (squash a5ff969) — obs stats forwards
+  --json/--verbose as global flags in any position (--json was never forwarded before); PR #114
+  (squash aee198e) — obs ai suggest-links/gaps/summarize/refactor/merge-suggest/tag-suggest and
+  obs doctor no longer hang forever on a trailing value flag (zsh `shift 2` with one arg left).
+  CI green on both; Jest 100/102 (2 dep_bootstrap = ambient py3.9), pytest 640 passed.
+  Homebrew tap PR #238 (squash 0d72ee2, revision 2): macOS 27 + rustc 1.98.1 rust-objcopy strip
+  corrupted the Rust extensions (pydantic_core, rpds: dyld "mis-aligned LINKEDIT string pool"), so
+  `import mcp` failed and the MCP server could not start; formula now builds them unstripped and
+  `brew test` imports mcp/pydantic_core/rpds. Local reinstall 4.5.0_2: brew test + doctor +
+  post-install-check green.
   v4.5.0 RELEASED 2026-09-25: feature PR #110 (squash 0821c23) + bump PR #111 (squash b75c9c9)
   into dev; release PR #112 (dev→main, regular merge 88a5df8), main CI green (CI + Deploy Docs),
   tag v4.5.0 + GitHub release published
