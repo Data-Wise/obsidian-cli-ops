@@ -1,8 +1,8 @@
 priority: P1
-status: 🔧 v4.4.2 DEV — manual installer Python 3.10 preflight
+status: 🚀 v4.5.0 RELEASE — discover_vaults(scan=True) + wrapper arg/OBS_PYTHON fixes
 progress: 100
 updated: 2026-09-25
-version: 4.4.2
+version: 4.5.0
 next: |
   1. Port plugin skills
   2. Port vault template ops (low priority)
