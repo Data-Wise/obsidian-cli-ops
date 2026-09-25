@@ -4,7 +4,7 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
-## Unreleased
+## v4.5.0 (2026-09-25) — MCP vault registration + wrapper argument fixes
 
 ### Fixed
 
