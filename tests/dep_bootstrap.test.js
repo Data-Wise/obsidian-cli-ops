@@ -233,18 +233,29 @@ describe('obs.zsh — _obs_resolve_python tier selection', () => {
     expect(resolved).toBe(stub);
   });
 
-  test('tier 1: an override with trailing args validates only the interpreter path', () => {
-    const stubDir = mkdtemp();
+  test('tier 1: an override path containing spaces is honored', () => {
+    const stubDir = path.join(mkdtemp(), 'dir with spaces');
     const stub = path.join(stubDir, 'python');
     writeStubExecutable(stub);
-    // e.g. OBS_PYTHON="/path/to/python -E -X utf8" — the `-x` check uses
-    // ${OBS_PYTHON%% *}, but the full string is what gets used to invoke.
-    const override = `${stub} -E -X utf8`;
-    const { resolved } = resolvePython({
-      home: mkdtemp(),
-      obsPython: override,
+    const { resolved } = resolvePython({ home: mkdtemp(), obsPython: stub });
+    expect(resolved).toBe(stub);
+  });
+
+  test('tier 1: an override with trailing args is not an interpreter path (warns, falls through)', () => {
+    // OBS_PYTHON is run as ONE word, so "/path/python -E" never executed (zsh:
+    // "no such file or directory: /path/python -E"). The resolver used to accept
+    // it by checking only ${OBS_PYTHON%% *}; now the whole value must be executable.
+    const home = mkdtemp();
+    const stub = path.join(mkdtemp(), 'python');
+    writeStubExecutable(stub);
+    const userVenv = path.join(home, '.local/share/obs/venv/bin/python');
+    writeStubExecutable(userVenv);
+    const { resolved, stderr } = resolvePython({
+      home,
+      obsPython: `${stub} -E -X utf8`,
     });
-    expect(resolved).toBe(override);
+    expect(resolved).toBe(userVenv);
+    expect(stderr).toContain('not executable');
   });
 
   test('tier 1: a non-existent $OBS_PYTHON override is ignored (falls through)', () => {
@@ -340,6 +351,13 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
   // "already provisioned" branch and never reaches pip (no network).
   function stagedInstall() {
     const home = mkdtemp();
+    const binDir = path.join(home, 'bin');
+    writeStubExecutable(
+      path.join(binDir, 'python3'),
+      '#!/bin/sh\n' +
+        'if [ "$1" = "-c" ]; then printf "3 12 3.12.0\\n"; exit 0; fi\n' +
+        'exit 99\n'
+    );
     const venvPy = path.join(home, '.local/share/obs/venv/bin/python');
     writeStubExecutable(venvPy);
     fs.writeFileSync(
@@ -347,7 +365,7 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
       sha256OfFile(LOCKFILE)
     );
     const out = execFileSync('bash', [INSTALL_SCRIPT], {
-      env: cleanEnv({ HOME: home }),
+      env: cleanEnv({ HOME: home, PATH: `${binDir}:${process.env.PATH}` }),
       encoding: 'utf8',
     });
     return { home, out };
@@ -388,6 +406,37 @@ describe('install.sh — launcher symlink + idempotency (offline)', () => {
     expect(`${err.stderr || ''}${err.stdout || ''}`).toMatch(
       /requirements\.lock not found/i
     );
+  });
+
+  test('rejects an ambient Python older than 3.10 before creating a venv', () => {
+    const home = mkdtemp();
+    const projectDir = mkdtemp();
+    const installCopy = path.join(projectDir, 'install.sh');
+    fs.copyFileSync(INSTALL_SCRIPT, installCopy);
+    fs.copyFileSync(LOCKFILE, path.join(projectDir, 'requirements.lock'));
+    fs.chmodSync(installCopy, 0o755);
+    const binDir = path.join(home, 'bin');
+    const python3 = path.join(binDir, 'python3');
+    writeStubExecutable(
+      python3,
+      '#!/bin/sh\n' +
+        'if [ "$1" = "-c" ]; then printf "3 9\\n"; exit 0; fi\n' +
+        'exit 99\n'
+    );
+
+    const result = spawnSync('bash', [installCopy], {
+      env: cleanEnv({
+        HOME: home,
+        PATH: `${binDir}:/usr/bin:/bin`,
+      }),
+      encoding: 'utf8',
+    });
+
+    expect(result.status).not.toBe(0);
+    expect(`${result.stderr || ''}${result.stdout || ''}`).toMatch(
+      /Python 3\.10 or newer is required.*found 3\.9/i
+    );
+    expect(fs.existsSync(path.join(home, '.local/share/obs/venv'))).toBe(false);
   });
 });
 

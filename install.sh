@@ -70,6 +70,19 @@ if [[ -z "$PYTHON_BOOTSTRAP" ]]; then
     exit 1
 fi
 
+PYTHON_VERSION_INFO="$("$PYTHON_BOOTSTRAP" -c \
+    'import platform, sys; print(sys.version_info.major, sys.version_info.minor, platform.python_version())' \
+    2>/dev/null || true)"
+read -r PYTHON_MAJOR PYTHON_MINOR PYTHON_VERSION <<< "$PYTHON_VERSION_INFO"
+if [[ ! "$PYTHON_MAJOR" =~ ^[0-9]+$ || ! "$PYTHON_MINOR" =~ ^[0-9]+$ ]]; then
+    warn "ERROR: unable to determine the version of $PYTHON_BOOTSTRAP."
+    exit 1
+fi
+if (( PYTHON_MAJOR < 3 || (PYTHON_MAJOR == 3 && PYTHON_MINOR < 10) )); then
+    warn "ERROR: Python 3.10 or newer is required; found ${PYTHON_VERSION:-$PYTHON_MAJOR.$PYTHON_MINOR} at $PYTHON_BOOTSTRAP."
+    exit 1
+fi
+
 LOCK_HASH="$(hash_file "$LOCKFILE")"
 
 if [[ -x "$VENV_DIR/bin/python" && -f "$SENTINEL" && "$(cat "$SENTINEL")" == "$LOCK_HASH" ]]; then

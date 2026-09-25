@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~2 minutes | **Level:** Beginner | **Version:** 4.4.2
+**Time:** ~2 minutes | **Level:** Beginner | **Version:** 4.5.0
 
 ---
 
@@ -76,7 +76,7 @@ for a full diagnostic.
 |------|-----------|-------------|
 | `list_vaults` | — | List all registered vaults with note/link counts |
 | `get_vault_stats` | `vault_id` | Detailed statistics for a vault |
-| `discover_vaults` | `path` | Find Obsidian vaults in a directory tree |
+| `discover_vaults` | `path`, `scan=False` | Find Obsidian vaults in a directory tree. Default is **find-only** (index unchanged); `scan=True` registers + scans each vault not yet registered (named after its folder; already-registered vaults are skipped, never renamed) |
 | `rename_vault` | `vault_id`, `new_name` | Rename a vault's display name (path/ID unchanged); rejects name collisions |
 | `delete_vault` | `vault_id`, `confirm=False` | Remove a vault from the index — `confirm=True` required; default is **dry-run**. Files on disk untouched |
 

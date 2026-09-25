@@ -4,6 +4,18 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## v4.5.0 (2026-09-25) — MCP vault registration + wrapper argument fixes
+
+### Fixed
+
+- **Manual installer Python preflight** — `install.sh` now checks the ambient `python3` version before creating the isolated environment or invoking `pip`. Python 3.9 and older exit with a direct Python 3.10+ requirement instead of failing later during dependency resolution.
+- **`obs scan` / `obs discover` / `obs health` flag order** — the ZSH wrapper read the path from the first argument and looked for `--name` only in the next two, so `obs scan --name X "<path>"` failed (`argument --name: expected one argument`) and `obs scan "--name=X" "<path>"` lost the path. `obs health --json <vault>` likewise dropped the vault. All three wrappers now pass every argument through intact (`"$@"`) and let argparse parse them; `--analyze`/`--prune` are no longer substring-matched against the whole command line (a path containing `--prune` could trigger it), and `local path=` (zsh's `$PATH`-tied array) is gone. Arguments with spaces were never split; the failure was only positional. Regression tests: `tests/arg_passthrough.test.js`.
+- **`OBS_PYTHON` with spaces** — the launcher checked only `${OBS_PYTHON%% *}` (the text before the first space), so an interpreter path containing a space failed the check and resolution silently fell through to another Python. The whole value is now the path. The cutoff existed to allow trailing interpreter arguments (`OBS_PYTHON="/path/python -E"`), but that form never ran: zsh executes the value as one word (`no such file or directory: /path/python -E`). A non-executable `OBS_PYTHON` now prints a warning instead of being skipped silently, and every call site quotes `"$OBS_PYTHON"` so `setopt shwordsplit` cannot split it.
+
+### Added
+
+- **MCP `discover_vaults(path, scan=True)`** — MCP had no way to register a new vault (`rescan_vault` only refreshes registered ones). `scan=True` registers and scans each discovered vault that is not yet registered, named after its folder. Already-registered vaults are listed and skipped, so a custom name is never overwritten by the folder name. The default (`scan=False`) stays find-only; the old docstring and the `list_vaults`/`delete_vault` hints wrongly said it registered vaults. The tool is now `async` and awaits the scan inside FastMCP's loop (#62).
+
 ## v4.4.2 (2026-09-16) — configure_mcp.py symlink fix + Homebrew tap post_install_steps
 
 ### Fixed

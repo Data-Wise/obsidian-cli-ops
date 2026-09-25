@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.4.2 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
+**Version:** 4.5.0 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -59,7 +59,7 @@ vaults"* — it should call `list_vaults()` and return results.
 |------|-------------|
 | `list_vaults()` | List all registered vaults with stats |
 | `get_vault_stats(vault_id)` | Detailed stats for a vault |
-| `discover_vaults(path)` | Find Obsidian vaults in a directory |
+| `discover_vaults(path, scan=False)` | Find Obsidian vaults in a directory; `scan=True` also registers the ones not yet indexed |
 | `rename_vault(vault_id, new_name)` | Rename a vault's display name (path/ID unchanged); rejects name collisions |
 | `delete_vault(vault_id, confirm)` | Remove a vault from the index — `confirm=True` required; default is dry-run. Files on disk are untouched |
 

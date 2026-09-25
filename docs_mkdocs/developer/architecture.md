@@ -314,8 +314,8 @@ schema/vault_db.sql          # Database schema
 
 ## Testing
 
-- **764 pytest tests** covering core, AI, vault features, data layer, flow init, MCP server, and E2E (+71 E2E gated behind `E2E=1`)
-- **70 Jest tests** (2 skipped) for ZSH wrapper + dependency-bootstrapping validation
+- **640 pytest tests** covering core, AI, vault features, data layer, flow init, and MCP server (+138 E2E gated behind `E2E=1`)
+- **86 Jest tests** for the ZSH wrapper (argument pass-through, `OBS_PYTHON` resolution) and dependency bootstrapping
 - Core layer tested independently with mocked dependencies
 - AI providers mocked for deterministic tests
 - MCP tools tested via FastMCP test client

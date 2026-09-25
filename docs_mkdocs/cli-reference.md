@@ -128,6 +128,8 @@ obs scan ~/Documents/MyVault              # Scan and register a vault (additive)
 obs scan ~/Notes --name "Personal Notes"  # Scan with a custom name
 obs scan ~/Vault --analyze                # Scan and run analysis in one step
 obs scan ~/Vault --prune                  # Scan AND remove deleted/renamed notes
+obs scan --name "Eng" "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Engineering"
+                                          # Flags may come before the path; quote paths with spaces
 ```
 
 !!! note "Additive by default — `--prune` opts into removal"
