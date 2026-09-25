@@ -86,12 +86,13 @@ Searches for `.obsidian/` directories recursively. With `--scan`, populates the 
 Show vault or global statistics.
 
 ```bash
-obs stats [--vault <name|id>]
+obs stats [<vault> | --vault <name|id>] [--json]
 ```
 
 | Argument | Description |
 |----------|-------------|
-| `--vault` | Vault name or ID (full or prefix). Omit for global stats. |
+| `<vault>` / `--vault` | Vault name or ID (full or prefix). Omit for global stats. |
+| `--json` | Output as JSON. May appear before or after the vault. |
 
 **Examples:**
 
@@ -99,6 +100,7 @@ obs stats [--vault <name|id>]
 obs stats                    # Global stats (all vaults)
 obs stats --vault MyVault    # Specific vault stats
 obs stats --vault abc        # Prefix lookup
+obs stats --json "My Vault"  # JSON for one vault (flag order is free)
 ```
 
 !!! info "Link count display (v3.2.3+)"

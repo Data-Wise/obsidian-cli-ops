@@ -338,15 +338,30 @@ obs_vaults() {
 
 obs_stats() {
     local python_cli=$(_get_python_cli) || return 1
-    local vault_id=$1
 
-    _log_verbose "Showing statistics"
+    _log_verbose "Showing statistics: $*"
 
-    if [[ -n "$vault_id" ]]; then
-        "$OBS_PYTHON" "$python_cli" stats --vault "$vault_id"
-    else
-        "$OBS_PYTHON" "$python_cli" stats
-    fi
+    # --json/--verbose are GLOBAL argparse flags: route them to gflags (before
+    # "stats") wherever they appear. A bare positional is the vault, sent as
+    # --vault; flag order is free (`stats --json <vault>` == `stats <vault> --json`).
+    local gflags=() subargs=()
+    [[ "$VERBOSE" == "true" ]] && gflags+=(--verbose)
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --json) gflags+=(--json); shift ;;
+            --verbose|-v) gflags+=(--verbose); shift ;;
+            --vault)
+                # A trailing --vault has no value: pass it alone so argparse
+                # reports it (a bare `shift 2` would loop forever here).
+                if [[ $# -ge 2 ]]; then subargs+=(--vault "$2"); shift 2
+                else subargs+=(--vault); shift; fi ;;
+            --vault=*) subargs+=("$1"); shift ;;
+            --*) subargs+=("$1"); shift ;;
+            *) subargs+=(--vault "$1"); shift ;;
+        esac
+    done
+
+    "$OBS_PYTHON" "$python_cli" "${gflags[@]}" stats "${subargs[@]}"
 }
 
 obs_health() {
