@@ -1,0 +1,8 @@
+{
+  "name": "obsidian-ops",
+  "description": "Research, writing and teaching workflows for obs: routes Zotero, PDF, manuscript, bibliography, course and vault tasks to the obsidian-ops MCP tools, with the obs CLI as fallback",
+  "author": {
+    "name": "Data-Wise"
+  },
+  "skills": "./skills"
+}
