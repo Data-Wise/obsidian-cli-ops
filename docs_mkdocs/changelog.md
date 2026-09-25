@@ -9,6 +9,8 @@ All notable changes to Obsidian CLI Ops.
 ### Fixed
 
 - **Manual installer Python preflight** — `install.sh` now checks the ambient `python3` version before creating the isolated environment or invoking `pip`. Python 3.9 and older exit with a direct Python 3.10+ requirement instead of failing later during dependency resolution.
+- **`obs scan` / `obs discover` flag order** — the ZSH wrapper read the path from the first argument and looked for `--name` only in the next two, so `obs scan --name X "<path>"` failed (`argument --name: expected one argument`) and `obs scan "--name=X" "<path>"` lost the path. Both wrappers now pass every argument through intact (`"$@"`) and let argparse parse them; `--analyze`/`--prune` are no longer substring-matched against the whole command line (a path containing `--prune` could trigger it), and `local path=` (zsh's `$PATH`-tied array) is gone. Arguments with spaces were never split; the failure was only positional. Regression tests: `tests/arg_passthrough.test.js`.
+- **MCP `discover_vaults` wording** — the tool is find-only by design (it mirrors `obs discover` without `--scan`), but its docstring and the `list_vaults`/`delete_vault` hints said it registered vaults. They now say it does not, and point to `obs scan <path>` for registration.
 
 ## v4.4.2 (2026-09-16) — configure_mcp.py symlink fix + Homebrew tap post_install_steps
 

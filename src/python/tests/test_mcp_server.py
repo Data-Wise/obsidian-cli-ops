@@ -237,6 +237,18 @@ class TestVaultTools:
         result = mcp_mod.discover_vaults(str(vault_dir.parent))
         assert isinstance(result, str)
 
+    def test_discover_vaults_is_find_only(self, mcp_mod, obs_vault, tmp_path):
+        """discover_vaults reports vaults but must not register them."""
+        new_vault = tmp_path / "Found Vault"
+        (new_vault / ".obsidian").mkdir(parents=True)
+        (new_vault / "a.md").write_text("# a\n")
+        before = {v.path for v in mcp_mod.vault_manager.list_vaults()}
+        result = mcp_mod.discover_vaults(str(tmp_path))
+        assert "Found Vault" in result
+        assert "NOT registered" in result
+        after = {v.path for v in mcp_mod.vault_manager.list_vaults()}
+        assert after == before
+
     def test_discover_vaults_nonexistent(self, mcp_mod):
         result = mcp_mod.discover_vaults("/no/such/path/e2e_xyz")
         assert isinstance(result, str)

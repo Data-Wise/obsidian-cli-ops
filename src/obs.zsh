@@ -260,55 +260,43 @@ _get_python_cli() {
 
 obs_discover() {
     local python_cli=$(_get_python_cli) || return 1
-    local path=${1:-.}  # Default to current directory
 
-    _log_verbose "Running vault discovery in: $path"
+    # Pass every argument through intact ("$@") so argparse handles flag
+    # order (`discover --scan <dir>`). Default the directory to "." only
+    # when no positional was given. (Never `local path=`: in zsh that is
+    # the array tied to $PATH.)
+    local args=("$@") a has_dir=false
+    for a in "${args[@]}"; do
+        [[ "$a" != --* ]] && has_dir=true
+    done
+    [[ "$has_dir" == "false" ]] && args+=(".")
 
-    # Build command
+    _log_verbose "Running vault discovery: ${args[*]}"
+
     local cmd=("$python_cli")
     [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-    cmd+=("discover" "$path")
-
-    # Add --scan flag if requested
-    if [[ "$2" == "--scan" ]]; then
-        cmd+=(--scan)
-    fi
+    cmd+=("discover" "${args[@]}")
 
     $OBS_PYTHON "${cmd[@]}"
 }
 
 obs_scan() {
     local python_cli=$(_get_python_cli) || return 1
-    local path=$1
 
-    if [[ -z "$path" ]]; then
+    if [[ $# -eq 0 ]]; then
         _log "ERROR" "Vault path required"
         echo "Usage: obs scan <path> [--name <name>] [--analyze] [--prune|--no-prune]"
         return 1
     fi
 
-    _log_verbose "Scanning vault at: $path"
+    _log_verbose "Scanning vault: $*"
 
+    # Pass every argument through intact ("$@"): argparse owns flag order,
+    # --name=value, and --prune/--no-prune, and a path or name that merely
+    # contains "--prune" is never mistaken for the flag.
     local cmd=("$python_cli")
     [[ "$VERBOSE" == "true" ]] && cmd+=(--verbose)
-    cmd+=("scan" "$path")
-
-    # Optional vault name
-    if [[ "$2" == "--name" && -n "$3" ]]; then
-        cmd+=(--name "$3")
-    fi
-
-    # Optional post-scan analysis
-    if [[ "$*" == *"--analyze"* ]]; then
-        cmd+=(--analyze)
-    fi
-
-    # Optional prune of deleted/renamed notes (S1/S2)
-    if [[ "$*" == *"--no-prune"* ]]; then
-        cmd+=(--no-prune)
-    elif [[ "$*" == *"--prune"* ]]; then
-        cmd+=(--prune)
-    fi
+    cmd+=("scan" "$@")
 
     $OBS_PYTHON "${cmd[@]}"
 }

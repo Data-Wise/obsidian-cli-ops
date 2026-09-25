@@ -200,7 +200,8 @@ def list_vaults() -> str:
     try:
         vaults = vault_manager.list_vaults()
         if not vaults:
-            return "No vaults found. Use discover_vaults(path) to register one."
+            return ("No vaults found. discover_vaults(path) can locate vaults on disk; "
+                    "register one with `obs scan <path>` from the CLI.")
 
         lines = ["📚 **Obsidian Vaults**\n"]
         for v in vaults:
@@ -230,8 +231,9 @@ def delete_vault(vault_id: str, confirm: bool = False) -> str:
 
     Removing the vault row cascades — via ON DELETE CASCADE foreign keys — to all
     of its notes, links, tags, graph metrics, and embeddings in the obs index.
-    The markdown files themselves are left in place; re-run discover_vaults() +
-    rescan_vault() to re-index.
+    The markdown files themselves are left in place; re-register the vault with
+    `obs scan <path>` from the CLI to re-index it (rescan_vault() only works on
+    a vault that is still registered).
     """
     try:
         vault, err = _resolve_vault(vault_id)
@@ -352,12 +354,17 @@ def get_vault_stats(vault_id: Optional[str] = None) -> str:
 @mcp.tool()
 def discover_vaults(path: str) -> str:
     """
-    Scan a filesystem path to discover and register Obsidian vaults.
+    Find Obsidian vaults (folders containing `.obsidian/`) under a filesystem path.
 
     Args:
         path: Directory to search (e.g. '/Users/dt' or '~/Documents').
 
-    Use this when a vault is missing from list_vaults().
+    Find-only by design: this reports vault paths but does NOT register or
+    scan them, so the obs index is unchanged. It mirrors `obs discover`, where
+    scanning is the separate opt-in `--scan` flag. To register a found vault,
+    run `obs scan <path> [--name <name>]` from the CLI (or `obs discover <dir>
+    --scan`); rescan_vault() only refreshes a vault that is already registered.
+    Use this when a vault is missing from list_vaults() to confirm its path.
     """
     try:
         expanded = str(Path(path).expanduser().resolve())
@@ -367,7 +374,8 @@ def discover_vaults(path: str) -> str:
         lines = [f"Found {len(found)} vault(s) under {expanded}:\n"]
         for p in found:
             lines.append(f"  - {p}")
-        lines.append("\nRun get_vault_stats() to see registered vaults.")
+        lines.append("\nThese vaults are NOT registered by this tool. Register one with "
+                     "`obs scan <path>` from the CLI, then use list_vaults().")
         return "\n".join(lines)
     except Exception as e:
         return f"Error discovering vaults: {e}"
