@@ -40,7 +40,11 @@ afterAll(() => {
 function argvFor(...args) {
   const env = { ...process.env, HOME: tmp, OBS_PYTHON: stub };
   delete env.XDG_DATA_HOME;
-  const res = spawnSync(ZSH, [OBS_SCRIPT, ...args], { encoding: 'utf8', env });
+  const res = spawnSync(ZSH, [OBS_SCRIPT, ...args], {
+    encoding: 'utf8',
+    env,
+    timeout: 10000,
+  });
   // _log_verbose writes to stdout, so skip anything before the stub's output.
   const lines = res.stdout.split('\n').filter((l) => l !== '');
   const start = lines.findIndex((l) => /obs_cli\.py$/.test(l));
@@ -104,6 +108,55 @@ describe('obs discover argument pass-through', () => {
 
   test('defaults to the current directory', () => {
     expect(argvFor('discover')).toEqual(['discover', '.']);
+  });
+});
+
+describe('obs stats argument pass-through', () => {
+  test('no args shows global stats', () => {
+    expect(argvFor('stats')).toEqual(['stats']);
+  });
+
+  test('bare spaced vault name maps to --vault', () => {
+    expect(argvFor('stats', 'Obsidian Vault')).toEqual([
+      'stats',
+      '--vault',
+      'Obsidian Vault',
+    ]);
+  });
+
+  test('--json before the vault is hoisted to a global flag', () => {
+    expect(argvFor('stats', '--json', 'Obsidian Vault')).toEqual([
+      '--json',
+      'stats',
+      '--vault',
+      'Obsidian Vault',
+    ]);
+  });
+
+  test('--json after the vault is kept, not dropped', () => {
+    expect(argvFor('stats', 'Obsidian Vault', '--json')).toEqual([
+      '--json',
+      'stats',
+      '--vault',
+      'Obsidian Vault',
+    ]);
+  });
+
+  test('explicit --vault value is passed through', () => {
+    expect(argvFor('stats', '--vault', 'Obsidian Vault', '--json')).toEqual([
+      '--json',
+      'stats',
+      '--vault',
+      'Obsidian Vault',
+    ]);
+  });
+
+  test('a trailing --vault with no value is passed through (no hang)', () => {
+    expect(argvFor('stats', '--vault')).toEqual(['stats', '--vault']);
+  });
+
+  test('--json with no vault gives global JSON stats', () => {
+    expect(argvFor('stats', '--json')).toEqual(['--json', 'stats']);
   });
 });
 

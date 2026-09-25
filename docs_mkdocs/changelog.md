@@ -4,6 +4,12 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## Unreleased
+
+### Fixed
+
+- **`obs stats --json`** — `--json` is a global flag in `obs_cli.py` (it must precede `stats`), and the ZSH wrapper never forwarded it: `obs stats <vault> --json` silently printed the Rich panel, and `obs stats --json <vault>` failed (`--vault: expected one argument`). `obs_stats` now moves `--json`/`--verbose` before the subcommand wherever they appear, maps a bare positional to `--vault`, and passes a trailing `--vault` with no value through to argparse instead of looping forever on `shift 2`.
+
 ## v4.5.0 (2026-09-25) — MCP vault registration + wrapper argument fixes
 
 ### Fixed
