@@ -140,6 +140,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
   - `tests/` - Test suite (640 pytest incl. 134 MCP unit, + 138 E2E pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
+- `plugin/` - Claude Code plugin: 2 MCP-first skills (`research-writing`, `teaching-vault`); `tests/test_plugin_skills.py` guards tool/command names
 
 ### Documentation
 

@@ -67,32 +67,35 @@ def test_plugin_manifest_lists_skills_dir():
     assert len(SKILLS) == 2
 
 
-@pytest.mark.parametrize("skill", SKILLS, ids=lambda p: p.parent.name)
-def test_skill_frontmatter(skill):
-    text = skill.read_text(encoding="utf-8")
-    m = re.match(r"---\nname: ([a-z-]+)\ndescription: (.+?)\n---\n", text, re.S)
-    assert m, "SKILL.md must start with name/description frontmatter"
-    assert m.group(1) == skill.parent.name
-    assert m.group(2).startswith("Use when")
+def test_skill_frontmatter():
+    for skill in SKILLS:
+        text = skill.read_text(encoding="utf-8")
+        m = re.match(r"---\nname: ([a-z-]+)\ndescription: (.+?)\n---\n", text, re.S)
+        assert m, f"{skill} must start with name/description frontmatter"
+        assert m.group(1) == skill.parent.name
+        assert m.group(2).startswith("Use when")
 
 
-@pytest.mark.parametrize("skill", SKILLS, ids=lambda p: p.parent.name)
-def test_skill_mcp_tools_exist(skill):
-    missing = _tool_calls(skill.read_text(encoding="utf-8")) - _mcp_tools()
-    assert not missing, f"{skill.parent.name} names MCP tools that do not exist: {sorted(missing)}"
+def test_skill_mcp_tools_exist():
+    tools = _mcp_tools()
+    missing = {skill.parent.name: sorted(_tool_calls(skill.read_text(encoding="utf-8")) - tools)
+               for skill in SKILLS}
+    missing = {k: v for k, v in missing.items() if v}
+    assert not missing, f"skills name MCP tools that do not exist: {missing}"
 
 
-def _all_obs_commands():
-    return sorted({c for s in SKILLS for c in _obs_commands(s.read_text(encoding="utf-8"))})
-
-
-@pytest.mark.parametrize("words", _all_obs_commands(), ids=" ".join)
-def test_skill_obs_commands_exist(words, tmp_path, monkeypatch):
+def test_skill_obs_commands_exist(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path))
-    with mock.patch.object(sys, "argv", ["obs_cli.py", *words, "--help"]):
-        with pytest.raises(SystemExit) as exc:
-            obs_cli.main()
-    assert exc.value.code == 0, f"`obs {' '.join(words)}` is not a valid command"
+    commands = sorted({c for s in SKILLS for c in _obs_commands(s.read_text(encoding="utf-8"))})
+    assert len(commands) > 20
+    bad = []
+    for words in commands:
+        with mock.patch.object(sys, "argv", ["obs_cli.py", *words, "--help"]):
+            with pytest.raises(SystemExit) as exc:
+                obs_cli.main()
+        if exc.value.code != 0:
+            bad.append(" ".join(words))
+    assert not bad, f"skills name obs commands that do not exist: {bad}"
 
 
 def test_extractors_catch_a_bad_name():
