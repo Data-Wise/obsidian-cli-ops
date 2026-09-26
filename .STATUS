@@ -1,8 +1,8 @@
 priority: P1
-status: ✅ v4.5.1 RELEASED — obs stats --json + trailing-flag hang fixes
+status: 🚀 v4.6.0 RELEASING — vault templates + Claude Code plugin skills
 progress: 100
 updated: 2026-09-25
-version: 4.5.1
+version: 4.6.0
 next: |
   1. Release v4.6.0 (unreleased on dev/feature: plugin skills #117 + vault templates); tap caveats say 42 tools → bump to 44 (verify-caveats.sh)
   2. Remaining nexus vault-ops row items not yet ported: daily, backlinks, recent (CLI) — decide scope before archiving SPEC-merge-nexus-cli-v2
