@@ -229,4 +229,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.5.1 | **Commands:** 65 | **MCP Tools:** 44 | **AI Providers:** 5
+**Version:** 4.6.0 | **Commands:** 65 | **MCP Tools:** 44 | **AI Providers:** 5
