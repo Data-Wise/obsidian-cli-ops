@@ -47,6 +47,8 @@ and workflow — all on one page.
 | `obs vault info` | [Metadata](../refcard.md#vault-lookup) | [Details](../cli-reference.md#obs-vault-info) |
 | `obs vault rename` | — | [Rename rules](../cli-reference.md#obs-vault-rename) |
 | `obs vault delete` | — | [Safety notes](../cli-reference.md#obs-vault-delete) |
+| `obs template list` | [Templates](../refcard.md#templates) | [Folder lookup](../cli-reference.md#templates) |
+| `obs template new` | [Templates](../refcard.md#templates) | [Variables](../cli-reference.md#obs-template-new) |
 | `obs flow init` | — | [Mirror map](../cli-reference.md#obs-flow-init) |
 
 ### Graph & Health

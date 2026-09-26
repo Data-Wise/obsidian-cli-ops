@@ -1,12 +1,23 @@
 priority: P1
-status: 🚀 v4.5.1 RELEASE — obs stats --json + trailing-flag hang fixes
+status: 🚀 v4.6.0 RELEASING — vault templates + Claude Code plugin skills
 progress: 100
 updated: 2026-09-25
-version: 4.5.1
+version: 4.6.0
 next: |
-  1. Port plugin skills
-  2. Port vault template ops (low priority)
+  1. Release v4.6.0 (unreleased on dev/feature: plugin skills #117 + vault templates); tap caveats say 42 tools → bump to 44 (verify-caveats.sh)
+  2. Remaining nexus vault-ops row items not yet ported: daily, backlinks, recent (CLI) — decide scope before archiving SPEC-merge-nexus-cli-v2
 verified: |
+  feature/vault-templates (unmerged): obs template list|new + MCP list_templates/create_from_template
+  (details in changelog Unreleased). pytest 674 passed / 142 skipped, Jest 105/105, validate-counts aligned
+  (tools=44, commands=65); live wrapper E2E incl. traversal/overwrite/template-escape refusals.
+  v4.5.1 RELEASED 2026-09-25: bump PR #115 (squash 8ed0055) into dev; release PR #116
+  (dev→main, regular merge 6c5c3f9), main CI green (CI + Deploy Docs), tag v4.5.1 + GitHub
+  release published (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.5.1).
+  Homebrew tap auto-synced (data-wise/homebrew-tap PR #239, auto-merged b142b94; keeps #238's
+  unstripped Rust build). Local `brew upgrade` → 4.5.1_2 (revision 2 carried over from #238:
+  the release workflow bumps url+sha only). brew test rc 0; import mcp/pydantic_core/rpds OK;
+  post-install-check.sh 4.5.1 + verify-caveats.sh green; installed `obs stats --json "My Vault"`
+  → JSON, `obs doctor --vault` → argparse error (no hang). dev/main in sync at 6c5c3f9.
   Shipped in v4.5.1, 2026-09-25: PR #113 (squash a5ff969) — obs stats forwards
   --json/--verbose as global flags in any position (--json was never forwarded before); PR #114
   (squash aee198e) — obs ai suggest-links/gaps/summarize/refactor/merge-suggest/tag-suggest and

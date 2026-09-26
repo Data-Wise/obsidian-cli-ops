@@ -1,6 +1,6 @@
 # Testing Overview
 
-**Version:** 4.3.0
+**Version:** 4.6.0
 **Total Tests:** 800 pytest + 72 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see `core/doc_counts.py`).
 
 ## Test Coverage
@@ -47,10 +47,10 @@
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
-| MCP Server — all 42 tools + 4 resources | 127 | pytest | `test_mcp_server.py` |
+| MCP Server — all 44 tools + 4 resources | 127 | pytest | `test_mcp_server.py` |
 | **MCP Subtotal** | **127** | **pytest** | |
 
-Covers all 42 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions. This file is excluded from `doc_counts.py`'s static unit-test gate because it uses `@pytest.mark.parametrize` — its 127 tests are collected live (`pytest --collect-only`), not counted via static `def test_` scanning.
+Covers all 44 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions. This file is excluded from `doc_counts.py`'s static unit-test gate because it uses `@pytest.mark.parametrize` — its 127 tests are collected live (`pytest --collect-only`), not counted via static `def test_` scanning.
 
 ### E2E Tests (pytest, gated)
 

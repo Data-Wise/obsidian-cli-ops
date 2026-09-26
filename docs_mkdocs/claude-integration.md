@@ -7,7 +7,7 @@
 > - **Next:** Try *"List my Obsidian vaults"* in Claude Desktop
 { .tldr }
 
-**Time:** ~2 minutes | **Level:** Beginner | **Version:** 4.5.1
+**Time:** ~2 minutes | **Level:** Beginner | **Version:** 4.6.0
 
 ---
 
@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **42 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **44 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -111,6 +111,8 @@ for a full diagnostic.
 | `write_note` | `note_id`, `content`, `create_backup=True` | Overwrite note (backup created by default) |
 | `create_note` | `vault_id`, `title`, `content`, `folder`, `tags` | Create a new note |
 | `append_to_note` | `note_id`, `content`, `separator` | Append text to an existing note |
+| `list_templates` | `vault_id` | List the vault's note templates |
+| `create_from_template` | `vault_id`, `template`, `dest`, `variables` | Create a note from a template (no overwrite, stays in vault) |
 | `insert_to_note` | `note_id`, `content`, `after_heading`, `before_heading`, `as_table_row`, `replace_section` | Insert at a heading-relative position |
 | `rename_note` | `note_id`, `new_title` | Rename note (warns about wikilink breakage) |
 | `delete_note` | `note_id`, `confirm=False` | Delete note — `confirm=True` required; default is **dry-run** |
@@ -318,6 +320,27 @@ npx @modelcontextprotocol/inspector \
 ```
 
 ---
+
+## Plugin Skills (optional)
+
+The repo ships a small Claude Code plugin in `plugin/` with two skills that tell Claude
+which MCP tool fits a research, writing, teaching or vault task, with the `obs research`
+CLI as fallback:
+
+| Skill | Covers |
+|-------|--------|
+| `research-writing` | Zotero search/cite, PDF full text, manuscript status, bibliography checks |
+| `teaching-vault` | Courses and lectures, Quarto build/preview, vault search, orphans, stale notes |
+
+The plugin contains no MCP server config; register the server with `configure_mcp.py`
+(Step 1) first. Load the plugin from a source checkout for a session:
+
+```bash
+claude --plugin-dir ~/projects/dev-tools/obsidian-cli-ops/plugin
+```
+
+Check what it loaded with `claude --plugin-dir <path> plugin details obsidian-ops`.
+The Homebrew install does not include `plugin/`.
 
 ## Roadmap
 

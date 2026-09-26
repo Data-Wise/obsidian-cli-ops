@@ -4,7 +4,7 @@ Obsidian CLI Ops - Python Module
 Knowledge graph analysis and vault management for Obsidian.
 """
 
-__version__ = "4.5.1"
+__version__ = "4.6.0"
 __author__ = "Data-Wise"
 
 from .db_manager import DatabaseManager

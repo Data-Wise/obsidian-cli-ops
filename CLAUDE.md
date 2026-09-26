@@ -6,7 +6,7 @@ Developer guide for Claude Code when working with this repository.
 
 **Obsidian CLI Ops (obs)** - Laser-focused CLI tool for Obsidian vault management with AI-powered graph analysis.
 
-**Current Version**: 4.5.1
+**Current Version**: 4.6.0
 **Status**: Stable release
 **Priority**: P1
 
@@ -66,7 +66,7 @@ python3 src/python/obs_cli.py db init
 
 ### Essential Commands
 
-**v4.3.0** - 64 commands (18 top-level + subcommands):
+**v4.6.0** - 65 commands (19 top-level + subcommands):
 
 ```bash
 # PRIMARY COMMANDS
@@ -83,6 +83,10 @@ obs health <vault>              # Vault health dashboard (scores + recommendatio
 obs vault info <vault>          # Show a single vault's metadata (--json)
 obs vault rename <vault> <name> # Rename display name (path/ID unchanged; rejects collisions)
 obs vault delete <vault>        # Remove from index (dry-run; --force to delete; files on disk untouched)
+
+# TEMPLATES
+obs template list <vault>       # List note templates in a vault
+obs template new <vault> <tpl> <dest> [--var k=v]  # Create a note from a template
 
 # AI FEATURES
 obs ai status                   # Show AI provider status
@@ -140,6 +144,7 @@ Shell scripts use full Python path `/opt/homebrew/bin/python3` to avoid PATH iss
   - `ai/` - Multi-provider AI package (5 providers, 3,241 lines)
   - `tests/` - Test suite (640 pytest incl. 134 MCP unit, + 138 E2E pytest tests)
 - `schema/vault_db.sql` - Database schema (+ note_embeddings table)
+- `plugin/` - Claude Code plugin: 2 MCP-first skills (`research-writing`, `teaching-vault`); `tests/test_plugin_skills.py` guards tool/command names
 
 ### Documentation
 

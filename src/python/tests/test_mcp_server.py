@@ -1224,3 +1224,52 @@ class TestPhase4WithConfig:
         with patch("research.pdf.shutil.which", return_value=None):
             result = mcp_mod.pdf_search("causal")
         assert "pdftotext" in result or "not installed" in result.lower() or "not configured" in result.lower()
+
+
+# ---------------------------------------------------------------------------
+# Template tools (list_templates / create_from_template)
+# ---------------------------------------------------------------------------
+
+class TestTemplateTools:
+    @pytest.fixture
+    def tpl_vault(self, tmp_path, real_db, monkeypatch):
+        import config_loader
+        monkeypatch.setattr(config_loader, "load", lambda: None)
+        root = tmp_path / "Tpl Vault"
+        folder = root / "Meta" / "Templates"
+        folder.mkdir(parents=True)
+        (root / ".obsidian").mkdir()
+        (root / ".obsidian" / "templates.json").write_text('{"folder": "Meta/Templates"}')
+        (folder / "tpl-idea.md").write_text("# {{title}}\nFor {{project}}\n")
+        vault_id = real_db.add_vault(f"tplvault-{tmp_path.name}", str(root))
+        return vault_id, root
+
+    def test_list_templates(self, mcp_mod, tpl_vault):
+        vault_id, root = tpl_vault
+        result = mcp_mod.list_templates(vault_id)
+        assert "**idea**" in result
+        assert "from obsidian" in result
+
+    def test_list_templates_no_folder(self, mcp_mod, obs_vault):
+        vault_id, _, _ = obs_vault
+        assert "No templates folder" in mcp_mod.list_templates(vault_id)
+
+    def test_list_templates_unknown_vault(self, mcp_mod):
+        assert "not found" in mcp_mod.list_templates("no-vault").lower()
+
+    def test_create_from_template(self, mcp_mod, tpl_vault):
+        vault_id, root = tpl_vault
+        result = mcp_mod.create_from_template(
+            vault_id, "idea", "Ideas/Big Idea", {"project": "pmed"})
+        assert "✅" in result
+        assert (root / "Ideas" / "Big Idea.md").read_text() == "# Big Idea\nFor pmed\n"
+
+    def test_create_from_template_refusals(self, mcp_mod, tpl_vault):
+        vault_id, root = tpl_vault
+        (root / "Taken.md").write_text("keep")
+        assert "already exists" in mcp_mod.create_from_template(vault_id, "idea", "Taken")
+        assert "escapes the vault" in mcp_mod.create_from_template(vault_id, "idea", "../x")
+        assert "Template not found" in mcp_mod.create_from_template(vault_id, "nope", "y")
+        assert "escapes the templates folder" in mcp_mod.create_from_template(
+            vault_id, "../../Taken", "z")
+        assert (root / "Taken.md").read_text() == "keep"

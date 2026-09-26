@@ -1,6 +1,6 @@
 # obs -- Your Vault's Command Line
 
-[![Version](https://img.shields.io/badge/version-4.5.1-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
+[![Version](https://img.shields.io/badge/version-4.6.0-blue.svg)](https://github.com/Data-Wise/obsidian-cli-ops/releases)
 [![Build Status](https://github.com/Data-Wise/obsidian-cli-ops/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Data-Wise/obsidian-cli-ops/actions)
 [![Tests](https://img.shields.io/badge/tests-636%2B%20passing-brightgreen.svg)](https://github.com/Data-Wise/obsidian-cli-ops)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
@@ -33,7 +33,7 @@ Claude / MCP integration so you can query your vaults in natural language.
     status tables. LLM augments thinking sections on demand.
 
 !!! tip "Claude Integration (v4.0.0)"
-    42 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
+    44 MCP tools connect `obs` to Claude Desktop, Claude Code, and Cowork. Ask Claude to search, analyze, create, and edit your vault notes in plain English. [Setup takes 5 minutes →](claude-integration.md)
 
 !!! tip "Diagnostics & Doctor"
     `obs doctor` runs self-checks across 7 layers (runtime, DB, vault, sync, MCP, docs, iCloud) plus `flow`. Clear ghost notes with `obs scan --prune`. [Diagnostics tutorial →](tutorials/doctor.md)
@@ -96,5 +96,5 @@ graph LR
 - [Quick Reference](refcard.md) -- Command cheat sheet
 - [Cookbook](cookbook.md) -- Task-based recipes
 - [AI Setup Guide](ai-setup.md) -- Configure AI providers
-- [Claude Integration](claude-integration.md) -- MCP server setup (42 tools)
+- [Claude Integration](claude-integration.md) -- MCP server setup (44 tools)
 - [Architecture](developer/architecture.md) -- How it works

@@ -78,7 +78,7 @@ if Path(sys.executable).resolve() != Path(_obs_python).resolve():
 # Normal imports (now running inside obs venv)
 # ---------------------------------------------------------------------------
 
-from typing import Optional
+from typing import Dict, Optional
 from datetime import datetime, timezone
 
 # Ensure src/python is on path
@@ -89,6 +89,7 @@ from mcp.server.fastmcp import FastMCP
 from db_manager import DatabaseManager
 from core.vault_manager import VaultManager
 from core.graph_analyzer import GraphAnalyzer
+from core import templates as templates_ops
 from utils import format_relative_time
 
 # ---------------------------------------------------------------------------
@@ -873,6 +874,86 @@ def create_note(
         return f"❌ Create timed out: {e}"
     except Exception as e:
         return f"Error creating note: {e}"
+
+
+@mcp.tool()
+def list_templates(vault_id: str) -> str:
+    """
+    List the note templates available in a vault.
+
+    Args:
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
+
+    The templates folder is the one set in Obsidian's core Templates plugin
+    (.obsidian/templates.json), else the obs config `vault.templates` for that
+    vault, else the first of _SYSTEM/templates, templates/, Templates/, _templates/.
+    Use a listed name with create_from_template().
+    """
+    try:
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        vault_root = Path(vault["path"])
+        tdir = _fs_op(lambda: templates_ops.find_templates_dir(vault_root))
+        if tdir is None:
+            return (
+                f"No templates folder found in vault '{vault['name']}'.\n"
+                f"Tried: .obsidian/templates.json, obs config vault.templates, "
+                f"{', '.join(templates_ops.FALLBACK_DIRS)}"
+            )
+        items = _fs_op(lambda: templates_ops.list_templates(vault_root))
+        lines = [f"# Templates in {vault['name']} ({len(items)})",
+                 f"Folder: {tdir.path} (from {tdir.source})", ""]
+        lines += [f"- **{t['name']}** — {t['relative']}" for t in items]
+        return "\n".join(lines)
+    except TimeoutError as e:
+        return f"❌ Listing timed out: {e}"
+    except Exception as e:
+        return f"Error listing templates: {e}"
+
+
+@mcp.tool()
+def create_from_template(
+    vault_id: str,
+    template: str,
+    dest: str,
+    variables: Optional[Dict[str, str]] = None,
+) -> str:
+    """
+    Create a new note in a vault from one of its templates.
+
+    Args:
+        vault_id: Vault name or ID (accepts name, full ID, or unambiguous ID prefix).
+        template: Template name from list_templates() (a `tpl-` prefix and `.md` are optional).
+        dest: Destination path relative to the vault root, e.g. 'research/New Idea'
+              ('.md' is added if missing). Must stay inside the vault.
+        variables: Optional {key: value} substitutions for `{{key}}` placeholders.
+
+    Fills Obsidian core template variables: {{title}} (destination file name),
+    {{date}}, {{time}}, {{date:YYYY-MM-DD}}-style formats. Unknown placeholders and
+    Templater `<% %>` blocks are left untouched. Refuses to overwrite an existing note.
+    After creation, run analyze_vault() to index the note in graph analysis.
+    """
+    try:
+        vault, err = _resolve_vault(vault_id)
+        if err:
+            return err
+        vault_root = Path(vault["path"])
+        result = _fs_op(lambda: templates_ops.create_from_template(
+            vault_root, template, dest, variables))
+        return (
+            f"✅ **Note created from template**: {Path(result['template']).stem}\n"
+            f"- Path: {result['path']}\n"
+            f"- Relative: {result['relative']}\n"
+            f"- Words: {result['words']}\n\n"
+            f"⚠️  Run analyze_vault('{vault_id}') to index the note in graph analysis."
+        )
+    except templates_ops.TemplateError as e:
+        return f"❌ {e}"
+    except TimeoutError as e:
+        return f"❌ Create timed out: {e}"
+    except Exception as e:
+        return f"Error creating note from template: {e}"
 
 
 # ---------------------------------------------------------------------------

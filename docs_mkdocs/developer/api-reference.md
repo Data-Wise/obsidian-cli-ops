@@ -1,6 +1,6 @@
 # API Reference
 
-**Version:** 4.3.0
+**Version:** 4.6.0
 
 Reference documentation for the MCP tool API, Python CLI API, AI provider interface, and domain models.
 
@@ -8,7 +8,7 @@ Reference documentation for the MCP tool API, Python CLI API, AI provider interf
 
 ## MCP Server API (v3.3.0)
 
-The MCP server (`src/python/mcp_server.py`) exposes 42 tools and 4 resources over stdio to Claude Desktop, Claude Code, and Cowork.
+The MCP server (`src/python/mcp_server.py`) exposes 44 tools and 4 resources over stdio to Claude Desktop, Claude Code, and Cowork.
 
 ### Connection Flow
 
@@ -88,6 +88,7 @@ flowchart TD
 | `get_note_links(note_id)` | — (read-only) | Returns `{incoming: [...], outgoing: [...]}` |
 | `get_note_tags(note_id)` | — (read-only) | Returns `[tag1, tag2, ...]` |
 | `create_note(vault_id, title, content?)` | — | Creates new `.md` file |
+| `create_from_template(vault_id, template, dest, variables?)` | — | Renders a template into a new `.md` file; refuses overwrite and paths outside the vault |
 | `write_note(note_id, content, create_backup?)` | `create_backup=True` | Overwrites; auto-creates `.bak` |
 | `append_to_note(note_id, content)` | — | Appends to end of file |
 | `rename_note(note_id, new_title)` | — | Renames file; warns on broken backlinks |
@@ -481,5 +482,5 @@ MCP tools catch all exceptions and return structured error JSON rather than prop
 ## See Also
 
 - [Architecture](architecture.md) — layer diagrams and data flows
-- [Claude Integration](../claude-integration.md) — MCP setup guide with all 42 tools
+- [Claude Integration](../claude-integration.md) — MCP setup guide with all 44 tools
 - [Testing Overview](testing/overview.md) — test strategy and coverage
