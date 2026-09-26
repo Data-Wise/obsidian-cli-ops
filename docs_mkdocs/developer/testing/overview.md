@@ -1,6 +1,6 @@
 # Testing Overview
 
-**Version:** 4.3.0
+**Version:** 4.5.1
 **Total Tests:** 800 pytest + 72 Jest — includes the nexus-cli absorption (config + research) shipped in v4.0.0. The per-file table below is the exact inventory; the headline figures are gated as round-down floors (see `core/doc_counts.py`).
 
 ## Test Coverage

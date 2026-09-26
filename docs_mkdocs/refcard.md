@@ -94,6 +94,13 @@
 | `obs vault rename <vault> <new-name> [--json]` | Rename display name |
 | `obs vault delete <vault> [--force] [--json]` | Remove from index (dry-run by default) |
 
+## :memo: Templates
+
+| Command | Description |
+|---------|-------------|
+| `obs template list <vault> [--json]` | List the vault's note templates |
+| `obs template new <vault> <template> <dest> [--var K=V] [--json]` | Create a note from a template (never overwrites) |
+
 ## :link: Other
 
 | Command | Description |
@@ -222,4 +229,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.3.0 | **Commands:** 65 | **MCP Tools:** 44 | **AI Providers:** 5
+**Version:** 4.5.1 | **Commands:** 65 | **MCP Tools:** 44 | **AI Providers:** 5
