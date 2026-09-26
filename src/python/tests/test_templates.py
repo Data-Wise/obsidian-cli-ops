@@ -172,3 +172,39 @@ def test_create_refuses_absolute_and_empty_dest(vault, tmp_path):
         t.create_from_template(vault, "a", str(tmp_path / "abs"))
     with pytest.raises(t.TemplateError, match="empty"):
         t.create_from_template(vault, "a", "  ")
+
+
+# ── Hardening: template-name escape, degenerate destinations, formats ────────
+
+def test_template_name_cannot_escape_templates_folder(vault):
+    _tpl(vault / "templates", "a.md", "x")
+    _tpl(vault / "Private", "diary.md", "secret")
+    with pytest.raises(t.TemplateError, match="escapes the templates folder"):
+        t.resolve_template(vault, "../Private/diary")
+    with pytest.raises(t.TemplateError, match="Invalid template name"):
+        t.resolve_template(vault, str(vault / "Private" / "diary"))
+
+
+def test_nested_template_name_with_folder_still_resolves(vault):
+    idea = _tpl(vault / "templates" / "sub", "idea.md", "x")
+    assert t.resolve_template(vault, "sub/idea") == idea
+
+
+def test_destination_without_file_name_is_refused(vault):
+    _tpl(vault / "templates", "a.md", "x")
+    for dest in (".", "notes/.."):
+        with pytest.raises(t.TemplateError):
+            t.create_from_template(vault, "a", dest)
+
+
+def test_render_unpadded_tokens_and_literal_escape():
+    out = t.render("{{date:MMM D, YYYY [at] h A}}|{{date:M/D H}}", "x", now=NOW)
+    assert out == "Sep 25, 2026 at 2 PM|9/25 14"
+
+
+def test_obsidian_date_and_time_formats_apply_to_bare_placeholders(vault):
+    _tpl(vault / "templates", "a.md", "{{date}} {{time}} {{date:YYYY}}")
+    (vault / ".obsidian/templates.json").write_text(
+        json.dumps({"dateFormat": "DD.MM.YYYY", "timeFormat": "HH:mm:ss"}))
+    t.create_from_template(vault, "a", "Out", now=NOW)
+    assert (vault / "Out.md").read_text() == "25.09.2026 14:05:09 2026"

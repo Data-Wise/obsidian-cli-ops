@@ -35,13 +35,19 @@ class TemplateDir:
     source: str  # 'obsidian', 'config', or 'fallback'
 
 
-def _obsidian_templates_folder(vault_root: Path) -> Optional[Path]:
-    """Folder set in Obsidian's core Templates plugin (.obsidian/templates.json)."""
-    cfg = vault_root / ".obsidian" / "templates.json"
+def _obsidian_settings(vault_root: Path) -> dict:
+    """Obsidian core Templates plugin settings (.obsidian/templates.json), or {}."""
+    cfg = Path(vault_root) / ".obsidian" / "templates.json"
     try:
-        folder = json.loads(cfg.read_text(encoding="utf-8")).get("folder")
-    except (OSError, ValueError, AttributeError):
-        return None
+        data = json.loads(cfg.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _obsidian_templates_folder(vault_root: Path) -> Optional[Path]:
+    """Folder set in Obsidian's core Templates plugin."""
+    folder = _obsidian_settings(vault_root).get("folder")
     return vault_root / folder.strip("/") if isinstance(folder, str) and folder.strip("/") else None
 
 
@@ -106,8 +112,14 @@ def resolve_template(vault_root: Path, name: str) -> Path:
     if tdir is None:
         raise TemplateError(f"No templates folder found in vault: {vault_root}")
     stem = name[:-3] if name.endswith(".md") else name
-    candidates = [tdir.path / f"{stem}.md", tdir.path / f"{TEMPLATE_PREFIX}{stem}.md"]
-    for cand in candidates:
+    base = tdir.path.resolve()
+    rel = Path(stem)
+    if not stem or rel.is_absolute():
+        raise TemplateError(f"Invalid template name: {name}")
+    candidates = [rel.with_name(rel.name + ".md"), rel.with_name(TEMPLATE_PREFIX + rel.name + ".md")]
+    for cand in (tdir.path / c for c in candidates):
+        if not cand.resolve().is_relative_to(base):
+            raise TemplateError(f"Template name escapes the templates folder: {name}")
         if cand.is_file():
             return cand
     for t in list_templates(vault_root):  # nested folders, matched by display name
@@ -116,28 +128,42 @@ def resolve_template(vault_root: Path, name: str) -> Path:
     raise TemplateError(f"Template not found: {name} (in {tdir.path})")
 
 
-# moment.js tokens → strftime, longest first so YYYY wins over YY.
-_MOMENT_TOKENS = [
-    ("YYYY", "%Y"), ("YY", "%y"), ("MMMM", "%B"), ("MMM", "%b"), ("MM", "%m"),
-    ("dddd", "%A"), ("ddd", "%a"), ("DD", "%d"), ("HH", "%H"), ("hh", "%I"),
-    ("mm", "%M"), ("ss", "%S"), ("A", "%p"),
-]
-_MOMENT_RE = re.compile("|".join(re.escape(t) for t, _ in _MOMENT_TOKENS))
-_MOMENT_MAP = dict(_MOMENT_TOKENS)
+# moment.js tokens (common subset), longest first so YYYY wins over YY and MM over M.
+_MOMENT_TOKENS = {
+    "YYYY": lambda d: d.strftime("%Y"), "YY": lambda d: d.strftime("%y"),
+    "MMMM": lambda d: d.strftime("%B"), "MMM": lambda d: d.strftime("%b"),
+    "MM": lambda d: d.strftime("%m"), "M": lambda d: str(d.month),
+    "dddd": lambda d: d.strftime("%A"), "ddd": lambda d: d.strftime("%a"),
+    "DD": lambda d: d.strftime("%d"), "D": lambda d: str(d.day),
+    "HH": lambda d: d.strftime("%H"), "H": lambda d: str(d.hour),
+    "hh": lambda d: d.strftime("%I"), "h": lambda d: str(d.hour % 12 or 12),
+    "mm": lambda d: d.strftime("%M"), "ss": lambda d: d.strftime("%S"),
+    "A": lambda d: d.strftime("%p"),
+}
+# `[text]` is a moment literal escape.
+_MOMENT_RE = re.compile(r"\[([^\]]*)\]|" + "|".join(re.escape(t) for t in _MOMENT_TOKENS))
 
 
 def format_moment(fmt: str, when: datetime) -> str:
     """Format `when` with a moment.js-style format string (common tokens only)."""
-    return _MOMENT_RE.sub(lambda m: when.strftime(_MOMENT_MAP[m.group(0)]), fmt)
+    return _MOMENT_RE.sub(
+        lambda m: m.group(1) if m.group(1) is not None else _MOMENT_TOKENS[m.group(0)](when), fmt)
 
 
 _PLACEHOLDER_RE = re.compile(r"\{\{\s*([A-Za-z_][\w-]*)\s*(?::([^}]*))?\}\}")
 
 
 def render(text: str, title: str, variables: Optional[dict] = None,
-           now: Optional[datetime] = None) -> str:
-    """Substitute template placeholders; unknown ones are left as-is."""
+           now: Optional[datetime] = None, date_format: Optional[str] = None,
+           time_format: Optional[str] = None) -> str:
+    """Substitute template placeholders; unknown ones are left as-is.
+
+    `date_format` / `time_format` (moment syntax) set bare {{date}} / {{time}},
+    as Obsidian's dateFormat / timeFormat settings do. Defaults: YYYY-MM-DD, HH:mm.
+    """
     now = now or datetime.now()
+    date_format = date_format or "YYYY-MM-DD"
+    time_format = time_format or "HH:mm"
     variables = {str(k): str(v) for k, v in (variables or {}).items()}
 
     def sub(m: re.Match) -> str:
@@ -147,9 +173,9 @@ def render(text: str, title: str, variables: Optional[dict] = None,
         if key == "title" and fmt is None:
             return title
         if key == "date":
-            return format_moment(fmt, now) if fmt else now.strftime("%Y-%m-%d")
+            return format_moment(fmt or date_format, now)
         if key == "time":
-            return format_moment(fmt, now) if fmt else now.strftime("%H:%M")
+            return format_moment(fmt or time_format, now)
         return m.group(0)
 
     return _PLACEHOLDER_RE.sub(sub, text)
@@ -162,6 +188,8 @@ def resolve_destination(vault_root: Path, dest: str) -> Path:
     rel = Path(dest.strip())
     if rel.is_absolute():
         raise TemplateError(f"Destination must be relative to the vault: {dest}")
+    if rel.name in ("", ".", ".."):
+        raise TemplateError(f"Destination has no file name: {dest}")
     if rel.suffix != ".md":
         rel = rel.with_name(rel.name + ".md")
     root = Path(vault_root).resolve()
@@ -184,7 +212,12 @@ def create_from_template(vault_root: Path, template: str, dest: str,
     target = resolve_destination(vault_root, dest)
     if target.exists():
         raise TemplateError(f"Note already exists: {target}")
-    content = render(tpl_path.read_text(encoding="utf-8"), target.stem, variables, now)
+    settings = _obsidian_settings(vault_root)
+    formats = {k: v for k in ("dateFormat", "timeFormat")
+               if isinstance(v := settings.get(k), str) and v}
+    content = render(tpl_path.read_text(encoding="utf-8"), target.stem, variables, now,
+                     date_format=formats.get("dateFormat"),
+                     time_format=formats.get("timeFormat"))
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(content, encoding="utf-8")
     return {

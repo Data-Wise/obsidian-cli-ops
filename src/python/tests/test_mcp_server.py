@@ -1270,4 +1270,6 @@ class TestTemplateTools:
         assert "already exists" in mcp_mod.create_from_template(vault_id, "idea", "Taken")
         assert "escapes the vault" in mcp_mod.create_from_template(vault_id, "idea", "../x")
         assert "Template not found" in mcp_mod.create_from_template(vault_id, "nope", "y")
+        assert "escapes the templates folder" in mcp_mod.create_from_template(
+            vault_id, "../../Taken", "z")
         assert (root / "Taken.md").read_text() == "keep"

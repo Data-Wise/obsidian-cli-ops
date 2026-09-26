@@ -278,8 +278,11 @@ obs template new <vault> <template> <dest> [--var KEY=VALUE]... [--json]
 | `--json` | Emit the result as JSON |
 
 Fills Obsidian's core variables — `{{title}}` (destination file name), `{{date}}`,
-`{{time}}`, and `{{date:YYYY-MM-DD}}`-style formats. Unknown placeholders and Templater
-`<% %>` blocks are left as-is. An existing note is never overwritten.
+`{{time}}`, and `{{date:YYYY-MM-DD}}`-style formats (common moment.js tokens, `[literal]`
+escapes). Bare `{{date}}` / `{{time}}` follow the vault's Obsidian **Date format** / **Time
+format** settings, else `YYYY-MM-DD` / `HH:mm`. Unknown placeholders and Templater
+`<% %>` blocks are left as-is. An existing note is never overwritten, and neither the
+destination nor the template name may point outside its folder.
 
 ```bash
 obs template new Research meeting "Meetings/2026-09-25 Advisor" --var project=pmed

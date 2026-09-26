@@ -6,10 +6,10 @@ version: 4.5.1
 next: |
   1. Release v4.6.0 (unreleased on dev/feature: plugin skills #117 + vault templates); tap caveats say 42 tools → bump to 44 (verify-caveats.sh)
   2. Remaining nexus vault-ops row items not yet ported: daily, backlinks, recent (CLI) — decide scope before archiving SPEC-merge-nexus-cli-v2
-  vault templates (feature/vault-templates): core/templates.py + obs template list|new + MCP list_templates/create_from_template;
-  folder order .obsidian/templates.json → config vault.templates (same vault) → _SYSTEM/templates, templates, Templates, _templates.
-  Tests: 19 core + 5 MCP + 3 Jest passthrough; full suite 669 pytest / 105 Jest green; live E2E in PR body.
 verified: |
+  feature/vault-templates (unmerged): obs template list|new + MCP list_templates/create_from_template
+  (details in changelog Unreleased). pytest 674 passed / 142 skipped, Jest 105/105, validate-counts aligned
+  (tools=44, commands=65); live wrapper E2E incl. traversal/overwrite/template-escape refusals.
   v4.5.1 RELEASED 2026-09-25: bump PR #115 (squash 8ed0055) into dev; release PR #116
   (dev→main, regular merge 6c5c3f9), main CI green (CI + Deploy Docs), tag v4.5.1 + GitHub
   release published (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.5.1).
