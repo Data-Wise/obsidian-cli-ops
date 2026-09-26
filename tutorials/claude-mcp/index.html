@@ -2699,7 +2699,7 @@
 <p><strong>Prerequisites:</strong> Complete <a href="../getting-started/">Getting Started</a> and have Claude Desktop installed.</p>
 <hr />
 <h2 id="step-1-what-is-the-mcp-integration">Step 1: What Is the MCP Integration?<a class="headerlink" href="#step-1-what-is-the-mcp-integration" title="Permanent link">&para;</a></h2>
-<p>MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. <code>obs</code> ships an MCP server (<code>mcp_server.py</code>) that exposes <strong>42 tools</strong> covering your full vault workflow:</p>
+<p>MCP (Model Context Protocol) lets Claude Desktop call tools in external programs. <code>obs</code> ships an MCP server (<code>mcp_server.py</code>) that exposes <strong>44 tools</strong> covering your full vault workflow:</p>
 <pre class="mermaid"><code>flowchart LR
     A([You, in Claude chat]) --&gt;|"natural language"| B[Claude Desktop]
     B --&gt;|"MCP stdio"| C[obs mcp_server.py]
@@ -2717,7 +2717,7 @@
 <h2 id="step-2-install-obs-via-homebrew">Step 2: Install <code>obs</code> via Homebrew<a class="headerlink" href="#step-2-install-obs-via-homebrew" title="Permanent link">&para;</a></h2>
 <p>If not already installed:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>install<span class="w"> </span>data-wise/tap/obsidian-cli-ops
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>version<span class="w">   </span><span class="c1"># should print 4.5.1 or newer</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>obs<span class="w"> </span>version<span class="w">   </span><span class="c1"># should print 4.6.0 or newer</span>
 </code></pre></div>
 <p>The Homebrew formula includes <code>mcp==1.27.2</code> and all transitive deps in an isolated
 venv at <code>/opt/homebrew/opt/obsidian-cli-ops/libexec/venv/</code>.</p>
@@ -2987,7 +2987,7 @@ from the repo root.</p>
 <td><a href="../../claude-integration/">Claude Integration</a></td>
 </tr>
 <tr>
-<td>All 42 MCP tools</td>
+<td>All 44 MCP tools</td>
 <td><a href="../../cli-reference/#claude-mcp-integration">CLI Reference — MCP section</a></td>
 </tr>
 <tr>

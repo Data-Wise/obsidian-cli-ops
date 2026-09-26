@@ -2101,6 +2101,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#plugin-skills-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin Skills (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#roadmap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3069,6 +3080,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#plugin-skills-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin Skills (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#roadmap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3118,7 +3140,7 @@
 - <strong>How:</strong> Run <code>configure_mcp.py</code> (registers via the <code>claude</code> CLI), restart Claude
 - <strong>Next:</strong> Try <em>"List my Obsidian vaults"</em> in Claude Desktop</p>
 </blockquote>
-<p><strong>Time:</strong> ~2 minutes | <strong>Level:</strong> Beginner | <strong>Version:</strong> 4.5.1</p>
+<p><strong>Time:</strong> ~2 minutes | <strong>Level:</strong> Beginner | <strong>Version:</strong> 4.6.0</p>
 <hr />
 <h2 id="what-you-get">What You Get<a class="headerlink" href="#what-you-get" title="Permanent link">&para;</a></h2>
 <p>Once connected, Claude can interact with every <code>obs</code> capability through natural language:</p>
@@ -3129,7 +3151,7 @@
 <li><strong>"Check vault health for Research"</strong> — 4-dimension health scores</li>
 <li><strong>"Run a quality check on all notes"</strong> — <code>obs ai quality</code> via AI passthrough</li>
 </ul>
-<p>The MCP server exposes <strong>42 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
+<p>The MCP server exposes <strong>44 tools</strong> and <strong>4 resources</strong> that map directly to <code>obs</code> commands.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3305,6 +3327,16 @@ for a full diagnostic.</p>
 <td><code>append_to_note</code></td>
 <td><code>note_id</code>, <code>content</code>, <code>separator</code></td>
 <td>Append text to an existing note</td>
+</tr>
+<tr>
+<td><code>list_templates</code></td>
+<td><code>vault_id</code></td>
+<td>List the vault's note templates</td>
+</tr>
+<tr>
+<td><code>create_from_template</code></td>
+<td><code>vault_id</code>, <code>template</code>, <code>dest</code>, <code>variables</code></td>
+<td>Create a note from a template (no overwrite, stays in vault)</td>
 </tr>
 <tr>
 <td><code>insert_to_note</code></td>
@@ -3639,6 +3671,34 @@ re-register:</p>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>~/projects/dev-tools/obsidian-cli-ops/src/python/mcp_server.py
 </code></pre></div>
 <hr />
+<h2 id="plugin-skills-optional">Plugin Skills (optional)<a class="headerlink" href="#plugin-skills-optional" title="Permanent link">&para;</a></h2>
+<p>The repo ships a small Claude Code plugin in <code>plugin/</code> with two skills that tell Claude
+which MCP tool fits a research, writing, teaching or vault task, with the <code>obs research</code>
+CLI as fallback:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>research-writing</code></td>
+<td>Zotero search/cite, PDF full text, manuscript status, bibliography checks</td>
+</tr>
+<tr>
+<td><code>teaching-vault</code></td>
+<td>Courses and lectures, Quarto build/preview, vault search, orphans, stale notes</td>
+</tr>
+</tbody>
+</table>
+<p>The plugin contains no MCP server config; register the server with <code>configure_mcp.py</code>
+(Step 1) first. Load the plugin from a source checkout for a session:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>claude<span class="w"> </span>--plugin-dir<span class="w"> </span>~/projects/dev-tools/obsidian-cli-ops/plugin
+</code></pre></div>
+<p>Check what it loaded with <code>claude --plugin-dir &lt;path&gt; plugin details obsidian-ops</code>.
+The Homebrew install does not include <code>plugin/</code>.</p>
 <h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
 <p>The Claude integration is being built in three phases:</p>
 <table>
