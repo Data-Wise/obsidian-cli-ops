@@ -1,15 +1,21 @@
 priority: P1
-status: 🚀 v4.6.0 RELEASING — vault templates + Claude Code plugin skills
+status: ✅ v4.6.0 RELEASED — vault templates + Claude Code plugin skills
 progress: 100
 updated: 2026-09-25
 version: 4.6.0
 next: |
-  1. Release v4.6.0 (unreleased on dev/feature: plugin skills #117 + vault templates); tap caveats say 42 tools → bump to 44 (verify-caveats.sh)
+  1. Restart Claude Desktop + Claude Code so the obsidian-ops MCP server loads 4.6.0 (44 tools)
   2. Remaining nexus vault-ops row items not yet ported: daily, backlinks, recent (CLI) — decide scope before archiving SPEC-merge-nexus-cli-v2
 verified: |
-  feature/vault-templates (unmerged): obs template list|new + MCP list_templates/create_from_template
-  (details in changelog Unreleased). pytest 674 passed / 142 skipped, Jest 105/105, validate-counts aligned
-  (tools=44, commands=65); live wrapper E2E incl. traversal/overwrite/template-escape refusals.
+  v4.6.0 RELEASED 2026-09-25: #117 plugin skills, #118 vault templates (obs template list|new + MCP
+  list_templates/create_from_template, tools 42→44), #119 site docs sync. Bump PR #120 (squash cb9edd8)
+  into dev; release PR #121 (dev→main, regular merge 0bcee40), main CI green (CI + Deploy Docs), tag
+  v4.6.0 + GitHub release (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.6.0). Tap:
+  auto-bump #240 (url+sha), then #241 (squash 390384b, revision-exempt) caveats 42→44 tools + dropped
+  stale `revision 2`. `brew upgrade` built from source (2m11s; #238 unstripped-Rust fix still works) →
+  obsidian-cli-ops 4.6.0 (no _N suffix). brew test rc 0; post-install-check.sh 4.6.0 all green (MCP
+  tools = 44); verify-caveats.sh green. Pre-bump gates: pytest 674 passed / 142 skipped, Jest 105/105,
+  validate-counts aligned (commands=65 tools=44), mkdocs --strict clean, post-release-sweep clean.
   v4.5.1 RELEASED 2026-09-25: bump PR #115 (squash 8ed0055) into dev; release PR #116
   (dev→main, regular merge 6c5c3f9), main CI green (CI + Deploy Docs), tag v4.5.1 + GitHub
   release published (https://github.com/Data-Wise/obsidian-cli-ops/releases/tag/v4.5.1).
