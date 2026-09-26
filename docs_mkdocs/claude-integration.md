@@ -319,6 +319,27 @@ npx @modelcontextprotocol/inspector \
 
 ---
 
+## Plugin Skills (optional)
+
+The repo ships a small Claude Code plugin in `plugin/` with two skills that tell Claude
+which MCP tool fits a research, writing, teaching or vault task, with the `obs research`
+CLI as fallback:
+
+| Skill | Covers |
+|-------|--------|
+| `research-writing` | Zotero search/cite, PDF full text, manuscript status, bibliography checks |
+| `teaching-vault` | Courses and lectures, Quarto build/preview, vault search, orphans, stale notes |
+
+The plugin contains no MCP server config; register the server with `configure_mcp.py`
+(Step 1) first. Load the plugin from a source checkout for a session:
+
+```bash
+claude --plugin-dir ~/projects/dev-tools/obsidian-cli-ops/plugin
+```
+
+Check what it loaded with `claude --plugin-dir <path> plugin details obsidian-ops`.
+The Homebrew install does not include `plugin/`.
+
 ## Roadmap
 
 The Claude integration is being built in three phases:

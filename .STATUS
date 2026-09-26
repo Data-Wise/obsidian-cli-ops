@@ -4,8 +4,7 @@ progress: 100
 updated: 2026-09-25
 version: 4.5.1
 next: |
-  1. Port plugin skills
-  2. Port vault template ops (low priority)
+  1. Port vault template ops (low priority)
 verified: |
   v4.5.1 RELEASED 2026-09-25: bump PR #115 (squash 8ed0055) into dev; release PR #116
   (dev→main, regular merge 6c5c3f9), main CI green (CI + Deploy Docs), tag v4.5.1 + GitHub

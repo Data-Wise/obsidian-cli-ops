@@ -4,6 +4,12 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## Unreleased
+
+### Added
+
+- **Claude Code plugin skills (`plugin/`)** — two MCP-first skills port nexus-cli's plugin (5 skills + 5 slash commands, spec item P3b): `research-writing` (Zotero, PDFs, manuscripts, bibliography) and `teaching-vault` (courses, Quarto, vault knowledge). Each maps a task to its obsidian-ops MCP tool with the `obs research …` CLI as fallback, and adds guardrails the tool descriptions don't carry (don't start `quarto preview` unasked, never write a guessed path into the config, report vault-cleanup candidates without deleting). The plugin ships no `.mcp.json`; the server stays registered through `configure_mcp.py`. Load it with `claude --plugin-dir <repo>/plugin`. `tests/test_plugin_skills.py` fails if a skill names an MCP tool or `obs` command that does not exist.
+
 ## v4.5.1 (2026-09-25) — obs stats --json + trailing-flag hang fixes
 
 ### Fixed
