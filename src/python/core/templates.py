@@ -1,0 +1,228 @@
+"""Vault template ops — list templates and create notes from them (nexus port).
+
+Filesystem-direct (SPEC-merge-nexus-cli-v2 decision D3): works on the vault's
+files, not the obs index. Interface-agnostic — the CLI and the MCP server both
+call these functions and format the result themselves.
+
+Rendering covers Obsidian's core Templates plugin variables only:
+``{{title}}``, ``{{date}}``, ``{{time}}``, ``{{date:FORMAT}}`` / ``{{time:FORMAT}}``
+(a moment.js token subset), plus caller-supplied ``{{key}}`` variables.
+Unknown ``{{...}}`` placeholders and Templater ``<% %>`` blocks are left untouched.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Optional
+
+# Fallback template folders, relative to the vault root, tried in order.
+# `_SYSTEM/templates` is the obs config default (config_loader.DEFAULT_TEMPLATES_SUBPATH).
+FALLBACK_DIRS = ("_SYSTEM/templates", "templates", "Templates", "_templates")
+TEMPLATE_PREFIX = "tpl-"
+
+
+class TemplateError(Exception):
+    """A template op was refused (bad destination, existing note, missing template)."""
+
+
+@dataclass
+class TemplateDir:
+    path: Path
+    source: str  # 'obsidian', 'config', or 'fallback'
+
+
+def _obsidian_settings(vault_root: Path) -> dict:
+    """Obsidian core Templates plugin settings (.obsidian/templates.json), or {}."""
+    cfg = Path(vault_root) / ".obsidian" / "templates.json"
+    try:
+        data = json.loads(cfg.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _obsidian_templates_folder(vault_root: Path) -> Optional[Path]:
+    """Folder set in Obsidian's core Templates plugin."""
+    folder = _obsidian_settings(vault_root).get("folder")
+    return vault_root / folder.strip("/") if isinstance(folder, str) and folder.strip("/") else None
+
+
+def _config_templates_folder(vault_root: Path) -> Optional[Path]:
+    """obs config `vault.templates`, only when that config's vault is this vault."""
+    try:
+        import config_loader
+        cfg = config_loader.load()
+    except Exception:  # a broken config must not break template listing
+        return None
+    if cfg is None:
+        return None
+    try:
+        tdir = cfg.templates_resolved
+    except ValueError:  # vault-less config with no explicit templates path
+        return None
+    root = vault_root.resolve()
+    if cfg.root is not None and cfg.root.resolve() == root:
+        return tdir
+    return tdir if tdir.resolve().is_relative_to(root) else None
+
+
+def find_templates_dir(vault_root: Path) -> Optional[TemplateDir]:
+    """Resolve a vault's templates folder: Obsidian setting → obs config → fallbacks."""
+    vault_root = Path(vault_root)
+    for path, source in (
+        (_obsidian_templates_folder(vault_root), "obsidian"),
+        (_config_templates_folder(vault_root), "config"),
+    ):
+        if path is not None and path.is_dir():
+            return TemplateDir(path, source)
+    for rel in FALLBACK_DIRS:
+        path = vault_root / rel
+        if path.is_dir():
+            return TemplateDir(path, "fallback")
+    return None
+
+
+def _display_name(stem: str) -> str:
+    return stem[len(TEMPLATE_PREFIX):] if stem.startswith(TEMPLATE_PREFIX) else stem
+
+
+def list_templates(vault_root: Path) -> list[dict]:
+    """Templates in the vault's templates folder, sorted by name.
+
+    Each entry: ``{"name", "path", "relative"}``. ``name`` drops a ``tpl-`` prefix.
+    Returns [] when the vault has no templates folder.
+    """
+    tdir = find_templates_dir(vault_root)
+    if tdir is None:
+        return []
+    out = [
+        {"name": _display_name(p.stem), "path": str(p), "relative": str(p.relative_to(tdir.path))}
+        for p in tdir.path.rglob("*.md")
+    ]
+    return sorted(out, key=lambda t: t["name"].lower())
+
+
+def resolve_template(vault_root: Path, name: str) -> Path:
+    """Find a template by name (with or without `.md` / `tpl-` prefix)."""
+    tdir = find_templates_dir(vault_root)
+    if tdir is None:
+        raise TemplateError(f"No templates folder found in vault: {vault_root}")
+    stem = name[:-3] if name.endswith(".md") else name
+    base = tdir.path.resolve()
+    rel = Path(stem)
+    if not stem or rel.is_absolute():
+        raise TemplateError(f"Invalid template name: {name}")
+    candidates = [rel.with_name(rel.name + ".md"), rel.with_name(TEMPLATE_PREFIX + rel.name + ".md")]
+    for cand in (tdir.path / c for c in candidates):
+        if not cand.resolve().is_relative_to(base):
+            raise TemplateError(f"Template name escapes the templates folder: {name}")
+        if cand.is_file():
+            return cand
+    for t in list_templates(vault_root):  # nested folders, matched by display name
+        if t["name"] == _display_name(stem):
+            return Path(t["path"])
+    raise TemplateError(f"Template not found: {name} (in {tdir.path})")
+
+
+# moment.js tokens (common subset), longest first so YYYY wins over YY and MM over M.
+_MOMENT_TOKENS = {
+    "YYYY": lambda d: d.strftime("%Y"), "YY": lambda d: d.strftime("%y"),
+    "MMMM": lambda d: d.strftime("%B"), "MMM": lambda d: d.strftime("%b"),
+    "MM": lambda d: d.strftime("%m"), "M": lambda d: str(d.month),
+    "dddd": lambda d: d.strftime("%A"), "ddd": lambda d: d.strftime("%a"),
+    "DD": lambda d: d.strftime("%d"), "D": lambda d: str(d.day),
+    "HH": lambda d: d.strftime("%H"), "H": lambda d: str(d.hour),
+    "hh": lambda d: d.strftime("%I"), "h": lambda d: str(d.hour % 12 or 12),
+    "mm": lambda d: d.strftime("%M"), "ss": lambda d: d.strftime("%S"),
+    "A": lambda d: d.strftime("%p"),
+}
+# `[text]` is a moment literal escape.
+_MOMENT_RE = re.compile(r"\[([^\]]*)\]|" + "|".join(re.escape(t) for t in _MOMENT_TOKENS))
+
+
+def format_moment(fmt: str, when: datetime) -> str:
+    """Format `when` with a moment.js-style format string (common tokens only)."""
+    return _MOMENT_RE.sub(
+        lambda m: m.group(1) if m.group(1) is not None else _MOMENT_TOKENS[m.group(0)](when), fmt)
+
+
+_PLACEHOLDER_RE = re.compile(r"\{\{\s*([A-Za-z_][\w-]*)\s*(?::([^}]*))?\}\}")
+
+
+def render(text: str, title: str, variables: Optional[dict] = None,
+           now: Optional[datetime] = None, date_format: Optional[str] = None,
+           time_format: Optional[str] = None) -> str:
+    """Substitute template placeholders; unknown ones are left as-is.
+
+    `date_format` / `time_format` (moment syntax) set bare {{date}} / {{time}},
+    as Obsidian's dateFormat / timeFormat settings do. Defaults: YYYY-MM-DD, HH:mm.
+    """
+    now = now or datetime.now()
+    date_format = date_format or "YYYY-MM-DD"
+    time_format = time_format or "HH:mm"
+    variables = {str(k): str(v) for k, v in (variables or {}).items()}
+
+    def sub(m: re.Match) -> str:
+        key, fmt = m.group(1), m.group(2)
+        if key in variables and fmt is None:
+            return variables[key]
+        if key == "title" and fmt is None:
+            return title
+        if key == "date":
+            return format_moment(fmt or date_format, now)
+        if key == "time":
+            return format_moment(fmt or time_format, now)
+        return m.group(0)
+
+    return _PLACEHOLDER_RE.sub(sub, text)
+
+
+def resolve_destination(vault_root: Path, dest: str) -> Path:
+    """Vault-relative destination → absolute path; refuses anything outside the vault."""
+    if not dest or not dest.strip():
+        raise TemplateError("Destination path is empty")
+    rel = Path(dest.strip())
+    if rel.is_absolute():
+        raise TemplateError(f"Destination must be relative to the vault: {dest}")
+    if rel.name in ("", ".", ".."):
+        raise TemplateError(f"Destination has no file name: {dest}")
+    if rel.suffix != ".md":
+        rel = rel.with_name(rel.name + ".md")
+    root = Path(vault_root).resolve()
+    target = (root / rel).resolve()
+    if not target.is_relative_to(root):
+        raise TemplateError(f"Destination escapes the vault: {dest}")
+    return target
+
+
+def create_from_template(vault_root: Path, template: str, dest: str,
+                         variables: Optional[dict] = None,
+                         now: Optional[datetime] = None) -> dict:
+    """Render `template` into a new note at vault-relative `dest`.
+
+    Refuses to overwrite an existing note. Returns
+    ``{"path", "relative", "template", "words"}``.
+    """
+    vault_root = Path(vault_root)
+    tpl_path = resolve_template(vault_root, template)
+    target = resolve_destination(vault_root, dest)
+    if target.exists():
+        raise TemplateError(f"Note already exists: {target}")
+    settings = _obsidian_settings(vault_root)
+    formats = {k: v for k in ("dateFormat", "timeFormat")
+               if isinstance(v := settings.get(k), str) and v}
+    content = render(tpl_path.read_text(encoding="utf-8"), target.stem, variables, now,
+                     date_format=formats.get("dateFormat"),
+                     time_format=formats.get("timeFormat"))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(content, encoding="utf-8")
+    return {
+        "path": str(target),
+        "relative": str(target.relative_to(vault_root.resolve())),
+        "template": str(tpl_path),
+        "words": len(content.split()),
+    }

@@ -458,6 +458,77 @@ class ObsCLI:
         ))
         console.print()
 
+    def _vault_or_exit(self, vault_identifier: str, as_json: bool):
+        """Resolve a vault by name/ID/prefix, or print an error and exit 1."""
+        try:
+            vault = self.db.get_vault_by_name_or_id(vault_identifier)
+        except ValueError as e:
+            vault, msg = None, str(e)
+        else:
+            msg = f"Vault not found: {vault_identifier}"
+        if not vault:
+            self._fail(msg, as_json)
+        return vault
+
+    @staticmethod
+    def _fail(msg: str, as_json: bool):
+        """Print an error (JSON or Rich) and exit 1."""
+        if as_json:
+            print(json.dumps({"error": msg}))
+        else:
+            console.print(f"[red]❌ {msg}[/]")
+        sys.exit(1)
+
+    def template_list(self, vault_identifier: str, as_json: bool = False):
+        """List the templates available in a vault."""
+        from core import templates as templates_ops
+        vault = self._vault_or_exit(vault_identifier, as_json)
+        root = Path(vault['path'])
+        tdir = templates_ops.find_templates_dir(root)
+        items = templates_ops.list_templates(root)
+        if as_json:
+            print(json.dumps({
+                "vault": vault['name'],
+                "folder": str(tdir.path) if tdir else None,
+                "source": tdir.source if tdir else None,
+                "templates": items,
+            }))
+            return
+        if tdir is None:
+            console.print(f"[yellow]No templates folder found in {vault['name']}[/]")
+            console.print("[dim]Tried: .obsidian/templates.json, obs config vault.templates, "
+                          + ", ".join(templates_ops.FALLBACK_DIRS) + "[/]")
+            return
+        console.print(f"[dim]Templates folder:[/] {tdir.path} [dim]({tdir.source})[/]\n")
+        if not items:
+            console.print("[yellow]No templates found[/]")
+            return
+        for t in items:
+            console.print(f"  • [cyan]{t['name']}[/]  [dim]{t['relative']}[/]")
+
+    def template_new(self, vault_identifier: str, template: str, dest: str,
+                     var_pairs=None, as_json: bool = False):
+        """Create a note from a template (refuses to overwrite)."""
+        from core import templates as templates_ops
+        vault = self._vault_or_exit(vault_identifier, as_json)
+        variables = {}
+        for pair in var_pairs or []:
+            key, sep, value = pair.partition('=')
+            if not sep or not key:
+                self._fail(f"Invalid --var '{pair}' (expected key=value)", as_json)
+            variables[key] = value
+        try:
+            result = templates_ops.create_from_template(
+                Path(vault['path']), template, dest, variables)
+        except templates_ops.TemplateError as e:
+            self._fail(str(e), as_json)
+        if as_json:
+            print(json.dumps(result))
+            return
+        console.print(f"[green]✓ Created from template:[/] {result['relative']}")
+        console.print(f"[dim]  {result['path']}[/]")
+        console.print(f"[dim]  Run [cyan]obs scan {vault['name']}[/] to index it.[/]")
+
     def list_vaults(self):
         """List all vaults in database with Rich table."""
         vaults = self.vault_manager.list_vaults()
@@ -1212,6 +1283,21 @@ def main():
     vault_info.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
     vault_info.add_argument('--json', action='store_true', dest='json_output',
                             help='Output result as JSON')
+
+    template_parser = subparsers.add_parser('template', help='List vault templates / create notes from them')
+    template_sub = template_parser.add_subparsers(dest='template_command')
+    template_ls = template_sub.add_parser('list', help='List templates in a vault')
+    template_ls.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
+    template_ls.add_argument('--json', action='store_true', dest='json_output',
+                             help='Output result as JSON')
+    template_new = template_sub.add_parser('new', help='Create a note from a template')
+    template_new.add_argument('vault', help='Vault name, ID, or unambiguous ID prefix')
+    template_new.add_argument('template', help='Template name (tpl- prefix and .md optional)')
+    template_new.add_argument('dest', help="Destination path relative to the vault ('.md' optional)")
+    template_new.add_argument('--var', action='append', default=[], metavar='KEY=VALUE',
+                              help='Substitute {{KEY}} with VALUE (repeatable)')
+    template_new.add_argument('--json', action='store_true', dest='json_output',
+                              help='Output result as JSON')
 
     args = parser.parse_args()
 
@@ -2472,6 +2558,17 @@ def main():
                 cli.info_vault(args.vault, as_json=as_json)
             else:
                 vault_parser.print_help()
+
+        elif args.command == 'template':
+            sub = getattr(args, 'template_command', None)
+            as_json = getattr(args, 'json_output', False) or getattr(args, 'json', False)
+            if sub == 'list':
+                cli.template_list(args.vault, as_json=as_json)
+            elif sub == 'new':
+                cli.template_new(args.vault, args.template, args.dest,
+                                 var_pairs=args.var, as_json=as_json)
+            else:
+                template_parser.print_help()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interrupted by user")

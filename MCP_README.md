@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.5.1 | **Tools:** 42 | **Protocol:** FastMCP (stdio)
+**Version:** 4.5.1 | **Tools:** 44 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -47,7 +47,7 @@ vaults"* — it should call `list_vaults()` and return results.
 
 ---
 
-## Available Tools (42)
+## Available Tools (44)
 
 > **`vault_id` accepts a vault name, full ID, or unambiguous ID prefix.** You don't
 > need the exact hash ID — `get_vault_stats("ResearchVault")` works the same as
@@ -94,6 +94,8 @@ vaults"* — it should call `list_vaults()` and return results.
 | `write_note(note_id, content, create_backup)` | Overwrite note (backup created by default) |
 | `create_note(vault_id, title, content, folder, tags)` | Create a new note |
 | `append_to_note(note_id, content, separator)` | Append text to an existing note |
+| `list_templates(vault_id)` | List the vault's note templates |
+| `create_from_template(vault_id, template, dest, variables)` | Create a note from a template (no overwrite, stays in vault) |
 | `rename_note(note_id, new_title)` | Rename note (warns about wikilink breakage) |
 | `delete_note(note_id, confirm)` | Delete note — `confirm=True` required; default is dry-run |
 | `get_note_links(note_id)` | Incoming + outgoing links for a note |
@@ -183,7 +185,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 42 tools)
+     mcp_server.py   (FastMCP, 44 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓

@@ -274,3 +274,47 @@ describe('OBS_PYTHON resolution', () => {
     expect(res.stderr).toContain('not executable');
   });
 });
+
+describe('obs template argument pass-through', () => {
+  test('new with spaced vault, destination and --var value', () => {
+    expect(
+      argvFor(
+        'template',
+        'new',
+        'My Vault',
+        'idea',
+        'Lit Review/My Note',
+        '--var',
+        'project=Missing Effect'
+      )
+    ).toEqual([
+      'template',
+      'new',
+      'My Vault',
+      'idea',
+      'Lit Review/My Note',
+      '--var',
+      'project=Missing Effect',
+    ]);
+  });
+
+  test('a trailing --var with no value is passed through (no hang)', () => {
+    expect(argvFor('template', 'new', 'V', 'idea', 'Dest', '--var')).toEqual([
+      'template',
+      'new',
+      'V',
+      'idea',
+      'Dest',
+      '--var',
+    ]);
+  });
+
+  test('list --json keeps the flag after the vault', () => {
+    expect(argvFor('template', 'list', 'My Vault', '--json')).toEqual([
+      'template',
+      'list',
+      'My Vault',
+      '--json',
+    ]);
+  });
+});

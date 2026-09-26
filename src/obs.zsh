@@ -171,6 +171,11 @@ obs_help() {
         echo "  obs vault delete <vault> [--force]  Remove from index (dry-run without --force)"
         echo ""
 
+        echo "📝 TEMPLATES"
+        echo "  obs template list <vault>  List note templates in a vault"
+        echo "  obs template new <vault> <template> <dest> [--var k=v]  Create a note from a template"
+        echo ""
+
         echo "📋 RESEARCH BOARD"
         echo "  obs board refresh [--all] [--dry-run] [--out PATH]  Refresh research board from atlas state"
         echo "  obs board status          Show board refresh status"
@@ -774,6 +779,11 @@ obs_vault() {
     "$OBS_PYTHON" "$python_cli" vault "$@"
 }
 
+obs_template() {
+    local python_cli=$(_get_python_cli) || return 1
+    "$OBS_PYTHON" "$python_cli" template "$@"
+}
+
 obs_board() {
     local python_cli=$(_get_python_cli) || return 1
     "$OBS_PYTHON" "$python_cli" board "$@"
@@ -864,6 +874,9 @@ obs() {
             ;;
         "board")
             obs_board "$@"
+            ;;
+        "template")
+            obs_template "$@"
             ;;
         *)
             _log "ERROR" "Unknown command: $cmd"

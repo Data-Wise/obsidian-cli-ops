@@ -1,7 +1,7 @@
 # CLI Command Reference
 
 > **TL;DR** (30 seconds)
-> - **What:** Full reference for all 63 `obs` commands (18 top-level groups, incl. the board, config & research families) + 42 MCP tools for Claude
+> - **What:** Full reference for all 65 `obs` commands (19 top-level groups, incl. the board, config & research families) + 44 MCP tools for Claude
 > - **Why:** One-stop lookup for exact syntax and options
 > - **How:** `obs help --all` — see this in your terminal
 > - **Next:** [Quick Reference](refcard.md) for a printable cheat sheet
@@ -245,6 +245,48 @@ obs vault delete MyVault --force    # Actually remove from the index
     `obs vault delete <vault>` previews what would be removed (name, path, note
     count) without changing anything. Re-run with `--force` to commit. Re-index a
     deleted vault any time with `obs scan <path>`.
+
+---
+
+## :memo: Templates
+
+Create notes from a vault's templates, filesystem-direct (no scan needed first).
+The templates folder is the one set in Obsidian's core Templates plugin
+(`.obsidian/templates.json`), else the obs config `vault.templates` for that
+vault, else the first of `_SYSTEM/templates`, `templates/`, `Templates/`, `_templates/`.
+
+### obs template list
+
+```bash
+obs template list <vault> [--json]
+```
+
+Lists template names (a `tpl-` filename prefix is dropped) and which folder they came from.
+
+### obs template new
+
+```bash
+obs template new <vault> <template> <dest> [--var KEY=VALUE]... [--json]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `vault` | Vault name, ID, or unambiguous ID prefix |
+| `template` | Template name (`tpl-` prefix and `.md` optional) |
+| `dest` | Destination relative to the vault root (`.md` added if missing); must stay inside the vault |
+| `--var KEY=VALUE` | Substitute `{{KEY}}` (repeatable) |
+| `--json` | Emit the result as JSON |
+
+Fills Obsidian's core variables — `{{title}}` (destination file name), `{{date}}`,
+`{{time}}`, and `{{date:YYYY-MM-DD}}`-style formats (common moment.js tokens, `[literal]`
+escapes). Bare `{{date}}` / `{{time}}` follow the vault's Obsidian **Date format** / **Time
+format** settings, else `YYYY-MM-DD` / `HH:mm`. Unknown placeholders and Templater
+`<% %>` blocks are left as-is. An existing note is never overwritten, and neither the
+destination nor the template name may point outside its folder.
+
+```bash
+obs template new Research meeting "Meetings/2026-09-25 Advisor" --var project=pmed
+```
 
 ---
 
@@ -1104,7 +1146,7 @@ obs research learn advanced --step 3
 
 ## :robot_face: Claude / MCP Integration
 
-`obs` exposes **42 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
+`obs` exposes **44 MCP tools** via `src/python/mcp_server.py` for use in Claude Desktop,
 Claude Code, and Cowork. Once configured (see [Claude Integration](claude-integration.md)),
 you can ask Claude natural-language questions about your vaults.
 
@@ -1119,7 +1161,8 @@ you can ask Claude natural-language questions about your vaults.
 **Health** — `get_vault_health`
 
 **Notes** — `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`,
-`insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault`
+`insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault`,
+`list_templates`, `create_from_template`
 
 **AI** — `run_obs_ai` (bridges all `obs ai` subcommands)
 
@@ -1143,7 +1186,7 @@ you can ask Claude natural-language questions about your vaults.
 "Run a quality check on MyVault"
 ```
 
-See [Claude Integration](claude-integration.md) for full setup instructions and all 42 tools.
+See [Claude Integration](claude-integration.md) for full setup instructions and all 44 tools.
 
 ---
 
