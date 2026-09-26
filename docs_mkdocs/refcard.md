@@ -173,7 +173,7 @@ obs doctor --json
 
 ## :link: Claude / MCP Tools
 
-42 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
+44 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
 
 | Group | Tools |
 |-------|-------|
@@ -181,7 +181,7 @@ obs doctor --json
 | **Search** | `search_notes`, `find_similar_notes`, `unified_search` |
 | **Graph** | `get_hub_notes`, `get_orphaned_notes`, `get_broken_links`, `analyze_vault` |
 | **Health** | `get_vault_health` |
-| **Notes** | `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault` |
+| **Notes** | `list_notes`, `read_note`, `write_note`, `create_note`, `append_to_note`, `insert_to_note`, `rename_note`, `delete_note`, `get_note_links`, `rescan_vault`, `list_templates`, `create_from_template` |
 | **AI** | `run_obs_ai` (all 11 subcommands) |
 | **Bridge** | `get_bridge_status`, `server_info` |
 | **Temporal** | `get_trends`, `get_stale_notes`, `get_daily_digest` |
@@ -222,4 +222,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.3.0 | **Commands:** 63 | **MCP Tools:** 42 | **AI Providers:** 5
+**Version:** 4.3.0 | **Commands:** 65 | **MCP Tools:** 44 | **AI Providers:** 5

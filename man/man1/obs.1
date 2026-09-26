@@ -80,6 +80,17 @@ Remove a vault from the database. The vault folder on disk is never touched;
 deletion cascades to the vault's notes, links, tags, and metrics. Without
 .BR \-\-force ,
 print a dry-run preview only.
+.SS Templates
+.TP
+.B template list\fR \fIvault\fR [\fB\-\-json\fR]
+List the note templates in a vault. The folder comes from Obsidian's
+Templates plugin setting, else the obs config, else _SYSTEM/templates,
+templates, Templates or _templates.
+.TP
+.B template new\fR \fIvault\fR \fItemplate\fR \fIdest\fR [\fB\-\-var\fR \fIkey=value\fR]... [\fB\-\-json\fR]
+Create a note at the vault-relative path \fIdest\fR from a template, filling
+{{title}}, {{date}}, {{time}} and \fB\-\-var\fR values. Never overwrites an
+existing note and refuses a destination outside the vault.
 .SS Graph Analysis
 .TP
 .B analyze\fR \fIvault\fR

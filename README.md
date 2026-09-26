@@ -98,6 +98,10 @@ obs vault info <vault>          # Show a single vault's metadata
 obs vault rename <vault> <name> # Rename display name (path/ID unchanged)
 obs vault delete <vault>        # Remove from index (dry-run; --force to delete)
 
+# TEMPLATES
+obs template list <vault>       # List note templates in a vault
+obs template new <vault> <tpl> <dest> [--var k=v]  # Create a note from a template
+
 # AI FEATURES (optional)
 obs ai status                   # Check provider status
 obs ai setup                    # Interactive setup wizard

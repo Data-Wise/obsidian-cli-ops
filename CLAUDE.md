@@ -66,7 +66,7 @@ python3 src/python/obs_cli.py db init
 
 ### Essential Commands
 
-**v4.3.0** - 64 commands (18 top-level + subcommands):
+**v4.3.0** - 65 commands (19 top-level + subcommands):
 
 ```bash
 # PRIMARY COMMANDS
@@ -83,6 +83,10 @@ obs health <vault>              # Vault health dashboard (scores + recommendatio
 obs vault info <vault>          # Show a single vault's metadata (--json)
 obs vault rename <vault> <name> # Rename display name (path/ID unchanged; rejects collisions)
 obs vault delete <vault>        # Remove from index (dry-run; --force to delete; files on disk untouched)
+
+# TEMPLATES
+obs template list <vault>       # List note templates in a vault
+obs template new <vault> <tpl> <dest> [--var k=v]  # Create a note from a template
 
 # AI FEATURES
 obs ai status                   # Show AI provider status
