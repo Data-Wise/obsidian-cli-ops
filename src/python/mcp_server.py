@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 20951)
-Total output lines: 2152
-
 #!/usr/bin/env python3
 """
 Obsidian MCP Server v2.0
@@ -1065,7 +1062,103 @@ def insert_to_note(
             return f"Note not found: {note_id}"
 
         vault = db.get_vault(note["vault_id"])
-        if n…951 tokens truncated…           target_dir.mkdir(parents=True, exist_ok=True)
+        if not vault:
+            return f"Vault not found for note {note_id}"
+
+        note_path = Path(vault["path"]) / note["path"]
+        if not note_path.exists():
+            return f"Note file not found on disk: {note_path}"
+
+        if _is_dataless(note_path):
+            return (
+                f"❌ Note is an iCloud placeholder (not downloaded): {note_path}\n"
+                "In Finder, right-click the file → Download Now before inserting."
+            )
+
+        def _do_insert():
+            text = note_path.read_text(encoding="utf-8")
+            if after_heading is not None and as_table_row:
+                new_text = append_table_row(text, after_heading, content)
+            elif after_heading is not None:
+                new_text = insert_after_heading(text, after_heading, content)
+            elif before_heading is not None:
+                new_text = insert_before_heading(text, before_heading, content)
+            elif replace_section is not None:
+                new_text = _replace_section(text, replace_section, content)
+            else:
+                new_text = text.rstrip() + "\n\n" + content
+            note_path.write_text(new_text, encoding="utf-8")
+            return new_text
+
+        new_text = _fs_op(_do_insert)
+        added_words = len(content.split())
+        mode_desc = (
+            f"after heading '{after_heading}'"
+            if after_heading and not as_table_row
+            else f"as table row under '{after_heading}'"
+            if as_table_row
+            else f"before heading '{before_heading}'"
+            if before_heading
+            else f"replacing section '{replace_section}'"
+            if replace_section
+            else "at EOF"
+        )
+        return (
+            f"✅ **Inserted into**: {note['title']}\n"
+            f"- Mode: {mode_desc}\n"
+            f"- Path: {note_path}\n"
+            f"- Added: {added_words} words\n"
+            f"- Total: {len(new_text.split())} words\n\n"
+            f"⚠️  Run analyze_vault('{note['vault_id']}') to update graph metrics."
+        )
+    except ValueError as e:
+        return f"❌ {e}"
+    except TimeoutError as e:
+        return f"❌ Insert timed out: {e}"
+    except Exception as e:
+        return f"Error inserting into note: {e}"
+
+
+@mcp.tool()
+def rename_note(note_id: str, new_title: str, subfolder: str = "") -> str:
+    """
+    Rename a note (changes filename on disk; does NOT update wikilinks in other notes).
+
+    Args:
+        note_id: Note ID from search_notes() or list_notes().
+        new_title: New title/filename (spaces → hyphens, .md appended automatically).
+        subfolder: Move to a different subfolder within the vault (optional;
+                   omit to keep same directory).
+
+    WARNING: Renaming breaks wikilinks in other notes that reference the old
+    title. After renaming, run analyze_vault() to find newly broken links,
+    then fix them manually or use run_obs_ai('suggest-links', ...) to reconnect.
+    """
+    try:
+        note = db.get_note(note_id)
+        if not note:
+            return f"Note not found: {note_id}"
+
+        vault = db.get_vault(note["vault_id"])
+        if not vault:
+            return f"Vault not found for note {note_id}"
+
+        vault_root = Path(vault["path"])
+        old_path = vault_root / note["path"]
+        if not old_path.exists():
+            return f"Note file not found on disk: {old_path}"
+
+        safe_title = new_title.replace(" ", "-").replace("/", "-").strip("-")
+        if not safe_title.endswith(".md"):
+            safe_title += ".md"
+
+        target_dir = (vault_root / subfolder) if subfolder else old_path.parent
+        new_path = target_dir / safe_title
+        if new_path.exists():
+            return f"❌ A note already exists at: {new_path}"
+
+        def _do_rename():
+            target_dir.mkdir(parents=True, exist_ok=True)
             old_path.rename(new_path)
 
         _fs_op(_do_rename)
