@@ -47,10 +47,11 @@
 
 | Component | Tests | Framework | File |
 |-----------|-------|-----------|------|
-| MCP Server — all 44 tools + 4 resources | 127 | pytest | `test_mcp_server.py` |
-| **MCP Subtotal** | **127** | **pytest** | |
+| MCP Server — all 45 tools + 4 resources | 129 | pytest | `test_mcp_server.py` |
+| Zotero Local API | 3 | pytest | `test_zotero_local_api.py` |
+| **MCP Subtotal** | **132** | **pytest** | |
 
-Covers all 44 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions. This file is excluded from `doc_counts.py`'s static unit-test gate because it uses `@pytest.mark.parametrize` — its 127 tests are collected live (`pytest --collect-only`), not counted via static `def test_` scanning.
+Covers all 45 MCP tools and 4 resources with mock vault/DB fixtures. Includes edge cases: unicode inputs, empty queries, path traversal safety, and server stability under error conditions. This file is excluded from `doc_counts.py`'s static unit-test gate because it uses `@pytest.mark.parametrize` — its 129 tests are collected live (`pytest --collect-only`), not counted via static `def test_` scanning.
 
 ### E2E Tests (pytest, gated)
 
