@@ -180,7 +180,7 @@ obs doctor --json
 
 ## :link: Claude / MCP Tools
 
-44 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
+45 MCP tools in 10 groups. Setup: [Claude Integration](claude-integration.md)
 
 | Group | Tools |
 |-------|-------|
@@ -193,7 +193,7 @@ obs doctor --json
 | **Bridge** | `get_bridge_status`, `server_info` |
 | **Temporal** | `get_trends`, `get_stale_notes`, `get_daily_digest` |
 | **Diagnostics** | `diagnose` |
-| **Research** | `zotero_search`, `zotero_get`, `zotero_cite`, `zotero_recent`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check` |
+| **Research** | `zotero_search`, `zotero_get`, `zotero_update`, `zotero_cite`, `zotero_recent`, `pdf_search`, `course_list`, `course_show`, `course_lectures`, `manuscript_list`, `manuscript_show`, `manuscript_stats`, `bib_check` |
 
 **Example Claude prompts:**
 
@@ -229,4 +229,4 @@ See the [official docs](https://help.obsidian.md/cli).
 
 ---
 
-**Version:** 4.6.0 | **Commands:** 65 | **MCP Tools:** 44 | **AI Providers:** 5
+**Version:** 4.6.0 | **Commands:** 65 | **MCP Tools:** 45 | **AI Providers:** 5

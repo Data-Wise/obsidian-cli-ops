@@ -21,7 +21,7 @@ Once connected, Claude can interact with every `obs` capability through natural 
 - **"Check vault health for Research"** — 4-dimension health scores
 - **"Run a quality check on all notes"** — `obs ai quality` via AI passthrough
 
-The MCP server exposes **44 tools** and **4 resources** that map directly to `obs` commands.
+The MCP server exposes **45 tools** and **4 resources** that map directly to `obs` commands.
 
 ---
 
@@ -184,13 +184,14 @@ See the [Monitoring & Health tutorial](tutorials/monitoring-and-health.md) for a
 
 ### Research Tools
 
-These 13 tools provide access to Zotero, PDFs, courses, and manuscripts **when the MCP server runs on the same machine as your data**.
+These 14 tools provide access to Zotero, PDFs, courses, and manuscripts **when the MCP server runs on the same machine as your data**.
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
 | `unified_search` | `query`, `limit=20` | Unified search across vault + Zotero + PDFs |
 | `zotero_search` | `query`, `limit=20`, `item_type=""`, `tag=""` | Search Zotero library by title/author/year |
 | `zotero_get` | `key`, `format="apa"` | Get full Zotero item details |
+| `zotero_update` | `key`, `updates` | Update selected metadata; Zotero 10+ asks for local write authorization |
 | `zotero_cite` | `key`, `format="apa"` | Format a citation in APA/MLA/Chicago |
 | `zotero_recent` | `limit=10` | Most recently modified Zotero items |
 | `pdf_search` | `query`, `limit=10` | Full-text search across PDFs |

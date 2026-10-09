@@ -6,7 +6,7 @@ Exposes Obsidian vault operations as MCP tools for AI assistants (Claude Desktop
 Claude Code, Cowork). Covers vault metadata, graph analysis, health scoring,
 full note read/write, and AI-powered ops via `obs` CLI subprocess.
 
-Tools (40):
+Tools (45):
   Vault:    list_vaults, get_vault_stats, discover_vaults
   Search:   search_notes, find_similar_notes, unified_search
   Graph:    get_hub_notes, get_orphaned_notes, get_broken_links, analyze_vault
@@ -16,7 +16,7 @@ Tools (40):
   AI:       run_obs_ai
   Temporal: get_bridge_status, server_info, get_trends, get_stale_notes, get_daily_digest
   Config:   diagnose
-  Zotero:   zotero_search, zotero_get, zotero_cite, zotero_recent
+  Zotero:   zotero_search, zotero_get, zotero_update, zotero_cite, zotero_recent
   PDF:      pdf_search
   Teaching: course_list, course_show, course_lectures
   Writing:  manuscript_list, manuscript_show, manuscript_stats
@@ -1681,6 +1681,34 @@ def _load_cfg():
     _sys.path.insert(0, str(Path(__file__).parent))
     import config_loader as _cl
     return _cl.load()
+
+@mcp.tool()
+def zotero_update(key: str, updates: dict[str, str]) -> str:
+    """Update selected metadata fields on an existing Zotero item.
+
+    Zotero 10+ will ask the user to authorize the local write. Supported
+    fields include title, date, DOI, URL, journal, volume, issue, and pages.
+    Use an empty string to clear a field.
+
+    Args:
+        key: 8-character Zotero item key
+        updates: Mapping of supported Zotero field names to string values
+    """
+    cfg = _load_cfg()
+    if not (cfg and cfg.research and cfg.research.zotero):
+        return "_Zotero not configured._"
+    try:
+        from research.zotero_local_api import ZoteroLocalAPI, ZoteroLocalAPIError
+        fields = ZoteroLocalAPI().update_item(key, updates)
+        field_list = ", ".join(fields)
+        return f"Updated Zotero item `{key}` fields: {field_list}."
+    except ImportError:
+        return "_Research backend not available._"
+    except ZoteroLocalAPIError as e:
+        return f"Zotero update failed: {e}"
+    except Exception as e:
+        return f"Zotero update error: {e}"
+
 
 @mcp.tool()
 def zotero_search(query: str, limit: int = 20, item_type: str = "", tag: str = "") -> str:

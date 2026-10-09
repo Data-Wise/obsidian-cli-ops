@@ -1,7 +1,7 @@
 priority: P1
-status: ✅ v4.6.0 RELEASED — vault templates + Claude Code plugin skills
+status: ✅ v4.6.0 + Zotero local metadata update ready for review
 progress: 100
-updated: 2026-09-25
+updated: 2026-10-09
 version: 4.6.0
 next: |
   1. Restart Claude Desktop + Claude Code so the obsidian-ops MCP server loads 4.6.0 (44 tools)

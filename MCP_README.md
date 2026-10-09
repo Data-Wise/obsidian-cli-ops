@@ -4,7 +4,7 @@ MCP (Model Context Protocol) server that gives Claude Desktop, Claude Code, and 
 direct access to your Obsidian vaults — search, graph analysis, health scoring, note
 read/write, and AI features, all via natural language.
 
-**Version:** 4.6.0 | **Tools:** 44 | **Protocol:** FastMCP (stdio)
+**Version:** 4.6.0 | **Tools:** 45 | **Protocol:** FastMCP (stdio)
 
 ---
 
@@ -47,7 +47,7 @@ vaults"* — it should call `list_vaults()` and return results.
 
 ---
 
-## Available Tools (44)
+## Available Tools (45)
 
 > **`vault_id` accepts a vault name, full ID, or unambiguous ID prefix.** You don't
 > need the exact hash ID — `get_vault_stats("ResearchVault")` works the same as
@@ -137,6 +137,7 @@ vaults"* — it should call `list_vaults()` and return results.
 | `unified_search(query, limit)` | Cross-source fan-out search: vault + Zotero + PDF, grouped by source |
 | `zotero_search(query, limit, item_type, tag)` | Search Zotero library by title, author, or abstract |
 | `zotero_get(key, format)` | Get a Zotero item by key (`format`: `apa`, `bibtex`, `full`) |
+| `zotero_update(key, updates)` | Update selected metadata fields; Zotero 10+ prompts for local write authorization |
 | `zotero_recent(limit)` | List recently modified Zotero items |
 | `zotero_cite(key, format)` | Citation string for a Zotero item (`format`: `apa`, `bibtex`) |
 | `pdf_search(query, limit)` | Search PDF documents in configured directories (filename + content) |
@@ -185,7 +186,7 @@ The MCP server is a thin passthrough layer over the existing three-layer archite
 ```
 Claude Desktop / Claude Code / Cowork
            ↓  MCP / stdio
-     mcp_server.py   (FastMCP, 44 tools)
+     mcp_server.py   (FastMCP, 45 tools)
            ↓  subprocess or direct import
    obs_cli.py / core/   (business logic)
            ↓

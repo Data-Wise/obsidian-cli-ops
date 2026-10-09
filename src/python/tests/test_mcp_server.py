@@ -1022,6 +1022,35 @@ class TestUnifiedSearch:
 # Phase 4 — Research Domain Tools
 # ---------------------------------------------------------------------------
 
+class TestZoteroUpdate:
+    def test_update_calls_authorized_local_api(self, mcp_mod, monkeypatch):
+        from types import SimpleNamespace
+        import research.zotero_local_api as api_module
+
+        zotero = SimpleNamespace(database="unused")
+        cfg = SimpleNamespace(research=SimpleNamespace(zotero=zotero))
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: cfg)
+        calls = []
+
+        class FakeAPI:
+            def update_item(self, key, updates):
+                calls.append((key, updates))
+                return sorted(updates)
+
+        monkeypatch.setattr(api_module, "ZoteroLocalAPI", FakeAPI)
+        result = mcp_mod.zotero_update(
+            "38QV4IUR", {"DOI": "10.1234/example"}
+        )
+        assert calls == [("38QV4IUR", {"DOI": "10.1234/example"})]
+        assert "Updated Zotero item `38QV4IUR`" in result
+        assert "DOI" in result
+
+    def test_update_requires_zotero_config(self, mcp_mod, monkeypatch):
+        monkeypatch.setattr(mcp_mod, "_load_cfg", lambda: None)
+        result = mcp_mod.zotero_update("38QV4IUR", {"DOI": "x"})
+        assert "not configured" in result
+
+
 class TestPhase4NoConfig:
     """All Phase 4 tools return a helpful 'not configured' string when config is absent."""
 

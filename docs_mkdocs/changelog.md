@@ -4,6 +4,15 @@ All notable changes to Obsidian CLI Ops.
 
 ---
 
+## Unreleased
+
+### Added
+
+- **Zotero metadata updates via MCP** — the new zotero_update tool uses Zotero 10+'s authorized local API, validates editable metadata fields, and guards updates with the item version.
+
+---
+
+
 ## v4.6.0 (2026-09-25) — vault templates + Claude Code plugin skills
 
 ### Added
